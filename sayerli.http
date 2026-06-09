@@ -1,0 +1,299 @@
+# ============================================
+# SAYERLI — Tests API
+# Extension requise: REST Client (VS Code)
+# ============================================
+
+@baseUrl = http://localhost:3000/api/v1
+@token = COLLE_TON_TOKEN_ICI
+
+# ============================================
+# AUTH
+# ============================================
+
+### Connexion (copie accessToken dans @token ci-dessus)
+POST {{baseUrl}}/auth/connexion
+Content-Type: application/json
+
+{
+  "email": "youssef@atlas-digital.ma",
+  "motDePasse": "sayerli2024!"
+}
+
+###
+
+### Mon profil
+GET {{baseUrl}}/auth/profil
+Authorization: Bearer {{token}}
+
+###
+
+### Inscription nouvelle entreprise
+POST {{baseUrl}}/auth/inscription
+Content-Type: application/json
+
+{
+  "nomEntreprise": "Ma Nouvelle Boutique",
+  "emailEntreprise": "contact@maboutique.ma",
+  "telephoneEntreprise": "+212 6 00 11 22 33",
+  "nomAdmin": "Mohammed Alami",
+  "emailAdmin": "mohammed@maboutique.ma",
+  "motDePasse": "monmotdepasse123"
+}
+
+# ============================================
+# ENTREPRISE
+# ============================================
+
+### Mon entreprise
+GET {{baseUrl}}/entreprise
+Authorization: Bearer {{token}}
+
+###
+
+### Statistiques générales
+GET {{baseUrl}}/entreprise/statistiques
+Authorization: Bearer {{token}}
+
+###
+
+### Modifier mon entreprise
+PATCH {{baseUrl}}/entreprise
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telephone": "+212 5 22 11 22 33",
+  "adresse": "25 Boulevard Hassan II, Casablanca"
+}
+
+# ============================================
+# CLIENTS
+# ============================================
+
+### Lister tous les clients
+GET {{baseUrl}}/clients
+Authorization: Bearer {{token}}
+
+###
+
+### Rechercher un client
+GET {{baseUrl}}/clients?recherche=Hassan
+Authorization: Bearer {{token}}
+
+###
+
+### Créer un client
+POST {{baseUrl}}/clients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nom": "Nadia Berrada",
+  "email": "nadia@berrada-consulting.ma",
+  "telephone": "+212 6 55 44 33 22",
+  "nomEntreprise": "Berrada Consulting",
+  "notes": "Consultante RH, besoin d'une présence en ligne"
+}
+
+###
+
+### Statistiques d'un client (remplace CLIENT_ID)
+GET {{baseUrl}}/clients/CLIENT_ID/statistiques
+Authorization: Bearer {{token}}
+
+# ============================================
+# DEVIS
+# ============================================
+
+### Lister tous les devis
+GET {{baseUrl}}/devis
+Authorization: Bearer {{token}}
+
+###
+
+### Filtrer par statut
+GET {{baseUrl}}/devis?statut=ENVOYE
+Authorization: Bearer {{token}}
+
+###
+
+### Créer un devis (remplace CLIENT_ID par un vrai id)
+POST {{baseUrl}}/devis
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "clientId": "CLIENT_ID",
+  "dateExpiration": "2025-01-31",
+  "taxe": 20,
+  "notes": "Projet développement web",
+  "lignes": [
+    {
+      "description": "Site web vitrine responsive",
+      "quantite": 1,
+      "prixUnitaire": 8000
+    },
+    {
+      "description": "Formation utilisation CMS",
+      "quantite": 2,
+      "prixUnitaire": 500
+    }
+  ]
+}
+
+###
+
+### Changer statut d'un devis (remplace DEVIS_ID)
+PATCH {{baseUrl}}/devis/DEVIS_ID/statut
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "statut": "ENVOYE"
+}
+
+###
+
+### Générer lien public d'un devis
+POST {{baseUrl}}/devis/DEVIS_ID/lien-public?jours=7
+Authorization: Bearer {{token}}
+
+###
+
+### Voir devis via lien public (sans token)
+GET {{baseUrl}}/public/devis/TON_TOKEN_PUBLIC
+
+###
+
+### Convertir devis accepté en facture
+POST {{baseUrl}}/devis/DEVIS_ID/convertir-facture
+Authorization: Bearer {{token}}
+
+# ============================================
+# FACTURES
+# ============================================
+
+### Tableau de bord financier
+GET {{baseUrl}}/factures/tableau-de-bord
+Authorization: Bearer {{token}}
+
+###
+
+### Lister toutes les factures
+GET {{baseUrl}}/factures
+Authorization: Bearer {{token}}
+
+###
+
+### Filtrer factures en retard
+GET {{baseUrl}}/factures?statut=EN_RETARD
+Authorization: Bearer {{token}}
+
+###
+
+### Créer une facture manuellement
+POST {{baseUrl}}/factures
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "clientId": "CLIENT_ID",
+  "dateEcheance": "2025-02-15",
+  "taxe": 20,
+  "notes": "Facture mensuelle maintenance",
+  "lignes": [
+    {
+      "description": "Maintenance mensuelle site web",
+      "quantite": 1,
+      "prixUnitaire": 1500
+    }
+  ]
+}
+
+###
+
+### Marquer facture comme envoyée
+PATCH {{baseUrl}}/factures/FACTURE_ID/statut
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "statut": "ENVOYEE"
+}
+
+# ============================================
+# PAIEMENTS
+# ============================================
+
+### Lister les paiements
+GET {{baseUrl}}/paiements
+Authorization: Bearer {{token}}
+
+###
+
+### Paiements d'une facture
+GET {{baseUrl}}/paiements?factureId=FACTURE_ID
+Authorization: Bearer {{token}}
+
+###
+
+### Enregistrer un paiement
+POST {{baseUrl}}/paiements
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "factureId": "FACTURE_ID",
+  "montant": 5000,
+  "methode": "VIREMENT",
+  "reference": "VIR-2025-001",
+  "notes": "Premier versement"
+}
+
+# ============================================
+# NOTIFICATIONS
+# ============================================
+
+### Toutes les notifications
+GET {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+
+###
+
+### Notifications non lues seulement
+GET {{baseUrl}}/notifications?nonLues=true
+Authorization: Bearer {{token}}
+
+###
+
+### Compteur de non lues
+GET {{baseUrl}}/notifications/compteur
+Authorization: Bearer {{token}}
+
+###
+
+### Marquer toutes comme lues
+PATCH {{baseUrl}}/notifications/tout-lire
+Authorization: Bearer {{token}}
+
+# ============================================
+# ÉQUIPE
+# ============================================
+
+### Lister l'équipe
+GET {{baseUrl}}/equipe
+Authorization: Bearer {{token}}
+
+###
+
+### Ajouter un membre
+POST {{baseUrl}}/equipe
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nom": "Sara Filali",
+  "email": "sara@atlas-digital.ma",
+  "motDePasse": "sara2024pass",
+  "role": "COMMERCIAL"
+}

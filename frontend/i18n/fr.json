@@ -1,0 +1,1022 @@
+{
+  "nav": {
+    "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche",
+    "pricing": "Tarifs",
+    "testimonials": "Témoignages",
+    "login": "Connexion",
+    "startFree": "Essai gratuit"
+  },
+  "hero": {
+    "badge": "🇲🇦 Fait pour les PME marocaines",
+    "headline": "Nta khdem…",
+    "headlineSub": "Sayerli ysayyer lik lba9i.",
+    "subheadline": "Gérez vos clients, devis, factures et paiements en un seul endroit. Simple, rapide, et conçu pour le marché marocain.",
+    "cta": "Commencer gratuitement",
+    "ctaSecondary": "Se connecter",
+    "stat1": "PME marocaines",
+    "stat2": "Factures générées",
+    "stat3": "MAD encaissés"
+  },
+  "features": {
+    "badge": "Fonctionnalités",
+    "title": "Tout ce dont vous avez besoin",
+    "sub": "Une solution complète pour gérer votre activité. Simple à utiliser, puissante pour votre croissance.",
+    "crm": {
+      "title": "CRM Clients",
+      "desc": "Gérez tous vos clients, leurs coordonnées et leur historique en un clin d'œil."
+    },
+    "devis": {
+      "title": "Devis professionnels",
+      "desc": "Créez et envoyez des devis en quelques minutes. Suivez leur statut en temps réel."
+    },
+    "factures": {
+      "title": "Factures automatiques",
+      "desc": "Convertissez vos devis acceptés en factures. Numérotation automatique conforme."
+    },
+    "paiements": {
+      "title": "Suivi des paiements",
+      "desc": "Enregistrez chaque paiement (cash, virement, carte) et suivez les impayés."
+    },
+    "analytics": {
+      "title": "Tableau de bord",
+      "desc": "Visualisez votre chiffre d'affaires, vos clients actifs et vos performances en MAD."
+    },
+    "team": {
+      "title": "Gestion d'équipe",
+      "desc": "Invitez votre équipe avec des rôles précis : admin, commercial, comptable."
+    }
+  },
+  "howItWorks": {
+    "badge": "Comment ça marche",
+    "title": "Opérationnel en 3 minutes",
+    "sub": "Pas besoin de formation. Sayerli est pensé pour les entrepreneurs marocains.",
+    "step1": {
+      "title": "Créez votre compte",
+      "desc": "Inscrivez votre entreprise en quelques clics. Aucune carte bancaire requise."
+    },
+    "step2": {
+      "title": "Ajoutez vos clients",
+      "desc": "Importez ou créez votre base clients. Ajoutez leurs coordonnées facilement."
+    },
+    "step3": {
+      "title": "Générez & encaissez",
+      "desc": "Envoyez des devis, transformez-les en factures et encaissez vos paiements."
+    }
+  },
+  "pricing": {
+    "badge": "Tarifs",
+    "title": "Des prix simples et transparents",
+    "sub": "Commencez gratuitement. Évoluez selon vos besoins. Payez en MAD.",
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "yearlyDiscount": "-20%",
+    "popular": "Le plus populaire",
+    "cta": "Commencer maintenant",
+    "ctaFree": "Essai gratuit",
+    "starter": {
+      "name": "Starter",
+      "price": "0",
+      "desc": "Parfait pour débuter",
+      "features": [
+        "Jusqu'à 5 clients",
+        "10 devis / mois",
+        "10 factures / mois",
+        "1 utilisateur",
+        "Support email"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "299",
+      "desc": "Pour les PME en croissance",
+      "features": [
+        "Clients illimités",
+        "Devis illimités",
+        "Factures illimitées",
+        "5 utilisateurs",
+        "Lien public de devis",
+        "Support prioritaire",
+        "Export PDF"
+      ]
+    },
+    "business": {
+      "name": "Business",
+      "price": "599",
+      "desc": "Pour les équipes et agences",
+      "features": [
+        "Tout dans Pro",
+        "Utilisateurs illimités",
+        "Multi-entreprises",
+        "API accès",
+        "Manager de compte dédié",
+        "SLA garanti",
+        "Onboarding personnalisé"
+      ]
+    }
+  },
+  "testimonials": {
+    "badge": "Témoignages",
+    "title": "Ils nous font confiance",
+    "sub": "Des entreprises marocaines de toutes tailles utilisent Sayerli au quotidien.",
+    "t1": {
+      "name": "Karim El Fassi",
+      "company": "Atlas Marketing, Casablanca",
+      "text": "Avant Sayerli, je passais des heures sur Excel. Maintenant mes devis partent en 2 minutes et je suis payé plus vite. Franchement, c'est révolutionnaire pour les PME."
+    },
+    "t2": {
+      "name": "Nadia Bensouda",
+      "company": "Casablanca Studio Design",
+      "text": "Interface super simple, même mon assistante qui n'est pas technique l'utilise sans problème. Le suivi des impayés m'a sauvé plus d'une fois !"
+    },
+    "t3": {
+      "name": "Youssef Alaoui",
+      "company": "Rabat Consulting Group",
+      "text": "La meilleure décision pour mon cabinet. On a réduit notre temps de facturation de 80%. Le rapport qualité-prix en MAD est imbattable."
+    }
+  },
+  "cta": {
+    "title": "Commencez à organiser votre business dès aujourd'hui avec Sayerli",
+    "sub": "Rejoignez des centaines de PME marocaines qui font confiance à Sayerli.",
+    "btn": "Essai gratuit — Sans carte bancaire",
+    "btnSecondary": "Voir une démo"
+  },
+  "footer": {
+    "tagline": "La solution de gestion simple pour les PME marocaines.",
+    "product": "Produit",
+    "company": "Entreprise",
+    "legal": "Légal",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "changelog": "Mises à jour",
+    "about": "À propos",
+    "blog": "Blog",
+    "careers": "Carrières",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "copyright": "© 2024 Sayerli. Tous droits réservés.",
+    "madeIn": "Fait avec ❤️ au Maroc 🇲🇦"
+  },
+  "auth": {
+    "loginTitle": "Bon retour !",
+    "loginSub": "Connectez-vous à votre espace Sayerli",
+    "registerTitle": "Créez votre compte",
+    "registerSub": "Démarrez votre essai gratuit dès maintenant",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "companyName": "Nom de l'entreprise",
+    "yourName": "Votre nom",
+    "loginBtn": "Se connecter",
+    "registerBtn": "Créer mon compte",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "signUp": "S'inscrire",
+    "signIn": "Se connecter",
+    "forgotPassword": "Mot de passe oublié ?",
+    "loggingIn": "Connexion...",
+    "registering": "Création..."
+  },
+  "dashboard": {
+    "welcome": "Bonjour",
+    "overview": "Vue d'ensemble",
+    "totalRevenue": "Chiffre d'affaires",
+    "clients": "Clients",
+    "quotes": "Devis",
+    "invoices": "Factures",
+    "recentActivity": "Activité récente",
+    "quickActions": "Actions rapides",
+    "newQuote": "Nouveau devis",
+    "newInvoice": "Nouvelle facture",
+    "newClient": "Nouveau client",
+    "sidebar": {
+      "dashboard": "Tableau de bord",
+      "clients": "Clients",
+      "devis": "Devis",
+      "factures": "Factures",
+      "paiements": "Paiements",
+      "equipe": "Équipe",
+      "notifications": "Notifications",
+      "settings": "Paramètres",
+      "logout": "Déconnexion"
+    },
+    "payments": "Paiements",
+    "thisMonth": "ce mois",
+    "accepted": "Acceptés",
+    "overdue": "En retard",
+    "revenueChart": "Évolution du chiffre d'affaires",
+    "invoiceStatus": "Statut des factures",
+    "recentInvoices": "Dernières factures"
+  },
+  "dashboardShowcase": {
+    "badge": "Produit en action",
+    "title": "Voyez Sayerli travailler pour vous",
+    "sub": "Un tableau de bord pensé pour les entrepreneurs marocains. Simple, rapide, et toujours à portée de main.",
+    "tableHeaders": {
+      "name": "Nom",
+      "company": "Entreprise",
+      "amount": "Montant",
+      "status": "Statut"
+    },
+    "statuses": {
+      "actif": "Actif",
+      "enAttente": "En attente",
+      "accepte": "Accepté",
+      "envoye": "Envoyé",
+      "vu": "Vu",
+      "brouillon": "Brouillon",
+      "payee": "Payée",
+      "partielle": "Partielle",
+      "enRetard": "En retard",
+      "envoyee": "Envoyée"
+    },
+    "tabs": {
+      "clients": {
+        "label": "Gestion Clients",
+        "headline": "Tous vos clients, en un coup d'œil",
+        "desc": "Consultez l'historique complet de chaque client, ses devis, factures et paiements. Ajoutez des notes, filtrez par statut, et relancez en un clic.",
+        "point1": "Fiche client complète",
+        "point2": "Historique des transactions",
+        "point3": "Relance automatique"
+      },
+      "devis": {
+        "label": "Devis",
+        "headline": "Des devis professionnels en 2 minutes",
+        "desc": "Créez, envoyez et suivez vos devis avec un lien de partage unique. Le client accepte en ligne — vous recevez une notification instantanée.",
+        "point1": "Numérotation automatique",
+        "point2": "Lien public de signature",
+        "point3": "Conversion en facture"
+      },
+      "factures": {
+        "label": "Factures",
+        "headline": "Facturation rapide, paiements suivis",
+        "desc": "Générez des factures conformes en un clic depuis vos devis acceptés. Suivez les paiements, les retards et votre trésorerie en temps réel.",
+        "point1": "Conforme à la législation",
+        "point2": "Paiement partiel/total supporté",
+        "point3": "Alertes retards automatiques"
+      },
+      "analytics": {
+        "label": "Analytiques",
+        "headline": "Pilotez votre croissance avec les données",
+        "desc": "Tableau de bord financier en temps réel. Visualisez votre CA mensuel, vos clients actifs, vos devis acceptés et vos factures impayées.",
+        "point1": "CA mensuel et annuel",
+        "point2": "Taux de conversion devis",
+        "point3": "Clients les plus rentables"
+      }
+    }
+  },
+  "whyChoose": {
+    "badge": "Pourquoi Sayerli ?",
+    "title": "Pourquoi les entreprises choisissent Sayerli",
+    "sub": "Des avantages concrets pour votre quotidien. Pas des promesses — des résultats mesurables.",
+    "card1": {
+      "title": "Gagnez des heures chaque semaine",
+      "desc": "Automatisez la création de devis et factures. Ce qui prenait 2 heures sur Excel se fait maintenant en 5 minutes."
+    },
+    "card2": {
+      "title": "Dites adieu à Excel",
+      "desc": "Fini les fichiers perdus, les formules cassées, les erreurs de calcul. Sayerli fait tout ça pour vous, sans erreur."
+    },
+    "card3": {
+      "title": "Factures 100% professionnelles",
+      "desc": "Chaque facture générée est numérotée, datée, et conforme. Envoyez-les par email en un clic, vos clients seront impressionnés."
+    },
+    "card4": {
+      "title": "Encaissez plus vite",
+      "desc": "Suivez chaque paiement en temps réel. Les relances automatiques réduisent les délais de paiement de 40% en moyenne."
+    },
+    "card5": {
+      "title": "Meilleure relation client",
+      "desc": "Un historique complet par client. Retrouvez chaque échange, chaque devis, chaque paiement en quelques secondes."
+    },
+    "card6": {
+      "title": "Insights business en temps réel",
+      "desc": "Visualisez votre CA mensuel, vos meilleurs clients, et vos tendances. Prenez les bonnes décisions avec les bonnes données."
+    }
+  },
+  "workflow": {
+    "badge": "Workflow complet",
+    "title": "Du client au paiement, en un seul flux",
+    "sub": "Sayerli accompagne chaque étape de votre processus commercial, de la prospection à l'encaissement.",
+    "step1": {
+      "title": "Créer le client",
+      "desc": "Ajoutez les coordonnées du client en 30 secondes. Nom, email, téléphone, entreprise."
+    },
+    "step2": {
+      "title": "Créer le devis",
+      "desc": "Rédigez votre devis avec les lignes de services, les quantités et les prix. Aperçu en temps réel."
+    },
+    "step3": {
+      "title": "Client accepte",
+      "desc": "Envoyez un lien public. Le client visualise et accepte en ligne. Notification instantanée."
+    },
+    "step4": {
+      "title": "Générer la facture",
+      "desc": "Convertissez le devis accepté en facture en un clic. Numérotation et mise en page automatiques."
+    },
+    "step5": {
+      "title": "Recevoir le paiement",
+      "desc": "Enregistrez le paiement (cash, virement, carte). Facture marquée payée automatiquement."
+    },
+    "step6": {
+      "title": "Suivre les revenus",
+      "desc": "Visualisez votre chiffre d'affaires, vos tendances et vos meilleurs clients en temps réel."
+    }
+  },
+  "analytics": {
+    "badge": "Analytiques",
+    "title": "Pilotez votre business avec les données",
+    "sub": "Un tableau de bord financier complet. Comprenez vos revenus, vos clients et vos tendances en un coup d'œil.",
+    "kpi1": {
+      "label": "CA ce mois",
+      "change": "+18.4%",
+      "sub": "vs mois dernier"
+    },
+    "kpi2": {
+      "label": "Factures payées",
+      "change": "+3",
+      "sub": "vs mois dernier"
+    },
+    "kpi3": {
+      "label": "Clients actifs",
+      "change": "+5",
+      "sub": "nouveaux"
+    },
+    "kpi4": {
+      "label": "Paiements en attente",
+      "change": "-12%",
+      "sub": "vs mois dernier"
+    },
+    "chart": {
+      "title": "Chiffre d'affaires mensuel",
+      "sub": "En MAD — Année 2024",
+      "badge": "+34% vs 2023",
+      "tooltipMonth": "Décembre 2024",
+      "tooltipValue": "102,000 MAD"
+    },
+    "topClients": {
+      "title": "Meilleurs clients",
+      "sub": "Par CA généré (MAD)"
+    },
+    "months": [
+      "Jan",
+      "Fév",
+      "Mar",
+      "Avr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Aoû",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Déc"
+    ]
+  },
+  "comparison": {
+    "badge": "Comparaison",
+    "title": "Sayerli vs les alternatives",
+    "sub": "Pourquoi les PME marocaines migrent vers Sayerli et n'y reviennent jamais.",
+    "headers": {
+      "feature": "Fonctionnalité",
+      "excel": "Excel",
+      "generic": "Outils génériques",
+      "sayerli": "Sayerli"
+    },
+    "recommended": "Recommandé",
+    "features": [
+      "CRM & gestion clients",
+      "Devis professionnels",
+      "Factures conformes",
+      "Suivi des paiements",
+      "Analytiques & rapports",
+      "Automatisations",
+      "Multi-utilisateurs",
+      "Accès cloud / mobile",
+      "Lien de signature client",
+      "Notifications & rappels",
+      "Support en français",
+      "Adapté au marché marocain"
+    ],
+    "legend": {
+      "available": "Disponible",
+      "partial": "Partiel / Payant",
+      "unavailable": "Non disponible"
+    }
+  },
+  "automation": {
+    "badge": "Automatisation",
+    "title": "Sayerli travaille, même quand vous dormez",
+    "sub": "Des automatisations intelligentes qui éliminent les tâches répétitives et vous permettent de vous concentrer sur l'essentiel.",
+    "activeLabel": "Actif",
+    "item1": {
+      "title": "Rappels automatiques",
+      "desc": "Sayerli envoie des rappels aux clients dont les factures arrivent à échéance ou sont en retard. Vous ne perdez plus jamais d'argent par oubli.",
+      "tag": "Paiements",
+      "detail1": "Rappel à J-3, J-0 et J+7",
+      "detail2": "Message personnalisable",
+      "detail3": "Historique des relances"
+    },
+    "item2": {
+      "title": "Génération de factures",
+      "desc": "Dès qu'un devis est accepté, Sayerli peut créer automatiquement la facture correspondante. Numérotation, mise en page, totaux — tout est géré.",
+      "tag": "Facturation",
+      "detail1": "Conversion devis → facture",
+      "detail2": "Numérotation séquentielle",
+      "detail3": "PDF téléchargeable"
+    },
+    "item3": {
+      "title": "Suivi des paiements",
+      "desc": "Chaque paiement enregistré met à jour automatiquement le statut de la facture. Paiements partiels, acomptes, soldes — tout est tracé.",
+      "tag": "Comptabilité",
+      "detail1": "Cash, virement, carte",
+      "detail2": "Paiement partiel supporté",
+      "detail3": "Reçu automatique"
+    },
+    "item4": {
+      "title": "Suivi client proactif",
+      "desc": "Identifiez en un coup d'œil les clients inactifs, les devis expirés et les factures non réglées. Relancez au bon moment, avec le bon message.",
+      "tag": "CRM",
+      "detail1": "Vue 360° client",
+      "detail2": "Devis expirés signalés",
+      "detail3": "Historique complet"
+    },
+    "item5": {
+      "title": "Notifications en temps réel",
+      "desc": "Recevez une notification immédiate dès qu'un client consulte ou accepte un devis, ou dès qu'un paiement est enregistré. Restez informé sans effort.",
+      "tag": "Alertes",
+      "detail1": "Notification instantanée",
+      "detail2": "Historique des actions",
+      "detail3": "Centre de notifications"
+    }
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Questions fréquentes",
+    "sub": "Tout ce que vous avez besoin de savoir avant de commencer. Et si votre question n'est pas ici, notre équipe est disponible.",
+    "contact": "Vous avez d'autres questions ?",
+    "contactLink": "Contactez notre équipe",
+    "q1": "Sayerli est-il adapté aux petites entreprises ?",
+    "a1": "Absolument. Sayerli est conçu spécifiquement pour les PME marocaines — artisans, consultants, agences, commerçants, prestataires de services. L'interface est simple et ne nécessite aucune formation. Vous êtes opérationnel en moins de 5 minutes.",
+    "q2": "Puis-je inviter mon équipe ?",
+    "a2": "Oui. Avec les plans Pro et Business, vous pouvez inviter plusieurs collaborateurs avec des rôles précis : Admin, Manager, Commercial ou Comptable. Chaque rôle a ses propres permissions pour protéger vos données sensibles.",
+    "q3": "Puis-je créer des factures professionnelles conformes ?",
+    "a3": "Oui. Toutes les factures générées par Sayerli sont numérotées automatiquement, datées, et incluent toutes les informations obligatoires. Elles sont prêtes à être envoyées à vos clients et acceptées par votre comptable.",
+    "q4": "Comment fonctionne le suivi des paiements ?",
+    "a4": "Pour chaque facture, vous pouvez enregistrer des paiements (cash, virement, carte, chèque, mobile) en un clic. Sayerli calcule automatiquement le reste à payer, met à jour le statut de la facture, et vous alerte en cas de retard.",
+    "q5": "Y a-t-il un essai gratuit ?",
+    "a5": "Oui ! Le plan Starter est entièrement gratuit, sans limite de temps et sans carte bancaire. Il vous permet de gérer jusqu'à 5 clients, 10 devis et 10 factures par mois. Vous pouvez passer au plan Pro à tout moment quand vous avez besoin de plus.",
+    "q6": "Puis-je changer de plan plus tard ?",
+    "a6": "Oui, vous pouvez upgrader ou downgrader votre plan à tout moment depuis votre tableau de bord. Pas d'engagement, pas de pénalité. Votre data est toujours conservée quelle que soit votre formule.",
+    "q7": "Mes données sont-elles sécurisées ?",
+    "a7": "La sécurité est notre priorité. Toutes les données sont chiffrées, stockées sur des serveurs sécurisés, et sauvegardées quotidiennement. L'accès est protégé par authentification JWT avec des rôles et permissions granulaires.",
+    "q8": "Puis-je envoyer un devis directement à mon client ?",
+    "a8": "Oui. Sayerli génère un lien public unique pour chaque devis. Votre client peut consulter le devis en ligne, l'accepter ou le refuser — sans avoir besoin de créer un compte. Vous recevez une notification instantanée à chaque action."
+  },
+  "security": {
+    "badge": "Sécurité & Confiance",
+    "title": "Vos données sont entre de bonnes mains",
+    "sub": "La sécurité n'est pas une option. Chaque aspect de Sayerli est conçu pour protéger vos données et celles de vos clients.",
+    "item1": {
+      "title": "Authentification sécurisée",
+      "desc": "Connexion protégée par JWT avec expiration automatique. Chaque session est vérifiée côté serveur à chaque requête.",
+      "stat": "JWT",
+      "statLabel": "Token sécurisé"
+    },
+    "item2": {
+      "title": "Données chiffrées",
+      "desc": "Tous les mots de passe sont hachés avec bcrypt (facteur 12). Les communications sont chiffrées via HTTPS/TLS.",
+      "stat": "bcrypt",
+      "statLabel": "Hachage fort"
+    },
+    "item3": {
+      "title": "Sauvegardes quotidiennes",
+      "desc": "Vos données sont sauvegardées automatiquement chaque jour. Récupération possible à tout moment en cas d'incident.",
+      "stat": "24h",
+      "statLabel": "Cycle de backup"
+    },
+    "item4": {
+      "title": "Infrastructure cloud",
+      "desc": "Hébergement sur serveurs professionnels avec haute disponibilité. Vos données ne sont jamais sur votre ordinateur local.",
+      "stat": "99.9%",
+      "statLabel": "Disponibilité"
+    },
+    "item5": {
+      "title": "Permissions par rôle",
+      "desc": "Contrôle granulaire des accès. Admin, Manager, Commercial, Comptable — chaque rôle voit uniquement ce dont il a besoin.",
+      "stat": "RBAC",
+      "statLabel": "Contrôle d'accès"
+    },
+    "banner": {
+      "encrypted": "Données chiffrées",
+      "cloud": "Cloud sécurisé",
+      "auth": "Auth protégée",
+      "backup": "Backups quotidiens",
+      "multitenant": "Multi-tenant isolé"
+    }
+  },
+  "roadmap": {
+    "badge": "Roadmap",
+    "title": "La vision Sayerli pour demain",
+    "sub": "Sayerli grandit avec vous. Voici les fonctionnalités que nous construisons pour transformer encore plus votre façon de travailler.",
+    "comingSoon": "Bientôt",
+    "notifyText": "Recevez une notification dès qu'une nouvelle fonctionnalité est disponible.",
+    "emailPlaceholder": "votre@email.ma",
+    "notifyBtn": "Me notifier",
+    "item1": {
+      "title": "Gestion des stocks",
+      "desc": "Gérez votre inventaire, suivez vos produits et recevez des alertes de stock bas directement dans Sayerli.",
+      "quarter": "Q2 2025"
+    },
+    "item2": {
+      "title": "Assistant IA",
+      "desc": "Un assistant intelligent qui rédige vos devis, suggère des prix, et anticipe vos besoins à partir de vos données.",
+      "quarter": "Q3 2025"
+    },
+    "item3": {
+      "title": "Gestion de projets",
+      "desc": "Transformez vos devis acceptés en projets avec tâches, délais et équipes assignées. Tout en un seul endroit.",
+      "quarter": "Q3 2025"
+    },
+    "item4": {
+      "title": "Paiements en ligne",
+      "desc": "Intégration CMI, PayZone, et PayPal. Vos clients paient directement depuis leur devis ou facture en ligne.",
+      "quarter": "Q4 2025"
+    },
+    "item5": {
+      "title": "Analytiques avancées",
+      "desc": "Prévisions de revenus, analyses de tendances, rapports exportables en Excel et PDF pour votre comptable.",
+      "quarter": "Q4 2025"
+    },
+    "item6": {
+      "title": "Application mobile",
+      "desc": "Gérez votre business depuis votre téléphone. Créez des devis, encaissez des paiements, où que vous soyez.",
+      "quarter": "Q1 2026"
+    }
+  },
+  "finalMegaCta": {
+    "badge": "Rejoignez plus de 500 PME marocaines",
+    "title": "Arrêtez de gérer votre business avec des",
+    "strikethrough": "tableurs",
+    "sub": "Rejoignez Sayerli et gérez vos clients, factures, paiements et votre croissance en un seul endroit. Simple. Rapide. Fait pour le Maroc.",
+    "ctaPrimary": "Démarrer l'essai gratuit",
+    "ctaSecondary": "Réserver une démo",
+    "disclaimer": "Aucune carte bancaire requise · Annulation à tout moment · Support en français 🇲🇦",
+    "stat1": {
+      "value": "500+",
+      "label": "PME actives"
+    },
+    "stat2": {
+      "value": "12,000+",
+      "label": "Factures générées"
+    },
+    "stat3": {
+      "value": "8M+ MAD",
+      "label": "Encaissés"
+    },
+    "stat4": {
+      "value": "4.9/5",
+      "label": "Satisfaction client"
+    },
+    "floating1": {
+      "label": "Nouveau client",
+      "sub": "Rachidi Boutique"
+    },
+    "floating2": {
+      "label": "Devis accepté",
+      "sub": "DEV-2024-0052 · 24K MAD"
+    },
+    "floating3": {
+      "label": "Facture payée",
+      "sub": "FAC-2024-0031 · 8,400 MAD"
+    },
+    "floating4": {
+      "label": "CA mensuel",
+      "sub": "+18% vs mois dernier"
+    }
+  },
+  "statuses": {
+    "actif": "Actif",
+    "inactif": "Inactif",
+    "enAttente": "En attente",
+    "desactive": "Désactivé",
+    "brouillon": "Brouillon",
+    "envoye": "Envoyé",
+    "vu": "Vu",
+    "accepte": "Accepté",
+    "refuse": "Refusé",
+    "payee": "Payée",
+    "partielle": "Partielle",
+    "en_retard": "En retard",
+    "enRetard": "En retard",
+    "envoyee": "Envoyée"
+  },
+  "roles": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "commercial": "Commercial",
+    "comptable": "Comptable"
+  },
+  "methodes": {
+    "cash": "Espèces",
+    "virement": "Virement bancaire",
+    "carte": "Carte bancaire",
+    "cheque": "Chèque",
+    "mobile": "Mobile"
+  },
+  "common": {
+    "search": "Rechercher...",
+    "filter": "Filtrer",
+    "all": "Tous",
+    "close": "Fermer",
+    "view": "Voir",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "status": "Statut",
+    "viewAll": "Voir tout",
+    "noResults": "Aucun résultat",
+    "showingResults": "Affichage de {start} à {end} sur {total}"
+  },
+  "pages": {
+    "clients": {
+      "title": "Clients",
+      "sub": "Gérez votre base clients et suivez leurs activités.",
+      "addClient": "Nouveau client",
+      "searchPlaceholder": "Rechercher par nom, email, entreprise...",
+      "stats": {
+        "total": "Total clients",
+        "active": "Clients actifs",
+        "newThisMonth": "Nouveaux ce mois",
+        "totalRevenue": "CA généré"
+      },
+      "col": {
+        "name": "Nom",
+        "company": "Entreprise",
+        "contact": "Contact",
+        "revenue": "CA total",
+        "status": "Statut",
+        "created": "Créé le"
+      },
+      "empty": {
+        "title": "Aucun client pour le moment",
+        "desc": "Ajoutez votre premier client pour commencer à gérer vos relations commerciales."
+      },
+      "deleteTitle": "Supprimer le client",
+      "deleteMessage": "Êtes-vous sûr de vouloir supprimer {nom} ? Cette action est irréversible.",
+      "create": "Ajouter un client",
+      "edit": "Modifier le client",
+      "createSuccess": "Client créé avec succès.",
+      "editSuccess": "Client mis à jour.",
+      "deleteSuccess": "Client supprimé.",
+      "form": {
+        "nom": "Nom complet",
+        "email": "Adresse email",
+        "phone": "Téléphone",
+        "company": "Nom de l'entreprise",
+        "notes": "Notes",
+        "notesPlaceholder": "Informations utiles sur ce client...",
+        "nomRequired": "Le nom est requis.",
+        "emailInvalid": "Adresse email invalide."
+      }
+    },
+    "devis": {
+      "title": "Devis",
+      "sub": "Créez et suivez tous vos devis.",
+      "createDevis": "Nouveau devis",
+      "searchPlaceholder": "Rechercher par référence ou client...",
+      "col": {
+        "reference": "Référence",
+        "client": "Client",
+        "statut": "Statut",
+        "amount": "Montant",
+        "expiry": "Expiration",
+        "lines": "Lignes"
+      },
+      "actions": {
+        "send": "Envoyer",
+        "duplicate": "Dupliquer",
+        "convert": "Convertir en facture"
+      },
+      "empty": {
+        "title": "Aucun devis pour le moment",
+        "desc": "Créez votre premier devis pour commencer à développer votre activité."
+      },
+      "deleteTitle": "Supprimer le devis",
+      "deleteMessage": "Êtes-vous sûr de vouloir supprimer {ref} ?",
+      "create": "Créer un devis",
+      "edit": "Modifier le devis",
+      "createSuccess": "Devis créé avec succès.",
+      "editSuccess": "Devis mis à jour.",
+      "deleteSuccess": "Devis supprimé.",
+      "sendSuccess": "Devis marqué comme envoyé.",
+      "convertSuccess": "Facture créée depuis le devis.",
+      "linkCopied": "Lien copié dans le presse-papiers.",
+      "linkGenerated": "Lien public généré.",
+      "form": {
+        "client": "Client",
+        "clientPlaceholder": "Sélectionner un client",
+        "dateExpiration": "Date d'expiration",
+        "taxe": "TVA (%)",
+        "remise": "Remise (MAD)",
+        "notes": "Notes",
+        "notesPlaceholder": "Conditions, remarques...",
+        "addLine": "Ajouter une ligne",
+        "removeLine": "Supprimer",
+        "designation": "Désignation",
+        "description": "Description",
+        "quantite": "Qté",
+        "prixUnitaire": "Prix unitaire",
+        "total": "Total",
+        "sousTotal": "Sous-total",
+        "clientRequired": "Veuillez sélectionner un client.",
+        "lignesRequired": "Ajoutez au moins une ligne.",
+        "designationRequired": "La désignation est requise.",
+        "quantiteInvalid": "La quantité doit être > 0.",
+        "prixInvalid": "Le prix ne peut pas être négatif."
+      },
+      "publicPage": {
+        "viewedBy": "Consulté par le client",
+        "acceptBtn": "Accepter le devis",
+        "refuseBtn": "Refuser le devis",
+        "accepted": "Devis accepté",
+        "refused": "Devis refusé",
+        "expired": "Ce lien a expiré",
+        "confirmAccept": "Voulez-vous accepter ce devis ?",
+        "confirmRefuse": "Voulez-vous refuser ce devis ?",
+        "thankYou": "Merci pour votre réponse.",
+        "poweredBy": "Généré par Sayerli"
+      }
+    },
+    "factures": {
+      "title": "Factures",
+      "sub": "Suivez toutes vos factures et encaissements.",
+      "createFacture": "Nouvelle facture",
+      "searchPlaceholder": "Rechercher par numéro ou client...",
+      "create": "Créer une facture",
+      "edit": "Modifier la facture",
+      "createSuccess": "Facture créée avec succès.",
+      "editSuccess": "Facture mise à jour.",
+      "deleteSuccess": "Facture supprimée.",
+      "sendSuccess": "Facture marquée comme envoyée.",
+      "paymentSuccess": "Paiement enregistré avec succès.",
+      "stats": {
+        "paid": "Total encaissé",
+        "pending": "En attente",
+        "overdue": "En retard",
+        "total": "Total factures"
+      },
+      "col": {
+        "number": "Numéro",
+        "client": "Client",
+        "amount": "Montant",
+        "paid": "Payé",
+        "statut": "Statut",
+        "dueDate": "Échéance",
+        "lines": "Lignes",
+        "devis": "Devis lié"
+      },
+      "actions": {
+        "recordPayment": "Enregistrer un paiement",
+        "send": "Envoyer",
+        "download": "Télécharger PDF"
+      },
+      "empty": {
+        "title": "Aucune facture pour le moment",
+        "desc": "Créez votre première facture ou convertissez un devis accepté."
+      },
+      "deleteTitle": "Supprimer la facture",
+      "deleteMessage": "Êtes-vous sûr de vouloir supprimer {num} ?",
+      "form": {
+        "client": "Client",
+        "clientPlaceholder": "Sélectionner un client",
+        "dateEcheance": "Date d'échéance",
+        "taxe": "TVA (%)",
+        "notes": "Notes",
+        "notesPlaceholder": "Conditions, remarques...",
+        "addLine": "Ajouter une ligne",
+        "designation": "Désignation",
+        "quantite": "Qté",
+        "prixUnitaire": "Prix unitaire",
+        "total": "Total",
+        "sousTotal": "Sous-total",
+        "clientRequired": "Veuillez sélectionner un client.",
+        "lignesRequired": "Ajoutez au moins une ligne.",
+        "designationRequired": "La désignation est requise."
+      },
+      "payment": {
+        "title": "Enregistrer un paiement",
+        "montant": "Montant (MAD)",
+        "methode": "Méthode de paiement",
+        "reference": "Référence (optionnel)",
+        "referencePlaceholder": "VIR-2026-0001",
+        "date": "Date du paiement",
+        "notes": "Notes (optionnel)",
+        "restant": "Reste à payer",
+        "montantRequired": "Le montant est requis.",
+        "montantInvalid": "Le montant doit être supérieur à 0.",
+        "montantExceeds": "Le montant dépasse le reste à payer."
+      }
+    },
+    "paiements": {
+      "title": "Paiements",
+      "sub": "Suivez tous vos encaissements.",
+      "addPaiement": "Nouveau paiement",
+      "searchPlaceholder": "Rechercher par client, facture ou référence...",
+      "create": "Enregistrer un paiement",
+      "createSuccess": "Paiement enregistré avec succès.",
+      "editSuccess": "Paiement mis à jour.",
+      "deleteSuccess": "Paiement annulé avec succès.",
+      "deleteTitle": "Annuler le paiement",
+      "deleteMessage": "Êtes-vous sûr de vouloir annuler ce paiement de {montant} ? La facture sera recalculée automatiquement.",
+      "stats": {
+        "totalRecu": "Total encaissé",
+        "enAttente": "En attente",
+        "ceMois": "Ce mois"
+      },
+      "col": {
+        "client": "Client",
+        "facture": "Facture",
+        "methode": "Méthode",
+        "montant": "Montant",
+        "date": "Date",
+        "reference": "Référence"
+      },
+      "detail": {
+        "title": "Détail du paiement",
+        "facture": "Facture liée",
+        "reference": "Référence",
+        "client": "Client",
+        "notes": "Notes"
+      },
+      "timeline": {
+        "title": "Historique des paiements"
+      },
+      "empty": {
+        "title": "Aucun paiement pour le moment",
+        "desc": "Les paiements enregistrés apparaîtront ici."
+      },
+      "form": {
+        "facture": "Facture à régler",
+        "facturePlaceholder": "Sélectionner une facture",
+        "client": "Client",
+        "montant": "Montant (MAD)",
+        "methode": "Méthode de paiement",
+        "reference": "Référence (optionnel)",
+        "referencePlaceholder": "VIR-2026-0001",
+        "datePaiement": "Date du paiement",
+        "notes": "Notes (optionnel)",
+        "restant": "Reste à payer",
+        "factureRequired": "Veuillez sélectionner une facture.",
+        "montantRequired": "Le montant est requis.",
+        "montantInvalid": "Le montant doit être supérieur à 0.",
+        "montantExceeds": "Le montant dépasse le reste à payer.",
+        "noPayableInvoices": "Aucune facture en attente de paiement."
+      }
+    },
+    "equipe": {
+      "title": "Équipe",
+      "sub": "Gérez les membres et leurs rôles.",
+      "inviteMember": "Inviter un membre",
+      "stats": {
+        "total": "Membres",
+        "active": "Actifs",
+        "roles": "Rôles"
+      },
+      "col": {
+        "member": "Membre",
+        "role": "Rôle",
+        "email": "Email",
+        "joined": "Rejoint le",
+        "status": "Statut"
+      },
+      "inviteSuccess": "Invitation envoyée avec succès.",
+      "editSuccess": "Membre mis à jour.",
+      "deleteSuccess": "Membre retiré avec succès.",
+      "disableSuccess": "Compte désactivé.",
+      "enableSuccess": "Compte réactivé.",
+      "deleteTitle": "Retirer le membre",
+      "deleteMessage": "Voulez-vous retirer {nom} de l'équipe ? Cette action est irréversible.",
+      "disableTitle": "Désactiver le compte",
+      "disableMessage": "Voulez-vous désactiver le compte de {nom} ? Il ne pourra plus se connecter.",
+      "enableTitle": "Réactiver le compte",
+      "enableMessage": "Voulez-vous réactiver le compte de {nom} ?",
+      "searchPlaceholder": "Rechercher par nom ou email...",
+      "invite": {
+        "title": "Inviter un membre",
+        "prenom": "Prénom",
+        "nom": "Nom de famille",
+        "email": "Adresse email",
+        "phone": "Téléphone (optionnel)",
+        "role": "Rôle",
+        "sendInvite": "Envoyer l'invitation",
+        "sending": "Envoi...",
+        "prenomRequired": "Le prénom est requis.",
+        "nomRequired": "Le nom est requis.",
+        "emailRequired": "L'email est requis.",
+        "emailInvalid": "Adresse email invalide.",
+        "roleRequired": "Le rôle est requis.",
+        "emailHint": "Un lien d'invitation sera créé pour ce membre."
+      },
+      "edit": {
+        "title": "Modifier le membre"
+      },
+      "roles": {
+        "admin": {
+          "label": "Admin",
+          "desc": "Accès total"
+        },
+        "manager": {
+          "label": "Manager",
+          "desc": "Gestion complète"
+        },
+        "commercial": {
+          "label": "Commercial",
+          "desc": "Clients & devis"
+        },
+        "comptable": {
+          "label": "Comptable",
+          "desc": "Factures & paiements"
+        }
+      },
+      "empty": {
+        "title": "Votre équipe est vide",
+        "desc": "Invitez des collaborateurs pour travailler ensemble sur Sayerli."
+      }
+    },
+    "settings": {
+      "title": "Paramètres",
+      "sub": "Configurez votre espace Sayerli.",
+      "tabs": {
+        "profile": "Profil",
+        "company": "Entreprise",
+        "branding": "Identité",
+        "language": "Langue",
+        "theme": "Thème",
+        "notifications": "Notifications",
+        "security": "Sécurité",
+        "billing": "Facturation"
+      },
+      "profile": {
+        "title": "Informations personnelles",
+        "fullName": "Nom complet",
+        "email": "Email",
+        "phone": "Téléphone",
+        "role": "Rôle"
+      },
+      "company": {
+        "title": "Informations de l'entreprise",
+        "name": "Nom de l'entreprise",
+        "ice": "ICE",
+        "rc": "Registre de commerce",
+        "address": "Adresse",
+        "city": "Ville",
+        "country": "Pays",
+        "phone": "Téléphone",
+        "email": "Email professionnel",
+        "website": "Site web"
+      },
+      "branding": {
+        "title": "Identité visuelle",
+        "logo": "Logo",
+        "primaryColor": "Couleur principale",
+        "uploadLogo": "Télécharger un logo"
+      },
+      "language": {
+        "title": "Langue et région",
+        "lang": "Langue d'interface",
+        "currency": "Devise",
+        "dateFormat": "Format de date"
+      },
+      "theme": {
+        "title": "Apparence",
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "email": "Notifications email",
+        "devisAccepted": "Devis accepté",
+        "paymentReceived": "Paiement reçu",
+        "invoiceOverdue": "Facture en retard"
+      },
+      "security": {
+        "title": "Sécurité",
+        "changePassword": "Changer le mot de passe",
+        "currentPassword": "Mot de passe actuel",
+        "newPassword": "Nouveau mot de passe",
+        "confirmPassword": "Confirmer le mot de passe"
+      },
+      "billing": {
+        "title": "Abonnement",
+        "currentPlan": "Plan actuel",
+        "upgrade": "Passer au plan supérieur",
+        "cancelPlan": "Annuler l'abonnement"
+      },
+      "saveSuccess": "Paramètres enregistrés avec succès"
+    }
+  }
+}

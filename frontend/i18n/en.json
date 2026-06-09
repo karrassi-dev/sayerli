@@ -1,0 +1,1022 @@
+{
+  "nav": {
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "pricing": "Pricing",
+    "testimonials": "Testimonials",
+    "login": "Login",
+    "startFree": "Start Free"
+  },
+  "hero": {
+    "badge": "🇲🇦 Built for Moroccan SMEs",
+    "headline": "Nta khdem…",
+    "headlineSub": "Sayerli ysayyer lik lba9i.",
+    "subheadline": "Manage your clients, quotes, invoices, and payments in one place. Simple, fast, and built for the Moroccan market.",
+    "cta": "Start for Free",
+    "ctaSecondary": "Log In",
+    "stat1": "Moroccan SMEs",
+    "stat2": "Invoices Generated",
+    "stat3": "MAD Collected"
+  },
+  "features": {
+    "badge": "Features",
+    "title": "Everything you need",
+    "sub": "A complete solution to manage your business. Simple to use, powerful for your growth.",
+    "crm": {
+      "title": "Client CRM",
+      "desc": "Manage all your clients, their contact details, and history at a glance."
+    },
+    "devis": {
+      "title": "Professional Quotes",
+      "desc": "Create and send quotes in minutes. Track their status in real time."
+    },
+    "factures": {
+      "title": "Automatic Invoices",
+      "desc": "Convert accepted quotes into invoices instantly. Auto-numbered and compliant."
+    },
+    "paiements": {
+      "title": "Payment Tracking",
+      "desc": "Record each payment (cash, transfer, card) and track unpaid invoices."
+    },
+    "analytics": {
+      "title": "Dashboard",
+      "desc": "Visualize your revenue, active clients, and performance in MAD."
+    },
+    "team": {
+      "title": "Team Management",
+      "desc": "Invite your team with precise roles: admin, sales, accountant."
+    }
+  },
+  "howItWorks": {
+    "badge": "How It Works",
+    "title": "Up and running in 3 minutes",
+    "sub": "No training needed. Sayerli is designed for Moroccan entrepreneurs.",
+    "step1": {
+      "title": "Create Your Account",
+      "desc": "Register your company in a few clicks. No credit card required."
+    },
+    "step2": {
+      "title": "Add Your Clients",
+      "desc": "Import or create your client base. Add their details easily."
+    },
+    "step3": {
+      "title": "Generate & Collect",
+      "desc": "Send quotes, convert them to invoices, and collect your payments."
+    }
+  },
+  "pricing": {
+    "badge": "Pricing",
+    "title": "Simple, transparent pricing",
+    "sub": "Start free. Scale as you grow. Pay in MAD.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlyDiscount": "-20%",
+    "popular": "Most Popular",
+    "cta": "Get Started",
+    "ctaFree": "Start Free",
+    "starter": {
+      "name": "Starter",
+      "price": "0",
+      "desc": "Perfect to get started",
+      "features": [
+        "Up to 5 clients",
+        "10 quotes / month",
+        "10 invoices / month",
+        "1 user",
+        "Email support"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "299",
+      "desc": "For growing SMEs",
+      "features": [
+        "Unlimited clients",
+        "Unlimited quotes",
+        "Unlimited invoices",
+        "5 users",
+        "Public quote link",
+        "Priority support",
+        "PDF export"
+      ]
+    },
+    "business": {
+      "name": "Business",
+      "price": "599",
+      "desc": "For teams and agencies",
+      "features": [
+        "Everything in Pro",
+        "Unlimited users",
+        "Multi-company",
+        "API access",
+        "Dedicated account manager",
+        "SLA guarantee",
+        "Custom onboarding"
+      ]
+    }
+  },
+  "testimonials": {
+    "badge": "Testimonials",
+    "title": "Trusted by Moroccan businesses",
+    "sub": "Moroccan companies of all sizes use Sayerli every day.",
+    "t1": {
+      "name": "Karim El Fassi",
+      "company": "Atlas Marketing, Casablanca",
+      "text": "Before Sayerli, I spent hours on Excel. Now my quotes go out in 2 minutes and I get paid faster. It's truly revolutionary for SMEs."
+    },
+    "t2": {
+      "name": "Nadia Bensouda",
+      "company": "Casablanca Studio Design",
+      "text": "Super simple interface — even my non-technical assistant uses it effortlessly. The overdue tracking has saved me more than once!"
+    },
+    "t3": {
+      "name": "Youssef Alaoui",
+      "company": "Rabat Consulting Group",
+      "text": "Best decision for my firm. We reduced our invoicing time by 80%. The value for money in MAD is unbeatable."
+    }
+  },
+  "cta": {
+    "title": "Start organizing your business today with Sayerli",
+    "sub": "Join hundreds of Moroccan SMEs that trust Sayerli.",
+    "btn": "Start Free — No credit card",
+    "btnSecondary": "Watch Demo"
+  },
+  "footer": {
+    "tagline": "The simple management solution for Moroccan SMEs.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "features": "Features",
+    "pricing": "Pricing",
+    "changelog": "Changelog",
+    "about": "About",
+    "blog": "Blog",
+    "careers": "Careers",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "copyright": "© 2024 Sayerli. All rights reserved.",
+    "madeIn": "Made with ❤️ in Morocco 🇲🇦"
+  },
+  "auth": {
+    "loginTitle": "Welcome back!",
+    "loginSub": "Log in to your Sayerli workspace",
+    "registerTitle": "Create your account",
+    "registerSub": "Start your free trial right now",
+    "email": "Email address",
+    "password": "Password",
+    "companyName": "Company name",
+    "yourName": "Your name",
+    "loginBtn": "Log In",
+    "registerBtn": "Create My Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "forgotPassword": "Forgot password?",
+    "loggingIn": "Logging in...",
+    "registering": "Creating..."
+  },
+  "dashboard": {
+    "welcome": "Hello",
+    "overview": "Overview",
+    "totalRevenue": "Total Revenue",
+    "clients": "Clients",
+    "quotes": "Quotes",
+    "invoices": "Invoices",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "newQuote": "New Quote",
+    "newInvoice": "New Invoice",
+    "newClient": "New Client",
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "clients": "Clients",
+      "devis": "Quotes",
+      "factures": "Invoices",
+      "paiements": "Payments",
+      "equipe": "Team",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+    "payments": "Payments",
+    "thisMonth": "this month",
+    "accepted": "Accepted",
+    "overdue": "Overdue",
+    "revenueChart": "Revenue Overview",
+    "invoiceStatus": "Invoice Status",
+    "recentInvoices": "Recent Invoices"
+  },
+  "dashboardShowcase": {
+    "badge": "Product in Action",
+    "title": "See Sayerli Working for You",
+    "sub": "A dashboard built for Moroccan entrepreneurs. Simple, fast, and always at hand.",
+    "tableHeaders": {
+      "name": "Name",
+      "company": "Company",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "statuses": {
+      "actif": "Active",
+      "enAttente": "Pending",
+      "accepte": "Accepted",
+      "envoye": "Sent",
+      "vu": "Viewed",
+      "brouillon": "Draft",
+      "payee": "Paid",
+      "partielle": "Partial",
+      "enRetard": "Overdue",
+      "envoyee": "Sent"
+    },
+    "tabs": {
+      "clients": {
+        "label": "Client Management",
+        "headline": "All your clients, at a glance",
+        "desc": "View each client's full history — quotes, invoices, and payments. Add notes, filter by status, and follow up with one click.",
+        "point1": "Complete client profile",
+        "point2": "Full transaction history",
+        "point3": "Automatic follow-up"
+      },
+      "devis": {
+        "label": "Quotes",
+        "headline": "Professional quotes in 2 minutes",
+        "desc": "Create, send, and track your quotes with a unique sharing link. The client accepts online — you get an instant notification.",
+        "point1": "Auto-numbering",
+        "point2": "Public signing link",
+        "point3": "Convert to invoice"
+      },
+      "factures": {
+        "label": "Invoices",
+        "headline": "Fast invoicing, tracked payments",
+        "desc": "Generate compliant invoices in one click from your accepted quotes. Track payments, delays, and cash flow in real time.",
+        "point1": "Legally compliant",
+        "point2": "Partial/full payment support",
+        "point3": "Automatic overdue alerts"
+      },
+      "analytics": {
+        "label": "Analytics",
+        "headline": "Drive growth with data",
+        "desc": "Real-time financial dashboard. Visualize your monthly revenue, active clients, accepted quotes, and unpaid invoices.",
+        "point1": "Monthly and annual revenue",
+        "point2": "Quote conversion rate",
+        "point3": "Most profitable clients"
+      }
+    }
+  },
+  "whyChoose": {
+    "badge": "Why Sayerli?",
+    "title": "Why Businesses Choose Sayerli",
+    "sub": "Concrete benefits for your daily work. Not promises — measurable results.",
+    "card1": {
+      "title": "Save Hours Every Week",
+      "desc": "Automate quote and invoice creation. What took 2 hours in Excel now takes 5 minutes."
+    },
+    "card2": {
+      "title": "Stop Using Excel",
+      "desc": "No more lost files, broken formulas, or calculation errors. Sayerli handles it all, error-free."
+    },
+    "card3": {
+      "title": "Professional Invoices",
+      "desc": "Every invoice is numbered, dated, and compliant. Send by email in one click — clients will be impressed."
+    },
+    "card4": {
+      "title": "Faster Payments",
+      "desc": "Track every payment in real time. Automatic reminders reduce payment delays by 40% on average."
+    },
+    "card5": {
+      "title": "Better Client Management",
+      "desc": "A complete history per client. Find every exchange, quote, and payment in seconds."
+    },
+    "card6": {
+      "title": "Business Insights in Real Time",
+      "desc": "Visualize your monthly revenue, top clients, and trends. Make the right decisions with the right data."
+    }
+  },
+  "workflow": {
+    "badge": "Complete Workflow",
+    "title": "From client to payment, in one flow",
+    "sub": "Sayerli guides every step of your commercial process, from prospecting to collection.",
+    "step1": {
+      "title": "Create the Client",
+      "desc": "Add client details in 30 seconds. Name, email, phone, company."
+    },
+    "step2": {
+      "title": "Create the Quote",
+      "desc": "Write your quote with service lines, quantities, and prices. Real-time preview."
+    },
+    "step3": {
+      "title": "Client Accepts",
+      "desc": "Send a public link. The client views and accepts online. Instant notification."
+    },
+    "step4": {
+      "title": "Generate the Invoice",
+      "desc": "Convert the accepted quote to an invoice in one click. Auto-numbering and layout."
+    },
+    "step5": {
+      "title": "Receive Payment",
+      "desc": "Record the payment (cash, transfer, card). Invoice marked paid automatically."
+    },
+    "step6": {
+      "title": "Track Revenue",
+      "desc": "Visualize your revenue, trends, and top clients in real time."
+    }
+  },
+  "analytics": {
+    "badge": "Analytics",
+    "title": "Drive your business with data",
+    "sub": "A complete financial dashboard. Understand your revenue, clients, and trends at a glance.",
+    "kpi1": {
+      "label": "Revenue this month",
+      "change": "+18.4%",
+      "sub": "vs last month"
+    },
+    "kpi2": {
+      "label": "Invoices paid",
+      "change": "+3",
+      "sub": "vs last month"
+    },
+    "kpi3": {
+      "label": "Active clients",
+      "change": "+5",
+      "sub": "new"
+    },
+    "kpi4": {
+      "label": "Pending payments",
+      "change": "-12%",
+      "sub": "vs last month"
+    },
+    "chart": {
+      "title": "Monthly Revenue",
+      "sub": "In MAD — Year 2024",
+      "badge": "+34% vs 2023",
+      "tooltipMonth": "December 2024",
+      "tooltipValue": "102,000 MAD"
+    },
+    "topClients": {
+      "title": "Top Clients",
+      "sub": "By revenue generated (MAD)"
+    },
+    "months": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ]
+  },
+  "comparison": {
+    "badge": "Comparison",
+    "title": "Sayerli vs the Alternatives",
+    "sub": "Why Moroccan SMEs switch to Sayerli and never look back.",
+    "headers": {
+      "feature": "Feature",
+      "excel": "Excel",
+      "generic": "Generic Tools",
+      "sayerli": "Sayerli"
+    },
+    "recommended": "Recommended",
+    "features": [
+      "CRM & client management",
+      "Professional quotes",
+      "Compliant invoices",
+      "Payment tracking",
+      "Analytics & reports",
+      "Automations",
+      "Multi-user",
+      "Cloud / mobile access",
+      "Client signing link",
+      "Notifications & reminders",
+      "French language support",
+      "Built for Moroccan market"
+    ],
+    "legend": {
+      "available": "Available",
+      "partial": "Partial / Paid",
+      "unavailable": "Not available"
+    }
+  },
+  "automation": {
+    "badge": "Automation",
+    "title": "Sayerli works, even while you sleep",
+    "sub": "Smart automations that eliminate repetitive tasks and let you focus on what matters.",
+    "activeLabel": "Active",
+    "item1": {
+      "title": "Automatic Reminders",
+      "desc": "Sayerli sends reminders to clients whose invoices are due or overdue. You never lose money through forgetfulness again.",
+      "tag": "Payments",
+      "detail1": "Reminder at D-3, D-0 and D+7",
+      "detail2": "Customizable message",
+      "detail3": "Follow-up history"
+    },
+    "item2": {
+      "title": "Invoice Generation",
+      "desc": "When a quote is accepted, Sayerli can automatically create the corresponding invoice. Numbering, layout, totals — all handled.",
+      "tag": "Invoicing",
+      "detail1": "Quote → Invoice conversion",
+      "detail2": "Sequential numbering",
+      "detail3": "Downloadable PDF"
+    },
+    "item3": {
+      "title": "Payment Tracking",
+      "desc": "Every recorded payment automatically updates the invoice status. Partial payments, deposits, balances — all tracked.",
+      "tag": "Accounting",
+      "detail1": "Cash, transfer, card",
+      "detail2": "Partial payment supported",
+      "detail3": "Automatic receipt"
+    },
+    "item4": {
+      "title": "Proactive Client Follow-up",
+      "desc": "Identify inactive clients, expired quotes, and unpaid invoices at a glance. Follow up at the right moment, with the right message.",
+      "tag": "CRM",
+      "detail1": "360° client view",
+      "detail2": "Expired quotes flagged",
+      "detail3": "Full history"
+    },
+    "item5": {
+      "title": "Real-time Notifications",
+      "desc": "Get an instant notification when a client views or accepts a quote, or when a payment is recorded. Stay informed effortlessly.",
+      "tag": "Alerts",
+      "detail1": "Instant notification",
+      "detail2": "Action history",
+      "detail3": "Notification center"
+    }
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Frequently Asked Questions",
+    "sub": "Everything you need to know before getting started. And if your question isn't here, our team is available.",
+    "contact": "Have more questions?",
+    "contactLink": "Contact our team",
+    "q1": "Is Sayerli suitable for small businesses?",
+    "a1": "Absolutely. Sayerli is designed specifically for Moroccan SMEs — artisans, consultants, agencies, retailers, service providers. The interface is simple and requires no training. You're up and running in under 5 minutes.",
+    "q2": "Can I invite my team?",
+    "a2": "Yes. With Pro and Business plans, you can invite multiple collaborators with specific roles: Admin, Manager, Sales, or Accountant. Each role has its own permissions to protect your sensitive data.",
+    "q3": "Can I create professional compliant invoices?",
+    "a3": "Yes. All invoices generated by Sayerli are automatically numbered, dated, and include all required information. They're ready to send to your clients and accepted by your accountant.",
+    "q4": "How does payment tracking work?",
+    "a4": "For each invoice, you can record payments (cash, transfer, card, check, mobile) in one click. Sayerli automatically calculates the remaining amount, updates the invoice status, and alerts you when overdue.",
+    "q5": "Is there a free trial?",
+    "a5": "Yes! The Starter plan is completely free, with no time limit and no credit card. It allows you to manage up to 5 clients, 10 quotes, and 10 invoices per month. Upgrade to Pro anytime you need more.",
+    "q6": "Can I switch plans later?",
+    "a6": "Yes, you can upgrade or downgrade your plan at any time from your dashboard. No commitment, no penalty. Your data is always preserved regardless of your plan.",
+    "q7": "Is my data secure?",
+    "a7": "Security is our priority. All data is encrypted, stored on secure servers, and backed up daily. Access is protected by JWT authentication with granular roles and permissions.",
+    "q8": "Can I send a quote directly to my client?",
+    "a8": "Yes. Sayerli generates a unique public link for each quote. Your client can view the quote online, accept or decline it — without needing to create an account. You get an instant notification for every action."
+  },
+  "security": {
+    "badge": "Security & Trust",
+    "title": "Your data is in good hands",
+    "sub": "Security is not optional. Every aspect of Sayerli is designed to protect your data and your clients' data.",
+    "item1": {
+      "title": "Secure Authentication",
+      "desc": "JWT-protected login with automatic expiration. Each session is verified server-side on every request.",
+      "stat": "JWT",
+      "statLabel": "Secure Token"
+    },
+    "item2": {
+      "title": "Encrypted Data",
+      "desc": "All passwords are hashed with bcrypt (factor 12). Communications are encrypted via HTTPS/TLS.",
+      "stat": "bcrypt",
+      "statLabel": "Strong Hashing"
+    },
+    "item3": {
+      "title": "Daily Backups",
+      "desc": "Your data is automatically backed up every day. Recovery is possible at any time in case of an incident.",
+      "stat": "24h",
+      "statLabel": "Backup Cycle"
+    },
+    "item4": {
+      "title": "Cloud Infrastructure",
+      "desc": "Hosted on professional servers with high availability. Your data is never on your local computer.",
+      "stat": "99.9%",
+      "statLabel": "Uptime"
+    },
+    "item5": {
+      "title": "Role-based Permissions",
+      "desc": "Granular access control. Admin, Manager, Sales, Accountant — each role sees only what they need.",
+      "stat": "RBAC",
+      "statLabel": "Access Control"
+    },
+    "banner": {
+      "encrypted": "Encrypted data",
+      "cloud": "Secure cloud",
+      "auth": "Protected auth",
+      "backup": "Daily backups",
+      "multitenant": "Isolated multi-tenant"
+    }
+  },
+  "roadmap": {
+    "badge": "Roadmap",
+    "title": "Sayerli's Vision for Tomorrow",
+    "sub": "Sayerli grows with you. Here are the features we're building to transform how you work even more.",
+    "comingSoon": "Coming Soon",
+    "notifyText": "Get notified when a new feature becomes available.",
+    "emailPlaceholder": "your@email.ma",
+    "notifyBtn": "Notify Me",
+    "item1": {
+      "title": "Inventory Management",
+      "desc": "Manage your inventory, track your products, and receive low stock alerts directly in Sayerli.",
+      "quarter": "Q2 2025"
+    },
+    "item2": {
+      "title": "AI Assistant",
+      "desc": "An intelligent assistant that writes your quotes, suggests prices, and anticipates your needs from your data.",
+      "quarter": "Q3 2025"
+    },
+    "item3": {
+      "title": "Project Management",
+      "desc": "Turn your accepted quotes into projects with tasks, deadlines, and assigned teams. All in one place.",
+      "quarter": "Q3 2025"
+    },
+    "item4": {
+      "title": "Online Payments",
+      "desc": "CMI, PayZone, and PayPal integration. Your clients pay directly from their quote or invoice online.",
+      "quarter": "Q4 2025"
+    },
+    "item5": {
+      "title": "Advanced Analytics",
+      "desc": "Revenue forecasts, trend analysis, exportable reports in Excel and PDF for your accountant.",
+      "quarter": "Q4 2025"
+    },
+    "item6": {
+      "title": "Mobile Application",
+      "desc": "Manage your business from your phone. Create quotes, collect payments, wherever you are.",
+      "quarter": "Q1 2026"
+    }
+  },
+  "finalMegaCta": {
+    "badge": "Join 500+ Moroccan SMEs",
+    "title": "Stop managing your business with",
+    "strikethrough": "spreadsheets",
+    "sub": "Join Sayerli and manage clients, invoices, payments, and growth in one place. Simple. Fast. Made for Morocco.",
+    "ctaPrimary": "Start Free Trial",
+    "ctaSecondary": "Book a Demo",
+    "disclaimer": "No credit card required · Cancel anytime · French support 🇲🇦",
+    "stat1": {
+      "value": "500+",
+      "label": "Active SMEs"
+    },
+    "stat2": {
+      "value": "12,000+",
+      "label": "Invoices generated"
+    },
+    "stat3": {
+      "value": "8M+ MAD",
+      "label": "Collected"
+    },
+    "stat4": {
+      "value": "4.9/5",
+      "label": "Client satisfaction"
+    },
+    "floating1": {
+      "label": "New client",
+      "sub": "Rachidi Boutique"
+    },
+    "floating2": {
+      "label": "Quote accepted",
+      "sub": "DEV-2024-0052 · 24K MAD"
+    },
+    "floating3": {
+      "label": "Invoice paid",
+      "sub": "FAC-2024-0031 · 8,400 MAD"
+    },
+    "floating4": {
+      "label": "Monthly revenue",
+      "sub": "+18% vs last month"
+    }
+  },
+  "statuses": {
+    "actif": "Active",
+    "inactif": "Inactive",
+    "enAttente": "Pending",
+    "desactive": "Disabled",
+    "brouillon": "Draft",
+    "envoye": "Sent",
+    "vu": "Viewed",
+    "accepte": "Accepted",
+    "refuse": "Declined",
+    "payee": "Paid",
+    "partielle": "Partial",
+    "en_retard": "Overdue",
+    "enRetard": "Overdue",
+    "envoyee": "Sent"
+  },
+  "roles": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "commercial": "Sales",
+    "comptable": "Accountant"
+  },
+  "methodes": {
+    "cash": "Cash",
+    "virement": "Bank Transfer",
+    "carte": "Bank Card",
+    "cheque": "Cheque",
+    "mobile": "Mobile"
+  },
+  "common": {
+    "search": "Search...",
+    "filter": "Filter",
+    "all": "All",
+    "close": "Close",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "saving": "Saving...",
+    "status": "Status",
+    "viewAll": "View all",
+    "noResults": "No results found",
+    "showingResults": "Showing {start} to {end} of {total}"
+  },
+  "pages": {
+    "clients": {
+      "title": "Clients",
+      "sub": "Manage your client base and track their activities.",
+      "addClient": "New Client",
+      "searchPlaceholder": "Search by name, email, company...",
+      "stats": {
+        "total": "Total Clients",
+        "active": "Active Clients",
+        "newThisMonth": "New This Month",
+        "totalRevenue": "Revenue Generated"
+      },
+      "col": {
+        "name": "Name",
+        "company": "Company",
+        "contact": "Contact",
+        "revenue": "Total Revenue",
+        "status": "Status",
+        "created": "Created"
+      },
+      "empty": {
+        "title": "No clients yet",
+        "desc": "Add your first client to start managing your business relationships."
+      },
+      "deleteTitle": "Delete Client",
+      "deleteMessage": "Are you sure you want to delete {nom}? This action cannot be undone.",
+      "create": "Add Client",
+      "edit": "Edit Client",
+      "createSuccess": "Client created successfully.",
+      "editSuccess": "Client updated.",
+      "deleteSuccess": "Client deleted.",
+      "form": {
+        "nom": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone",
+        "company": "Company Name",
+        "notes": "Notes",
+        "notesPlaceholder": "Useful information about this client...",
+        "nomRequired": "Name is required.",
+        "emailInvalid": "Invalid email address."
+      }
+    },
+    "devis": {
+      "title": "Quotes",
+      "sub": "Create and track all your quotes.",
+      "createDevis": "New Quote",
+      "searchPlaceholder": "Search by reference or client...",
+      "col": {
+        "reference": "Reference",
+        "client": "Client",
+        "statut": "Status",
+        "amount": "Amount",
+        "expiry": "Expiry",
+        "lines": "Lines"
+      },
+      "actions": {
+        "send": "Send",
+        "duplicate": "Duplicate",
+        "convert": "Convert to Invoice"
+      },
+      "empty": {
+        "title": "No quotes yet",
+        "desc": "Create your first quote to start growing your business."
+      },
+      "deleteTitle": "Delete Quote",
+      "deleteMessage": "Are you sure you want to delete {ref}?",
+      "create": "Create Quote",
+      "edit": "Edit Quote",
+      "createSuccess": "Quote created successfully.",
+      "editSuccess": "Quote updated.",
+      "deleteSuccess": "Quote deleted.",
+      "sendSuccess": "Quote marked as sent.",
+      "convertSuccess": "Invoice created from quote.",
+      "linkCopied": "Link copied to clipboard.",
+      "linkGenerated": "Public link generated.",
+      "form": {
+        "client": "Client",
+        "clientPlaceholder": "Select a client",
+        "dateExpiration": "Expiration Date",
+        "taxe": "VAT (%)",
+        "remise": "Discount (MAD)",
+        "notes": "Notes",
+        "notesPlaceholder": "Terms, remarks...",
+        "addLine": "Add Line",
+        "removeLine": "Remove",
+        "designation": "Designation",
+        "description": "Description",
+        "quantite": "Qty",
+        "prixUnitaire": "Unit Price",
+        "total": "Total",
+        "sousTotal": "Subtotal",
+        "clientRequired": "Please select a client.",
+        "lignesRequired": "Add at least one line.",
+        "designationRequired": "Designation is required.",
+        "quantiteInvalid": "Quantity must be > 0.",
+        "prixInvalid": "Price cannot be negative."
+      },
+      "publicPage": {
+        "viewedBy": "Viewed by client",
+        "acceptBtn": "Accept Quote",
+        "refuseBtn": "Refuse Quote",
+        "accepted": "Quote accepted",
+        "refused": "Quote refused",
+        "expired": "This link has expired",
+        "confirmAccept": "Do you want to accept this quote?",
+        "confirmRefuse": "Do you want to refuse this quote?",
+        "thankYou": "Thank you for your response.",
+        "poweredBy": "Generated by Sayerli"
+      }
+    },
+    "factures": {
+      "title": "Invoices",
+      "sub": "Track all your invoices and collections.",
+      "createFacture": "New Invoice",
+      "searchPlaceholder": "Search by number or client...",
+      "create": "Create Invoice",
+      "edit": "Edit Invoice",
+      "createSuccess": "Invoice created successfully.",
+      "editSuccess": "Invoice updated.",
+      "deleteSuccess": "Invoice deleted.",
+      "sendSuccess": "Invoice marked as sent.",
+      "paymentSuccess": "Payment recorded successfully.",
+      "stats": {
+        "paid": "Total Collected",
+        "pending": "Pending",
+        "overdue": "Overdue",
+        "total": "Total Invoices"
+      },
+      "col": {
+        "number": "Number",
+        "client": "Client",
+        "amount": "Amount",
+        "paid": "Paid",
+        "statut": "Status",
+        "dueDate": "Due Date",
+        "lines": "Lines",
+        "devis": "Linked Quote"
+      },
+      "actions": {
+        "recordPayment": "Record Payment",
+        "send": "Send",
+        "download": "Download PDF"
+      },
+      "empty": {
+        "title": "No invoices yet",
+        "desc": "Create your first invoice or convert an accepted quote."
+      },
+      "deleteTitle": "Delete Invoice",
+      "deleteMessage": "Are you sure you want to delete {num}?",
+      "form": {
+        "client": "Client",
+        "clientPlaceholder": "Select a client",
+        "dateEcheance": "Due Date",
+        "taxe": "VAT (%)",
+        "notes": "Notes",
+        "notesPlaceholder": "Terms, remarks...",
+        "addLine": "Add Line",
+        "designation": "Designation",
+        "quantite": "Qty",
+        "prixUnitaire": "Unit Price",
+        "total": "Total",
+        "sousTotal": "Subtotal",
+        "clientRequired": "Please select a client.",
+        "lignesRequired": "Add at least one line.",
+        "designationRequired": "Designation is required."
+      },
+      "payment": {
+        "title": "Record Payment",
+        "montant": "Amount (MAD)",
+        "methode": "Payment Method",
+        "reference": "Reference (optional)",
+        "referencePlaceholder": "VIR-2026-0001",
+        "date": "Payment Date",
+        "notes": "Notes (optional)",
+        "restant": "Remaining",
+        "montantRequired": "Amount is required.",
+        "montantInvalid": "Amount must be greater than 0.",
+        "montantExceeds": "Amount exceeds the remaining balance."
+      }
+    },
+    "paiements": {
+      "title": "Payments",
+      "sub": "Track all your collections.",
+      "addPaiement": "New Payment",
+      "searchPlaceholder": "Search by client, invoice or reference...",
+      "create": "Record Payment",
+      "createSuccess": "Payment recorded successfully.",
+      "editSuccess": "Payment updated.",
+      "deleteSuccess": "Payment cancelled successfully.",
+      "deleteTitle": "Cancel Payment",
+      "deleteMessage": "Are you sure you want to cancel this payment of {montant}? The invoice will be recalculated automatically.",
+      "stats": {
+        "totalRecu": "Total Received",
+        "enAttente": "Pending",
+        "ceMois": "This Month"
+      },
+      "col": {
+        "client": "Client",
+        "facture": "Invoice",
+        "methode": "Method",
+        "montant": "Amount",
+        "date": "Date",
+        "reference": "Reference"
+      },
+      "detail": {
+        "title": "Payment Details",
+        "facture": "Linked Invoice",
+        "reference": "Reference",
+        "client": "Client",
+        "notes": "Notes"
+      },
+      "timeline": {
+        "title": "Payment History"
+      },
+      "empty": {
+        "title": "No payments yet",
+        "desc": "Recorded payments will appear here."
+      },
+      "form": {
+        "facture": "Invoice to settle",
+        "facturePlaceholder": "Select an invoice",
+        "client": "Client",
+        "montant": "Amount (MAD)",
+        "methode": "Payment Method",
+        "reference": "Reference (optional)",
+        "referencePlaceholder": "VIR-2026-0001",
+        "datePaiement": "Payment Date",
+        "notes": "Notes (optional)",
+        "restant": "Remaining",
+        "factureRequired": "Please select an invoice.",
+        "montantRequired": "Amount is required.",
+        "montantInvalid": "Amount must be greater than 0.",
+        "montantExceeds": "Amount exceeds the remaining balance.",
+        "noPayableInvoices": "No invoices pending payment."
+      }
+    },
+    "equipe": {
+      "title": "Team",
+      "sub": "Manage team members and their roles.",
+      "inviteMember": "Invite Member",
+      "stats": {
+        "total": "Members",
+        "active": "Active",
+        "roles": "Roles"
+      },
+      "col": {
+        "member": "Member",
+        "role": "Role",
+        "email": "Email",
+        "joined": "Joined",
+        "status": "Status"
+      },
+      "inviteSuccess": "Invitation sent successfully.",
+      "editSuccess": "Member updated.",
+      "deleteSuccess": "Member removed successfully.",
+      "disableSuccess": "Account disabled.",
+      "enableSuccess": "Account reactivated.",
+      "deleteTitle": "Remove Member",
+      "deleteMessage": "Remove {nom} from the team? This cannot be undone.",
+      "disableTitle": "Disable Account",
+      "disableMessage": "Disable {nom}'s account? They will no longer be able to log in.",
+      "enableTitle": "Reactivate Account",
+      "enableMessage": "Reactivate {nom}'s account?",
+      "searchPlaceholder": "Search by name or email...",
+      "invite": {
+        "title": "Invite a Member",
+        "prenom": "First name",
+        "nom": "Last name",
+        "email": "Email address",
+        "phone": "Phone (optional)",
+        "role": "Role",
+        "sendInvite": "Send Invitation",
+        "sending": "Sending...",
+        "prenomRequired": "First name is required.",
+        "nomRequired": "Last name is required.",
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Invalid email address.",
+        "roleRequired": "Role is required.",
+        "emailHint": "An invitation link will be generated for this member."
+      },
+      "edit": {
+        "title": "Edit Member"
+      },
+      "roles": {
+        "admin": {
+          "label": "Admin",
+          "desc": "Full access"
+        },
+        "manager": {
+          "label": "Manager",
+          "desc": "Full management"
+        },
+        "commercial": {
+          "label": "Sales",
+          "desc": "Clients & quotes"
+        },
+        "comptable": {
+          "label": "Accountant",
+          "desc": "Invoices & payments"
+        }
+      },
+      "empty": {
+        "title": "Your team is empty",
+        "desc": "Invite collaborators to work together on Sayerli."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "sub": "Configure your Sayerli workspace.",
+      "tabs": {
+        "profile": "Profile",
+        "company": "Company",
+        "branding": "Branding",
+        "language": "Language",
+        "theme": "Theme",
+        "notifications": "Notifications",
+        "security": "Security",
+        "billing": "Billing"
+      },
+      "profile": {
+        "title": "Personal Information",
+        "fullName": "Full Name",
+        "email": "Email",
+        "phone": "Phone",
+        "role": "Role"
+      },
+      "company": {
+        "title": "Company Information",
+        "name": "Company Name",
+        "ice": "ICE",
+        "rc": "Trade Register",
+        "address": "Address",
+        "city": "City",
+        "country": "Country",
+        "phone": "Phone",
+        "email": "Business Email",
+        "website": "Website"
+      },
+      "branding": {
+        "title": "Visual Identity",
+        "logo": "Logo",
+        "primaryColor": "Primary Color",
+        "uploadLogo": "Upload Logo"
+      },
+      "language": {
+        "title": "Language & Region",
+        "lang": "Interface Language",
+        "currency": "Currency",
+        "dateFormat": "Date Format"
+      },
+      "theme": {
+        "title": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "email": "Email Notifications",
+        "devisAccepted": "Quote Accepted",
+        "paymentReceived": "Payment Received",
+        "invoiceOverdue": "Invoice Overdue"
+      },
+      "security": {
+        "title": "Security",
+        "changePassword": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "billing": {
+        "title": "Subscription",
+        "currentPlan": "Current Plan",
+        "upgrade": "Upgrade Plan",
+        "cancelPlan": "Cancel Subscription"
+      },
+      "saveSuccess": "Settings saved successfully"
+    }
+  }
+}

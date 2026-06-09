@@ -1,0 +1,10 @@
+import { Module } from '@nestjs/common';
+import { DevisService } from './devis.service';
+import { DevisController, DevisPublicController } from './devis.controller';
+
+@Module({
+  controllers: [DevisController, DevisPublicController],
+  providers: [DevisService],
+  exports: [DevisService],
+})
+export class DevisModule {}
