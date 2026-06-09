@@ -12,6 +12,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotificationContext } from '@/components/providers/NotificationProvider'
 import { cn } from '@/lib/utils'
+import { NAV_ALLOWED_ROLES } from '@/lib/permissions'
 
 const NAV_ITEMS = [
   { href: '/dashboard',              iconC: LayoutDashboard, key: 'dashboard' },
@@ -55,6 +56,12 @@ export function Sidebar() {
     ? user.nom.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
     : 'U'
 
+  const userRole = user?.role?.toLowerCase() || ''
+  const visibleNavItems = NAV_ITEMS.filter(({ key }) => {
+    const allowed = NAV_ALLOWED_ROLES[key]
+    return !allowed || allowed.includes(userRole)
+  })
+
   const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (
     <div className="flex flex-col h-full">
       {/* Logo + toggle */}
@@ -85,7 +92,7 @@ export function Sidebar() {
       {/* Nav */}
       <nav className={cn('flex-1 py-3 overflow-y-auto overflow-x-hidden', collapsed && !isMobile ? 'px-2' : 'px-3')}>
         <div className="space-y-0.5">
-          {NAV_ITEMS.map(({ href, iconC: Icon, key }) => {
+          {visibleNavItems.map(({ href, iconC: Icon, key }) => {
             const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
             const badge = key === 'notifications' ? unreadCount : 0
             return (
