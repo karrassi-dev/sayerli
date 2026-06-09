@@ -61,6 +61,15 @@ export class UsersController {
     return this.usersService.modifierUtilisateur(id, dto, entrepriseId);
   }
 
+  @Post(':id/reinviter')
+  @Roles(RoleType.ADMIN)
+  async reinviter(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.usersService.renvoyerInvitation(id, entrepriseId);
+  }
+
   @Patch(':id/desactiver')
   @Roles(RoleType.ADMIN)
   async desactiver(

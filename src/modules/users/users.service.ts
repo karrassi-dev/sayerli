@@ -12,6 +12,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreerUtilisateurDto } from './dto/creer-utilisateur.dto';
 import { ModifierUtilisateurDto } from './dto/modifier-utilisateur.dto';
 import { AccepterInvitationDto } from './dto/accepter-invitation.dto';
+import { EmailService } from '../email/email.service';
 
 function computeStatut(actif: boolean, invitationToken: string | null): string {
   if (actif) return 'ACTIF';
@@ -21,7 +22,10 @@ function computeStatut(actif: boolean, invitationToken: string | null): string {
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private email: EmailService,
+  ) {}
 
   async listerUtilisateurs(entrepriseId: string, recherche?: string) {
     const utilisateurs = await this.prisma.utilisateur.findMany({
@@ -135,12 +139,66 @@ export class UsersService {
       },
     });
 
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { nom: true },
+    });
+
+    const nomComplet = utilisateur.prenom
+      ? `${utilisateur.prenom} ${utilisateur.nom}`
+      : utilisateur.nom;
+
+    // Send invitation email (non-blocking — errors are logged, not thrown)
+    this.email.sendInvitation({
+      toEmail: utilisateur.email,
+      toName: nomComplet,
+      entrepriseName: entreprise?.nom ?? 'Sayerli',
+      role: utilisateur.role,
+      token,
+    });
+
     return {
       ...utilisateur,
-      nomComplet: utilisateur.prenom ? `${utilisateur.prenom} ${utilisateur.nom}` : utilisateur.nom,
+      nomComplet,
       statut: 'EN_ATTENTE',
       invitationLink: `/invitation/${token}`,
     };
+  }
+
+  async renvoyerInvitation(id: string, entrepriseId: string) {
+    const utilisateur = await this.prisma.utilisateur.findFirst({
+      where: { id, entrepriseId },
+      select: { id: true, prenom: true, nom: true, email: true, role: true, actif: true, invitationToken: true },
+    });
+    if (!utilisateur) throw new NotFoundException('Utilisateur introuvable.');
+    if (utilisateur.actif) throw new BadRequestException('Cet utilisateur a déjà accepté son invitation.');
+
+    const token = randomUUID();
+    const expiration = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await this.prisma.utilisateur.update({
+      where: { id },
+      data: { invitationToken: token, invitationTokenExpiration: expiration },
+    });
+
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { nom: true },
+    });
+
+    const nomComplet = utilisateur.prenom
+      ? `${utilisateur.prenom} ${utilisateur.nom}`
+      : utilisateur.nom;
+
+    this.email.sendInvitation({
+      toEmail: utilisateur.email,
+      toName: nomComplet,
+      entrepriseName: entreprise?.nom ?? 'Sayerli',
+      role: utilisateur.role,
+      token,
+    });
+
+    return { message: 'Invitation renvoyée avec succès.' };
   }
 
   async modifierUtilisateur(id: string, dto: ModifierUtilisateurDto, entrepriseId: string) {

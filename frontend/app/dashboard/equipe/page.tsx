@@ -283,6 +283,15 @@ export default function EquipePage() {
     }
   }
 
+  async function handleResendInvite(membre: ApiMembre) {
+    try {
+      await equipeApi.resendInvite(membre.id)
+      success('Invitation renvoyée', `Un email a été envoyé à ${membre.email}`)
+    } catch {
+      toastError('Erreur', 'Impossible de renvoyer l\'invitation.')
+    }
+  }
+
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
@@ -534,6 +543,14 @@ export default function EquipePage() {
                     >
                       <UserX className="w-4 h-4" />
                       Désactiver
+                    </button>
+                  ) : selectedMember.statut === 'EN_ATTENTE' ? (
+                    <button
+                      onClick={() => { handleResendInvite(selectedMember); setSelectedMember(null) }}
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all"
+                    >
+                      <Mail className="w-4 h-4" />
+                      Renvoyer l'invitation
                     </button>
                   ) : selectedMember.statut === 'DESACTIVE' ? (
                     <button

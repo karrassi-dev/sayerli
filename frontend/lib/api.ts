@@ -127,6 +127,7 @@ export const equipeApi = {
   disable: (id: string) => api.patch(`/equipe/${id}/desactiver`),
   enable: (id: string) => api.patch(`/equipe/${id}/activer`),
   delete: (id: string) => api.delete(`/equipe/${id}`),
+  resendInvite: (id: string) => api.post(`/equipe/${id}/reinviter`),
 }
 
 // Invitation (public — no auth)
