@@ -10,6 +10,7 @@ import {
 import { useState, useEffect } from 'react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
+import { useNotificationContext } from '@/components/providers/NotificationProvider'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -20,7 +21,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/declarations', iconC: ClipboardCheck,  key: 'declarations' },
   { href: '/dashboard/paiements',    iconC: CreditCard,      key: 'paiements' },
   { href: '/dashboard/equipe',       iconC: UserCog,         key: 'equipe' },
-  { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications', badge: 2 },
+  { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications' },
   { href: '/dashboard/settings',     iconC: Settings,        key: 'settings' },
 ]
 
@@ -34,6 +35,7 @@ const ROLE_COLORS: Record<string, string> = {
 export function Sidebar() {
   const { t } = useTranslation()
   const { user, entreprise, logout } = useAuth()
+  const { unreadCount } = useNotificationContext()
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -83,8 +85,9 @@ export function Sidebar() {
       {/* Nav */}
       <nav className={cn('flex-1 py-3 overflow-y-auto overflow-x-hidden', collapsed && !isMobile ? 'px-2' : 'px-3')}>
         <div className="space-y-0.5">
-          {NAV_ITEMS.map(({ href, iconC: Icon, key, badge }) => {
+          {NAV_ITEMS.map(({ href, iconC: Icon, key }) => {
             const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
+            const badge = key === 'notifications' ? unreadCount : 0
             return (
               <Link
                 key={href}
@@ -103,8 +106,8 @@ export function Sidebar() {
                 {(!collapsed || isMobile) && (
                   <>
                     <span className="text-sm font-medium flex-1">{t(`dashboard.sidebar.${key}`)}</span>
-                    {badge && badge > 0 && (
-                      <span className="w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-bold flex-shrink-0">{badge}</span>
+                    {badge > 0 && (
+                      <span className="min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-bold flex-shrink-0">{badge}</span>
                     )}
                   </>
                 )}
@@ -112,7 +115,7 @@ export function Sidebar() {
                 {collapsed && !isMobile && (
                   <div className="absolute left-full ml-2 px-2.5 py-1.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-lg">
                     {t(`dashboard.sidebar.${key}`)}
-                    {badge && badge > 0 && <span className="ml-1.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] inline-flex items-center justify-center font-bold">{badge}</span>}
+                    {badge > 0 && <span className="ml-1.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] inline-flex items-center justify-center font-bold">{badge}</span>}
                   </div>
                 )}
               </Link>
