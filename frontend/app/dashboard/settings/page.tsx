@@ -224,7 +224,20 @@ export default function SettingsPage() {
     }).catch(() => {}).finally(() => setNotifsLoading(false))
 
     settingsApi.getBilling().then(r => {
-      setBilling(r.data?.data ?? r.data)
+      const d = r.data?.data ?? r.data
+      // Normalise usage — backend may return flat numbers (old format) or { actuel, limite } objects
+      const normalise = (field: unknown, fallbackLimite: number) => {
+        if (field && typeof field === 'object' && 'limite' in (field as object)) return field as { actuel: number; limite: number }
+        return { actuel: typeof field === 'number' ? field : 0, limite: fallbackLimite }
+      }
+      setBilling({
+        ...d,
+        usage: {
+          clients:      normalise(d.usage?.clients,      5),
+          utilisateurs: normalise(d.usage?.utilisateurs, 1),
+          devisCeMois:  normalise(d.usage?.devisCeMois,  10),
+        },
+      })
     }).catch(() => {}).finally(() => setBillingLoading(false))
   }, [])
 
