@@ -9,13 +9,14 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { StatutFacture, StatutDeclaration } from '@prisma/client';
+import { RoleType, StatutFacture, StatutDeclaration } from '@prisma/client';
 import { FacturesService } from './factures.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
 import { DeclarerPaiementDto } from './dto/declarer-paiement.dto';
 import { RejeterDeclarationDto } from './dto/rejeter-declaration.dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
 
 @Controller('factures')
@@ -23,11 +24,13 @@ export class FacturesController {
   constructor(private facturesService: FacturesService) {}
 
   @Get('tableau-de-bord')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE)
   async tableauDeBord(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.facturesService.tableauDeBord(entrepriseId);
   }
 
   @Get('declarations')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async listerDeclarations(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('statut') statut?: StatutDeclaration,
@@ -36,6 +39,7 @@ export class FacturesController {
   }
 
   @Get()
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('statut') statut?: StatutFacture,
@@ -46,6 +50,7 @@ export class FacturesController {
   }
 
   @Get(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -54,6 +59,7 @@ export class FacturesController {
   }
 
   @Post()
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
   async creer(
     @Body() dto: CreerFactureDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -62,6 +68,7 @@ export class FacturesController {
   }
 
   @Put(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
   async modifier(
     @Param('id') id: string,
     @Body() dto: CreerFactureDto,
@@ -71,6 +78,7 @@ export class FacturesController {
   }
 
   @Patch(':id/statut')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
   async modifierStatut(
     @Param('id') id: string,
     @Body() dto: ModifierStatutFactureDto,
@@ -80,6 +88,7 @@ export class FacturesController {
   }
 
   @Post(':id/envoyer')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
   async envoyer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -88,6 +97,7 @@ export class FacturesController {
   }
 
   @Patch('declarations/:id/approuver')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async approuverDeclaration(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -96,6 +106,7 @@ export class FacturesController {
   }
 
   @Patch('declarations/:id/rejeter')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async rejeterDeclaration(
     @Param('id') id: string,
     @Body() dto: RejeterDeclarationDto,
@@ -105,6 +116,7 @@ export class FacturesController {
   }
 
   @Delete(':id')
+  @Roles(RoleType.ADMIN)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

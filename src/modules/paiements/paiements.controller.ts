@@ -1,8 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { MethodePaiement } from '@prisma/client';
+import { MethodePaiement, RoleType } from '@prisma/client';
 import { PaiementsService } from './paiements.service';
 import { CreerPaiementDto } from './dto/creer-paiement.dto';
 import { ModifierPaiementDto } from './dto/modifier-paiement.dto';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
 
 @Controller('paiements')
@@ -10,11 +11,13 @@ export class PaiementsController {
   constructor(private paiementsService: PaiementsService) {}
 
   @Get('statistiques')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async statistiques(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.paiementsService.statistiques(entrepriseId);
   }
 
   @Get()
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('factureId') factureId?: string,
@@ -25,6 +28,7 @@ export class PaiementsController {
   }
 
   @Get(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -33,6 +37,7 @@ export class PaiementsController {
   }
 
   @Post()
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async enregistrer(
     @Body() dto: CreerPaiementDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -41,6 +46,7 @@ export class PaiementsController {
   }
 
   @Patch(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async modifier(
     @Param('id') id: string,
     @Body() dto: ModifierPaiementDto,
@@ -50,6 +56,7 @@ export class PaiementsController {
   }
 
   @Delete(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

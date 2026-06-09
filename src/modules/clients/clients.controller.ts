@@ -8,9 +8,11 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { RoleType } from '@prisma/client';
 import { ClientsService } from './clients.service';
 import { CreerClientDto } from './dto/creer-client.dto';
 import { ModifierClientDto } from './dto/modifier-client.dto';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
 
 @Controller('clients')
@@ -18,6 +20,7 @@ export class ClientsController {
   constructor(private clientsService: ClientsService) {}
 
   @Get()
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('recherche') recherche?: string,
@@ -26,6 +29,7 @@ export class ClientsController {
   }
 
   @Get(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -34,6 +38,7 @@ export class ClientsController {
   }
 
   @Get(':id/statistiques')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
   async statistiques(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -42,6 +47,7 @@ export class ClientsController {
   }
 
   @Post()
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
   async creer(
     @Body() dto: CreerClientDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -50,6 +56,7 @@ export class ClientsController {
   }
 
   @Patch(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
   async modifier(
     @Param('id') id: string,
     @Body() dto: ModifierClientDto,
@@ -59,6 +66,7 @@ export class ClientsController {
   }
 
   @Delete(':id')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

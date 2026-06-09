@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { RoleType } from '@prisma/client';
 import { SettingsService } from './settings.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -16,13 +17,14 @@ import { UpdateBrandingDto } from './dto/update-branding.dto';
 import { UpdatePreferencesDto } from './dto/update-preferences.dto';
 import { UpdateNotificationsDto } from './dto/update-notifications.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
 
 @Controller('settings')
 export class SettingsController {
   constructor(private settingsService: SettingsService) {}
 
-  // ─── PROFILE ────────────────────────────────────────────────────────────
+  // ─── PROFILE (all authenticated users) ──────────────────────────────────
 
   @Get('profile')
   getProfile(@UtilisateurCourant('id') userId: string) {
@@ -37,14 +39,16 @@ export class SettingsController {
     return this.settingsService.updateProfile(userId, dto);
   }
 
-  // ─── COMPANY ────────────────────────────────────────────────────────────
+  // ─── COMPANY (admin only) ────────────────────────────────────────────────
 
   @Get('company')
+  @Roles(RoleType.ADMIN)
   getCompany(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.settingsService.getCompany(entrepriseId);
   }
 
   @Patch('company')
+  @Roles(RoleType.ADMIN)
   updateCompany(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Body() dto: UpdateCompanyDto,
@@ -52,14 +56,16 @@ export class SettingsController {
     return this.settingsService.updateCompany(entrepriseId, dto);
   }
 
-  // ─── BRANDING ───────────────────────────────────────────────────────────
+  // ─── BRANDING (admin only) ───────────────────────────────────────────────
 
   @Get('branding')
+  @Roles(RoleType.ADMIN)
   getBranding(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.settingsService.getBranding(entrepriseId);
   }
 
   @Patch('branding')
+  @Roles(RoleType.ADMIN)
   updateBranding(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Body() dto: UpdateBrandingDto,
@@ -68,6 +74,7 @@ export class SettingsController {
   }
 
   @Post('branding/logo')
+  @Roles(RoleType.ADMIN)
   @UseInterceptors(FileInterceptor('logo', { storage: memoryStorage() }))
   uploadLogo(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -76,7 +83,7 @@ export class SettingsController {
     return this.settingsService.uploadLogo(entrepriseId, file);
   }
 
-  // ─── PREFERENCES ────────────────────────────────────────────────────────
+  // ─── PREFERENCES (all authenticated users) ──────────────────────────────
 
   @Get('preferences')
   getPreferences(
@@ -95,7 +102,7 @@ export class SettingsController {
     return this.settingsService.updatePreferences(userId, entrepriseId, dto);
   }
 
-  // ─── NOTIFICATIONS ───────────────────────────────────────────────────────
+  // ─── NOTIFICATIONS (all authenticated users) ─────────────────────────────
 
   @Get('notifications')
   getNotifications(@UtilisateurCourant('id') userId: string) {
@@ -110,7 +117,7 @@ export class SettingsController {
     return this.settingsService.updateNotifications(userId, dto);
   }
 
-  // ─── SECURITY ────────────────────────────────────────────────────────────
+  // ─── SECURITY (all authenticated users) ──────────────────────────────────
 
   @Post('change-password')
   changePassword(
@@ -120,9 +127,10 @@ export class SettingsController {
     return this.settingsService.changePassword(userId, dto);
   }
 
-  // ─── BILLING ─────────────────────────────────────────────────────────────
+  // ─── BILLING (admin only) ─────────────────────────────────────────────────
 
   @Get('billing')
+  @Roles(RoleType.ADMIN)
   getBilling(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.settingsService.getBilling(entrepriseId);
   }
