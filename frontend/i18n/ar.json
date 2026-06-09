@@ -1024,10 +1024,20 @@
       },
       "notifications": {
         "title": "الإشعارات",
-        "email": "إشعارات البريد الإلكتروني",
-        "devisAccepted": "قبول العرض",
-        "paymentReceived": "استلام دفعة",
-        "invoiceOverdue": "تأخر الفاتورة"
+        "emailSection": "إشعارات البريد الإلكتروني",
+        "emailSectionDesc": "تلقّ تنبيهات عبر البريد بناءً على نشاطك",
+        "inAppSection": "الإشعارات الفورية",
+        "inAppSectionDesc": "بانرات فورية داخل لوحة التحكم",
+        "masterEmail": "تفعيل البريد الإلكتروني",
+        "masterEmailDesc": "تشغيل أو إيقاف جميع رسائل الإشعارات",
+        "devis": "العروض",
+        "devisDesc": "مقبول، مرفوض، مُشاهَد",
+        "factures": "الفواتير",
+        "facturesDesc": "مُرسَلة، مُشاهَدة، مدفوعة",
+        "paiements": "المدفوعات والإقرارات",
+        "paiementsDesc": "المدفوعات المستلمة والإقرارات",
+        "systeme": "النظام",
+        "systemeDesc": "التذكيرات وتنبيهات المواعيد"
       },
       "security": {
         "title": "الأمان",

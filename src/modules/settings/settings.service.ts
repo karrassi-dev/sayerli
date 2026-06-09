@@ -255,6 +255,10 @@ export class SettingsService {
         notificationsFactures: true,
         notificationsPaiements: true,
         notificationsSysteme: true,
+        inAppDevis: true,
+        inAppFactures: true,
+        inAppPaiements: true,
+        inAppSysteme: true,
       },
     });
   }

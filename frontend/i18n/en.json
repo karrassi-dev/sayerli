@@ -1024,10 +1024,20 @@
       },
       "notifications": {
         "title": "Notifications",
-        "email": "Email Notifications",
-        "devisAccepted": "Quote Accepted",
-        "paymentReceived": "Payment Received",
-        "invoiceOverdue": "Invoice Overdue"
+        "emailSection": "Email Notifications",
+        "emailSectionDesc": "Receive email alerts based on your activity",
+        "inAppSection": "Real-time Notifications",
+        "inAppSectionDesc": "Instant banners inside the dashboard",
+        "masterEmail": "Enable emails",
+        "masterEmailDesc": "Turn all notification emails on or off",
+        "devis": "Quotes",
+        "devisDesc": "Accepted, refused, viewed",
+        "factures": "Invoices",
+        "facturesDesc": "Sent, viewed, paid",
+        "paiements": "Payments & Declarations",
+        "paiementsDesc": "Payments received, declarations",
+        "systeme": "System",
+        "systemeDesc": "Reminders and due date alerts"
       },
       "security": {
         "title": "Security",

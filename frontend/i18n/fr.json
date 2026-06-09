@@ -1025,10 +1025,20 @@
       },
       "notifications": {
         "title": "Notifications",
-        "email": "Notifications email",
-        "devisAccepted": "Devis accepté",
-        "paymentReceived": "Paiement reçu",
-        "invoiceOverdue": "Facture en retard"
+        "emailSection": "Notifications par email",
+        "emailSectionDesc": "Recevez des alertes par email selon vos activités",
+        "inAppSection": "Notifications en temps réel",
+        "inAppSectionDesc": "Bannières instantanées dans le tableau de bord",
+        "masterEmail": "Activer les emails",
+        "masterEmailDesc": "Active ou désactive tous les emails",
+        "devis": "Devis",
+        "devisDesc": "Accepté, refusé, consulté",
+        "factures": "Factures",
+        "facturesDesc": "Envoyée, consultée, payée",
+        "paiements": "Paiements & Déclarations",
+        "paiementsDesc": "Paiements reçus, déclarations",
+        "systeme": "Système",
+        "systemeDesc": "Rappels et alertes d'échéance"
       },
       "security": {
         "title": "Sécurité",

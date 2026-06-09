@@ -74,6 +74,10 @@ model PreferencesNotification {
   notificationsFactures  Boolean     @default(true)
   notificationsPaiements Boolean     @default(true)
   notificationsSysteme   Boolean     @default(true)
+  inAppDevis             Boolean     @default(true)
+  inAppFactures          Boolean     @default(true)
+  inAppPaiements         Boolean     @default(true)
+  inAppSysteme           Boolean     @default(true)
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @updatedAt
   utilisateur            Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)

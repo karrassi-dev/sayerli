@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes'
 import {
   User, Building2, Palette, Globe, Sun, Moon, Monitor, Bell, Shield, CreditCard,
   Camera, Check, ChevronRight, Eye, EyeOff, Zap, AlertCircle,
+  Mail, FileText, Receipt, AlertTriangle,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -145,6 +146,10 @@ export default function SettingsPage() {
     notificationsFactures: true,
     notificationsPaiements: true,
     notificationsSysteme: true,
+    inAppDevis: true,
+    inAppFactures: true,
+    inAppPaiements: true,
+    inAppSysteme: true,
   })
   const [notifsLoading, setNotifsLoading] = useState(true)
 
@@ -199,6 +204,10 @@ export default function SettingsPage() {
         notificationsFactures: d.notificationsFactures ?? true,
         notificationsPaiements: d.notificationsPaiements ?? true,
         notificationsSysteme: d.notificationsSysteme ?? true,
+        inAppDevis: d.inAppDevis ?? true,
+        inAppFactures: d.inAppFactures ?? true,
+        inAppPaiements: d.inAppPaiements ?? true,
+        inAppSysteme: d.inAppSysteme ?? true,
       })
     }).catch(() => {}).finally(() => setNotifsLoading(false))
 
@@ -666,44 +675,98 @@ export default function SettingsPage() {
         )
 
       // ── NOTIFICATIONS ────────────────────────────────────────────────────
-      case 'notifications':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.notifications.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Gérez les alertes et notifications</p>
-            </div>
+      case 'notifications': {
+        const Toggle = ({ fieldKey }: { fieldKey: keyof typeof notifs }) => (
+          <button
+            onClick={() => setNotifs(prev => ({ ...prev, [fieldKey]: !prev[fieldKey] }))}
+            className={cn('relative flex-shrink-0 w-11 h-6 rounded-full transition-all duration-200', notifs[fieldKey] ? 'bg-primary-600' : 'bg-slate-200 dark:bg-slate-700')}
+          >
+            <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200', notifs[fieldKey] && 'translate-x-5')} />
+          </button>
+        )
 
+        const NotifRow = ({
+          icon: Icon, iconColor, iconBg, label, desc, fieldKey,
+        }: {
+          icon: React.ElementType; iconColor: string; iconBg: string
+          label: string; desc: string; fieldKey: keyof typeof notifs
+        }) => (
+          <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <div className="flex items-center gap-3">
+              <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0', iconBg)}>
+                <Icon className={cn('w-4 h-4', iconColor)} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">{label}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{desc}</p>
+              </div>
+            </div>
+            <Toggle fieldKey={fieldKey} />
+          </div>
+        )
+
+        const p = 'pages.settings.notifications'
+        const rows = [
+          { icon: FileText,     iconColor: 'text-blue-600 dark:text-blue-400',   iconBg: 'bg-blue-50 dark:bg-blue-950/50',   label: t(`${p}.devis`),     desc: t(`${p}.devisDesc`),     emailKey: 'notificationsDevis' as const,     inAppKey: 'inAppDevis' as const },
+          { icon: Receipt,      iconColor: 'text-purple-600 dark:text-purple-400', iconBg: 'bg-purple-50 dark:bg-purple-950/50', label: t(`${p}.factures`),  desc: t(`${p}.facturesDesc`),  emailKey: 'notificationsFactures' as const,  inAppKey: 'inAppFactures' as const },
+          { icon: CreditCard,   iconColor: 'text-green-600 dark:text-green-400',  iconBg: 'bg-green-50 dark:bg-green-950/50', label: t(`${p}.paiements`), desc: t(`${p}.paiementsDesc`), emailKey: 'notificationsPaiements' as const, inAppKey: 'inAppPaiements' as const },
+          { icon: AlertTriangle, iconColor: 'text-orange-600 dark:text-orange-400', iconBg: 'bg-orange-50 dark:bg-orange-950/50', label: t(`${p}.systeme`), desc: t(`${p}.systemeDesc`), emailKey: 'notificationsSysteme' as const, inAppKey: 'inAppSysteme' as const },
+        ]
+
+        return (
+          <div className="space-y-8">
             {notifsLoading ? (
-              <div className="space-y-3">{[1,2,3,4,5].map(i => <div key={i} className="h-16 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
+              <div className="space-y-3">{[1,2,3,4,5,6,7,8,9].map(i => <div key={i} className="h-16 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
             ) : (
-              <div className="space-y-3">
-                {([
-                  { key: 'emailNotifications' as const, labelKey: 'pages.settings.notifications.email' },
-                  { key: 'notificationsDevis' as const, labelKey: 'pages.settings.notifications.devisAccepted' },
-                  { key: 'notificationsFactures' as const, labelKey: 'pages.settings.notifications.invoiceOverdue' },
-                  { key: 'notificationsPaiements' as const, labelKey: 'pages.settings.notifications.paymentReceived' },
-                  { key: 'notificationsSysteme' as const, labelKey: 'pages.settings.notifications.email' },
-                ]).map(n => (
-                  <div key={n.key} className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+              <>
+                {/* Email section */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Mail className="w-4 h-4 text-slate-500" />
+                    <div>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{t(`${p}.emailSection`)}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{t(`${p}.emailSectionDesc`)}</p>
+                    </div>
+                  </div>
+
+                  {/* Master email toggle */}
+                  <div className="flex items-center justify-between p-4 rounded-xl border-2 border-primary-200 dark:border-primary-800 bg-primary-50/50 dark:bg-primary-950/20">
                     <div className="flex items-center gap-3">
-                      <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center', notifs[n.key] ? 'bg-green-100 dark:bg-green-950/50' : 'bg-slate-100 dark:bg-slate-800')}>
-                        <Bell className={cn('w-4 h-4', notifs[n.key] ? 'text-green-600 dark:text-green-400' : 'text-slate-400')} />
+                      <div className="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-950/60 flex items-center justify-center">
+                        <Mail className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{t(n.labelKey)}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Notification par email</p>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{t(`${p}.masterEmail`)}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{t(`${p}.masterEmailDesc`)}</p>
                       </div>
                     </div>
-                    <button
-                      onClick={() => setNotifs(prev => ({ ...prev, [n.key]: !prev[n.key] }))}
-                      className={cn('relative w-11 h-6 rounded-full transition-all', notifs[n.key] ? 'bg-primary-600' : 'bg-slate-200 dark:bg-slate-700')}
-                    >
-                      <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', notifs[n.key] && 'translate-x-5')} />
-                    </button>
+                    <Toggle fieldKey="emailNotifications" />
                   </div>
-                ))}
-              </div>
+
+                  {/* Per-type email toggles */}
+                  <div className={cn('space-y-2 transition-opacity', !notifs.emailNotifications && 'opacity-40 pointer-events-none')}>
+                    {rows.map(r => (
+                      <NotifRow key={r.emailKey} icon={r.icon} iconColor={r.iconColor} iconBg={r.iconBg} label={r.label} desc={r.desc} fieldKey={r.emailKey} />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-100 dark:border-slate-800" />
+
+                {/* In-app section */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Bell className="w-4 h-4 text-slate-500" />
+                    <div>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{t(`${p}.inAppSection`)}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{t(`${p}.inAppSectionDesc`)}</p>
+                    </div>
+                  </div>
+                  {rows.map(r => (
+                    <NotifRow key={r.inAppKey} icon={r.icon} iconColor={r.iconColor} iconBg={r.iconBg} label={r.label} desc={r.desc} fieldKey={r.inAppKey} />
+                  ))}
+                </div>
+              </>
             )}
 
             <div className="flex justify-end pt-2">
@@ -711,6 +774,7 @@ export default function SettingsPage() {
             </div>
           </div>
         )
+      }
 
       // ── SECURITY ─────────────────────────────────────────────────────────
       case 'security':
