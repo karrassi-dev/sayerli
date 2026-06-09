@@ -86,7 +86,7 @@ export function Hero() {
                     <span className="w-3 h-3 rounded-full bg-green-400" />
                   </div>
                   <div className="flex-1 text-center">
-                    <span className="text-xs text-slate-500 font-medium">sayerli.ma/dashboard</span>
+                    <span className="text-xs text-slate-500 font-medium">sayerli.com/dashboard</span>
                   </div>
                 </div>
 

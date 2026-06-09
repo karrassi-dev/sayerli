@@ -87,8 +87,23 @@ export const facturesApi = {
   update: (id: string, data: unknown) => api.put(`/factures/${id}`, data),
   updateStatus: (id: string, statut: string) =>
     api.patch(`/factures/${id}/statut`, { statut }),
+  send: (id: string) => api.post(`/factures/${id}/envoyer`),
   dashboard: () => api.get('/factures/tableau-de-bord'),
   delete: (id: string) => api.delete(`/factures/${id}`),
+  // Declarations
+  declarations: (statut?: string) =>
+    api.get('/factures/declarations', { params: statut ? { statut } : {} }),
+  approveDeclaration: (id: string) =>
+    api.patch(`/factures/declarations/${id}/approuver`),
+  rejectDeclaration: (id: string, raison?: string) =>
+    api.patch(`/factures/declarations/${id}/rejeter`, { raison }),
+}
+
+// Public factures (no auth required)
+export const publicFacturesApi = {
+  get: (token: string) => publicApi.get(`/public/factures/${token}`),
+  declarer: (token: string, data: unknown) =>
+    publicApi.post(`/public/factures/${token}/declarer-paiement`, data),
 }
 
 // Paiements
@@ -153,6 +168,7 @@ export const settingsApi = {
   updateCompany: (data: {
     nom?: string; ice?: string; rc?: string; telephone?: string;
     email?: string; website?: string; adresse?: string; ville?: string; pays?: string;
+    titulaireCompte?: string; banque?: string; rib?: string; iban?: string; swift?: string;
   }) => api.patch('/settings/company', data),
 
   // Branding

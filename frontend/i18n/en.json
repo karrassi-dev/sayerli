@@ -193,6 +193,7 @@
       "clients": "Clients",
       "devis": "Quotes",
       "factures": "Invoices",
+      "declarations": "Declarations",
       "paiements": "Payments",
       "equipe": "Team",
       "notifications": "Notifications",
@@ -608,7 +609,9 @@
     "partielle": "Partial",
     "en_retard": "Overdue",
     "enRetard": "Overdue",
-    "envoyee": "Sent"
+    "envoyee": "Sent",
+    "vue": "Viewed",
+    "annulee": "Cancelled"
   },
   "roles": {
     "admin": "Admin",
@@ -771,7 +774,9 @@
       "createSuccess": "Invoice created successfully.",
       "editSuccess": "Invoice updated.",
       "deleteSuccess": "Invoice deleted.",
-      "sendSuccess": "Invoice marked as sent.",
+      "sendSuccess": "Invoice sent — link copied to clipboard.",
+      "linkCopied": "Link copied to clipboard.",
+      "linkError": "Could not generate link.",
       "paymentSuccess": "Payment recorded successfully.",
       "stats": {
         "paid": "Total Collected",
@@ -791,7 +796,8 @@
       },
       "actions": {
         "recordPayment": "Record Payment",
-        "send": "Send",
+        "send": "Send & Copy Link",
+        "copyLink": "Copy Client Link",
         "download": "Download PDF"
       },
       "empty": {
@@ -988,6 +994,15 @@
         "phone": "Phone",
         "email": "Business Email",
         "website": "Website"
+      },
+      "banking": {
+        "title": "Banking Information",
+        "desc": "These details are displayed on the client portal for wire transfers.",
+        "titulaireCompte": "Account Holder Name",
+        "banque": "Bank",
+        "rib": "RIB",
+        "iban": "IBAN",
+        "swift": "BIC / SWIFT (optional)"
       },
       "branding": {
         "title": "Visual Identity",

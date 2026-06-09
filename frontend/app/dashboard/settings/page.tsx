@@ -120,6 +120,7 @@ export default function SettingsPage() {
   // ─── Company state ───────────────────────────────────────────────────────
   const [company, setCompany] = useState({
     nom: '', email: '', telephone: '', adresse: '', ville: '', pays: '', website: '', ice: '', rc: '',
+    titulaireCompte: '', banque: '', rib: '', iban: '', swift: '',
   })
   const [companyLoading, setCompanyLoading] = useState(true)
 
@@ -169,6 +170,8 @@ export default function SettingsPage() {
         nom: d.nom ?? '', email: d.email ?? '', telephone: d.telephone ?? '',
         adresse: d.adresse ?? '', ville: d.ville ?? '', pays: d.pays ?? '',
         website: d.website ?? '', ice: d.ice ?? '', rc: d.rc ?? '',
+        titulaireCompte: d.titulaireCompte ?? '', banque: d.banque ?? '',
+        rib: d.rib ?? '', iban: d.iban ?? '', swift: d.swift ?? '',
       })
     }).catch(() => {}).finally(() => setCompanyLoading(false))
 
@@ -420,6 +423,35 @@ export default function SettingsPage() {
                 ))}
               </div>
             )}
+            {/* Banking section */}
+            <div className="border-t border-slate-200 dark:border-slate-700 pt-6 space-y-4">
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{t('pages.settings.banking.title')}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.banking.desc')}</p>
+              </div>
+              {!companyLoading && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {([
+                    { key: 'titulaireCompte', label: t('pages.settings.banking.titulaireCompte'), colSpan: true },
+                    { key: 'banque',          label: t('pages.settings.banking.banque') },
+                    { key: 'rib',             label: t('pages.settings.banking.rib') },
+                    { key: 'iban',            label: t('pages.settings.banking.iban'), colSpan: true },
+                    { key: 'swift',           label: t('pages.settings.banking.swift') },
+                  ] as { key: keyof typeof company; label: string; colSpan?: boolean }[]).map(field => (
+                    <div key={field.key} className={field.colSpan ? 'sm:col-span-2' : ''}>
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">{field.label}</label>
+                      <input
+                        type="text"
+                        value={company[field.key]}
+                        onChange={e => setCompany(c => ({ ...c, [field.key]: e.target.value }))}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div className="flex justify-end pt-2">
               <SaveButton onClick={saveCompany} saving={saving} saved={saved} />
             </div>

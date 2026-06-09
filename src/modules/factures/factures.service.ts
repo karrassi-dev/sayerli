@@ -2,11 +2,15 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
-import { StatutFacture } from '@prisma/client';
+import { StatutFacture, StatutDeclaration } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
+import { DeclarerPaiementDto } from './dto/declarer-paiement.dto';
+import { RejeterDeclarationDto } from './dto/rejeter-declaration.dto';
 
 @Injectable()
 export class FacturesService {
@@ -39,7 +43,7 @@ export class FacturesService {
       },
       include: {
         client: { select: { id: true, nom: true, email: true, nomEntreprise: true } },
-        _count: { select: { lignes: true, paiements: true } },
+        _count: { select: { lignes: true, paiements: true, declarationsPaiement: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -53,6 +57,10 @@ export class FacturesService {
         devis: { select: { id: true, reference: true } },
         lignes: { orderBy: { ordre: 'asc' } },
         paiements: { orderBy: { datePaiement: 'desc' } },
+        declarationsPaiement: {
+          orderBy: { createdAt: 'desc' },
+          where: { statut: StatutDeclaration.PENDING },
+        },
       },
     });
     if (!facture) throw new NotFoundException('Facture introuvable.');
@@ -82,6 +90,7 @@ export class FacturesService {
         clientId: dto.clientId,
         devisId: dto.devisId,
         numeroFacture,
+        publicToken: uuidv4(),
         statut: StatutFacture.BROUILLON,
         taxe,
         totalHT,
@@ -153,6 +162,34 @@ export class FacturesService {
     });
   }
 
+  async envoyerFacture(id: string, entrepriseId: string) {
+    const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
+    if (!facture) throw new NotFoundException('Facture introuvable.');
+
+    if (facture.statut === StatutFacture.BROUILLON) {
+      await this.prisma.$transaction([
+        this.prisma.facture.update({
+          where: { id },
+          data: { statut: StatutFacture.ENVOYEE, dateEnvoi: new Date() },
+        }),
+        this.prisma.notification.create({
+          data: {
+            entrepriseId,
+            type: 'FACTURE_ENVOYEE',
+            message: `La facture ${facture.numeroFacture} a été envoyée au client.`,
+            lien: `/dashboard/factures`,
+          },
+        }),
+      ]);
+    }
+
+    const updated = await this.prisma.facture.findUnique({ where: { id } });
+    return {
+      publicToken: updated!.publicToken,
+      lienPublic: `/public/factures/${updated!.publicToken}`,
+    };
+  }
+
   async supprimerFacture(id: string, entrepriseId: string) {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
@@ -162,6 +199,193 @@ export class FacturesService {
     await this.prisma.facture.delete({ where: { id } });
     return { message: 'Facture supprimée avec succès.' };
   }
+
+  // ── Public portal ────────────────────────────────────────────────────────────
+
+  async obtenirFactureParToken(token: string) {
+    const facture = await this.prisma.facture.findUnique({
+      where: { publicToken: token },
+      include: {
+        client: { select: { nom: true, email: true, telephone: true, nomEntreprise: true } },
+        lignes: { orderBy: { ordre: 'asc' } },
+        entreprise: {
+          select: {
+            nom: true, email: true, telephone: true, adresse: true,
+            logo: true, couleurPrimaire: true, ice: true, rc: true, website: true,
+            titulaireCompte: true, banque: true, rib: true, iban: true, swift: true,
+          },
+        },
+      },
+    });
+
+    if (!facture) throw new NotFoundException('Ce lien de facture est invalide.');
+
+    const now = new Date();
+    const trackingData: Record<string, unknown> = {
+      dateDerniereConsultation: now,
+      nombreConsultations: { increment: 1 },
+    };
+
+    if (!facture.dateConsultation) {
+      trackingData.dateConsultation = now;
+    }
+
+    if (facture.statut === StatutFacture.ENVOYEE) {
+      trackingData.statut = StatutFacture.VUE;
+      await this.prisma.$transaction([
+        this.prisma.facture.update({ where: { publicToken: token }, data: trackingData }),
+        this.prisma.notification.create({
+          data: {
+            entrepriseId: facture.entrepriseId,
+            type: 'FACTURE_VUE',
+            message: `La facture ${facture.numeroFacture} a été consultée par ${facture.client.nom}.`,
+            lien: `/dashboard/factures`,
+          },
+        }),
+      ]);
+    } else {
+      await this.prisma.facture.update({ where: { publicToken: token }, data: trackingData });
+    }
+
+    return { ...facture, statut: (trackingData.statut ?? facture.statut) as StatutFacture };
+  }
+
+  async declarerPaiement(token: string, dto: DeclarerPaiementDto) {
+    const facture = await this.prisma.facture.findUnique({ where: { publicToken: token } });
+    if (!facture) throw new NotFoundException('Ce lien de facture est invalide.');
+
+    const payableStatuts: StatutFacture[] = [
+      StatutFacture.ENVOYEE,
+      StatutFacture.VUE,
+      StatutFacture.PARTIELLE,
+      StatutFacture.EN_RETARD,
+    ];
+    if (!payableStatuts.includes(facture.statut)) {
+      throw new BadRequestException('Cette facture ne peut pas recevoir de déclaration de paiement.');
+    }
+
+    const montantRestant = Number(facture.totalTTC) - Number(facture.montantPaye);
+    if (dto.montant > montantRestant + 0.01) {
+      throw new BadRequestException('Le montant déclaré dépasse le reste à payer.');
+    }
+
+    const [declaration] = await this.prisma.$transaction([
+      this.prisma.declarationPaiement.create({
+        data: {
+          entrepriseId: facture.entrepriseId,
+          factureId: facture.id,
+          montant: dto.montant,
+          methode: dto.methode,
+          reference: dto.reference,
+          message: dto.message,
+          datePaiement: dto.datePaiement ? new Date(dto.datePaiement) : new Date(),
+        },
+      }),
+      this.prisma.notification.create({
+        data: {
+          entrepriseId: facture.entrepriseId,
+          type: 'DECLARATION_RECUE',
+          message: `Nouvelle déclaration de paiement reçue pour la facture ${facture.numeroFacture} — ${dto.montant} MAD.`,
+          lien: `/dashboard/declarations`,
+        },
+      }),
+    ]);
+
+    return declaration;
+  }
+
+  // ── Declarations management ──────────────────────────────────────────────────
+
+  async listerDeclarations(entrepriseId: string, statut?: StatutDeclaration) {
+    return this.prisma.declarationPaiement.findMany({
+      where: { entrepriseId, ...(statut && { statut }) },
+      include: {
+        facture: {
+          select: {
+            id: true,
+            numeroFacture: true,
+            totalTTC: true,
+            montantPaye: true,
+            statut: true,
+            publicToken: true,
+            client: { select: { id: true, nom: true, nomEntreprise: true, email: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async approuverDeclaration(id: string, entrepriseId: string) {
+    const declaration = await this.prisma.declarationPaiement.findFirst({
+      where: { id, entrepriseId },
+      include: { facture: true },
+    });
+    if (!declaration) throw new NotFoundException('Déclaration introuvable.');
+    if (declaration.statut !== StatutDeclaration.PENDING) {
+      throw new BadRequestException('Cette déclaration a déjà été traitée.');
+    }
+
+    const facture = declaration.facture;
+    const montantPaye = Number(facture.montantPaye) + Number(declaration.montant);
+    const montantRestant = Number(facture.totalTTC) - montantPaye;
+    const nouveauStatut = montantRestant <= 0.01
+      ? StatutFacture.PAYEE
+      : StatutFacture.PARTIELLE;
+
+    await this.prisma.$transaction([
+      this.prisma.paiement.create({
+        data: {
+          entrepriseId,
+          factureId: facture.id,
+          montant: declaration.montant,
+          methode: declaration.methode,
+          reference: declaration.reference ?? undefined,
+          datePaiement: declaration.datePaiement,
+          notes: declaration.message ?? undefined,
+        },
+      }),
+      this.prisma.facture.update({
+        where: { id: facture.id },
+        data: { montantPaye, statut: nouveauStatut },
+      }),
+      this.prisma.declarationPaiement.update({
+        where: { id },
+        data: { statut: StatutDeclaration.APPROVED, reviewedAt: new Date() },
+      }),
+      this.prisma.notification.create({
+        data: {
+          entrepriseId,
+          type: nouveauStatut === StatutFacture.PAYEE ? 'FACTURE_PAYEE' : 'FACTURE_PARTIELLE',
+          message: `Déclaration approuvée : ${Number(declaration.montant)} MAD reçus pour la facture ${facture.numeroFacture}.`,
+          lien: `/dashboard/factures`,
+        },
+      }),
+    ]);
+
+    return { message: 'Déclaration approuvée et paiement enregistré.' };
+  }
+
+  async rejeterDeclaration(id: string, entrepriseId: string, dto: RejeterDeclarationDto) {
+    const declaration = await this.prisma.declarationPaiement.findFirst({
+      where: { id, entrepriseId },
+    });
+    if (!declaration) throw new NotFoundException('Déclaration introuvable.');
+    if (declaration.statut !== StatutDeclaration.PENDING) {
+      throw new BadRequestException('Cette déclaration a déjà été traitée.');
+    }
+
+    return this.prisma.declarationPaiement.update({
+      where: { id },
+      data: {
+        statut: StatutDeclaration.REJECTED,
+        raisonRejet: dto.raison,
+        reviewedAt: new Date(),
+      },
+    });
+  }
+
+  // ── Dashboard ────────────────────────────────────────────────────────────────
 
   async tableauDeBord(entrepriseId: string) {
     const maintenant = new Date();
@@ -178,7 +402,7 @@ export class FacturesService {
       this.prisma.facture.count({ where: { entrepriseId } }),
       this.prisma.facture.count({ where: { entrepriseId, statut: StatutFacture.PAYEE } }),
       this.prisma.facture.count({
-        where: { entrepriseId, statut: { in: [StatutFacture.ENVOYEE, StatutFacture.PARTIELLE] } },
+        where: { entrepriseId, statut: { in: [StatutFacture.ENVOYEE, StatutFacture.VUE, StatutFacture.PARTIELLE] } },
       }),
       this.prisma.facture.count({ where: { entrepriseId, statut: StatutFacture.EN_RETARD } }),
       this.prisma.paiement.aggregate({

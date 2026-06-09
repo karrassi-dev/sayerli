@@ -36,4 +36,24 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   pays?: string;
+
+  @IsOptional()
+  @IsString()
+  titulaireCompte?: string;
+
+  @IsOptional()
+  @IsString()
+  banque?: string;
+
+  @IsOptional()
+  @IsString()
+  rib?: string;
+
+  @IsOptional()
+  @IsString()
+  iban?: string;
+
+  @IsOptional()
+  @IsString()
+  swift?: string;
 }

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { FacturesService } from './factures.service';
-import { FacturesController } from './factures.controller';
+import { FacturesController, FacturesPublicController } from './factures.controller';
 
 @Module({
-  controllers: [FacturesController],
+  controllers: [FacturesController, FacturesPublicController],
   providers: [FacturesService],
   exports: [FacturesService],
 })

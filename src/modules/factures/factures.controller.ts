@@ -9,10 +9,13 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { StatutFacture } from '@prisma/client';
+import { StatutFacture, StatutDeclaration } from '@prisma/client';
 import { FacturesService } from './factures.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
+import { DeclarerPaiementDto } from './dto/declarer-paiement.dto';
+import { RejeterDeclarationDto } from './dto/rejeter-declaration.dto';
+import { Public } from '../../common/decorators/public.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
 
 @Controller('factures')
@@ -22,6 +25,14 @@ export class FacturesController {
   @Get('tableau-de-bord')
   async tableauDeBord(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.facturesService.tableauDeBord(entrepriseId);
+  }
+
+  @Get('declarations')
+  async listerDeclarations(
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @Query('statut') statut?: StatutDeclaration,
+  ) {
+    return this.facturesService.listerDeclarations(entrepriseId, statut);
   }
 
   @Get()
@@ -68,11 +79,56 @@ export class FacturesController {
     return this.facturesService.modifierStatut(id, dto, entrepriseId);
   }
 
+  @Post(':id/envoyer')
+  async envoyer(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.facturesService.envoyerFacture(id, entrepriseId);
+  }
+
+  @Patch('declarations/:id/approuver')
+  async approuverDeclaration(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.facturesService.approuverDeclaration(id, entrepriseId);
+  }
+
+  @Patch('declarations/:id/rejeter')
+  async rejeterDeclaration(
+    @Param('id') id: string,
+    @Body() dto: RejeterDeclarationDto,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.facturesService.rejeterDeclaration(id, entrepriseId, dto);
+  }
+
   @Delete(':id')
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
   ) {
     return this.facturesService.supprimerFacture(id, entrepriseId);
+  }
+}
+
+@Controller('public/factures')
+export class FacturesPublicController {
+  constructor(private facturesService: FacturesService) {}
+
+  @Public()
+  @Get(':token')
+  async obtenirParToken(@Param('token') token: string) {
+    return this.facturesService.obtenirFactureParToken(token);
+  }
+
+  @Public()
+  @Post(':token/declarer-paiement')
+  async declarerPaiement(
+    @Param('token') token: string,
+    @Body() dto: DeclarerPaiementDto,
+  ) {
+    return this.facturesService.declarerPaiement(token, dto);
   }
 }

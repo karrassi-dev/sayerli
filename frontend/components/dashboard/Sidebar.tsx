@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Users, FileText, Receipt, CreditCard,
   UserCog, Bell, Settings, LogOut, Menu, X,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, ClipboardCheck,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/clients',      iconC: Users,           key: 'clients' },
   { href: '/dashboard/devis',        iconC: FileText,        key: 'devis' },
   { href: '/dashboard/factures',     iconC: Receipt,         key: 'factures' },
+  { href: '/dashboard/declarations', iconC: ClipboardCheck,  key: 'declarations' },
   { href: '/dashboard/paiements',    iconC: CreditCard,      key: 'paiements' },
   { href: '/dashboard/equipe',       iconC: UserCog,         key: 'equipe' },
   { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications', badge: 2 },

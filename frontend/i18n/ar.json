@@ -193,6 +193,7 @@
       "clients": "العملاء",
       "devis": "العروض",
       "factures": "الفواتير",
+      "declarations": "الإشعارات بالدفع",
       "paiements": "المدفوعات",
       "equipe": "الفريق",
       "notifications": "الإشعارات",
@@ -608,7 +609,9 @@
     "partielle": "جزئي",
     "en_retard": "متأخر",
     "enRetard": "متأخر",
-    "envoyee": "مُرسَلة"
+    "envoyee": "مُرسَلة",
+    "vue": "تمت مشاهدتها",
+    "annulee": "ملغاة"
   },
   "roles": {
     "admin": "مدير",
@@ -771,7 +774,9 @@
       "createSuccess": "تم إنشاء الفاتورة بنجاح.",
       "editSuccess": "تم تحديث الفاتورة.",
       "deleteSuccess": "تم حذف الفاتورة.",
-      "sendSuccess": "تم تحديد الفاتورة كمُرسَلة.",
+      "sendSuccess": "تم إرسال الفاتورة — تم نسخ الرابط.",
+      "linkCopied": "تم نسخ الرابط في الحافظة.",
+      "linkError": "تعذّر إنشاء الرابط.",
       "paymentSuccess": "تم تسجيل الدفعة بنجاح.",
       "stats": {
         "paid": "إجمالي المحصّل",
@@ -791,7 +796,8 @@
       },
       "actions": {
         "recordPayment": "تسجيل دفعة",
-        "send": "إرسال",
+        "send": "إرسال ونسخ الرابط",
+        "copyLink": "نسخ رابط العميل",
         "download": "تحميل PDF"
       },
       "empty": {
@@ -988,6 +994,15 @@
         "phone": "الهاتف",
         "email": "البريد المهني",
         "website": "الموقع الإلكتروني"
+      },
+      "banking": {
+        "title": "المعلومات البنكية",
+        "desc": "تُعرض هذه المعلومات على بوابة العميل للتحويلات البنكية.",
+        "titulaireCompte": "اسم صاحب الحساب",
+        "banque": "البنك",
+        "rib": "RIB",
+        "iban": "IBAN",
+        "swift": "BIC / SWIFT (اختياري)"
       },
       "branding": {
         "title": "الهوية البصرية",

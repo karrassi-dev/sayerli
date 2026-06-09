@@ -193,6 +193,7 @@
       "clients": "Clients",
       "devis": "Devis",
       "factures": "Factures",
+      "declarations": "Déclarations",
       "paiements": "Paiements",
       "equipe": "Équipe",
       "notifications": "Notifications",
@@ -608,7 +609,9 @@
     "partielle": "Partielle",
     "en_retard": "En retard",
     "enRetard": "En retard",
-    "envoyee": "Envoyée"
+    "envoyee": "Envoyée",
+    "vue": "Consultée",
+    "annulee": "Annulée"
   },
   "roles": {
     "admin": "Admin",
@@ -621,7 +624,8 @@
     "virement": "Virement bancaire",
     "carte": "Carte bancaire",
     "cheque": "Chèque",
-    "mobile": "Mobile"
+    "mobile": "Mobile",
+    "autre": "Autre"
   },
   "common": {
     "search": "Rechercher...",
@@ -771,7 +775,7 @@
       "createSuccess": "Facture créée avec succès.",
       "editSuccess": "Facture mise à jour.",
       "deleteSuccess": "Facture supprimée.",
-      "sendSuccess": "Facture marquée comme envoyée.",
+      "sendSuccess": "Facture envoyée — lien copié dans le presse-papier.",
       "paymentSuccess": "Paiement enregistré avec succès.",
       "stats": {
         "paid": "Total encaissé",
@@ -791,9 +795,12 @@
       },
       "actions": {
         "recordPayment": "Enregistrer un paiement",
-        "send": "Envoyer",
+        "send": "Envoyer & copier le lien",
+        "copyLink": "Copier le lien client",
         "download": "Télécharger PDF"
       },
+      "linkCopied": "Lien copié dans le presse-papier.",
+      "linkError": "Impossible de générer le lien.",
       "empty": {
         "title": "Aucune facture pour le moment",
         "desc": "Créez votre première facture ou convertissez un devis accepté."
@@ -988,6 +995,15 @@
         "phone": "Téléphone",
         "email": "Email professionnel",
         "website": "Site web"
+      },
+      "banking": {
+        "title": "Informations bancaires",
+        "desc": "Ces informations s'affichent sur le portail client pour les virements.",
+        "titulaireCompte": "Nom du titulaire du compte",
+        "banque": "Banque",
+        "rib": "RIB",
+        "iban": "IBAN",
+        "swift": "BIC / SWIFT (optionnel)"
       },
       "branding": {
         "title": "Identité visuelle",

@@ -79,6 +79,11 @@ export class SettingsService {
         plan: true,
         planExpiration: true,
         createdAt: true,
+        titulaireCompte: true,
+        banque: true,
+        rib: true,
+        iban: true,
+        swift: true,
       },
     });
     if (!company) throw new NotFoundException('Entreprise introuvable.');
@@ -96,6 +101,11 @@ export class SettingsService {
     if (dto.website !== undefined) data.website = dto.website;
     if (dto.ice !== undefined) data.ice = dto.ice;
     if (dto.rc !== undefined) data.rc = dto.rc;
+    if (dto.titulaireCompte !== undefined) data.titulaireCompte = dto.titulaireCompte;
+    if (dto.banque !== undefined) data.banque = dto.banque;
+    if (dto.rib !== undefined) data.rib = dto.rib;
+    if (dto.iban !== undefined) data.iban = dto.iban;
+    if (dto.swift !== undefined) data.swift = dto.swift;
 
     return this.prisma.entreprise.update({
       where: { id: entrepriseId },
@@ -111,6 +121,11 @@ export class SettingsService {
         website: true,
         ice: true,
         rc: true,
+        titulaireCompte: true,
+        banque: true,
+        rib: true,
+        iban: true,
+        swift: true,
         updatedAt: true,
       },
     });

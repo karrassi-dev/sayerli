@@ -305,6 +305,7 @@ export class DevisService {
         clientId: devis.clientId,
         devisId: devis.id,
         numeroFacture,
+        publicToken: uuidv4(),
         statut: 'BROUILLON',
         taxe: devis.taxe,
         totalHT: devis.totalHT,
