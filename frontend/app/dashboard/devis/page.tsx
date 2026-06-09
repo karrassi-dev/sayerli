@@ -408,10 +408,11 @@ export default function DevisPage() {
       success(t('pages.devis.createSuccess'))
       fetchDevis(search.trim() || undefined, filters.statut)
     } catch (err: unknown) {
-      const e = err as { response?: { status?: number; data?: { code?: string; message?: string | string[]; limite?: number; actuel?: number } } }
-      if (e?.response?.status === 402 || e?.response?.data?.code === 'PLAN_LIMIT') {
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
         setCreateOpen(false)
-        setLimitModal({ resource: 'devis', limite: e.response!.data?.limite ?? 10, actuel: e.response!.data?.actuel ?? 10 })
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'devis', limite: errs?.limite ?? 10, actuel: errs?.actuel ?? 10 })
       } else {
         const msg = e?.response?.data?.message
         toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))

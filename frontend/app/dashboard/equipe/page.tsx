@@ -192,10 +192,11 @@ export default function EquipePage() {
       setInviteForm(EMPTY_INVITE)
       fetchMembres()
     } catch (err: unknown) {
-      const e = err as { response?: { status?: number; data?: { code?: string; message?: string; limite?: number; actuel?: number } } }
-      if (e?.response?.status === 402 || e?.response?.data?.code === 'PLAN_LIMIT') {
+      const e = err as { response?: { status?: number; data?: { message?: string; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
         setInviteOpen(false)
-        setLimitModal({ resource: 'utilisateurs', limite: e.response!.data?.limite ?? 1, actuel: e.response!.data?.actuel ?? 1 })
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'utilisateurs', limite: errs?.limite ?? 1, actuel: errs?.actuel ?? 1 })
       } else {
         const msg = e?.response?.data?.message
         toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? "Impossible d'envoyer l'invitation."))

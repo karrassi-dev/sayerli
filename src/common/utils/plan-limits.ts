@@ -14,7 +14,10 @@ export function verifierLimite(
 ) {
   if (limite === -1 || actuel < limite) return;
   throw new HttpException(
-    { code: 'PLAN_LIMIT', resource, limite, actuel },
+    {
+      message: 'PLAN_LIMIT',
+      errors: { code: 'PLAN_LIMIT', resource, limite, actuel },
+    },
     HttpStatus.PAYMENT_REQUIRED,
   );
 }

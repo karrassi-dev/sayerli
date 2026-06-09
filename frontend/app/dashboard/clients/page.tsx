@@ -14,6 +14,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useAuth } from '@/hooks/useAuth'
 import { clientsApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
@@ -131,9 +132,12 @@ function ClientFormFields({
   )
 }
 
+const CLIENTS_LIMIT: Record<string, number> = { STARTER: 5, PRO: -1, BUSINESS: -1 }
+
 export default function ClientsPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
+  const { entreprise } = useAuth()
 
   const [clients, setClients] = useState<ApiClient[]>([])
   const [loading, setLoading] = useState(true)
@@ -227,7 +231,14 @@ export default function ClientsPage() {
     if (formErrors[field]) setFormErrors(e => { const n = { ...e }; delete n[field]; return n })
   }
 
+  const planLimite = CLIENTS_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 5
+  const activeClientsCount = clients.filter(c => c.actif !== false).length
+
   const openCreate = () => {
+    if (planLimite !== -1 && activeClientsCount >= planLimite) {
+      setLimitModal({ resource: 'clients', limite: planLimite, actuel: activeClientsCount })
+      return
+    }
     setForm(EMPTY_FORM)
     setFormErrors({})
     setCreateOpen(true)
@@ -247,10 +258,11 @@ export default function ClientsPage() {
       success(t('pages.clients.createSuccess'))
       fetchClients(search.trim() || undefined)
     } catch (err: unknown) {
-      const e = err as { response?: { status?: number; data?: { code?: string; message?: string | string[]; limite?: number; actuel?: number } } }
-      if (e?.response?.status === 402 || e?.response?.data?.code === 'PLAN_LIMIT') {
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
         setCreateOpen(false)
-        setLimitModal({ resource: 'clients', limite: e.response!.data?.limite ?? 5, actuel: e.response!.data?.actuel ?? 5 })
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'clients', limite: errs?.limite ?? 5, actuel: errs?.actuel ?? 5 })
       } else {
         const msg = e?.response?.data?.message
         toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
@@ -337,10 +349,24 @@ export default function ClientsPage() {
         title={t('pages.clients.title')}
         sub={t('pages.clients.sub')}
         actions={
-          <button className="btn-primary text-sm" onClick={openCreate}>
-            <UserPlus className="w-4 h-4" />
-            {t('pages.clients.addClient')}
-          </button>
+          <div className="flex items-center gap-2">
+            {planLimite !== -1 && (
+              <span className={cn(
+                'text-xs font-semibold px-2.5 py-1 rounded-full border',
+                activeClientsCount >= planLimite
+                  ? 'bg-red-50 border-red-200 text-red-600 dark:bg-red-950/30 dark:border-red-800 dark:text-red-400'
+                  : activeClientsCount >= planLimite * 0.8
+                  ? 'bg-amber-50 border-amber-200 text-amber-600 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400'
+                  : 'bg-slate-100 border-slate-200 text-slate-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400'
+              )}>
+                {activeClientsCount} / {planLimite} clients
+              </span>
+            )}
+            <button className="btn-primary text-sm" onClick={openCreate}>
+              <UserPlus className="w-4 h-4" />
+              {t('pages.clients.addClient')}
+            </button>
+          </div>
         }
       />
 
