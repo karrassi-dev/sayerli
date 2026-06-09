@@ -3,6 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+import { PLAN_LIMITS } from '../../common/utils/plan-limits';
 import * as bcrypt from 'bcrypt';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -293,37 +294,40 @@ export class SettingsService {
   // ─── BILLING ─────────────────────────────────────────────────────────────
 
   async getBilling(entrepriseId: string) {
-    const company = await this.prisma.entreprise.findUnique({
-      where: { id: entrepriseId },
-      select: {
-        plan: true,
-        planExpiration: true,
-        _count: {
-          select: {
-            utilisateurs: true,
-            clients: true,
-          },
-        },
-      },
-    });
+    const now = new Date();
+    const debutMois = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const [company, clientsActifs, utilisateursCount, devisCeMois] = await Promise.all([
+      this.prisma.entreprise.findUnique({
+        where: { id: entrepriseId },
+        select: { plan: true, planDebut: true, planExpiration: true, createdAt: true },
+      }),
+      this.prisma.client.count({ where: { entrepriseId, actif: true } }),
+      this.prisma.utilisateur.count({ where: { entrepriseId } }),
+      this.prisma.devis.count({ where: { entrepriseId, createdAt: { gte: debutMois } } }),
+    ]);
+
     if (!company) throw new NotFoundException('Entreprise introuvable.');
 
-    const PLAN_LIMITS = {
-      STARTER: { clients: 5, devisParMois: 10, facturesParMois: 10, utilisateurs: 1, prix: 0 },
-      PRO: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: 5, prix: 299 },
-      BUSINESS: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: -1, prix: 599 },
-    };
-
     const limits = PLAN_LIMITS[company.plan];
+    const planDebut = company.planDebut ?? company.createdAt;
+
+    let joursRestants: number | null = null;
+    if (company.planExpiration) {
+      const diff = company.planExpiration.getTime() - now.getTime();
+      joursRestants = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+    }
 
     return {
       plan: company.plan,
+      planDebut,
       planExpiration: company.planExpiration,
+      joursRestants,
       usage: {
-        clients: company._count.clients,
-        utilisateurs: company._count.utilisateurs,
+        clients:     { actuel: clientsActifs,    limite: limits.clients },
+        utilisateurs:{ actuel: utilisateursCount, limite: limits.utilisateurs },
+        devisCeMois: { actuel: devisCeMois,       limite: limits.devisParMois },
       },
-      limits,
     };
   }
 }

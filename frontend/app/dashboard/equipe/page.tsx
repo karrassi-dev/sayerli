@@ -10,6 +10,7 @@ import { StatusBadge } from '@/components/dashboard/ui/StatusBadge'
 import { EmptyState } from '@/components/dashboard/ui/EmptyState'
 import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
+import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { equipeApi, authApi } from '@/lib/api'
@@ -104,6 +105,7 @@ export default function EquipePage() {
   const [inviteOpen, setInviteOpen] = useState(false)
   const [inviteForm, setInviteForm] = useState<InviteForm>(EMPTY_INVITE)
   const [inviteErrors, setInviteErrors] = useState<Record<string, string>>({})
+  const [limitModal, setLimitModal] = useState<{ resource: 'utilisateurs'; limite: number; actuel: number } | null>(null)
 
   const [editTarget, setEditTarget] = useState<ApiMembre | null>(null)
   const [editForm, setEditForm] = useState<EditForm>(EMPTY_EDIT)
@@ -190,8 +192,14 @@ export default function EquipePage() {
       setInviteForm(EMPTY_INVITE)
       fetchMembres()
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible d\'envoyer l\'invitation.'))
+      const e = err as { response?: { status?: number; data?: { code?: string; message?: string; limite?: number; actuel?: number } } }
+      if (e?.response?.status === 402 || e?.response?.data?.code === 'PLAN_LIMIT') {
+        setInviteOpen(false)
+        setLimitModal({ resource: 'utilisateurs', limite: e.response!.data?.limite ?? 1, actuel: e.response!.data?.actuel ?? 1 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? "Impossible d'envoyer l'invitation."))
+      }
     } finally {
       setSaving(false)
     }
@@ -658,6 +666,16 @@ export default function EquipePage() {
         confirmLabel="Retirer"
         danger
       />
+
+      {limitModal && (
+        <PlanLimitModal
+          open={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          resource={limitModal.resource}
+          limite={limitModal.limite}
+          actuel={limitModal.actuel}
+        />
+      )}
     </div>
   )
 }

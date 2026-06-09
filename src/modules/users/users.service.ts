@@ -13,6 +13,7 @@ import { CreerUtilisateurDto } from './dto/creer-utilisateur.dto';
 import { ModifierUtilisateurDto } from './dto/modifier-utilisateur.dto';
 import { AccepterInvitationDto } from './dto/accepter-invitation.dto';
 import { EmailService } from '../email/email.service';
+import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 
 function computeStatut(actif: boolean, invitationToken: string | null): string {
   if (actif) return 'ACTIF';
@@ -103,6 +104,12 @@ export class UsersService {
   }
 
   async inviterUtilisateur(dto: CreerUtilisateurDto, entrepriseId: string) {
+    const [entreprise, actuelUtilisateurs] = await Promise.all([
+      this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true, nom: true } }),
+      this.prisma.utilisateur.count({ where: { entrepriseId } }),
+    ]);
+    verifierLimite('utilisateurs', actuelUtilisateurs, PLAN_LIMITS[entreprise!.plan].utilisateurs);
+
     const existant = await this.prisma.utilisateur.findFirst({
       where: { email: dto.email, entrepriseId },
     });
@@ -137,11 +144,6 @@ export class UsersService {
         invitationToken: true,
         createdAt: true,
       },
-    });
-
-    const entreprise = await this.prisma.entreprise.findUnique({
-      where: { id: entrepriseId },
-      select: { nom: true },
     });
 
     const nomComplet = utilisateur.prenom

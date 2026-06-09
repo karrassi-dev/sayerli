@@ -14,6 +14,7 @@ import { Pagination } from '@/components/dashboard/ui/Pagination'
 import { EmptyState } from '@/components/dashboard/ui/EmptyState'
 import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
+import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { devisApi, clientsApi } from '@/lib/api'
@@ -296,6 +297,7 @@ export default function DevisPage() {
   const [editTarget, setEditTarget] = useState<ApiDevis | null>(null)
   const [form, setForm] = useState<DevisForm>(EMPTY_FORM)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
+  const [limitModal, setLimitModal] = useState<{ resource: 'devis'; limite: number; actuel: number } | null>(null)
   const [saving, setSaving] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
@@ -406,9 +408,14 @@ export default function DevisPage() {
       success(t('pages.devis.createSuccess'))
       fetchDevis(search.trim() || undefined, filters.statut)
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
+      const e = err as { response?: { status?: number; data?: { code?: string; message?: string | string[]; limite?: number; actuel?: number } } }
+      if (e?.response?.status === 402 || e?.response?.data?.code === 'PLAN_LIMIT') {
+        setCreateOpen(false)
+        setLimitModal({ resource: 'devis', limite: e.response!.data?.limite ?? 10, actuel: e.response!.data?.actuel ?? 10 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
+      }
     } finally {
       setSaving(false)
     }
@@ -880,6 +887,15 @@ export default function DevisPage() {
       />
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      {limitModal && (
+        <PlanLimitModal
+          open={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          resource={limitModal.resource}
+          limite={limitModal.limite}
+          actuel={limitModal.actuel}
+        />
+      )}
     </div>
   )
 }

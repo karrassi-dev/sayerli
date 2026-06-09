@@ -23,6 +23,7 @@ model Entreprise {
   ice                  String?
   pays                 String?               @default("Maroc")
   planExpiration       DateTime?
+  planDebut            DateTime?
   rc                   String?
   ville                String?
   website              String?

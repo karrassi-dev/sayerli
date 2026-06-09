@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreerClientDto } from './dto/creer-client.dto';
 import { ModifierClientDto } from './dto/modifier-client.dto';
+import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 
 @Injectable()
 export class ClientsService {
@@ -52,12 +53,15 @@ export class ClientsService {
   }
 
   async creerClient(dto: CreerClientDto, entrepriseId: string) {
-    return this.prisma.client.create({
-      data: {
-        ...dto,
-        entrepriseId,
-      },
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
     });
+    const limite = PLAN_LIMITS[entreprise!.plan].clients;
+    const actuel = await this.prisma.client.count({ where: { entrepriseId, actif: true } });
+    verifierLimite('clients', actuel, limite);
+
+    return this.prisma.client.create({ data: { ...dto, entrepriseId } });
   }
 
   async modifierClient(id: string, dto: ModifierClientDto, entrepriseId: string) {

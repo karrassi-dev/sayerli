@@ -11,6 +11,7 @@ import { Pagination } from '@/components/dashboard/ui/Pagination'
 import { EmptyState } from '@/components/dashboard/ui/EmptyState'
 import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
+import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { clientsApi } from '@/lib/api'
@@ -146,6 +147,7 @@ export default function ClientsPage() {
   const [deleteTarget, setDeleteTarget] = useState<ApiClient | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<ApiClient | null>(null)
+  const [limitModal, setLimitModal] = useState<{ resource: 'clients'; limite: number; actuel: number } | null>(null)
 
   const [form, setForm] = useState<ClientForm>(EMPTY_FORM)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
@@ -245,9 +247,14 @@ export default function ClientsPage() {
       success(t('pages.clients.createSuccess'))
       fetchClients(search.trim() || undefined)
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
+      const e = err as { response?: { status?: number; data?: { code?: string; message?: string | string[]; limite?: number; actuel?: number } } }
+      if (e?.response?.status === 402 || e?.response?.data?.code === 'PLAN_LIMIT') {
+        setCreateOpen(false)
+        setLimitModal({ resource: 'clients', limite: e.response!.data?.limite ?? 5, actuel: e.response!.data?.actuel ?? 5 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
+      }
     } finally {
       setSaving(false)
     }
@@ -582,6 +589,15 @@ export default function ClientsPage() {
       />
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      {limitModal && (
+        <PlanLimitModal
+          open={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          resource={limitModal.resource}
+          limite={limitModal.limite}
+          actuel={limitModal.actuel}
+        />
+      )}
     </div>
   )
 }

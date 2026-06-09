@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import {
   User, Building2, Palette, Globe, Sun, Moon, Monitor, Bell, Shield, CreditCard,
@@ -92,7 +93,11 @@ export default function SettingsPage() {
   const { setTheme } = useTheme()
   const { user } = useAuth()
   const { toasts, success, error: toastError, removeToast } = useToast()
-  const [activeTab, setActiveTab] = useState<Tab>('profile')
+  const searchParams = useSearchParams()
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const p = searchParams.get('tab') as Tab | null
+    return p && TABS.some(t => t.key === p) ? p : 'profile'
+  })
 
   // ─── Per-tab save state ──────────────────────────────────────────────────
   const [saving, setSaving] = useState(false)
@@ -159,7 +164,14 @@ export default function SettingsPage() {
   const [pwForm, setPwForm] = useState({ motDePasseActuel: '', nouveauMotDePasse: '', confirmationMotDePasse: '' })
 
   // ─── Billing state ───────────────────────────────────────────────────────
-  const [billing, setBilling] = useState<{ plan: string; planExpiration: string | null; usage: { clients: number; utilisateurs: number }; limits: { prix: number } } | null>(null)
+  type UsageField = { actuel: number; limite: number }
+  const [billing, setBilling] = useState<{
+    plan: string
+    planDebut: string | null
+    planExpiration: string | null
+    joursRestants: number | null
+    usage: { clients: UsageField; utilisateurs: UsageField; devisCeMois: UsageField }
+  } | null>(null)
   const [billingLoading, setBillingLoading] = useState(true)
 
   // ─── Data loading ─────────────────────────────────────────────────────────
@@ -868,8 +880,9 @@ export default function SettingsPage() {
               <div className="h-32 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
             ) : billing ? (
               <>
+                {/* ── Current plan card ── */}
                 <div className="p-5 rounded-2xl bg-gradient-to-br from-primary-500 to-teal-500 text-white">
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Zap className="w-4 h-4" />
@@ -880,13 +893,44 @@ export default function SettingsPage() {
                         {PLAN_LABELS[billing.plan]?.prix === '0' ? 'Gratuit' : `${PLAN_LABELS[billing.plan]?.prix} MAD / mois`}
                       </p>
                     </div>
-                    {billing.planExpiration && (
-                      <div className="text-right">
-                        <p className="text-xs opacity-70 mb-1">Renouvellement</p>
-                        <p className="text-sm font-bold">{new Date(billing.planExpiration).toLocaleDateString('fr-MA')}</p>
-                      </div>
-                    )}
+                    <div className="text-right text-sm shrink-0">
+                      {billing.planDebut && (
+                        <div className="mb-2">
+                          <p className="text-xs opacity-70">Depuis</p>
+                          <p className="font-bold">{new Date(billing.planDebut).toLocaleDateString('fr-MA')}</p>
+                        </div>
+                      )}
+                      {billing.planExpiration ? (
+                        <div>
+                          <p className="text-xs opacity-70">Renouvellement</p>
+                          <p className="font-bold">{new Date(billing.planExpiration).toLocaleDateString('fr-MA')}</p>
+                          {billing.joursRestants !== null && (
+                            <p className="text-xs opacity-80 mt-0.5">
+                              {billing.joursRestants === 0 ? 'Expire aujourd\'hui' : `${billing.joursRestants} j restants`}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-xs opacity-70">Expiration</p>
+                          <p className="font-bold text-sm">Aucune</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Days remaining bar (paid plans only) */}
+                  {billing.planExpiration && billing.joursRestants !== null && (
+                    <div className="mt-4">
+                      <div className="h-1.5 rounded-full bg-white/20 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-white/80 transition-all"
+                          style={{ width: `${Math.min(100, Math.max(3, (billing.joursRestants / 30) * 100))}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <div className="mt-4 pt-4 border-t border-white/20 flex flex-wrap gap-2">
                     {PLAN_LABELS[billing.plan]?.features.map(f => (
                       <span key={f} className="text-xs px-2.5 py-1 rounded-full bg-white/15 font-medium">{f}</span>
@@ -894,6 +938,50 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
+                {/* ── Usage section ── */}
+                <div className="card rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4">Utilisation du plan</h4>
+                  <div className="space-y-4">
+                    {([
+                      { key: 'clients',     label: 'Clients',          field: billing.usage.clients },
+                      { key: 'devisCeMois', label: 'Devis ce mois',    field: billing.usage.devisCeMois },
+                      { key: 'utilisateurs',label: 'Membres d\'équipe', field: billing.usage.utilisateurs },
+                    ] as const).map(({ key, label, field }) => {
+                      const unlimited = field.limite === -1
+                      const pct = unlimited ? 0 : Math.min(100, Math.round((field.actuel / field.limite) * 100))
+                      const atLimit = !unlimited && field.actuel >= field.limite
+                      const nearLimit = !unlimited && !atLimit && pct >= 80
+                      const barColor = atLimit ? 'bg-red-500' : nearLimit ? 'bg-amber-500' : 'bg-primary-500'
+                      return (
+                        <div key={key}>
+                          <div className="flex items-center justify-between text-xs mb-1.5">
+                            <span className="font-medium text-slate-700 dark:text-slate-300">{label}</span>
+                            <span className={cn('font-semibold', atLimit ? 'text-red-500' : nearLimit ? 'text-amber-500' : 'text-slate-500 dark:text-slate-400')}>
+                              {unlimited ? `${field.actuel} / ∞` : `${field.actuel} / ${field.limite}`}
+                            </span>
+                          </div>
+                          {unlimited ? (
+                            <div className="h-1.5 rounded-full bg-primary-100 dark:bg-primary-900/40">
+                              <div className="h-full w-full rounded-full bg-primary-200 dark:bg-primary-800/60" />
+                            </div>
+                          ) : (
+                            <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                              <div className={cn('h-full rounded-full transition-all', barColor)} style={{ width: `${Math.max(pct, field.actuel > 0 ? 3 : 0)}%` }} />
+                            </div>
+                          )}
+                          {atLimit && (
+                            <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3 flex-shrink-0" />
+                              Limite atteinte — passez au plan Pro pour continuer
+                            </p>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Plan comparison ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {(['STARTER', 'PRO', 'BUSINESS'] as const).map(plan => {
                     const info = PLAN_LABELS[plan]

@@ -8,6 +8,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreerDevisDto } from './dto/creer-devis.dto';
 import { ModifierStatutDevisDto } from './dto/modifier-statut-devis.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 
 @Injectable()
 export class DevisService {
@@ -72,6 +73,15 @@ export class DevisService {
   }
 
   async creerDevis(dto: CreerDevisDto, entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
+    });
+    const limite = PLAN_LIMITS[entreprise!.plan].devisParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.devis.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('devis', actuel, limite);
+
     const client = await this.prisma.client.findFirst({
       where: { id: dto.clientId, entrepriseId },
     });
