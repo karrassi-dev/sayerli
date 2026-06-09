@@ -17,6 +17,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useAuth } from '@/hooks/useAuth'
 import { devisApi, clientsApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
@@ -278,9 +279,12 @@ function DevisFormFields({
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
+const DEVIS_LIMIT: Record<string, number> = { STARTER: 10, PRO: -1, BUSINESS: -1 }
+
 export default function DevisPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
+  const { entreprise } = useAuth()
 
   const [devisList, setDevisList] = useState<ApiDevis[]>([])
   const [clients, setClients] = useState<ApiClient[]>([])
@@ -393,7 +397,18 @@ export default function DevisPage() {
   })
 
   // ── Handlers ──
+  const planLimite = DEVIS_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 10
+  const now = new Date()
+  const devisCeMois = devisList.filter(d => {
+    const created = new Date(d.createdAt)
+    return created.getFullYear() === now.getFullYear() && created.getMonth() === now.getMonth()
+  }).length
+
   const openCreate = () => {
+    if (planLimite !== -1 && devisCeMois >= planLimite) {
+      setLimitModal({ resource: 'devis', limite: planLimite, actuel: devisCeMois })
+      return
+    }
     setForm(EMPTY_FORM)
     setFormErrors({})
     setCreateOpen(true)
@@ -593,10 +608,24 @@ export default function DevisPage() {
         title={t('pages.devis.title')}
         sub={t('pages.devis.sub')}
         actions={
-          <button className="btn-primary text-sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" />
-            {t('pages.devis.createDevis')}
-          </button>
+          <div className="flex items-center gap-2">
+            {planLimite !== -1 && (
+              <span className={cn(
+                'text-xs font-semibold px-2.5 py-1 rounded-full border',
+                devisCeMois >= planLimite
+                  ? 'bg-red-50 border-red-200 text-red-600 dark:bg-red-950/30 dark:border-red-800 dark:text-red-400'
+                  : devisCeMois >= planLimite * 0.8
+                  ? 'bg-amber-50 border-amber-200 text-amber-600 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400'
+                  : 'bg-slate-100 border-slate-200 text-slate-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400'
+              )}>
+                {devisCeMois} / {planLimite} devis ce mois
+              </span>
+            )}
+            <button className="btn-primary text-sm" onClick={openCreate}>
+              <Plus className="w-4 h-4" />
+              {t('pages.devis.createDevis')}
+            </button>
+          </div>
         }
       />
 

@@ -13,6 +13,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useAuth } from '@/hooks/useAuth'
 import { equipeApi, authApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
@@ -91,9 +92,12 @@ const EMPTY_EDIT: EditForm = { prenom: '', nom: '', telephone: '', role: 'COMMER
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
+const EQUIPE_LIMIT: Record<string, number> = { STARTER: 1, PRO: 5, BUSINESS: -1 }
+
 export default function EquipePage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
+  const { entreprise } = useAuth()
 
   const [membres, setMembres] = useState<ApiMembre[]>([])
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
@@ -151,6 +155,17 @@ export default function EquipePage() {
 
   const isAdmin = currentUserRole === 'ADMIN'
   const activeCount = membres.filter(m => m.statut === 'ACTIF').length
+  const planLimite = EQUIPE_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 1
+
+  const openInvite = () => {
+    if (planLimite !== -1 && membres.length >= planLimite) {
+      setLimitModal({ resource: 'utilisateurs', limite: planLimite, actuel: membres.length })
+      return
+    }
+    setInviteForm(EMPTY_INVITE)
+    setInviteErrors({})
+    setInviteOpen(true)
+  }
 
   // ── Role key helper ────────────────────────────────────────────────────────
 
@@ -312,10 +327,24 @@ export default function EquipePage() {
         sub={t('pages.equipe.sub')}
         actions={
           isAdmin ? (
-            <button className="btn-primary text-sm" onClick={() => { setInviteForm(EMPTY_INVITE); setInviteErrors({}); setInviteOpen(true) }}>
-              <UserPlus className="w-4 h-4" />
-              {t('pages.equipe.inviteMember')}
-            </button>
+            <div className="flex items-center gap-2">
+              {planLimite !== -1 && (
+                <span className={cn(
+                  'text-xs font-semibold px-2.5 py-1 rounded-full border',
+                  membres.length >= planLimite
+                    ? 'bg-red-50 border-red-200 text-red-600 dark:bg-red-950/30 dark:border-red-800 dark:text-red-400'
+                    : membres.length >= planLimite * 0.8
+                    ? 'bg-amber-50 border-amber-200 text-amber-600 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400'
+                    : 'bg-slate-100 border-slate-200 text-slate-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400'
+                )}>
+                  {membres.length} / {planLimite} membres
+                </span>
+              )}
+              <button className="btn-primary text-sm" onClick={openInvite}>
+                <UserPlus className="w-4 h-4" />
+                {t('pages.equipe.inviteMember')}
+              </button>
+            </div>
           ) : null
         }
       />
@@ -373,7 +402,7 @@ export default function EquipePage() {
             icon={UserCog}
             title={t('pages.equipe.empty.title')}
             desc={t('pages.equipe.empty.desc')}
-            action={isAdmin ? { label: t('pages.equipe.inviteMember'), onClick: () => setInviteOpen(true) } : undefined}
+            action={isAdmin ? { label: t('pages.equipe.inviteMember'), onClick: openInvite } : undefined}
             color="blue"
           />
         </div>
@@ -430,7 +459,7 @@ export default function EquipePage() {
             {/* Invite placeholder */}
             {isAdmin && (
               <button
-                onClick={() => { setInviteForm(EMPTY_INVITE); setInviteErrors({}); setInviteOpen(true) }}
+                onClick={openInvite}
                 className="card rounded-2xl p-5 border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-3 text-center hover:border-primary-400 dark:hover:border-primary-600 hover:bg-primary-50/50 dark:hover:bg-primary-950/20 transition-all group min-h-[160px]"
               >
                 <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/50 flex items-center justify-center transition-colors">
