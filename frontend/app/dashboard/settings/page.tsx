@@ -57,6 +57,12 @@ const PLAN_LABELS: Record<string, { label: string; prix: string; features: strin
   BUSINESS:{ label: 'Business',prix: '599', features: ['Tout Pro', 'Utilisateurs illimités', 'API accès'] },
 }
 
+const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; utilisateurs: number }> = {
+  STARTER:  { clients: 5,  devisParMois: 10, utilisateurs: 1  },
+  PRO:      { clients: -1, devisParMois: -1, utilisateurs: 5  },
+  BUSINESS: { clients: -1, devisParMois: -1, utilisateurs: -1 },
+}
+
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
   return (
     <button
@@ -225,7 +231,7 @@ export default function SettingsPage() {
 
     settingsApi.getBilling().then(r => {
       const d = r.data?.data ?? r.data
-      // Normalise usage — backend may return flat numbers (old format) or { actuel, limite } objects
+      const planLimits = PLAN_LIMITS_FRONTEND[d.plan] ?? PLAN_LIMITS_FRONTEND.STARTER
       const normalise = (field: unknown, fallbackLimite: number) => {
         if (field && typeof field === 'object' && 'limite' in (field as object)) return field as { actuel: number; limite: number }
         return { actuel: typeof field === 'number' ? field : 0, limite: fallbackLimite }
@@ -233,9 +239,9 @@ export default function SettingsPage() {
       setBilling({
         ...d,
         usage: {
-          clients:      normalise(d.usage?.clients,      5),
-          utilisateurs: normalise(d.usage?.utilisateurs, 1),
-          devisCeMois:  normalise(d.usage?.devisCeMois,  10),
+          clients:      normalise(d.usage?.clients,      planLimits.clients),
+          utilisateurs: normalise(d.usage?.utilisateurs, planLimits.utilisateurs),
+          devisCeMois:  normalise(d.usage?.devisCeMois,  planLimits.devisParMois),
         },
       })
     }).catch(() => {}).finally(() => setBillingLoading(false))
