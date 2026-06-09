@@ -136,11 +136,16 @@ model Devis {
   remise          Decimal     @default(0) @db.Decimal(12, 2)
   taxe            Decimal     @default(20) @db.Decimal(5, 2)
   totalTTC        Decimal     @default(0) @db.Decimal(12, 2)
-  dateExpiration  DateTime?
-  dateAcceptation DateTime?
-  notes           String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  dateExpiration           DateTime?
+  dateAcceptation          DateTime?
+  dateRefus                DateTime?
+  dateEnvoi                DateTime?
+  dateConsultation         DateTime?
+  dateDerniereConsultation DateTime?
+  nombreConsultations      Int       @default(0)
+  notes                    String?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 
   entreprise    Entreprise      @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
   client        Client          @relation(fields: [clientId], references: [id])

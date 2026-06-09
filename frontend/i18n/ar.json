@@ -697,7 +697,8 @@
       },
       "actions": {
         "send": "إرسال",
-        "duplicate": "نسخ",
+        "copyLink": "نسخ الرابط",
+        "duplicate": "تكرار",
         "convert": "تحويل إلى فاتورة"
       },
       "empty": {
@@ -713,8 +714,18 @@
       "deleteSuccess": "تم حذف العرض.",
       "sendSuccess": "تم تحديد العرض كمُرسَل.",
       "convertSuccess": "تم إنشاء الفاتورة من العرض.",
+      "duplicateSuccess": "تم تكرار العرض بنجاح.",
       "linkCopied": "تم نسخ الرابط إلى الحافظة.",
+      "linkError": "تعذر إنشاء الرابط.",
       "linkGenerated": "تم إنشاء الرابط العام.",
+      "history": {
+        "title": "سجل العرض",
+        "created": "تم الإنشاء",
+        "sent": "تم الإرسال",
+        "viewed": "تمت المشاهدة",
+        "accepted": "تم القبول",
+        "refused": "تم الرفض"
+      },
       "form": {
         "client": "العميل",
         "clientPlaceholder": "اختر عميلاً",

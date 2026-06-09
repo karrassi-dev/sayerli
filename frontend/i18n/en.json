@@ -697,6 +697,7 @@
       },
       "actions": {
         "send": "Send",
+        "copyLink": "Copy link",
         "duplicate": "Duplicate",
         "convert": "Convert to Invoice"
       },
@@ -713,8 +714,18 @@
       "deleteSuccess": "Quote deleted.",
       "sendSuccess": "Quote marked as sent.",
       "convertSuccess": "Invoice created from quote.",
+      "duplicateSuccess": "Quote duplicated successfully.",
       "linkCopied": "Link copied to clipboard.",
+      "linkError": "Unable to generate link.",
       "linkGenerated": "Public link generated.",
+      "history": {
+        "title": "Quote history",
+        "created": "Created",
+        "sent": "Sent",
+        "viewed": "Viewed",
+        "accepted": "Accepted",
+        "refused": "Refused"
+      },
       "form": {
         "client": "Client",
         "clientPlaceholder": "Select a client",

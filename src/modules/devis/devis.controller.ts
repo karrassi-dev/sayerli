@@ -77,9 +77,16 @@ export class DevisController {
   async genererLien(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
-    @Query('jours') jours?: number,
   ) {
-    return this.devisService.genererLienPublic(id, entrepriseId, jours);
+    return this.devisService.genererLienPublic(id, entrepriseId);
+  }
+
+  @Post(':id/dupliquer')
+  async dupliquer(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.devisService.dupliquerDevis(id, entrepriseId);
   }
 
   @Post(':id/convertir-facture')

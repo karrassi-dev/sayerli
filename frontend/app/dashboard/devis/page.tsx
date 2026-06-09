@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   FileText, Plus, Eye, Pencil, Trash2, Copy, Send, CheckCircle,
-  Link, Minus, AlertCircle, X,
+  Link, AlertCircle, X,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -47,6 +47,11 @@ interface ApiDevis {
   totalTTC: number | string
   dateExpiration: string | null
   dateAcceptation: string | null
+  dateRefus: string | null
+  dateEnvoi: string | null
+  dateConsultation: string | null
+  dateDerniereConsultation: string | null
+  nombreConsultations: number
   notes: string | null
   createdAt: string
   client: { id: string; nom: string; email: string | null; nomEntreprise: string | null }
@@ -289,8 +294,6 @@ export default function DevisPage() {
   const [deleteTarget, setDeleteTarget] = useState<ApiDevis | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<ApiDevis | null>(null)
-  const [publicLink, setPublicLink] = useState<{ token: string; url: string } | null>(null)
-
   const [form, setForm] = useState<DevisForm>(EMPTY_FORM)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
@@ -478,18 +481,35 @@ export default function DevisPage() {
     finally { setActionLoading(null) }
   }
 
-  const handleGenerateLink = async (d: ApiDevis) => {
+  const handleCopyLink = async (d: ApiDevis) => {
     setActionLoading(`link_${d.id}`)
     try {
+      // Auto-advance BROUILLON → ENVOYE: sharing a quote with a client means it's sent
+      if (d.statut === 'BROUILLON') {
+        await devisApi.updateStatus(d.id, 'ENVOYE')
+      }
       const res = await devisApi.generateLink(d.id)
       const data = res.data?.data ?? res.data
       const token = data.token
       const url = `${window.location.origin}/public/devis/${token}`
       await navigator.clipboard.writeText(url).catch(() => {})
-      setPublicLink({ token, url })
-      success(t('pages.devis.linkGenerated'))
+      success(t('pages.devis.linkCopied'))
       fetchDevis(search.trim() || undefined, filters.statut)
-    } catch { toastError('Erreur', 'Impossible de générer le lien.') }
+    } catch { toastError('Erreur', t('pages.devis.linkError')) }
+    finally { setActionLoading(null) }
+  }
+
+  const handleDuplicate = async (d: ApiDevis) => {
+    setActionLoading(`dup_${d.id}`)
+    try {
+      await devisApi.duplicate(d.id)
+      success(t('pages.devis.duplicateSuccess'))
+      fetchDevis(search.trim() || undefined, filters.statut)
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string | string[] } } }
+      const msg = e?.response?.data?.message
+      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de dupliquer ce devis.'))
+    }
     finally { setActionLoading(null) }
   }
 
@@ -573,9 +593,10 @@ export default function DevisPage() {
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
         <StatsCard label={t('statuses.brouillon')} value={loading ? '—' : byStatus('BROUILLON')} icon={FileText} color="blue" />
         <StatsCard label={t('statuses.envoye')} value={loading ? '—' : byStatus('ENVOYE')} icon={Send} color="teal" />
+        <StatsCard label={t('statuses.vu')} value={loading ? '—' : byStatus('VU')} icon={Eye} color="purple" />
         <StatsCard label={t('statuses.accepte')} value={loading ? '—' : byStatus('ACCEPTE')} icon={CheckCircle} color="green" />
         <StatsCard label={t('statuses.refuse')} value={loading ? '—' : byStatus('REFUSE')} icon={FileText} color="red" />
       </div>
@@ -639,7 +660,8 @@ export default function DevisPage() {
                           { label: t('common.view'), icon: Eye, onClick: () => handleOpenDetail(devis) },
                           ...(devis.statut === 'BROUILLON' || devis.statut === 'ENVOYE' ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(devis) }] : []),
                           { label: t('pages.devis.actions.send'), icon: Send, onClick: () => handleSend(devis) },
-                          { label: t('pages.devis.actions.duplicate'), icon: Link, onClick: () => handleGenerateLink(devis) },
+                          { label: t('pages.devis.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(devis) },
+                          { label: t('pages.devis.actions.duplicate'), icon: Copy, onClick: () => handleDuplicate(devis) },
                           ...(devis.statut === 'ACCEPTE' ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
                           ...(devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
                         ]} />
@@ -724,10 +746,39 @@ export default function DevisPage() {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-2 text-xs text-slate-500">
-              <div><span className="font-medium">Expiration :</span> {formatDate(selected.dateExpiration)}</div>
-              {selected.dateAcceptation && <div><span className="font-medium">Accepté :</span> {formatDate(selected.dateAcceptation)}</div>}
+            {/* History timeline */}
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{t('pages.devis.history.title')}</p>
+              <div className="space-y-2">
+                {[
+                  { label: t('pages.devis.history.created'), date: selected.createdAt, done: true },
+                  { label: t('pages.devis.history.sent'), date: selected.dateEnvoi, done: !!selected.dateEnvoi },
+                  { label: t('pages.devis.history.viewed'), date: selected.dateConsultation, done: !!selected.dateConsultation, sub: selected.nombreConsultations > 1 ? `${selected.nombreConsultations} consultations` : undefined },
+                  { label: t('pages.devis.history.accepted'), date: selected.dateAcceptation, done: !!selected.dateAcceptation },
+                  { label: t('pages.devis.history.refused'), date: selected.dateRefus, done: !!selected.dateRefus },
+                ].filter(e => e.done || e.label === t('pages.devis.history.sent') || e.label === t('pages.devis.history.viewed')).map((ev, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className={cn(
+                      'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
+                      ev.done ? 'bg-green-100 dark:bg-green-950/40' : 'bg-slate-100 dark:bg-slate-800',
+                    )}>
+                      <div className={cn('w-2 h-2 rounded-full', ev.done ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600')} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={cn('text-xs font-semibold', ev.done ? 'text-slate-900 dark:text-white' : 'text-slate-400')}>{ev.label}</p>
+                      {ev.date && <p className="text-xs text-slate-400 mt-0.5">{formatDate(ev.date)}</p>}
+                      {ev.sub && <p className="text-xs text-purple-600 dark:text-purple-400 mt-0.5">{ev.sub}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {selected.dateExpiration && (
+              <div className="text-xs text-slate-500">
+                <span className="font-medium">{t('pages.devis.col.expiry')} :</span> {formatDate(selected.dateExpiration)}
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-2 pt-2">
               {(selected.statut === 'BROUILLON' || selected.statut === 'ENVOYE') && (
@@ -749,11 +800,19 @@ export default function DevisPage() {
                 </button>
               )}
               <button
-                onClick={() => handleGenerateLink(selected)}
+                onClick={() => handleCopyLink(selected)}
                 disabled={!!actionLoading}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
               >
                 <Link className="w-3.5 h-3.5" />
+                {t('pages.devis.actions.copyLink')}
+              </button>
+              <button
+                onClick={() => { handleDuplicate(selected); setSelected(null) }}
+                disabled={!!actionLoading}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
+              >
+                <Copy className="w-3.5 h-3.5" />
                 {t('pages.devis.actions.duplicate')}
               </button>
               {selected.statut === 'ACCEPTE' && (
@@ -774,27 +833,6 @@ export default function DevisPage() {
                   {t('common.delete')}
                 </button>
               )}
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      {/* Public link modal */}
-      <Modal open={!!publicLink} onClose={() => setPublicLink(null)} title={t('pages.devis.linkGenerated')} size="sm">
-        {publicLink && (
-          <div className="space-y-3">
-            <p className="text-sm text-slate-600 dark:text-slate-400">Partagez ce lien avec votre client :</p>
-            <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-              <span className="text-xs font-mono text-slate-700 dark:text-slate-300 flex-1 break-all">{publicLink.url}</span>
-              <button
-                onClick={async () => {
-                  await navigator.clipboard.writeText(publicLink.url).catch(() => {})
-                  success(t('pages.devis.linkCopied'))
-                }}
-                className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex-shrink-0"
-              >
-                <Copy className="w-4 h-4 text-slate-500" />
-              </button>
             </div>
           </div>
         )}

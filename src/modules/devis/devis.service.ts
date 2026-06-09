@@ -159,8 +159,13 @@ export class DevisService {
     const devis = await this.prisma.devis.findFirst({ where: { id, entrepriseId } });
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
-    const data: Partial<{ statut: StatutDevis; dateAcceptation: Date }> = { statut: dto.statut };
+    const data: Partial<{
+      statut: StatutDevis; dateAcceptation: Date;
+      dateEnvoi: Date; dateRefus: Date;
+    }> = { statut: dto.statut };
     if (dto.statut === StatutDevis.ACCEPTE) data.dateAcceptation = new Date();
+    if (dto.statut === StatutDevis.REFUSE)  data.dateRefus = new Date();
+    if (dto.statut === StatutDevis.ENVOYE)  data.dateEnvoi = new Date();
 
     const typeNotif =
       dto.statut === StatutDevis.ACCEPTE ? 'DEVIS_ACCEPTE' :
@@ -183,12 +188,13 @@ export class DevisService {
     return devisMaj;
   }
 
-  async genererLienPublic(id: string, entrepriseId: string, joursValidite = 30) {
+  async genererLienPublic(id: string, entrepriseId: string, joursValidite?: number) {
     const devis = await this.prisma.devis.findFirst({ where: { id, entrepriseId } });
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
+    const jours = joursValidite && !isNaN(joursValidite) ? joursValidite : 30;
     const expiration = new Date();
-    expiration.setDate(expiration.getDate() + joursValidite);
+    expiration.setDate(expiration.getDate() + jours);
 
     const lien = await this.prisma.lienPublicDevis.upsert({
       where: { devisId: id },
@@ -225,16 +231,22 @@ export class DevisService {
     if (!lien) throw new NotFoundException('Ce lien de devis est invalide.');
     if (lien.expiration < new Date()) throw new BadRequestException('Ce lien de devis a expiré.');
 
+    const now = new Date();
+    const trackingData: Record<string, unknown> = {
+      dateDerniereConsultation: now,
+      nombreConsultations: { increment: 1 },
+    };
+
     if (!lien.utilise) {
       await this.prisma.lienPublicDevis.update({ where: { token }, data: { utilise: true } });
+      trackingData.dateConsultation = now;
       if (lien.devis.statut === StatutDevis.ENVOYE) {
-        await this.prisma.devis.update({
-          where: { id: lien.devisId },
-          data: { statut: StatutDevis.VU },
-        });
+        trackingData.statut = StatutDevis.VU;
         lien.devis.statut = StatutDevis.VU;
       }
     }
+
+    await this.prisma.devis.update({ where: { id: lien.devisId }, data: trackingData });
 
     return lien.devis;
   }
@@ -255,8 +267,9 @@ export class DevisService {
     }
 
     const newStatut = reponse === 'accepter' ? StatutDevis.ACCEPTE : StatutDevis.REFUSE;
-    const data: Partial<{ statut: StatutDevis; dateAcceptation: Date }> = { statut: newStatut };
+    const data: Partial<{ statut: StatutDevis; dateAcceptation: Date; dateRefus: Date }> = { statut: newStatut };
     if (newStatut === StatutDevis.ACCEPTE) data.dateAcceptation = new Date();
+    if (newStatut === StatutDevis.REFUSE)  data.dateRefus = new Date();
 
     await this.prisma.$transaction([
       this.prisma.devis.update({ where: { id: devis.id }, data }),
@@ -307,6 +320,43 @@ export class DevisService {
         },
       },
       include: { lignes: true, client: true },
+    });
+  }
+
+  async dupliquerDevis(id: string, entrepriseId: string) {
+    const devis = await this.prisma.devis.findFirst({
+      where: { id, entrepriseId },
+      include: { lignes: true },
+    });
+    if (!devis) throw new NotFoundException('Devis introuvable.');
+
+    const reference = await this.genererReference(entrepriseId);
+
+    return this.prisma.devis.create({
+      data: {
+        entrepriseId,
+        clientId: devis.clientId,
+        reference,
+        statut: StatutDevis.BROUILLON,
+        taxe: devis.taxe,
+        remise: devis.remise,
+        totalHT: devis.totalHT,
+        totalTTC: devis.totalTTC,
+        notes: devis.notes,
+        lignes: {
+          create: devis.lignes.map((ligne, index) => ({
+            description: ligne.description,
+            quantite: ligne.quantite,
+            prixUnitaire: ligne.prixUnitaire,
+            total: ligne.total,
+            ordre: index,
+          })),
+        },
+      },
+      include: {
+        client: { select: { id: true, nom: true, email: true } },
+        lignes: true,
+      },
     });
   }
 

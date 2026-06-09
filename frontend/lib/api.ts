@@ -61,6 +61,7 @@ export const devisApi = {
   updateStatus: (id: string, statut: string) =>
     api.patch(`/devis/${id}/statut`, { statut }),
   generateLink: (id: string) => api.post(`/devis/${id}/lien-public`),
+  duplicate: (id: string) => api.post(`/devis/${id}/dupliquer`),
   convertToInvoice: (id: string) => api.post(`/devis/${id}/convertir-facture`),
   delete: (id: string) => api.delete(`/devis/${id}`),
 }

@@ -697,6 +697,7 @@
       },
       "actions": {
         "send": "Envoyer",
+        "copyLink": "Copier le lien",
         "duplicate": "Dupliquer",
         "convert": "Convertir en facture"
       },
@@ -713,8 +714,18 @@
       "deleteSuccess": "Devis supprimé.",
       "sendSuccess": "Devis marqué comme envoyé.",
       "convertSuccess": "Facture créée depuis le devis.",
+      "duplicateSuccess": "Devis dupliqué avec succès.",
       "linkCopied": "Lien copié dans le presse-papiers.",
+      "linkError": "Impossible de générer le lien.",
       "linkGenerated": "Lien public généré.",
+      "history": {
+        "title": "Historique du devis",
+        "created": "Créé",
+        "sent": "Envoyé",
+        "viewed": "Consulté",
+        "accepted": "Accepté",
+        "refused": "Refusé"
+      },
       "form": {
         "client": "Client",
         "clientPlaceholder": "Sélectionner un client",
