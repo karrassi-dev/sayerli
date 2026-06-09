@@ -142,6 +142,7 @@ export const notificationsApi = {
   count: () => api.get('/notifications/compteur'),
   markRead: (id: string) => api.patch(`/notifications/${id}/lire`),
   markAllRead: () => api.patch('/notifications/tout-lire'),
+  delete: (id: string) => api.delete(`/notifications/${id}`),
 }
 
 // Entreprise

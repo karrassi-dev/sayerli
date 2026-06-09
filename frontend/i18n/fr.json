@@ -1046,6 +1046,35 @@
       "saveSuccess": "Paramètres enregistrés avec succès"
     }
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "filterAll": "Toutes",
+    "filterUnread": "Non lues",
+    "empty": "Aucune notification",
+    "emptyUnread": "Aucune notification non lue",
+    "emptyDesc": "Vous êtes à jour ! Les alertes apparaîtront ici.",
+    "deleteLabel": "Supprimer",
+    "justNow": "À l'instant",
+    "minutesAgo": "il y a {{n}} min",
+    "hoursAgo": "il y a {{n}}h",
+    "yesterday": "Hier",
+    "daysAgo": "il y a {{n}} jours",
+    "types": {
+      "DEVIS_ENVOYE": "Devis envoyé",
+      "DEVIS_ACCEPTE": "Devis accepté",
+      "DEVIS_REFUSE": "Devis refusé",
+      "DEVIS_VU": "Devis consulté",
+      "FACTURE_CREEE": "Facture créée",
+      "FACTURE_ENVOYEE": "Facture envoyée",
+      "FACTURE_VUE": "Facture consultée",
+      "FACTURE_PAYEE": "Facture payée",
+      "FACTURE_PARTIELLE": "Paiement partiel",
+      "RAPPEL_ECHEANCE": "Rappel d'échéance",
+      "PAIEMENT_RECU": "Paiement reçu",
+      "DECLARATION_RECUE": "Déclaration reçue"
+    }
+  },
   "notFound": {
     "heading": "Page introuvable",
     "message": "La page que vous cherchez n'existe pas ou a été déplacée.",

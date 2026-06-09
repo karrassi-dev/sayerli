@@ -1045,6 +1045,35 @@
       "saveSuccess": "Settings saved successfully"
     }
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "empty": "No notifications",
+    "emptyUnread": "No unread notifications",
+    "emptyDesc": "You're all caught up! Alerts will appear here.",
+    "deleteLabel": "Delete",
+    "justNow": "Just now",
+    "minutesAgo": "{{n}} min ago",
+    "hoursAgo": "{{n}}h ago",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{n}} days ago",
+    "types": {
+      "DEVIS_ENVOYE": "Quote sent",
+      "DEVIS_ACCEPTE": "Quote accepted",
+      "DEVIS_REFUSE": "Quote refused",
+      "DEVIS_VU": "Quote viewed",
+      "FACTURE_CREEE": "Invoice created",
+      "FACTURE_ENVOYEE": "Invoice sent",
+      "FACTURE_VUE": "Invoice viewed",
+      "FACTURE_PAYEE": "Invoice paid",
+      "FACTURE_PARTIELLE": "Partial payment",
+      "RAPPEL_ECHEANCE": "Due date reminder",
+      "PAIEMENT_RECU": "Payment received",
+      "DECLARATION_RECUE": "Declaration received"
+    }
+  },
   "notFound": {
     "heading": "Page not found",
     "message": "The page you are looking for does not exist or has been moved.",

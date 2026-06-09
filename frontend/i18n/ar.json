@@ -1045,6 +1045,35 @@
       "saveSuccess": "تم حفظ الإعدادات بنجاح"
     }
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "filterAll": "الكل",
+    "filterUnread": "غير المقروءة",
+    "empty": "لا توجد إشعارات",
+    "emptyUnread": "لا توجد إشعارات غير مقروءة",
+    "emptyDesc": "أنت محدّث! ستظهر التنبيهات هنا.",
+    "deleteLabel": "حذف",
+    "justNow": "الآن",
+    "minutesAgo": "منذ {{n}} دقيقة",
+    "hoursAgo": "منذ {{n}} ساعة",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {{n}} أيام",
+    "types": {
+      "DEVIS_ENVOYE": "تم إرسال العرض",
+      "DEVIS_ACCEPTE": "تم قبول العرض",
+      "DEVIS_REFUSE": "تم رفض العرض",
+      "DEVIS_VU": "تمت مشاهدة العرض",
+      "FACTURE_CREEE": "تم إنشاء الفاتورة",
+      "FACTURE_ENVOYEE": "تم إرسال الفاتورة",
+      "FACTURE_VUE": "تمت مشاهدة الفاتورة",
+      "FACTURE_PAYEE": "تم دفع الفاتورة",
+      "FACTURE_PARTIELLE": "دفع جزئي",
+      "RAPPEL_ECHEANCE": "تذكير بالموعد النهائي",
+      "PAIEMENT_RECU": "تم استلام الدفع",
+      "DECLARATION_RECUE": "تم استلام الإقرار"
+    }
+  },
   "notFound": {
     "heading": "الصفحة غير موجودة",
     "message": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
