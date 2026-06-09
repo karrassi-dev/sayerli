@@ -170,6 +170,19 @@ export default function ClientsPage() {
 
   useEffect(() => { fetchClients() }, [fetchClients])
 
+  const [pendingCreate, setPendingCreate] = useState(false)
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    if (p.get('action') === 'create') {
+      setPendingCreate(true)
+      window.history.replaceState(null, '', '/dashboard/clients')
+    }
+  }, [])
+  useEffect(() => {
+    if (pendingCreate && !loading) { setPendingCreate(false); openCreate() }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingCreate, loading])
+
   const handleSearch = (v: string) => {
     setSearch(v)
     setPage(1)

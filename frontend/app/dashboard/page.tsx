@@ -21,10 +21,10 @@ import { formatMAD } from '@/lib/mock-data'
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const QUICK_ACTIONS = [
-  { href: '/dashboard/devis/new',   icon: '📄', labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950' },
-  { href: '/dashboard/factures/new',icon: '🧾', labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950' },
-  { href: '/dashboard/clients/new', icon: '👤', labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950' },
-  { href: '/dashboard/paiements',   icon: '💰', labelKey: 'dashboard.payments',   color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950' },
+  { href: '/dashboard/devis?action=create',    icon: '📄', labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950' },
+  { href: '/dashboard/factures?action=create', icon: '🧾', labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950' },
+  { href: '/dashboard/clients?action=create',  icon: '👤', labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950' },
+  { href: '/dashboard/paiements?action=create',icon: '💰', labelKey: 'dashboard.payments',   color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950' },
 ]
 
 const ACTIVITY_COLORS: Record<string, string> = {

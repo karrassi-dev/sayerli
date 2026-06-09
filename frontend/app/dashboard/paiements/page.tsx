@@ -167,6 +167,19 @@ export default function PaiementsPage() {
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
+  const [pendingCreate, setPendingCreate] = useState(false)
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    if (p.get('action') === 'create') {
+      setPendingCreate(true)
+      window.history.replaceState(null, '', '/dashboard/paiements')
+    }
+  }, [])
+  useEffect(() => {
+    if (pendingCreate && !loading) { setPendingCreate(false); openCreate() }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingCreate, loading])
+
   // ── Derived ────────────────────────────────────────────────────────────────
 
   const filtered = paiements.filter(p => {
