@@ -1,18 +1,6 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Cookies from 'js-cookie'
 import { Sidebar } from '@/components/dashboard/Sidebar'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-
-  useEffect(() => {
-    const token = Cookies.get('sayerli_token')
-    if (!token) router.push('/login')
-  }, [router])
-
   return (
     <>
       <meta name="robots" content="noindex, nofollow" />
