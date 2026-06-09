@@ -1045,5 +1045,13 @@
       },
       "saveSuccess": "Paramètres enregistrés avec succès"
     }
+  },
+  "notFound": {
+    "heading": "Page introuvable",
+    "message": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "redirectLoggedIn": "Redirection vers votre tableau de bord",
+    "redirectGuest": "Redirection vers la page d'accueil",
+    "seconds": "secondes",
+    "redirectNow": "Rediriger maintenant"
   }
 }

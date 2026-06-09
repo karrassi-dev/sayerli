@@ -1044,5 +1044,13 @@
       },
       "saveSuccess": "Settings saved successfully"
     }
+  },
+  "notFound": {
+    "heading": "Page not found",
+    "message": "The page you are looking for does not exist or has been moved.",
+    "redirectLoggedIn": "Redirecting to your dashboard",
+    "redirectGuest": "Redirecting to home page",
+    "seconds": "seconds",
+    "redirectNow": "Redirect now"
   }
 }
