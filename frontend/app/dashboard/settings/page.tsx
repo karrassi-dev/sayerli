@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import {
   User, Building2, Palette, Globe, Sun, Moon, Monitor, Bell, Shield, CreditCard,
@@ -93,11 +92,12 @@ export default function SettingsPage() {
   const { setTheme } = useTheme()
   const { user } = useAuth()
   const { toasts, success, error: toastError, removeToast } = useToast()
-  const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<Tab>(() => {
-    const p = searchParams.get('tab') as Tab | null
-    return p && TABS.some(t => t.key === p) ? p : 'profile'
-  })
+  const [activeTab, setActiveTab] = useState<Tab>('profile')
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get('tab') as Tab | null
+    if (p && TABS.some(t => t.key === p)) setActiveTab(p)
+  }, [])
 
   // ─── Per-tab save state ──────────────────────────────────────────────────
   const [saving, setSaving] = useState(false)
