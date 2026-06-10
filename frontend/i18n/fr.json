@@ -5,7 +5,8 @@
     "pricing": "Tarifs",
     "testimonials": "Témoignages",
     "login": "Connexion",
-    "startFree": "Essai gratuit"
+    "startFree": "Essai gratuit",
+    "contact": "Contact"
   },
   "hero": {
     "badge": "🇲🇦 Fait pour les PME marocaines",
@@ -152,6 +153,7 @@
     "about": "À propos",
     "blog": "Blog",
     "careers": "Carrières",
+    "contact": "Contact",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "copyright": "© 2024 Sayerli. Tous droits réservés.",

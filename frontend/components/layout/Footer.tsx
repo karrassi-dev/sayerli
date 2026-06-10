@@ -48,6 +48,7 @@ export function Footer() {
                 { href: '#', label: t('footer.about') },
                 { href: '#', label: t('footer.blog') },
                 { href: '#', label: t('footer.careers') },
+                { href: '/contact', label: t('footer.contact') },
               ].map(item => (
                 <li key={item.label}>
                   <a href={item.href} className="text-sm hover:text-white transition-colors">

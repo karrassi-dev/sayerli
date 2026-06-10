@@ -28,6 +28,7 @@ export function Navbar() {
     { href: '#how-it-works', label: t('nav.howItWorks') },
     { href: '#pricing', label: t('nav.pricing') },
     { href: '#testimonials', label: t('nav.testimonials') },
+    { href: '/contact', label: t('nav.contact') },
   ]
 
   const currentLocale = LOCALES.find(l => l.code === locale)

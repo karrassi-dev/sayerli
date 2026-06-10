@@ -5,7 +5,8 @@
     "pricing": "Pricing",
     "testimonials": "Testimonials",
     "login": "Login",
-    "startFree": "Start Free"
+    "startFree": "Start Free",
+    "contact": "Contact"
   },
   "hero": {
     "badge": "🇲🇦 Built for Moroccan SMEs",
@@ -152,6 +153,7 @@
     "about": "About",
     "blog": "Blog",
     "careers": "Careers",
+    "contact": "Contact",
     "privacy": "Privacy",
     "terms": "Terms",
     "copyright": "© 2024 Sayerli. All rights reserved.",
