@@ -1138,6 +1138,50 @@
       }
     }
   },
+  "contact": {
+    "meta": {
+      "title": "Contactez notre équipe | Sayerli",
+      "description": "Nous sommes là pour répondre à vos questions et vous accompagner dans la gestion de votre entreprise."
+    },
+    "hero": {
+      "badge": "Support",
+      "title": "Contactez notre équipe",
+      "subtitle": "Nous sommes là pour répondre à vos questions et vous accompagner dans la gestion de votre entreprise."
+    },
+    "form": {
+      "title": "Envoyez-nous un message",
+      "subtitle": "Nous vous répondrons dans les 24 heures.",
+      "name": "Nom complet",
+      "namePlaceholder": "Mohammed Alami",
+      "email": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "phone": "Téléphone",
+      "phonePlaceholder": "+212 6 XX XX XX XX",
+      "company": "Entreprise",
+      "companyPlaceholder": "Nom de votre entreprise",
+      "subject": "Sujet",
+      "subjectPlaceholder": "Comment pouvons-nous vous aider ?",
+      "message": "Message",
+      "messagePlaceholder": "Décrivez votre demande en détail...",
+      "optional": "Optionnel",
+      "submit": "Envoyer le message",
+      "submitting": "Envoi en cours...",
+      "required": "Ce champ est requis.",
+      "invalidEmail": "Adresse email invalide.",
+      "messageTooShort": "Le message doit contenir au moins 10 caractères."
+    },
+    "info": {
+      "title": "Sayerli",
+      "subtitle": "Logiciel de gestion pour PME marocaines",
+      "emailLabel": "Email",
+      "responseTime": "Réponse sous 24 heures",
+      "responseTimeLabel": "Délai de réponse"
+    },
+    "successTitle": "Message envoyé !",
+    "success": "Votre message a été envoyé avec succès. Nous vous répondrons dans les 24 heures.",
+    "errorTitle": "Erreur",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  },
   "export": {
     "title": "Exporter mes données",
     "subtitle": "Téléchargez vos données en Excel ou PDF, filtrées par période.",

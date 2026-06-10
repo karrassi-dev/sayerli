@@ -1137,6 +1137,50 @@
       }
     }
   },
+  "contact": {
+    "meta": {
+      "title": "تواصل مع فريقنا | Sayerli",
+      "description": "نحن هنا للإجابة على أسئلتك ومساعدتك في إدارة أعمالك."
+    },
+    "hero": {
+      "badge": "الدعم",
+      "title": "تواصل مع فريقنا",
+      "subtitle": "نحن هنا للإجابة على أسئلتك ومساعدتك في إدارة أعمالك."
+    },
+    "form": {
+      "title": "أرسل لنا رسالة",
+      "subtitle": "سنرد عليك خلال 24 ساعة.",
+      "name": "الاسم الكامل",
+      "namePlaceholder": "محمد العلوي",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "you@example.com",
+      "phone": "الهاتف",
+      "phonePlaceholder": "+212 6 XX XX XX XX",
+      "company": "الشركة",
+      "companyPlaceholder": "اسم شركتك",
+      "subject": "الموضوع",
+      "subjectPlaceholder": "كيف يمكننا مساعدتك؟",
+      "message": "الرسالة",
+      "messagePlaceholder": "اشرح طلبك بالتفصيل...",
+      "optional": "اختياري",
+      "submit": "إرسال الرسالة",
+      "submitting": "جارٍ الإرسال...",
+      "required": "هذا الحقل مطلوب.",
+      "invalidEmail": "عنوان البريد الإلكتروني غير صالح.",
+      "messageTooShort": "يجب أن تحتوي الرسالة على 10 أحرف على الأقل."
+    },
+    "info": {
+      "title": "Sayerli",
+      "subtitle": "برنامج إدارة الأعمال للمؤسسات الصغيرة والمتوسطة المغربية",
+      "emailLabel": "البريد الإلكتروني",
+      "responseTime": "الرد خلال 24 ساعة",
+      "responseTimeLabel": "وقت الاستجابة"
+    },
+    "successTitle": "تم الإرسال!",
+    "success": "تم إرسال رسالتك بنجاح. سنرد عليك خلال 24 ساعة.",
+    "errorTitle": "خطأ",
+    "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  },
   "export": {
     "title": "تصدير بياناتي",
     "subtitle": "تنزيل بياناتك بصيغة Excel أو PDF مع تصفية حسب الفترة.",

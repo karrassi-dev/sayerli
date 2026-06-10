@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { ChevronDown, MessageCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
@@ -53,10 +54,10 @@ export function FAQ() {
 
         <div className={cn('mt-10 text-center transition-all duration-700 delay-200', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
           <p className="text-slate-500 dark:text-slate-400 mb-3">{t('faq.contact')}</p>
-          <a href="mailto:support@sayerli.ma" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-semibold hover:underline">
+          <Link href="/contact" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-semibold hover:underline">
             <MessageCircle className="w-4 h-4" />
             {t('faq.contactLink')}
-          </a>
+          </Link>
         </div>
       </div>
     </section>

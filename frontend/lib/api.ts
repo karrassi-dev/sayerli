@@ -214,6 +214,18 @@ export const exportApi = {
     api.get('/export/data', { params }),
 }
 
+// Contact
+export const contactApi = {
+  submit: (data: {
+    name: string
+    email: string
+    phone?: string
+    company?: string
+    subject: string
+    message: string
+  }) => api.post('/contact', data),
+}
+
 // Token helpers
 export const setToken = (token: string) =>
   Cookies.set(TOKEN_KEY, token, { expires: 7, sameSite: 'strict' })

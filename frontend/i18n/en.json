@@ -1137,6 +1137,50 @@
       }
     }
   },
+  "contact": {
+    "meta": {
+      "title": "Contact our team | Sayerli",
+      "description": "We are here to answer your questions and help you manage your business."
+    },
+    "hero": {
+      "badge": "Support",
+      "title": "Contact our team",
+      "subtitle": "We are here to answer your questions and help you manage your business."
+    },
+    "form": {
+      "title": "Send us a message",
+      "subtitle": "We will reply within 24 hours.",
+      "name": "Full name",
+      "namePlaceholder": "Mohammed Alami",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+212 6 XX XX XX XX",
+      "company": "Company",
+      "companyPlaceholder": "Your company name",
+      "subject": "Subject",
+      "subjectPlaceholder": "How can we help you?",
+      "message": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "optional": "Optional",
+      "submit": "Send message",
+      "submitting": "Sending...",
+      "required": "This field is required.",
+      "invalidEmail": "Invalid email address.",
+      "messageTooShort": "Message must be at least 10 characters."
+    },
+    "info": {
+      "title": "Sayerli",
+      "subtitle": "Business management software for Moroccan SMEs",
+      "emailLabel": "Email",
+      "responseTime": "Response within 24 hours",
+      "responseTimeLabel": "Response time"
+    },
+    "successTitle": "Message sent!",
+    "success": "Your message has been sent successfully. We will reply within 24 hours.",
+    "errorTitle": "Error",
+    "error": "Something went wrong. Please try again."
+  },
   "export": {
     "title": "Export my data",
     "subtitle": "Download your data as Excel or PDF, filtered by period.",

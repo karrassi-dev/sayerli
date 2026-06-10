@@ -321,3 +321,19 @@ enum StatutDeclaration {
   APPROVED
   REJECTED
 }
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  subject   String
+  message   String
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@map("contact_submissions")
+}
