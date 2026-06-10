@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import {
   CheckCircle, Clock, Building2, Mail, Phone, MapPin,
   AlertCircle, Eye, FileText, CreditCard, Copy, Banknote,
@@ -9,6 +10,11 @@ import {
 import { useParams } from 'next/navigation'
 import { publicFacturesApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+
+const FactureDownloadButton = dynamic(
+  () => import('@/components/pdf/FactureDownloadButton'),
+  { ssr: false },
+)
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -19,6 +25,16 @@ interface Ligne {
   prixUnitaire: number | string
   total: number | string
   ordre: number
+}
+
+interface DevisLie {
+  reference: string
+  totalHT: number | string
+  taxe: number | string
+  totalTTC: number | string
+  createdAt: string
+  dateExpiration: string | null
+  lignes: Ligne[]
 }
 
 interface PublicFacture {
@@ -33,6 +49,7 @@ interface PublicFacture {
   dateEnvoi: string | null
   notes: string | null
   createdAt: string
+  devis: DevisLie | null
   client: { nom: string; email: string | null; telephone: string | null; nomEntreprise: string | null }
   lignes: Ligne[]
   entreprise: {
@@ -90,25 +107,234 @@ const EMPTY_FORM: DeclarationForm = {
 
 // ── Success screen ───────────────────────────────────────────────────────────
 
-function DeclarationSuccessScreen({ facture }: { facture: PublicFacture }) {
+const METHODE_LABELS: Record<string, string> = {
+  VIREMENT: 'Virement bancaire',
+  CASH:     'Espèces',
+  CHEQUE:   'Chèque',
+  CARTE:    'Carte bancaire',
+  AUTRE:    'Autre',
+}
+
+function DeclarationSuccessScreen({
+  facture,
+  declaration,
+  submittedAt,
+  montantRestantAvant,
+}: {
+  facture: PublicFacture
+  declaration: DeclarationForm
+  submittedAt: Date
+  montantRestantAvant: number
+}) {
+  const brand = facture.entreprise.couleurPrimaire || '#2563eb'
+  const montantDeclare = parseFloat(declaration.montant) || 0
+  const montantRestantApres = Math.max(0, montantRestantAvant - montantDeclare)
+  const isFullyPaid = montantRestantApres < 0.01
+
+  const pdfLogoUrl = facture.entreprise.logo
+    ? facture.entreprise.logo.startsWith('http')
+      ? facture.entreprise.logo
+      : `${API_ORIGIN}${facture.entreprise.logo}`
+    : null
+
+  const pdfData = {
+    numeroFacture: facture.numeroFacture,
+    createdAt: facture.createdAt,
+    dateEcheance: facture.dateEcheance,
+    notes: facture.notes,
+    totalHT: n(facture.totalHT),
+    taxe: n(facture.taxe),
+    totalTTC: n(facture.totalTTC),
+    montantDejaPayeAvant: n(facture.montantPaye),
+    devisReference: facture.devis?.reference ?? null,
+    lignes: facture.lignes.map(l => ({
+      description: l.description,
+      quantite: n(l.quantite),
+      prixUnitaire: n(l.prixUnitaire),
+    })),
+    client: facture.client,
+    entreprise: { ...facture.entreprise, logoUrl: pdfLogoUrl },
+    declaration: {
+      montant: montantDeclare,
+      methode: declaration.methode,
+      reference: declaration.reference.trim(),
+      message: declaration.message.trim(),
+      datePaiement: declaration.datePaiement,
+      submittedAt: submittedAt.toISOString(),
+    },
+  }
+
+  const submittedStr = submittedAt.toLocaleString('fr-MA', {
+    day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
-      <div className="max-w-sm w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 text-center">
-        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-green-100 dark:bg-green-950/40">
-          <CheckCircle className="w-10 h-10 text-green-600" />
+      <div className="max-w-md w-full space-y-4">
+
+        {/* Main card */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden">
+          <div className="h-1.5" style={{ backgroundColor: brand }} />
+
+          <div className="p-8">
+            {/* Icon */}
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 bg-green-100 dark:bg-green-950/40">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+
+            <h2 className="text-xl font-black text-slate-900 dark:text-white text-center mb-1">Déclaration envoyée !</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 text-center mb-6">
+              Votre paiement a été transmis à <span className="font-semibold text-slate-700 dark:text-slate-300">{facture.entreprise.nom}</span> pour vérification.
+            </p>
+
+            {/* Declaration summary */}
+            <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/20 p-4 mb-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Montant déclaré</span>
+                <span className="text-lg font-black text-blue-700 dark:text-blue-300">{formatMAD(montantDeclare)}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <p className="text-slate-400">Méthode</p>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300">{METHODE_LABELS[declaration.methode] ?? declaration.methode}</p>
+                </div>
+                <div>
+                  <p className="text-slate-400">Date</p>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300">{formatDate(declaration.datePaiement)}</p>
+                </div>
+                {declaration.reference.trim() && (
+                  <div className="col-span-2">
+                    <p className="text-slate-400">Référence</p>
+                    <p className="font-semibold text-slate-700 dark:text-slate-300">{declaration.reference}</p>
+                  </div>
+                )}
+              </div>
+              <div className="text-xs text-blue-500 dark:text-blue-400">Envoyée le {submittedStr}</div>
+            </div>
+
+            {/* Balance summary */}
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden mb-6">
+              <div className="bg-slate-800 dark:bg-slate-950 px-4 py-2.5">
+                <p className="text-xs font-bold text-white uppercase tracking-wider">Récapitulatif du solde</p>
+              </div>
+              <div className="p-4 space-y-2 text-sm">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400">
+                  <span>Total facture TTC</span>
+                  <span>{formatMAD(facture.totalTTC)}</span>
+                </div>
+                {n(facture.montantPaye) > 0 && (
+                  <div className="flex justify-between text-slate-500 dark:text-slate-400">
+                    <span>Déjà réglé</span>
+                    <span>−{formatMAD(facture.montantPaye)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-semibold text-blue-600 dark:text-blue-400 border-t border-slate-100 dark:border-slate-700 pt-2">
+                  <span>Cette déclaration</span>
+                  <span>−{formatMAD(montantDeclare)}</span>
+                </div>
+                <div className={cn(
+                  'flex justify-between font-bold text-sm rounded-lg px-3 py-2 mt-1',
+                  isFullyPaid
+                    ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
+                    : 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400',
+                )}>
+                  <span>{isFullyPaid ? '✓ Facture entièrement réglée' : 'Reste à payer'}</span>
+                  <span>{isFullyPaid ? formatMAD(0) : formatMAD(montantRestantApres)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Download button */}
+            <div className="text-center">
+              <FactureDownloadButton data={pdfData} brand={brand} />
+              <p className="mt-3 text-xs text-slate-400">
+                Le PDF contient le détail complet de la facture et de votre déclaration.
+              </p>
+            </div>
+          </div>
         </div>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Déclaration envoyée !</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Votre déclaration de paiement a bien été transmise à <strong>{facture.entreprise.nom}</strong>.
-          Elle sera examinée et confirmée sous peu.
+
+        <p className="text-xs text-slate-400 text-center">
+          Généré par <span className="font-semibold text-slate-500">Sayerli</span> — Logiciel de gestion pour PME marocaines
         </p>
-        <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400">
-          <CheckCircle className="w-3.5 h-3.5" />
-          En cours de vérification
+      </div>
+    </div>
+  )
+}
+
+// ── Linked devis card ────────────────────────────────────────────────────────
+
+function DevisLieCard({ devis, brand }: { devis: DevisLie; brand: string }) {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden">
+      <div className="p-6 sm:p-8 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${brand}1a` }}>
+            <FileText className="w-5 h-5" style={{ color: brand }} />
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900 dark:text-white text-sm">Devis lié à cette facture</h2>
+            <p className="text-xs text-slate-400 mt-0.5">Référence : <span className="font-semibold text-slate-600 dark:text-slate-300">{devis.reference}</span></p>
+          </div>
         </div>
-        <p className="mt-6 text-xs text-slate-400">
-          Généré par <span className="font-semibold text-slate-500">Sayerli</span>
-        </p>
+      </div>
+
+      <div className="p-6 sm:p-8 space-y-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+            <p className="text-xs text-slate-400 mb-0.5">Date du devis</p>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">{formatDate(devis.createdAt)}</p>
+          </div>
+          {devis.dateExpiration && (
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+              <p className="text-xs text-slate-400 mb-0.5">Valide jusqu'au</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">{formatDate(devis.dateExpiration)}</p>
+            </div>
+          )}
+          <div className="p-3 rounded-xl" style={{ backgroundColor: `${brand}12` }}>
+            <p className="text-xs mb-0.5" style={{ color: brand }}>Montant TTC</p>
+            <p className="text-sm font-bold" style={{ color: brand }}>{formatMAD(devis.totalTTC)}</p>
+          </div>
+        </div>
+
+        {devis.lignes.length > 0 && (
+          <>
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-all text-sm font-semibold text-slate-700 dark:text-slate-300"
+            >
+              <span>Prestations du devis ({devis.lignes.length})</span>
+              {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            </button>
+
+            {expanded && (
+              <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Désignation</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide hidden sm:table-cell">Qté</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide hidden sm:table-cell">P.U</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {devis.lignes.map((l, i) => (
+                      <tr key={l.id ?? i} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
+                        <td className="px-4 py-3 text-slate-900 dark:text-white font-medium">{l.description}</td>
+                        <td className="px-4 py-3 text-center text-slate-500 hidden sm:table-cell">{n(l.quantite)}</td>
+                        <td className="px-4 py-3 text-right text-slate-500 hidden sm:table-cell">{formatMAD(l.prixUnitaire)}</td>
+                        <td className="px-4 py-3 text-right font-bold text-slate-900 dark:text-white">{formatMAD(n(l.quantite) * n(l.prixUnitaire))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   )
@@ -375,6 +601,9 @@ export default function PublicFacturePage() {
   const [declarationOpen, setDeclarationOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [submittedDeclaration, setSubmittedDeclaration] = useState<DeclarationForm | null>(null)
+  const [submittedAt, setSubmittedAt] = useState<Date | null>(null)
+  const [montantRestantSnapshot, setMontantRestantSnapshot] = useState(0)
   const [linesExpanded, setLinesExpanded] = useState(false)
 
   useEffect(() => {
@@ -388,6 +617,7 @@ export default function PublicFacturePage() {
   const handleDeclare = async (form: DeclarationForm) => {
     setSubmitting(true)
     try {
+      const restantAvant = facture ? Math.max(0, n(facture.totalTTC) - n(facture.montantPaye)) : 0
       await publicFacturesApi.declarer(token, {
         montant: parseFloat(form.montant),
         methode: form.methode,
@@ -395,6 +625,9 @@ export default function PublicFacturePage() {
         message: form.message.trim() || undefined,
         datePaiement: form.datePaiement || undefined,
       })
+      setSubmittedDeclaration(form)
+      setSubmittedAt(new Date())
+      setMontantRestantSnapshot(restantAvant)
       setDeclarationOpen(false)
       setDone(true)
     } catch (err) {
@@ -433,7 +666,16 @@ export default function PublicFacturePage() {
   if (!facture) return null
 
   // ── Declaration sent ──
-  if (done) return <DeclarationSuccessScreen facture={facture} />
+  if (done && submittedDeclaration && submittedAt) {
+    return (
+      <DeclarationSuccessScreen
+        facture={facture}
+        declaration={submittedDeclaration}
+        submittedAt={submittedAt}
+        montantRestantAvant={montantRestantSnapshot}
+      />
+    )
+  }
 
   const brand = facture.entreprise.couleurPrimaire || '#2563eb'
   const montantRestant = Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))
@@ -693,6 +935,9 @@ export default function PublicFacturePage() {
             </p>
           </div>
         </div>
+
+        {/* Linked devis */}
+        {facture.devis && <DevisLieCard devis={facture.devis} brand={brand} />}
 
         {/* Banking info */}
         <BankInfoCard facture={facture} />

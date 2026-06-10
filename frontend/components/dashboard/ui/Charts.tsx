@@ -214,17 +214,17 @@ export function InvoiceDonutChart({
   if (!data.length) return <EmptyChart label="Aucune facture" />
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       {/* Donut */}
-      <div style={{ height: 160, flexShrink: 0 }}>
+      <div style={{ height: 128, flexShrink: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius="52%"
-              outerRadius="78%"
+              innerRadius="50%"
+              outerRadius="76%"
               paddingAngle={2}
               dataKey="value"
               strokeWidth={0}
@@ -238,14 +238,14 @@ export function InvoiceDonutChart({
         </ResponsiveContainer>
       </div>
       {/* Center label */}
-      <p className="text-center -mt-1 mb-3">
-        <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.total}</span>
+      <p className="text-center -mt-1 mb-2.5">
+        <span className="text-xl font-black text-slate-900 dark:text-white">{stats.total}</span>
         <span className="text-xs text-slate-400 ml-1">factures</span>
       </p>
       {/* Legend */}
-      <div className="space-y-1.5 flex-1">
+      <div className="space-y-1">
         {data.map(d => (
-          <div key={d.key} className="flex items-center justify-between">
+          <div key={d.key} className="flex items-center justify-between py-0.5">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: d.color }} />
               <span className="text-xs text-slate-600 dark:text-slate-400">{d.label}</span>
@@ -344,27 +344,27 @@ export function ClientStatsVisual({
   const activeRatio = total > 0 ? Math.round((actifs / total) * 100) : 0
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between h-full overflow-hidden">
       {/* Big number */}
       <div className="text-center">
-        <div className="text-5xl font-black text-slate-900 dark:text-white tracking-tight">{total}</div>
+        <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{total}</div>
         <p className="text-xs text-slate-400 mt-0.5">clients au total</p>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 gap-3 mt-4">
-        <div className="bg-teal-50 dark:bg-teal-950/30 rounded-xl p-3 text-center">
-          <div className="text-xl font-black text-teal-600 dark:text-teal-400">{actifs}</div>
-          <div className="text-[10px] text-teal-500 dark:text-teal-500 font-medium mt-0.5">Actifs</div>
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        <div className="bg-teal-50 dark:bg-teal-950/30 rounded-xl p-2 text-center">
+          <div className="text-lg font-black text-teal-600 dark:text-teal-400">{actifs}</div>
+          <div className="text-[10px] text-teal-500 dark:text-teal-500 font-medium">Actifs</div>
         </div>
-        <div className="bg-purple-50 dark:bg-purple-950/30 rounded-xl p-3 text-center">
-          <div className="text-xl font-black text-purple-600 dark:text-purple-400">+{nouveauxCeMois}</div>
-          <div className="text-[10px] text-purple-500 dark:text-purple-500 font-medium mt-0.5">Ce mois</div>
+        <div className="bg-purple-50 dark:bg-purple-950/30 rounded-xl p-2 text-center">
+          <div className="text-lg font-black text-purple-600 dark:text-purple-400">+{nouveauxCeMois}</div>
+          <div className="text-[10px] text-purple-500 dark:text-purple-500 font-medium">Ce mois</div>
         </div>
       </div>
 
       {/* Active ratio bar */}
-      <div className="mt-4">
+      <div className="mt-2">
         <div className="flex justify-between text-[10px] text-slate-400 mb-1">
           <span>Taux d'activité</span>
           <span className="font-bold text-slate-700 dark:text-slate-300">{activeRatio}%</span>

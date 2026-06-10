@@ -200,6 +200,24 @@ export class FacturesService {
     return { message: 'Facture supprimée avec succès.' };
   }
 
+  async annulerFacture(id: string, entrepriseId: string) {
+    const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
+    if (!facture) throw new NotFoundException('Facture introuvable.');
+    if (facture.statut === StatutFacture.PAYEE) {
+      throw new BadRequestException('Une facture entièrement payée ne peut pas être annulée.');
+    }
+    if (facture.statut === StatutFacture.ANNULEE) {
+      throw new BadRequestException('Cette facture est déjà annulée.');
+    }
+    if (facture.statut === StatutFacture.BROUILLON) {
+      throw new BadRequestException('Supprimez la facture plutôt que de l\'annuler.');
+    }
+    return this.prisma.facture.update({
+      where: { id },
+      data: { statut: StatutFacture.ANNULEE },
+    });
+  }
+
   // ── Public portal ────────────────────────────────────────────────────────────
 
   async obtenirFactureParToken(token: string) {
@@ -208,6 +226,17 @@ export class FacturesService {
       include: {
         client: { select: { nom: true, email: true, telephone: true, nomEntreprise: true } },
         lignes: { orderBy: { ordre: 'asc' } },
+        devis: {
+          select: {
+            reference: true,
+            totalHT: true,
+            taxe: true,
+            totalTTC: true,
+            createdAt: true,
+            dateExpiration: true,
+            lignes: { orderBy: { ordre: 'asc' } },
+          },
+        },
         entreprise: {
           select: {
             nom: true, email: true, telephone: true, adresse: true,

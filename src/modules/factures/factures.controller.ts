@@ -115,6 +115,15 @@ export class FacturesController {
     return this.facturesService.rejeterDeclaration(id, entrepriseId, dto);
   }
 
+  @Patch(':id/annuler')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  async annuler(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.facturesService.annulerFacture(id, entrepriseId);
+  }
+
   @Delete(':id')
   @Roles(RoleType.ADMIN)
   async supprimer(

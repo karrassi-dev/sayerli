@@ -377,6 +377,10 @@ export class DevisService {
     if (devis.statut !== StatutDevis.BROUILLON) {
       throw new BadRequestException('Seuls les devis en brouillon peuvent être supprimés.');
     }
+    const facturesLiees = await this.prisma.facture.count({ where: { devisId: id } });
+    if (facturesLiees > 0) {
+      throw new BadRequestException('Ce devis est lié à une facture et ne peut pas être supprimé.');
+    }
     await this.prisma.devis.delete({ where: { id } });
     return { message: 'Devis supprimé avec succès.' };
   }

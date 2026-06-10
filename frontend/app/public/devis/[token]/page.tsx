@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import {
   CheckCircle, XCircle, Clock, Building2, Mail, Phone, MapPin,
@@ -8,6 +9,11 @@ import {
 } from 'lucide-react'
 import { publicDevisApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+
+const DevisDownloadButton = dynamic(
+  () => import('@/components/pdf/DevisDownloadButton'),
+  { ssr: false },
+)
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -169,40 +175,104 @@ function StatusGate({ statut, brand }: { statut: string; brand: string }) {
   )
 }
 
-// ── Success Screen ─────────────────────────────────────────────────────────────
+// ── Refused Screen ────────────────────────────────────────────────────────────
 
-function SuccessScreen({ type, brand }: { type: 'accepted' | 'refused'; brand: string }) {
+function RefusedScreen() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="max-w-sm w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 text-center">
-        <div className={cn(
-          'w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6',
-          type === 'accepted' ? 'bg-green-100 dark:bg-green-950/40' : 'bg-red-100 dark:bg-red-950/40',
-        )}>
-          {type === 'accepted'
-            ? <CheckCircle className="w-10 h-10 text-green-600" />
-            : <XCircle className="w-10 h-10 text-red-500" />
-          }
+        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-red-100 dark:bg-red-950/40">
+          <XCircle className="w-10 h-10 text-red-500" />
         </div>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">
-          {type === 'accepted' ? 'Devis accepté !' : 'Devis refusé'}
-        </h2>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Devis refusé</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          {type === 'accepted'
-            ? 'Merci. Votre acceptation a bien été enregistrée. L\'entreprise a été notifiée et vous contactera prochainement.'
-            : 'Votre réponse a été enregistrée. L\'entreprise a été notifiée.'}
+          Votre réponse a été enregistrée. L&apos;entreprise a été notifiée.
         </p>
-        <div className={cn(
-          'mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold',
-          type === 'accepted'
-            ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
-            : 'bg-slate-100 dark:bg-slate-800 text-slate-500',
-        )}>
-          {type === 'accepted' ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-          {type === 'accepted' ? 'Accepté' : 'Refusé'}
-        </div>
         <p className="mt-6 text-xs text-slate-400">
           Généré par <span className="font-semibold text-slate-500">Sayerli</span>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ── Accepted Screen ───────────────────────────────────────────────────────────
+
+function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt: Date }) {
+  const brand = devis.entreprise.couleurPrimaire || '#2563eb'
+
+  const pdfLogoUrl = devis.entreprise.logo
+    ? devis.entreprise.logo.startsWith('http')
+      ? devis.entreprise.logo
+      : `${API_ORIGIN}${devis.entreprise.logo}`
+    : null
+
+  const pdfData = {
+    reference: devis.reference,
+    createdAt: devis.createdAt,
+    dateExpiration: devis.dateExpiration,
+    dateAcceptation: acceptedAt.toISOString(),
+    notes: devis.notes,
+    totalHT: parseFloat(String(devis.totalHT)) || 0,
+    remise: parseFloat(String(devis.remise)) || 0,
+    taxe: parseFloat(String(devis.taxe)) || 0,
+    totalTTC: parseFloat(String(devis.totalTTC)) || 0,
+    lignes: devis.lignes.map(l => ({
+      description: l.description,
+      quantite: parseFloat(String(l.quantite)) || 0,
+      prixUnitaire: parseFloat(String(l.prixUnitaire)) || 0,
+      total: parseFloat(String(l.total)) || 0,
+    })),
+    client: devis.client,
+    entreprise: { ...devis.entreprise, logoUrl: pdfLogoUrl },
+  }
+
+  const acceptedStr = acceptedAt.toLocaleString('fr-MA', {
+    day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+
+        {/* Main card */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden">
+          {/* Brand top bar */}
+          <div className="h-1.5" style={{ backgroundColor: brand }} />
+
+          <div className="p-8 text-center">
+            {/* Checkmark */}
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 bg-green-100 dark:bg-green-950/40">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Devis accepté !</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
+              Merci. Votre acceptation a bien été enregistrée.
+              <br />
+              <span className="font-semibold text-slate-600 dark:text-slate-300">{devis.entreprise.nom}</span> a été notifié et vous contactera prochainement.
+            </p>
+
+            {/* Acceptance info */}
+            <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 mb-6">
+              <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+              <div className="text-left">
+                <p className="text-xs font-bold text-green-700 dark:text-green-400">{devis.reference}</p>
+                <p className="text-xs text-green-600 dark:text-green-500 mt-0.5">Accepté le {acceptedStr}</p>
+              </div>
+            </div>
+
+            {/* Download button */}
+            <DevisDownloadButton data={pdfData} brand={brand} />
+
+            <p className="mt-6 text-xs text-slate-400">
+              Le PDF inclut le détail complet du devis et la confirmation d&apos;acceptation.
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-4 text-xs text-slate-400 text-center">
+          Généré par <span className="font-semibold text-slate-500">Sayerli</span> — Logiciel de gestion pour PME marocaines
         </p>
       </div>
     </div>
@@ -220,6 +290,7 @@ export default function PublicDevisPage() {
   const [confirming, setConfirming] = useState<'accept' | 'refuse' | null>(null)
   const [responding, setResponding] = useState(false)
   const [done, setDone] = useState<'accepted' | 'refused' | null>(null)
+  const [acceptedAt, setAcceptedAt] = useState<Date | null>(null)
 
   useEffect(() => {
     if (!token) return
@@ -240,6 +311,7 @@ export default function PublicDevisPage() {
     try {
       if (action === 'accept') {
         await publicDevisApi.accept(token)
+        setAcceptedAt(new Date())
         setDone('accepted')
       } else {
         await publicDevisApi.refuse(token)
@@ -280,7 +352,8 @@ export default function PublicDevisPage() {
   }
 
   // ── Full success screen after responding ──
-  if (done) return <SuccessScreen type={done} brand={devis.entreprise.couleurPrimaire || '#2563eb'} />
+  if (done === 'refused') return <RefusedScreen />
+  if (done === 'accepted' && acceptedAt && devis) return <AcceptedScreen devis={devis} acceptedAt={acceptedAt} />
 
   const brand = devis.entreprise.couleurPrimaire || '#2563eb'
   const expired = isExpired(devis)

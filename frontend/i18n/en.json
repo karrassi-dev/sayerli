@@ -798,12 +798,16 @@
         "recordPayment": "Record Payment",
         "send": "Send & Copy Link",
         "copyLink": "Copy Client Link",
-        "download": "Download PDF"
+        "download": "Download PDF",
+        "cancel": "Cancel Invoice"
       },
       "empty": {
         "title": "No invoices yet",
         "desc": "Create your first invoice or convert an accepted quote."
       },
+      "cancelSuccess": "Invoice cancelled.",
+      "cancelTitle": "Cancel Invoice",
+      "cancelMessage": "Are you sure you want to cancel {num}? It will be marked as cancelled. This action cannot be undone.",
       "deleteTitle": "Delete Invoice",
       "deleteMessage": "Are you sure you want to delete {num}?",
       "form": {

@@ -797,10 +797,14 @@
         "recordPayment": "Enregistrer un paiement",
         "send": "Envoyer & copier le lien",
         "copyLink": "Copier le lien client",
-        "download": "Télécharger PDF"
+        "download": "Télécharger PDF",
+        "cancel": "Annuler la facture"
       },
       "linkCopied": "Lien copié dans le presse-papier.",
       "linkError": "Impossible de générer le lien.",
+      "cancelSuccess": "Facture annulée.",
+      "cancelTitle": "Annuler la facture",
+      "cancelMessage": "Êtes-vous sûr de vouloir annuler {num} ? La facture sera marquée comme annulée. Cette action est irréversible.",
       "empty": {
         "title": "Aucune facture pour le moment",
         "desc": "Créez votre première facture ou convertissez un devis accepté."
