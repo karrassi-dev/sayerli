@@ -1063,6 +1063,7 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all as read",
+    "deleteAll": "Delete all",
     "filterAll": "All",
     "filterUnread": "Unread",
     "empty": "No notifications",

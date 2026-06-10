@@ -52,4 +52,9 @@ export class NotificationsService {
     await this.prisma.notification.delete({ where: { id } });
     return { message: 'Notification supprimée.' };
   }
+
+  async supprimerToutesNotifications(entrepriseId: string) {
+    const result = await this.prisma.notification.deleteMany({ where: { entrepriseId } });
+    return { message: `${result.count} notification(s) supprimée(s).` };
+  }
 }

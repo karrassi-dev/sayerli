@@ -1063,6 +1063,7 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
+    "deleteAll": "حذف الكل",
     "filterAll": "الكل",
     "filterUnread": "غير المقروءة",
     "empty": "لا توجد إشعارات",

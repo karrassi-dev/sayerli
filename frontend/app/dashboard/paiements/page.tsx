@@ -476,7 +476,6 @@ export default function PaiementsPage() {
                               items={[
                                 { label: 'Voir', icon: Eye, onClick: () => setSelected(p) },
                                 { label: 'Modifier', icon: Pencil, onClick: () => openEdit(p) },
-                                { label: 'Annuler', icon: Trash2, onClick: () => setDeleteTarget(p), variant: 'danger', separator: true },
                               ]}
                             />
                           </td>
@@ -639,13 +638,6 @@ export default function PaiementsPage() {
               >
                 <Pencil className="w-4 h-4" />
                 Modifier
-              </button>
-              <button
-                onClick={() => { setSelected(null); setDeleteTarget(selected) }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
-              >
-                <Trash2 className="w-4 h-4" />
-                Annuler
               </button>
             </div>
           </div>

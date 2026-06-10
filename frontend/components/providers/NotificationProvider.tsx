@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
-import { notificationsApi, settingsApi } from '@/lib/api'
+import { notificationsApi, settingsApi, facturesApi } from '@/lib/api'
 import { NotificationBannerContainer, BannerItem } from '@/components/dashboard/NotificationBanner'
 
 interface Prefs {
@@ -26,10 +26,11 @@ function isBannerAllowed(type: string, prefs: Prefs): boolean {
 
 interface NotificationContextType {
   unreadCount: number
+  pendingDeclarationsCount: number
   refresh: () => void
 }
 
-const NotificationContext = createContext<NotificationContextType>({ unreadCount: 0, refresh: () => {} })
+const NotificationContext = createContext<NotificationContextType>({ unreadCount: 0, pendingDeclarationsCount: 0, refresh: () => {} })
 
 export function useNotificationContext() {
   return useContext(NotificationContext)
@@ -37,6 +38,7 @@ export function useNotificationContext() {
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [unreadCount, setUnreadCount] = useState(0)
+  const [pendingDeclarationsCount, setPendingDeclarationsCount] = useState(0)
   const [banners, setBanners] = useState<BannerItem[]>([])
   const seenIds = useRef<Set<string>>(new Set())
   const initialized = useRef(false)
@@ -57,21 +59,30 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const fetchAndCheck = useCallback(async () => {
     try {
-      const res = await notificationsApi.list(true)
-      const notifications: BannerItem[] = res.data?.data ?? res.data ?? []
-      setUnreadCount(notifications.length)
+      const [notifRes, declRes] = await Promise.allSettled([
+        notificationsApi.list(true),
+        facturesApi.declarations('PENDING'),
+      ])
 
-      if (!initialized.current) {
-        notifications.forEach(n => seenIds.current.add(n.id))
-        initialized.current = true
-        return
+      if (notifRes.status === 'fulfilled') {
+        const notifications: BannerItem[] = notifRes.value.data?.data ?? notifRes.value.data ?? []
+        setUnreadCount(notifications.length)
+
+        if (!initialized.current) {
+          notifications.forEach(n => seenIds.current.add(n.id))
+          initialized.current = true
+        } else {
+          const fresh = notifications.filter(n => !seenIds.current.has(n.id))
+          fresh.forEach(n => seenIds.current.add(n.id))
+          const allowed = fresh.filter(n => isBannerAllowed(n.type, prefs.current))
+          if (allowed.length > 0) setBanners(prev => [...prev, ...allowed])
+        }
       }
 
-      const fresh = notifications.filter(n => !seenIds.current.has(n.id))
-      fresh.forEach(n => seenIds.current.add(n.id))
-
-      const allowed = fresh.filter(n => isBannerAllowed(n.type, prefs.current))
-      if (allowed.length > 0) setBanners(prev => [...prev, ...allowed])
+      if (declRes.status === 'fulfilled') {
+        const declarations: any[] = declRes.value.data?.data ?? declRes.value.data ?? []
+        setPendingDeclarationsCount(declarations.length)
+      }
     } catch {}
   }, [])
 
@@ -90,7 +101,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const refresh = useCallback(() => { fetchAndCheck() }, [fetchAndCheck])
 
   return (
-    <NotificationContext.Provider value={{ unreadCount, refresh }}>
+    <NotificationContext.Provider value={{ unreadCount, pendingDeclarationsCount, refresh }}>
       {children}
       <NotificationBannerContainer banners={banners} onDismiss={dismissBanner} />
     </NotificationContext.Provider>

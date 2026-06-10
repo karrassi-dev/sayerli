@@ -206,6 +206,9 @@ export class FacturesService {
     if (facture.statut === StatutFacture.PAYEE) {
       throw new BadRequestException('Une facture entièrement payée ne peut pas être annulée.');
     }
+    if (facture.statut === StatutFacture.PARTIELLE) {
+      throw new BadRequestException('Une facture avec des paiements enregistrés ne peut pas être annulée.');
+    }
     if (facture.statut === StatutFacture.ANNULEE) {
       throw new BadRequestException('Cette facture est déjà annulée.');
     }

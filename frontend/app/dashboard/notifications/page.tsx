@@ -93,6 +93,11 @@ export default function NotificationsPage() {
     setNotifications(prev => prev.map(x => ({ ...x, lu: true })))
   }
 
+  const handleDeleteAll = async () => {
+    await notificationsApi.deleteAll().catch(() => {})
+    setNotifications([])
+  }
+
   const unreadCount = notifications.filter(n => !n.lu).length
   const shown = filter === 'unread' ? notifications.filter(n => !n.lu) : notifications
 
@@ -114,15 +119,26 @@ export default function NotificationsPage() {
           </div>
         </div>
 
-        {unreadCount > 0 && (
-          <button
-            onClick={handleMarkAllRead}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-950 transition-colors"
-          >
-            <CheckCheck className="w-4 h-4" />
-            {t('notifications.markAllRead')}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {unreadCount > 0 && (
+            <button
+              onClick={handleMarkAllRead}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-950 transition-colors"
+            >
+              <CheckCheck className="w-4 h-4" />
+              {t('notifications.markAllRead')}
+            </button>
+          )}
+          {notifications.length > 0 && (
+            <button
+              onClick={handleDeleteAll}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              {t('notifications.deleteAll')}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Filter tabs */}

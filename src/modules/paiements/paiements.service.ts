@@ -196,33 +196,10 @@ export class PaiementsService {
     return this.obtenirPaiement(id, entrepriseId);
   }
 
-  async supprimerPaiement(id: string, entrepriseId: string) {
-    const paiement = await this.prisma.paiement.findFirst({
-      where: { id, entrepriseId },
-      include: { facture: { include: { paiements: true } } },
-    });
-    if (!paiement) throw new NotFoundException('Paiement introuvable.');
-
-    const autresPaiements = paiement.facture.paiements.filter(p => p.id !== id);
-    const totalRestant = autresPaiements.reduce((sum, p) => sum + Number(p.montant), 0);
-    const totalTTC = Number(paiement.facture.totalTTC);
-
-    const nouveauStatut =
-      totalRestant === 0
-        ? StatutFacture.ENVOYEE
-        : totalRestant < totalTTC
-        ? StatutFacture.PARTIELLE
-        : StatutFacture.PAYEE;
-
-    await this.prisma.$transaction([
-      this.prisma.paiement.delete({ where: { id } }),
-      this.prisma.facture.update({
-        where: { id: paiement.factureId },
-        data: { montantPaye: totalRestant, statut: nouveauStatut },
-      }),
-    ]);
-
-    return { message: 'Paiement annulé avec succès.' };
+  async supprimerPaiement(_id: string, _entrepriseId: string): Promise<never> {
+    throw new BadRequestException(
+      'Les paiements enregistrés ne peuvent pas être supprimés afin de garantir l\'intégrité comptable.',
+    );
   }
 
   async statistiques(entrepriseId: string) {

@@ -145,6 +145,7 @@ export const notificationsApi = {
   markRead: (id: string) => api.patch(`/notifications/${id}/lire`),
   markAllRead: () => api.patch('/notifications/tout-lire'),
   delete: (id: string) => api.delete(`/notifications/${id}`),
+  deleteAll: () => api.delete('/notifications'),
 }
 
 // Entreprise

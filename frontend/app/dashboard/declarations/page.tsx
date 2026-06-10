@@ -12,6 +12,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { EmptyState } from '@/components/dashboard/ui/EmptyState'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useNotificationContext } from '@/components/providers/NotificationProvider'
 import { facturesApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -90,6 +91,7 @@ function StatutBadge({ statut }: { statut: string }) {
 export default function DeclarationsPage() {
   const { t } = useTranslation()
   const { success, error: toastError, toasts, removeToast } = useToast()
+  const { refresh: refreshBadge } = useNotificationContext()
 
   const [declarations, setDeclarations] = useState<Declaration[]>([])
   const [loading, setLoading] = useState(true)
@@ -133,6 +135,7 @@ export default function DeclarationsPage() {
       setSelected(null)
       success('Déclaration approuvée', 'Le paiement a été enregistré sur la facture.')
       fetchDeclarations()
+      refreshBadge()
     } catch (err) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       toastError('Erreur', msg ?? 'Impossible d\'approuver cette déclaration.')
@@ -151,6 +154,7 @@ export default function DeclarationsPage() {
       setRejectRaison('')
       success('Déclaration rejetée', 'Le client sera informé du refus.')
       fetchDeclarations()
+      refreshBadge()
     } catch (err) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       toastError('Erreur', msg ?? 'Impossible de rejeter cette déclaration.')

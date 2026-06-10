@@ -1064,6 +1064,7 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
+    "deleteAll": "Tout supprimer",
     "filterAll": "Toutes",
     "filterUnread": "Non lues",
     "empty": "Aucune notification",

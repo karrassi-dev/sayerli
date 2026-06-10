@@ -32,6 +32,11 @@ export class NotificationsController {
     return this.notificationsService.marquerCommeLue(id, entrepriseId);
   }
 
+  @Delete()
+  async supprimerToutes(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
+    return this.notificationsService.supprimerToutesNotifications(entrepriseId);
+  }
+
   @Delete(':id')
   async supprimer(
     @Param('id') id: string,

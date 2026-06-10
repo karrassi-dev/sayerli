@@ -37,7 +37,7 @@ const ROLE_COLORS: Record<string, string> = {
 export function Sidebar() {
   const { t } = useTranslation()
   const { user, entreprise, logout } = useAuth()
-  const { unreadCount } = useNotificationContext()
+  const { unreadCount, pendingDeclarationsCount } = useNotificationContext()
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -95,7 +95,7 @@ export function Sidebar() {
         <div className="space-y-0.5">
           {visibleNavItems.map(({ href, iconC: Icon, key }) => {
             const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
-            const badge = key === 'notifications' ? unreadCount : 0
+            const badge = key === 'notifications' ? unreadCount : key === 'declarations' ? pendingDeclarationsCount : 0
             return (
               <Link
                 key={href}
