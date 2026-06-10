@@ -207,6 +207,12 @@ export const settingsApi = {
   getBilling: () => api.get('/settings/billing'),
 }
 
+// Export
+export const exportApi = {
+  data: (params: { types: string; dateDebut?: string; dateFin?: string }) =>
+    api.get('/export/data', { params }),
+}
+
 // Token helpers
 export const setToken = (token: string) =>
   Cookies.set(TOKEN_KEY, token, { expires: 7, sameSite: 'strict' })

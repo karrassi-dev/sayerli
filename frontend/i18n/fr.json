@@ -197,6 +197,7 @@
       "paiements": "Paiements",
       "equipe": "Équipe",
       "notifications": "Notifications",
+      "export": "Exporter",
       "settings": "Paramètres",
       "logout": "Déconnexion"
     },
@@ -1134,6 +1135,40 @@
         "CARTE": "Carte bancaire",
         "AUTRE": "Autre"
       }
+    }
+  },
+  "export": {
+    "title": "Exporter mes données",
+    "subtitle": "Téléchargez vos données en Excel ou PDF, filtrées par période.",
+    "step1Title": "Données à inclure",
+    "step2Title": "Période",
+    "step3Title": "Format de sortie",
+    "selectAtLeastOne": "Veuillez sélectionner au moins un type de données.",
+    "from": "Du",
+    "to": "Au",
+    "button": "Télécharger l'export",
+    "loading": "Génération en cours…",
+    "entities": {
+      "clients": "Clients",
+      "clientsDesc": "Répertoire clients",
+      "devis": "Devis",
+      "devisDesc": "Tous vos devis",
+      "factures": "Factures",
+      "facturesDesc": "Toutes vos factures",
+      "paiements": "Paiements",
+      "paiementsDesc": "Historique des paiements"
+    },
+    "periods": {
+      "thisMonth": "Ce mois-ci",
+      "lastMonth": "Mois dernier",
+      "last3Months": "3 derniers mois",
+      "thisYear": "Cette année",
+      "all": "Tout",
+      "custom": "Personnalisé"
+    },
+    "formats": {
+      "excelDesc": "Feuilles de calcul, idéal pour analyses et comptable",
+      "pdfDesc": "Rapport formaté, prêt à imprimer ou archiver"
     }
   }
 }

@@ -15,6 +15,7 @@ import { PaiementsModule } from './modules/paiements/paiements.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { ExportModule } from './modules/export/export.module';
 
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -39,6 +40,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     NotificationsModule,
     SettingsModule,
     DashboardModule,
+    ExportModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

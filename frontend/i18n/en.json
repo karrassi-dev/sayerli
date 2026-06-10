@@ -197,6 +197,7 @@
       "paiements": "Payments",
       "equipe": "Team",
       "notifications": "Notifications",
+      "export": "Export",
       "settings": "Settings",
       "logout": "Logout"
     },
@@ -1134,6 +1135,39 @@
         "AUTRE": "Other"
       }
     }
+  },
+  "export": {
+    "title": "Export my data",
+    "subtitle": "Download your data as Excel or PDF, filtered by period.",
+    "step1Title": "Data to include",
+    "step2Title": "Period",
+    "step3Title": "Output format",
+    "selectAtLeastOne": "Please select at least one data type.",
+    "from": "From",
+    "to": "To",
+    "button": "Download export",
+    "loading": "Generating…",
+    "entities": {
+      "clients": "Clients",
+      "clientsDesc": "Client directory",
+      "devis": "Quotes",
+      "devisDesc": "All your quotes",
+      "factures": "Invoices",
+      "facturesDesc": "All your invoices",
+      "paiements": "Payments",
+      "paiementsDesc": "Payment history"
+    },
+    "periods": {
+      "thisMonth": "This month",
+      "lastMonth": "Last month",
+      "last3Months": "Last 3 months",
+      "thisYear": "This year",
+      "all": "All time",
+      "custom": "Custom"
+    },
+    "formats": {
+      "excelDesc": "Spreadsheet, ideal for analysis and accountant",
+      "pdfDesc": "Formatted report, ready to print or archive"
+    }
   }
-}
 }

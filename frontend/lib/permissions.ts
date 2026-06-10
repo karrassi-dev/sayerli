@@ -7,6 +7,7 @@ export const ROUTE_ROLE_MAP: Record<string, string[]> = {
   '/dashboard/declarations': ['admin', 'manager', 'comptable'],
   '/dashboard/paiements':    ['admin', 'manager', 'comptable'],
   '/dashboard/notifications':['admin', 'manager', 'commercial', 'comptable'],
+  '/dashboard/export':       ['admin', 'manager', 'comptable'],
 }
 
 export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
@@ -18,6 +19,7 @@ export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
   paiements:     ['admin', 'manager', 'comptable'],
   equipe:        ['admin'],
   notifications: ['admin', 'manager', 'commercial', 'comptable'],
+  export:        ['admin', 'manager', 'comptable'],
   settings:      ['admin'],
 }
 

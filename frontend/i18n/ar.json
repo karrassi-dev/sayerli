@@ -197,6 +197,7 @@
       "paiements": "المدفوعات",
       "equipe": "الفريق",
       "notifications": "الإشعارات",
+      "export": "تصدير",
       "settings": "الإعدادات",
       "logout": "تسجيل الخروج"
     },
@@ -1134,6 +1135,39 @@
         "AUTRE": "أخرى"
       }
     }
+  },
+  "export": {
+    "title": "تصدير بياناتي",
+    "subtitle": "تنزيل بياناتك بصيغة Excel أو PDF مع تصفية حسب الفترة.",
+    "step1Title": "البيانات المراد تضمينها",
+    "step2Title": "الفترة الزمنية",
+    "step3Title": "صيغة التصدير",
+    "selectAtLeastOne": "يرجى اختيار نوع بيانات واحد على الأقل.",
+    "from": "من",
+    "to": "إلى",
+    "button": "تنزيل التصدير",
+    "loading": "جارٍ الإنشاء…",
+    "entities": {
+      "clients": "العملاء",
+      "clientsDesc": "قائمة العملاء",
+      "devis": "العروض",
+      "devisDesc": "جميع عروضك",
+      "factures": "الفواتير",
+      "facturesDesc": "جميع فواتيرك",
+      "paiements": "المدفوعات",
+      "paiementsDesc": "سجل المدفوعات"
+    },
+    "periods": {
+      "thisMonth": "هذا الشهر",
+      "lastMonth": "الشهر الماضي",
+      "last3Months": "آخر 3 أشهر",
+      "thisYear": "هذا العام",
+      "all": "الكل",
+      "custom": "مخصص"
+    },
+    "formats": {
+      "excelDesc": "جداول بيانات، مثالية للتحليل والمحاسب",
+      "pdfDesc": "تقرير منسق، جاهز للطباعة أو الأرشفة"
+    }
   }
-}
 }
