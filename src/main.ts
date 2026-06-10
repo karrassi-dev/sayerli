@@ -7,7 +7,9 @@ async function bootstrap() {
   const logger = new Logger('Sayerli');
   const app = await NestFactory.create(AppModule);
 
-  app.use(helmet());
+  app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }));
 
   const allowedOrigin = process.env.FRONTEND_URL;
   if (!allowedOrigin) {
