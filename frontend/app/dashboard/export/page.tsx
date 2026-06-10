@@ -153,7 +153,8 @@ async function generatePDF(data: ExportData, meta: { entrepriseName: string; per
   const { default: ExportPDF } = await import('@/components/pdf/ExportPDF')
   const React                = (await import('react')).default
 
-  const blob = await pdf(React.createElement(ExportPDF, { data, meta })).toBlob()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const blob = await pdf(React.createElement(ExportPDF, { data, meta }) as any).toBlob()
   const url  = URL.createObjectURL(blob)
   const a    = document.createElement('a')
   a.href     = url

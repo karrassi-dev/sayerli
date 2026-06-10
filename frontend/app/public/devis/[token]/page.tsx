@@ -260,7 +260,7 @@ function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt:
             {/* Acceptance info */}
             <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 mb-6">
               <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-              <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+              <div className={(dir as string) === 'rtl' ? 'text-right' : 'text-left'}>
                 <p className="text-xs font-bold text-green-700 dark:text-green-400">{devis.reference}</p>
                 <p className="text-xs text-green-600 dark:text-green-500 mt-0.5">{t('public.devis.acceptedOn')} {acceptedStr}</p>
               </div>
