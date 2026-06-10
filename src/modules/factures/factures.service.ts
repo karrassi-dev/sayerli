@@ -156,6 +156,20 @@ export class FacturesService {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
 
+    const transitionsAutorisees: Partial<Record<StatutFacture, StatutFacture[]>> = {
+      [StatutFacture.ENVOYEE]:  [StatutFacture.EN_RETARD],
+      [StatutFacture.VUE]:      [StatutFacture.EN_RETARD],
+      [StatutFacture.PARTIELLE]:[StatutFacture.EN_RETARD],
+      [StatutFacture.EN_RETARD]:[StatutFacture.ENVOYEE],
+    };
+
+    const permis = transitionsAutorisees[facture.statut] ?? [];
+    if (!permis.includes(dto.statut)) {
+      throw new BadRequestException(
+        `Transition invalide : ${facture.statut} → ${dto.statut}.`,
+      );
+    }
+
     return this.prisma.facture.update({
       where: { id },
       data: { statut: dto.statut },

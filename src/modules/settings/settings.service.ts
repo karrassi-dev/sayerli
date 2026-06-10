@@ -1,6 +1,7 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { PLAN_LIMITS } from '../../common/utils/plan-limits';
@@ -156,11 +157,11 @@ export class SettingsService {
   }
 
   async uploadLogo(entrepriseId: string, file: Express.Multer.File) {
-    const ALLOWED_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/svg+xml'];
+    const ALLOWED_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
     const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
     if (!ALLOWED_TYPES.includes(file.mimetype)) {
-      throw new BadRequestException('Format non supporté. Utilisez PNG, JPG ou SVG.');
+      throw new BadRequestException('Format non supporté. Utilisez PNG ou JPG.');
     }
     if (file.size > MAX_SIZE) {
       throw new BadRequestException('Le fichier ne doit pas dépasser 2MB.');
@@ -209,7 +210,11 @@ export class SettingsService {
     };
   }
 
-  async updatePreferences(userId: string, entrepriseId: string, dto: UpdatePreferencesDto) {
+  async updatePreferences(userId: string, entrepriseId: string, role: string, dto: UpdatePreferencesDto) {
+    if ((dto.devise || dto.formatDate) && role !== 'ADMIN') {
+      throw new ForbiddenException('Seul un administrateur peut modifier la devise et le format de date.');
+    }
+
     const userUpdate: Record<string, unknown> = {};
     const companyUpdate: Record<string, unknown> = {};
 

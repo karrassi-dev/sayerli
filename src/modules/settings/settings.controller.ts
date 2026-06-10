@@ -97,9 +97,10 @@ export class SettingsController {
   updatePreferences(
     @UtilisateurCourant('id') userId: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('role') role: string,
     @Body() dto: UpdatePreferencesDto,
   ) {
-    return this.settingsService.updatePreferences(userId, entrepriseId, dto);
+    return this.settingsService.updatePreferences(userId, entrepriseId, role, dto);
   }
 
   // ─── NOTIFICATIONS (all authenticated users) ─────────────────────────────
