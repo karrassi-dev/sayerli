@@ -4,7 +4,14 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Download } from 'lucide-react'
 import FacturePDF, { type FacturePDFProps } from './FacturePDF'
 
-export default function FactureDownloadButton({ data, brand }: { data: FacturePDFProps; brand: string }) {
+export default function FactureDownloadButton({
+  data, brand, label, loadingLabel,
+}: {
+  data: FacturePDFProps
+  brand: string
+  label: string
+  loadingLabel: string
+}) {
   return (
     <PDFDownloadLink
       document={<FacturePDF {...data} />}
@@ -21,7 +28,7 @@ export default function FactureDownloadButton({ data, brand }: { data: FacturePD
           ) : (
             <Download className="w-4 h-4" />
           )}
-          {loading ? 'Génération du PDF…' : 'Télécharger le reçu (PDF)'}
+          {loading ? loadingLabel : label}
         </button>
       )}
     </PDFDownloadLink>

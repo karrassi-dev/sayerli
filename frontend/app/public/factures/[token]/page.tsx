@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import { usePublicLocale } from '@/hooks/usePublicLocale'
 import {
   CheckCircle, Clock, Building2, Mail, Phone, MapPin,
   AlertCircle, Eye, FileText, CreditCard, Copy, Banknote,
@@ -107,14 +108,6 @@ const EMPTY_FORM: DeclarationForm = {
 
 // ── Success screen ───────────────────────────────────────────────────────────
 
-const METHODE_LABELS: Record<string, string> = {
-  VIREMENT: 'Virement bancaire',
-  CASH:     'Espèces',
-  CHEQUE:   'Chèque',
-  CARTE:    'Carte bancaire',
-  AUTRE:    'Autre',
-}
-
 function DeclarationSuccessScreen({
   facture,
   declaration,
@@ -126,6 +119,7 @@ function DeclarationSuccessScreen({
   submittedAt: Date
   montantRestantAvant: number
 }) {
+  const { t, dir } = usePublicLocale()
   const brand = facture.entreprise.couleurPrimaire || '#2563eb'
   const montantDeclare = parseFloat(declaration.montant) || 0
   const montantRestantApres = Math.max(0, montantRestantAvant - montantDeclare)
@@ -168,8 +162,10 @@ function DeclarationSuccessScreen({
     day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
   })
 
+  const methodeLabel = t(`public.facture.methodes.${declaration.methode}`) || declaration.methode
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
+    <div dir={dir} className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-4">
 
         {/* Main card */}
@@ -182,54 +178,54 @@ function DeclarationSuccessScreen({
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
 
-            <h2 className="text-xl font-black text-slate-900 dark:text-white text-center mb-1">Déclaration envoyée !</h2>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white text-center mb-1">{t('public.facture.declarationSent')}</h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 text-center mb-6">
-              Votre paiement a été transmis à <span className="font-semibold text-slate-700 dark:text-slate-300">{facture.entreprise.nom}</span> pour vérification.
+              {t('public.facture.declarationDesc').replace('{company}', facture.entreprise.nom)}
             </p>
 
             {/* Declaration summary */}
             <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/20 p-4 mb-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Montant déclaré</span>
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">{t('public.facture.montantDeclare')}</span>
                 <span className="text-lg font-black text-blue-700 dark:text-blue-300">{formatMAD(montantDeclare)}</span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
-                  <p className="text-slate-400">Méthode</p>
-                  <p className="font-semibold text-slate-700 dark:text-slate-300">{METHODE_LABELS[declaration.methode] ?? declaration.methode}</p>
+                  <p className="text-slate-400">{t('public.facture.methode')}</p>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300">{methodeLabel}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400">Date</p>
+                  <p className="text-slate-400">{t('public.facture.date')}</p>
                   <p className="font-semibold text-slate-700 dark:text-slate-300">{formatDate(declaration.datePaiement)}</p>
                 </div>
                 {declaration.reference.trim() && (
                   <div className="col-span-2">
-                    <p className="text-slate-400">Référence</p>
+                    <p className="text-slate-400">{t('public.facture.reference')}</p>
                     <p className="font-semibold text-slate-700 dark:text-slate-300">{declaration.reference}</p>
                   </div>
                 )}
               </div>
-              <div className="text-xs text-blue-500 dark:text-blue-400">Envoyée le {submittedStr}</div>
+              <div className="text-xs text-blue-500 dark:text-blue-400">{t('public.facture.sentOn')} {submittedStr}</div>
             </div>
 
             {/* Balance summary */}
             <div className="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden mb-6">
               <div className="bg-slate-800 dark:bg-slate-950 px-4 py-2.5">
-                <p className="text-xs font-bold text-white uppercase tracking-wider">Récapitulatif du solde</p>
+                <p className="text-xs font-bold text-white uppercase tracking-wider">{t('public.facture.balance')}</p>
               </div>
               <div className="p-4 space-y-2 text-sm">
                 <div className="flex justify-between text-slate-500 dark:text-slate-400">
-                  <span>Total facture TTC</span>
+                  <span>{t('public.facture.totalTTC')}</span>
                   <span>{formatMAD(facture.totalTTC)}</span>
                 </div>
                 {n(facture.montantPaye) > 0 && (
                   <div className="flex justify-between text-slate-500 dark:text-slate-400">
-                    <span>Déjà réglé</span>
+                    <span>{t('public.facture.alreadyPaid')}</span>
                     <span>−{formatMAD(facture.montantPaye)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-semibold text-blue-600 dark:text-blue-400 border-t border-slate-100 dark:border-slate-700 pt-2">
-                  <span>Cette déclaration</span>
+                  <span>{t('public.facture.thisDeclaration')}</span>
                   <span>−{formatMAD(montantDeclare)}</span>
                 </div>
                 <div className={cn(
@@ -238,7 +234,7 @@ function DeclarationSuccessScreen({
                     ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
                     : 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400',
                 )}>
-                  <span>{isFullyPaid ? '✓ Facture entièrement réglée' : 'Reste à payer'}</span>
+                  <span>{isFullyPaid ? `✓ ${t('public.facture.fullyPaid')}` : t('public.facture.remaining')}</span>
                   <span>{isFullyPaid ? formatMAD(0) : formatMAD(montantRestantApres)}</span>
                 </div>
               </div>
@@ -246,16 +242,21 @@ function DeclarationSuccessScreen({
 
             {/* Download button */}
             <div className="text-center">
-              <FactureDownloadButton data={pdfData} brand={brand} />
+              <FactureDownloadButton
+                data={pdfData}
+                brand={brand}
+                label={t('public.facture.downloadReceipt')}
+                loadingLabel={t('public.pdfGenerating')}
+              />
               <p className="mt-3 text-xs text-slate-400">
-                Le PDF contient le détail complet de la facture et de votre déclaration.
+                {t('public.facture.downloadReceiptDesc')}
               </p>
             </div>
           </div>
         </div>
 
         <p className="text-xs text-slate-400 text-center">
-          Généré par <span className="font-semibold text-slate-500">Sayerli</span> — Logiciel de gestion pour PME marocaines
+          {t('public.generatedBy')} — {t('public.generatedBySub')}
         </p>
       </div>
     </div>

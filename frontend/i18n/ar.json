@@ -798,12 +798,16 @@
         "recordPayment": "تسجيل دفعة",
         "send": "إرسال ونسخ الرابط",
         "copyLink": "نسخ رابط العميل",
-        "download": "تحميل PDF"
+        "download": "تحميل PDF",
+        "cancel": "إلغاء الفاتورة"
       },
       "empty": {
         "title": "لا توجد فواتير بعد",
         "desc": "أنشئ أول فاتورة أو حوّل عرضاً مقبولاً."
       },
+      "cancelSuccess": "تم إلغاء الفاتورة.",
+      "cancelTitle": "إلغاء الفاتورة",
+      "cancelMessage": "هل أنت متأكد من إلغاء {num}؟ ستُصنَّف الفاتورة كملغاة. هذا الإجراء لا يمكن التراجع عنه.",
       "deleteTitle": "حذف الفاتورة",
       "deleteMessage": "هل أنت متأكد من حذف {num}؟",
       "form": {
@@ -1091,5 +1095,45 @@
     "redirectGuest": "جارٍ التوجيه إلى الصفحة الرئيسية",
     "seconds": "ثوانٍ",
     "redirectNow": "التوجيه الآن"
+  },
+  "public": {
+    "generatedBy": "أنشئ بواسطة Sayerli",
+    "generatedBySub": "برنامج إدارة الأعمال للمؤسسات الصغيرة والمتوسطة المغربية",
+    "pdfGenerating": "جارٍ إنشاء PDF…",
+    "devis": {
+      "accepted": "تم قبول العرض!",
+      "refused": "تم رفض العرض",
+      "acceptedDesc": "شكراً. تم تسجيل قبولك بنجاح.",
+      "notifiedSoon": "تم إعلامه وسيتواصل معك قريباً.",
+      "refusedDesc": "تم تسجيل ردك. تم إعلام الشركة.",
+      "acceptedOn": "مقبول في",
+      "downloadPdf": "تنزيل العرض (PDF)",
+      "downloadPdfDesc": "يتضمن PDF التفاصيل الكاملة للعرض وتأكيد القبول."
+    },
+    "facture": {
+      "declarationSent": "تم إرسال الإشعار!",
+      "declarationDesc": "تم إرسال إشعار دفعك إلى {company} للمراجعة.",
+      "montantDeclare": "المبلغ المُعلن",
+      "methode": "طريقة الدفع",
+      "date": "التاريخ",
+      "reference": "المرجع",
+      "sentOn": "أُرسل في",
+      "balance": "ملخص الرصيد",
+      "totalTTC": "إجمالي الفاتورة شاملاً الضريبة",
+      "alreadyPaid": "تم دفعه مسبقاً",
+      "thisDeclaration": "هذا الإشعار",
+      "fullyPaid": "الفاتورة مسددة بالكامل",
+      "remaining": "المبلغ المتبقي",
+      "downloadReceipt": "تنزيل الإيصال (PDF)",
+      "downloadReceiptDesc": "يحتوي PDF على التفاصيل الكاملة للفاتورة وإشعار الدفع.",
+      "methodes": {
+        "VIREMENT": "تحويل بنكي",
+        "CASH": "نقداً",
+        "CHEQUE": "شيك",
+        "CARTE": "بطاقة بنكية",
+        "AUTRE": "أخرى"
+      }
+    }
   }
+}
 }

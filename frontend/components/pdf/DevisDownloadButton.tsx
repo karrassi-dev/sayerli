@@ -4,7 +4,14 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Download } from 'lucide-react'
 import DevisPDF, { type DevisPDFProps } from './DevisPDF'
 
-export default function DevisDownloadButton({ data, brand }: { data: DevisPDFProps; brand: string }) {
+export default function DevisDownloadButton({
+  data, brand, label, loadingLabel,
+}: {
+  data: DevisPDFProps
+  brand: string
+  label: string
+  loadingLabel: string
+}) {
   return (
     <PDFDownloadLink
       document={<DevisPDF {...data} />}
@@ -21,7 +28,7 @@ export default function DevisDownloadButton({ data, brand }: { data: DevisPDFPro
           ) : (
             <Download className="w-4 h-4" />
           )}
-          {loading ? 'Génération du PDF…' : 'Télécharger le devis (PDF)'}
+          {loading ? loadingLabel : label}
         </button>
       )}
     </PDFDownloadLink>

@@ -1096,5 +1096,44 @@
     "redirectGuest": "Redirection vers la page d'accueil",
     "seconds": "secondes",
     "redirectNow": "Rediriger maintenant"
+  },
+  "public": {
+    "generatedBy": "Généré par Sayerli",
+    "generatedBySub": "Logiciel de gestion pour PME marocaines",
+    "pdfGenerating": "Génération du PDF…",
+    "devis": {
+      "accepted": "Devis accepté !",
+      "refused": "Devis refusé",
+      "acceptedDesc": "Merci. Votre acceptation a bien été enregistrée.",
+      "notifiedSoon": "a été notifié et vous contactera prochainement.",
+      "refusedDesc": "Votre réponse a été enregistrée. L'entreprise a été notifiée.",
+      "acceptedOn": "Accepté le",
+      "downloadPdf": "Télécharger le devis (PDF)",
+      "downloadPdfDesc": "Le PDF inclut le détail complet du devis et la confirmation d'acceptation."
+    },
+    "facture": {
+      "declarationSent": "Déclaration envoyée !",
+      "declarationDesc": "Votre paiement a été transmis à {company} pour vérification.",
+      "montantDeclare": "Montant déclaré",
+      "methode": "Méthode",
+      "date": "Date",
+      "reference": "Référence",
+      "sentOn": "Envoyée le",
+      "balance": "Récapitulatif du solde",
+      "totalTTC": "Total facture TTC",
+      "alreadyPaid": "Déjà réglé",
+      "thisDeclaration": "Cette déclaration",
+      "fullyPaid": "Facture entièrement réglée",
+      "remaining": "Reste à payer",
+      "downloadReceipt": "Télécharger le reçu (PDF)",
+      "downloadReceiptDesc": "Le PDF contient le détail complet de la facture et de votre déclaration.",
+      "methodes": {
+        "VIREMENT": "Virement bancaire",
+        "CASH": "Espèces",
+        "CHEQUE": "Chèque",
+        "CARTE": "Carte bancaire",
+        "AUTRE": "Autre"
+      }
+    }
   }
 }

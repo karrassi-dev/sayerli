@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { publicDevisApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { usePublicLocale } from '@/hooks/usePublicLocale'
 
 const DevisDownloadButton = dynamic(
   () => import('@/components/pdf/DevisDownloadButton'),
@@ -178,18 +179,19 @@ function StatusGate({ statut, brand }: { statut: string; brand: string }) {
 // ── Refused Screen ────────────────────────────────────────────────────────────
 
 function RefusedScreen() {
+  const { t, dir } = usePublicLocale()
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
+    <div dir={dir} className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="max-w-sm w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 text-center">
         <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-red-100 dark:bg-red-950/40">
           <XCircle className="w-10 h-10 text-red-500" />
         </div>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Devis refusé</h2>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">{t('public.devis.refused')}</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-          Votre réponse a été enregistrée. L&apos;entreprise a été notifiée.
+          {t('public.devis.refusedDesc')}
         </p>
         <p className="mt-6 text-xs text-slate-400">
-          Généré par <span className="font-semibold text-slate-500">Sayerli</span>
+          {t('public.generatedBy')}
         </p>
       </div>
     </div>
@@ -199,6 +201,7 @@ function RefusedScreen() {
 // ── Accepted Screen ───────────────────────────────────────────────────────────
 
 function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt: Date }) {
+  const { t, dir } = usePublicLocale()
   const brand = devis.entreprise.couleurPrimaire || '#2563eb'
 
   const pdfLogoUrl = devis.entreprise.logo
@@ -232,7 +235,7 @@ function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt:
   })
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
+    <div dir={dir} className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
 
         {/* Main card */}
@@ -246,33 +249,39 @@ function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt:
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
 
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Devis accepté !</h2>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">{t('public.devis.accepted')}</h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
-              Merci. Votre acceptation a bien été enregistrée.
+              {t('public.devis.acceptedDesc')}
               <br />
-              <span className="font-semibold text-slate-600 dark:text-slate-300">{devis.entreprise.nom}</span> a été notifié et vous contactera prochainement.
+              <span className="font-semibold text-slate-600 dark:text-slate-300">{devis.entreprise.nom}</span>{' '}
+              {t('public.devis.notifiedSoon')}
             </p>
 
             {/* Acceptance info */}
             <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 mb-6">
               <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-              <div className="text-left">
+              <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
                 <p className="text-xs font-bold text-green-700 dark:text-green-400">{devis.reference}</p>
-                <p className="text-xs text-green-600 dark:text-green-500 mt-0.5">Accepté le {acceptedStr}</p>
+                <p className="text-xs text-green-600 dark:text-green-500 mt-0.5">{t('public.devis.acceptedOn')} {acceptedStr}</p>
               </div>
             </div>
 
             {/* Download button */}
-            <DevisDownloadButton data={pdfData} brand={brand} />
+            <DevisDownloadButton
+              data={pdfData}
+              brand={brand}
+              label={t('public.devis.downloadPdf')}
+              loadingLabel={t('public.pdfGenerating')}
+            />
 
             <p className="mt-6 text-xs text-slate-400">
-              Le PDF inclut le détail complet du devis et la confirmation d&apos;acceptation.
+              {t('public.devis.downloadPdfDesc')}
             </p>
           </div>
         </div>
 
         <p className="mt-4 text-xs text-slate-400 text-center">
-          Généré par <span className="font-semibold text-slate-500">Sayerli</span> — Logiciel de gestion pour PME marocaines
+          {t('public.generatedBy')} — {t('public.generatedBySub')}
         </p>
       </div>
     </div>
