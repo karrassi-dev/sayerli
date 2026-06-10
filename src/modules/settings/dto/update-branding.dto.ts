@@ -7,8 +7,4 @@ export class UpdateBrandingDto {
     message: 'La couleur doit être un code hexadécimal valide (ex: #2563eb)',
   })
   couleurPrimaire?: string;
-
-  @IsOptional()
-  @IsString()
-  logo?: string;
 }

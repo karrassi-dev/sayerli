@@ -147,7 +147,6 @@ export class SettingsService {
   async updateBranding(entrepriseId: string, dto: UpdateBrandingDto) {
     const data: Record<string, unknown> = {};
     if (dto.couleurPrimaire) data.couleurPrimaire = dto.couleurPrimaire;
-    if (dto.logo) data.logo = dto.logo;
 
     return this.prisma.entreprise.update({
       where: { id: entrepriseId },

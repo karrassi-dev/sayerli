@@ -4,8 +4,9 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import { StatutFacture, StatutDeclaration } from '@prisma/client';
+import { Prisma, StatutFacture, StatutDeclaration } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+import { retryOnConflict } from '../../common/utils/retry';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
@@ -22,8 +23,7 @@ export class FacturesService {
     return { totalHT, totalTTC };
   }
 
-  private async genererNumero(entrepriseId: string): Promise<string> {
-    const count = await this.prisma.facture.count({ where: { entrepriseId } });
+  private genererNumeroFac(count: number): string {
     return `FAC-${new Date().getFullYear()}-${String(count + 1).padStart(4, '0')}`;
   }
 
@@ -82,36 +82,42 @@ export class FacturesService {
 
     const taxe = dto.taxe ?? 20;
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe);
-    const numeroFacture = await this.genererNumero(entrepriseId);
 
-    return this.prisma.facture.create({
-      data: {
-        entrepriseId,
-        clientId: dto.clientId,
-        devisId: dto.devisId,
-        numeroFacture,
-        publicToken: uuidv4(),
-        statut: StatutFacture.BROUILLON,
-        taxe,
-        totalHT,
-        totalTTC,
-        dateEcheance: dto.dateEcheance ? new Date(dto.dateEcheance) : null,
-        notes: dto.notes,
-        lignes: {
-          create: dto.lignes.map((ligne, index) => ({
-            description: ligne.description,
-            quantite: ligne.quantite,
-            prixUnitaire: ligne.prixUnitaire,
-            total: ligne.quantite * ligne.prixUnitaire,
-            ordre: index,
-          })),
-        },
-      },
-      include: {
-        client: { select: { id: true, nom: true, email: true } },
-        lignes: true,
-      },
-    });
+    return retryOnConflict(() =>
+      this.prisma.$transaction(async (tx) => {
+        const count = await tx.facture.count({ where: { entrepriseId } });
+        const numeroFacture = this.genererNumeroFac(count);
+
+        return tx.facture.create({
+          data: {
+            entrepriseId,
+            clientId: dto.clientId,
+            devisId: dto.devisId,
+            numeroFacture,
+            publicToken: uuidv4(),
+            statut: StatutFacture.BROUILLON,
+            taxe,
+            totalHT,
+            totalTTC,
+            dateEcheance: dto.dateEcheance ? new Date(dto.dateEcheance) : null,
+            notes: dto.notes,
+            lignes: {
+              create: dto.lignes.map((ligne, index) => ({
+                description: ligne.description,
+                quantite: ligne.quantite,
+                prixUnitaire: ligne.prixUnitaire,
+                total: ligne.quantite * ligne.prixUnitaire,
+                ordre: index,
+              })),
+            },
+          },
+          include: {
+            client: { select: { id: true, nom: true, email: true } },
+            lignes: true,
+          },
+        });
+      }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
+    );
   }
 
   async modifierFacture(id: string, dto: CreerFactureDto, entrepriseId: string) {
@@ -120,6 +126,9 @@ export class FacturesService {
     if (facture.statut === StatutFacture.PAYEE) {
       throw new BadRequestException('Une facture payée ne peut pas être modifiée.');
     }
+
+    const client = await this.prisma.client.findFirst({ where: { id: dto.clientId, entrepriseId } });
+    if (!client) throw new NotFoundException('Client introuvable.');
 
     const taxe = dto.taxe ?? Number(facture.taxe);
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe);

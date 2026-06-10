@@ -3,12 +3,13 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { StatutDevis } from '@prisma/client';
+import { Prisma, StatutDevis } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreerDevisDto } from './dto/creer-devis.dto';
 import { ModifierStatutDevisDto } from './dto/modifier-statut-devis.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
+import { retryOnConflict } from '../../common/utils/retry';
 
 @Injectable()
 export class DevisService {
@@ -25,11 +26,8 @@ export class DevisService {
     return { totalHT, totalTTC };
   }
 
-  private async genererReference(entrepriseId: string): Promise<string> {
-    const count = await this.prisma.devis.count({ where: { entrepriseId } });
-    const numero = String(count + 1).padStart(4, '0');
-    const annee = new Date().getFullYear();
-    return `DEV-${annee}-${numero}`;
+  private genererReferenceDev(count: number): string {
+    return `DEV-${new Date().getFullYear()}-${String(count + 1).padStart(4, '0')}`;
   }
 
   async listerDevis(
@@ -90,35 +88,41 @@ export class DevisService {
     const taxe = dto.taxe ?? 20;
     const remise = dto.remise ?? 0;
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
-    const reference = await this.genererReference(entrepriseId);
 
-    return this.prisma.devis.create({
-      data: {
-        entrepriseId,
-        clientId: dto.clientId,
-        reference,
-        statut: StatutDevis.BROUILLON,
-        taxe,
-        remise,
-        totalHT,
-        totalTTC,
-        dateExpiration: dto.dateExpiration ? new Date(dto.dateExpiration) : null,
-        notes: dto.notes,
-        lignes: {
-          create: dto.lignes.map((ligne, index) => ({
-            description: ligne.description,
-            quantite: ligne.quantite,
-            prixUnitaire: ligne.prixUnitaire,
-            total: ligne.quantite * ligne.prixUnitaire,
-            ordre: index,
-          })),
-        },
-      },
-      include: {
-        client: { select: { id: true, nom: true, email: true } },
-        lignes: true,
-      },
-    });
+    return retryOnConflict(() =>
+      this.prisma.$transaction(async (tx) => {
+        const count = await tx.devis.count({ where: { entrepriseId } });
+        const reference = this.genererReferenceDev(count);
+
+        return tx.devis.create({
+          data: {
+            entrepriseId,
+            clientId: dto.clientId,
+            reference,
+            statut: StatutDevis.BROUILLON,
+            taxe,
+            remise,
+            totalHT,
+            totalTTC,
+            dateExpiration: dto.dateExpiration ? new Date(dto.dateExpiration) : null,
+            notes: dto.notes,
+            lignes: {
+              create: dto.lignes.map((ligne, index) => ({
+                description: ligne.description,
+                quantite: ligne.quantite,
+                prixUnitaire: ligne.prixUnitaire,
+                total: ligne.quantite * ligne.prixUnitaire,
+                ordre: index,
+              })),
+            },
+          },
+          include: {
+            client: { select: { id: true, nom: true, email: true } },
+            lignes: true,
+          },
+        });
+      }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
+    );
   }
 
   async modifierDevis(id: string, dto: CreerDevisDto, entrepriseId: string) {
@@ -131,6 +135,9 @@ export class DevisService {
         'Ce devis ne peut plus être modifié (accepté, refusé ou expiré).',
       );
     }
+
+    const client = await this.prisma.client.findFirst({ where: { id: dto.clientId, entrepriseId } });
+    if (!client) throw new NotFoundException('Client introuvable.');
 
     const taxe = dto.taxe ?? Number(devis.taxe);
     const remise = dto.remise ?? Number(devis.remise);
@@ -306,32 +313,36 @@ export class DevisService {
       throw new BadRequestException('Seuls les devis acceptés peuvent être convertis en facture.');
     }
 
-    const countFactures = await this.prisma.facture.count({ where: { entrepriseId } });
-    const numeroFacture = `FAC-${new Date().getFullYear()}-${String(countFactures + 1).padStart(4, '0')}`;
+    return retryOnConflict(() =>
+      this.prisma.$transaction(async (tx) => {
+        const countFactures = await tx.facture.count({ where: { entrepriseId } });
+        const numeroFacture = `FAC-${new Date().getFullYear()}-${String(countFactures + 1).padStart(4, '0')}`;
 
-    return this.prisma.facture.create({
-      data: {
-        entrepriseId,
-        clientId: devis.clientId,
-        devisId: devis.id,
-        numeroFacture,
-        publicToken: uuidv4(),
-        statut: 'BROUILLON',
-        taxe: devis.taxe,
-        totalHT: devis.totalHT,
-        totalTTC: devis.totalTTC,
-        lignes: {
-          create: devis.lignes.map(ligne => ({
-            description: ligne.description,
-            quantite: ligne.quantite,
-            prixUnitaire: ligne.prixUnitaire,
-            total: ligne.total,
-            ordre: ligne.ordre,
-          })),
-        },
-      },
-      include: { lignes: true, client: true },
-    });
+        return tx.facture.create({
+          data: {
+            entrepriseId,
+            clientId: devis.clientId,
+            devisId: devis.id,
+            numeroFacture,
+            publicToken: uuidv4(),
+            statut: 'BROUILLON',
+            taxe: devis.taxe,
+            totalHT: devis.totalHT,
+            totalTTC: devis.totalTTC,
+            lignes: {
+              create: devis.lignes.map(ligne => ({
+                description: ligne.description,
+                quantite: ligne.quantite,
+                prixUnitaire: ligne.prixUnitaire,
+                total: ligne.total,
+                ordre: ligne.ordre,
+              })),
+            },
+          },
+          include: { lignes: true, client: true },
+        });
+      }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
+    );
   }
 
   async dupliquerDevis(id: string, entrepriseId: string) {
@@ -341,34 +352,39 @@ export class DevisService {
     });
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
-    const reference = await this.genererReference(entrepriseId);
+    return retryOnConflict(() =>
+      this.prisma.$transaction(async (tx) => {
+        const count = await tx.devis.count({ where: { entrepriseId } });
+        const reference = this.genererReferenceDev(count);
 
-    return this.prisma.devis.create({
-      data: {
-        entrepriseId,
-        clientId: devis.clientId,
-        reference,
-        statut: StatutDevis.BROUILLON,
-        taxe: devis.taxe,
-        remise: devis.remise,
-        totalHT: devis.totalHT,
-        totalTTC: devis.totalTTC,
-        notes: devis.notes,
-        lignes: {
-          create: devis.lignes.map((ligne, index) => ({
-            description: ligne.description,
-            quantite: ligne.quantite,
-            prixUnitaire: ligne.prixUnitaire,
-            total: ligne.total,
-            ordre: index,
-          })),
-        },
-      },
-      include: {
-        client: { select: { id: true, nom: true, email: true } },
-        lignes: true,
-      },
-    });
+        return tx.devis.create({
+          data: {
+            entrepriseId,
+            clientId: devis.clientId,
+            reference,
+            statut: StatutDevis.BROUILLON,
+            taxe: devis.taxe,
+            remise: devis.remise,
+            totalHT: devis.totalHT,
+            totalTTC: devis.totalTTC,
+            notes: devis.notes,
+            lignes: {
+              create: devis.lignes.map((ligne, index) => ({
+                description: ligne.description,
+                quantite: ligne.quantite,
+                prixUnitaire: ligne.prixUnitaire,
+                total: ligne.total,
+                ordre: index,
+              })),
+            },
+          },
+          include: {
+            client: { select: { id: true, nom: true, email: true } },
+            lignes: true,
+          },
+        });
+      }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
+    );
   }
 
   async supprimerDevis(id: string, entrepriseId: string) {
