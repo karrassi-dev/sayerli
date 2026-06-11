@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sayerli.ma'
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sayerli.com'
 export const SITE_NAME = 'Sayerli'
 
 // ── Primary SEO keywords for Morocco ──────────────────────────────────────────
@@ -49,7 +49,7 @@ export const ALL_KEYWORDS = [
 
 // ── Shared Open Graph images ──────────────────────────────────────────────────
 export const OG_IMAGE = {
-  url: `${SITE_URL}/og-image.png`,
+  url: `${SITE_URL}/og-image.jpg`,
   width: 1200,
   height: 630,
   alt: 'Sayerli — CRM, Devis et Facturation pour PME au Maroc',
