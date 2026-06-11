@@ -7,6 +7,7 @@ import { Sun, Moon, Menu, X, Globe, ChevronDown } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { LOCALES, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { Logo } from '@/components/ui/LogoMark'
 
 export function Navbar() {
   const { t, locale, setLocale } = useTranslation()
@@ -45,13 +46,8 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center shadow-lg">
-              <span className="text-white font-black text-sm">S</span>
-            </div>
-            <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
-              sayerli
-            </span>
+          <Link href="/" aria-label="Sayerli">
+            <Logo size={32} />
           </Link>
 
           {/* Desktop Nav */}

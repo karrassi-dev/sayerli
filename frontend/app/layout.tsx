@@ -33,10 +33,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/sayerlilogopng.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [{ url: '/apple-icon.png', sizes: '180x180' }],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/favicon.ico',
   },
   manifest: '/manifest.json',
   openGraph: {
@@ -50,11 +52,11 @@ export const metadata: Metadata = {
       'Logiciel de gestion commerciale pour PME marocaines. Créez des devis, générez des factures, gérez vos clients et suivez vos paiements en MAD.',
     images: [
       {
-        url: `${SITE_URL}/og-image.png`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'Sayerli — Logiciel CRM, Devis et Facturation pour PME au Maroc',
-        type: 'image/png',
+        type: 'image/jpeg',
       },
     ],
   },
@@ -65,7 +67,7 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} | CRM, Devis et Facturation pour PME au Maroc`,
     description:
       'Logiciel de gestion commerciale pour PME marocaines. Devis, Factures, CRM et paiements — tout en un.',
-    images: [`${SITE_URL}/og-image.png`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
   alternates: {
     canonical: SITE_URL,

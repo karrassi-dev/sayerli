@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useNotificationContext } from '@/components/providers/NotificationProvider'
 import { cn } from '@/lib/utils'
 import { NAV_ALLOWED_ROLES } from '@/lib/permissions'
+import { Logo, LogoMark } from '@/components/ui/LogoMark'
 
 const NAV_ITEMS = [
   { href: '/dashboard',              iconC: LayoutDashboard, key: 'dashboard' },
@@ -68,14 +69,13 @@ export function Sidebar() {
       {/* Logo + toggle */}
       <div className={cn('flex items-center border-b border-slate-100 dark:border-slate-800 h-16', collapsed && !isMobile ? 'justify-center px-2' : 'justify-between px-4')}>
         <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0" onClick={() => setMobileOpen(false)}>
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center flex-shrink-0 shadow-md">
-            <span className="text-white font-black text-sm">S</span>
-          </div>
-          {(!collapsed || isMobile) && (
-            <div className="min-w-0">
-              <span className="font-black text-lg text-slate-900 dark:text-white tracking-tight">sayerli</span>
-              {entreprise && <p className="text-xs text-slate-400 truncate max-w-[110px]">{entreprise.nom}</p>}
-            </div>
+          {(!collapsed || isMobile) ? (
+            <Logo size={32} />
+          ) : (
+            <LogoMark size={32} />
+          )}
+          {(!collapsed || isMobile) && entreprise && (
+            <p className="text-xs text-slate-400 truncate max-w-[110px]">{entreprise.nom}</p>
           )}
         </Link>
         {!isMobile && (

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 -8 126 116" fill="none">
+  <defs>
+    <linearGradient id="g" x1="65" y1="20" x2="35" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E40AF"/>
+      <stop offset="45%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#06D6B0"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="75" y1="38" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    S path: starts upper-right (65,20), sweeps UP-RIGHT through the upper loop
+    (control at 90,5 pushes the arch upward), crosses center (50,52),
+    then sweeps LEFT-DOWN through the lower loop
+    (control at 10,90 pushes the arch downward), ends lower-left (35,88).
+  -->
+  <path
+    d="M 65 20 C 90 5, 90 50, 50 52 C 10 54, 10 90, 35 88"
+    stroke="url(#g)"
+    stroke-width="20"
+    stroke-linecap="round"
+    fill="none"
+  />
+
+  <!-- Fold highlight on the upper-right arm of the crossing -->
+  <path
+    d="M 65 36 C 82 44, 75 52, 50 52"
+    stroke="url(#fold)"
+    stroke-width="10"
+    stroke-linecap="round"
+    fill="none"
+  />
+</svg>

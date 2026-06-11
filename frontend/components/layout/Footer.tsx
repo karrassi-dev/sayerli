@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
+import { Logo } from '@/components/ui/LogoMark'
 
 export function Footer() {
   const { t } = useTranslation()
@@ -12,11 +13,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
           {/* Brand */}
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center">
-                <span className="text-white font-black text-sm">S</span>
-              </div>
-              <span className="font-black text-xl text-white tracking-tight">sayerli</span>
+            <div className="mb-4">
+              <Logo size={36} variant="dark" />
             </div>
             <p className="text-sm leading-relaxed">{t('footer.tagline')}</p>
             <p className="text-sm mt-4">{t('footer.madeIn')}</p>
