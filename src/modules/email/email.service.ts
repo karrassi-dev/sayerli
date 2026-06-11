@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 @Injectable()
 export class EmailService {
   private readonly resend = new Resend(process.env.RESEND_API_KEY);
-  private readonly from = 'onboarding@resend.dev';
+  private readonly from = 'Sayerli <invitations@sayerli.com>';
   private readonly frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
   private readonly logger = new Logger(EmailService.name);
 
