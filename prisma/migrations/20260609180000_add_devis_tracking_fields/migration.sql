@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "devis"
+  ADD COLUMN IF NOT EXISTS "dateRefus" TIMESTAMP(3),
+  ADD COLUMN IF NOT EXISTS "dateEnvoi" TIMESTAMP(3),
+  ADD COLUMN IF NOT EXISTS "dateConsultation" TIMESTAMP(3),
+  ADD COLUMN IF NOT EXISTS "dateDerniereConsultation" TIMESTAMP(3),
+  ADD COLUMN IF NOT EXISTS "nombreConsultations" INTEGER NOT NULL DEFAULT 0;
