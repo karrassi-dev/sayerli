@@ -25,5 +25,4 @@ frontend/.next/
 frontend/out/
 
 # Prisma
-prisma/migrations/
 .vercel
