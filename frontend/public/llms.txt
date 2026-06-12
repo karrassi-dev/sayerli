@@ -1,0 +1,65 @@
+# Sayerli
+
+> Sayerli is a SaaS platform built for Moroccan SMEs (PMEs). It centralizes client management, quotes (devis), invoices (factures), and payments in one simple tool — in French, in MAD (Moroccan dirhams), with Arabic RTL support.
+
+Sayerli solves a real problem: small Moroccan businesses have no dedicated tool to manage their commercial activity. Most still use Excel or paper. Sayerli replaces that with a modern, cloud-based platform designed specifically for the Moroccan market.
+
+**Tagline:** "Nta khdem, Sayerli ysayyer lik lba9i" — You work, Sayerli handles the rest.
+
+## What Sayerli Does
+
+- **CRM** — Manage clients, contact info, and commercial history
+- **Devis (Quotes)** — Create and send professional quotes; clients can accept or reject via a public portal
+- **Factures (Invoices)** — Create, send, and track invoices with payment status; clients can view invoices online
+- **Paiements (Payments)** — Track payments and outstanding balances
+- **Déclarations** — Clients can declare payments; owners approve or reject
+- **Équipe (Team)** — Invite team members with roles (admin, manager, commercial, comptable)
+- **Notifications** — Real-time alerts and email notifications per event type
+- **Tableau de bord (Dashboard)** — Analytics and business overview with charts
+- **Settings** — Company profile, branding, banking info (RIB, IBAN, SWIFT), language, theme
+
+## Who It's For
+
+- Moroccan small and medium businesses (PMEs/TPEs)
+- Freelancers and auto-entrepreneurs in Morocco
+- Agencies, consultants, and service businesses based in Morocco
+- Any Moroccan business that needs to manage clients, quotes, and invoices
+
+## Key Differentiators
+
+- Built specifically for Morocco (not adapted from a Western product)
+- Currency: MAD (Moroccan dirham) natively
+- Languages: French (primary), English, Arabic with RTL support
+- Moroccan legal compliance for quotes and invoices
+- Simple, fast, no accountant required
+
+## Tech Stack
+
+- Frontend: Next.js 15, TailwindCSS, TypeScript — hosted on Vercel
+- Backend: NestJS, PostgreSQL, Prisma ORM — hosted on Railway
+- Auth: JWT, multi-tenant (each company's data is isolated)
+- Email: Resend (domain: sayerli.com)
+
+## Important URLs
+
+- Homepage: https://sayerli.com
+- Register (free): https://sayerli.com/register
+- Login: https://sayerli.com/login
+- Blog: https://sayerli.com/blog
+
+## Blog Articles
+
+- https://sayerli.com/blog/comment-creer-un-devis-au-maroc — How to create a professional quote in Morocco
+- https://sayerli.com/blog/meilleur-logiciel-de-facturation-maroc — Best invoicing software in Morocco (2025)
+- https://sayerli.com/blog/crm-pour-pme-maroc — Why Moroccan SMEs need a CRM
+- https://sayerli.com/blog/gestion-clients-pour-entreprises-marocaines — Client management guide for Moroccan businesses
+- https://sayerli.com/blog/alternative-excel-pour-gerer-son-entreprise — Best Excel alternatives for Moroccan businesses
+
+## Keywords / Topics
+
+logiciel facturation maroc, logiciel devis maroc, crm maroc, gestion clients maroc, gestion commerciale maroc, logiciel pme maroc, facture en ligne maroc, devis en ligne maroc, meilleur logiciel de facturation au maroc, alternative excel gestion entreprise maroc, logiciel pour auto entrepreneur maroc
+
+## Contact & Social
+
+- Website: https://sayerli.com
+- Twitter/X: @sayerli_ma

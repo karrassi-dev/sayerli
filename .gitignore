@@ -26,3 +26,4 @@ frontend/out/
 
 # Prisma
 prisma/migrations/
+.vercel

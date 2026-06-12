@@ -3,6 +3,7 @@ import '@/styles/globals.css'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { LanguageProvider } from '@/components/providers/LanguageProvider'
 import { SITE_URL, SITE_NAME, ALL_KEYWORDS } from '@/lib/seo'
+import GoogleAnalytics from '@/components/seo/GoogleAnalytics'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -115,6 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
       </head>
       <body>
+        <GoogleAnalytics />
         <ThemeProvider>
           <LanguageProvider>
             {children}
