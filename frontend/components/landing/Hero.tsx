@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Play, TrendingUp, Users, FileText } from 'lucide-react'
+import { ArrowRight, CheckCircle, MapPin, Zap } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 
 export function Hero() {
@@ -50,12 +50,12 @@ export function Hero() {
               </Link>
             </div>
 
-            {/* Social proof stats */}
+            {/* Trust signals */}
             <div className="mt-12 flex items-center justify-center lg:justify-start gap-8">
               {[
-                { icon: Users, value: '500+', label: t('hero.stat1') },
-                { icon: FileText, value: '12K+', label: t('hero.stat2') },
-                { icon: TrendingUp, value: '8M+', label: t('hero.stat3') },
+                { icon: CheckCircle, value: '✓', label: t('hero.stat1') },
+                { icon: MapPin, value: '🇲🇦', label: t('hero.stat2') },
+                { icon: Zap, value: '2 min', label: t('hero.stat3') },
               ].map(({ icon: Icon, value, label }) => (
                 <div key={label} className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-950 flex items-center justify-center">
