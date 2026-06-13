@@ -83,6 +83,75 @@ export class EmailService {
     }
   }
 
+  async sendResetPasswordEmail(opts: { toEmail: string; toName: string; token: string }) {
+    const link = `${this.frontendUrl}/reset-password/${opts.token}`;
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Réinitialisation du mot de passe — Sayerli</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:32px 40px;text-align:center;">
+              <span style="color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">sayerli</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:40px;">
+              <h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#0f172a;">
+                Réinitialisation du mot de passe
+              </h1>
+              <p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">
+                Bonjour <strong style="color:#0f172a;">${opts.toName}</strong>,<br/>
+                Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.
+              </p>
+              <div style="text-align:center;margin-bottom:28px;">
+                <a href="${link}"
+                   style="display:inline-block;background:linear-gradient(135deg,#2563eb,#0d9488);color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:14px 40px;border-radius:12px;">
+                  Réinitialiser mon mot de passe
+                </a>
+              </div>
+              <p style="margin:0 0 8px;font-size:13px;color:#94a3b8;text-align:center;">
+                Ce lien est valide pendant <strong>1 heure</strong>.
+              </p>
+              <p style="margin:0;font-size:12px;color:#cbd5e1;text-align:center;word-break:break-all;">
+                ${link}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;">
+                Sayerli · Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    try {
+      const { error } = await this.resend.emails.send({
+        from: this.from,
+        to: opts.toEmail,
+        subject: 'Réinitialisation de votre mot de passe — Sayerli',
+        html,
+      });
+      if (error) this.logger.error(`Resend error: ${JSON.stringify(error)}`);
+    } catch (err) {
+      this.logger.error(`Failed to send reset password email: ${err}`);
+    }
+  }
+
   async sendNotificationEmail(opts: { toEmail: string; toName: string; message: string; lien?: string }) {
     const url = opts.lien ? `${this.frontendUrl}${opts.lien}` : this.frontendUrl;
     const html = `<!DOCTYPE html>

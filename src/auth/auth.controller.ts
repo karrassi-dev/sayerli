@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, IsString, MinLength } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { ConnexionDto } from './dto/connexion.dto';
@@ -29,6 +29,23 @@ export class AuthController {
   @Get('confirmer-email/:token')
   async confirmerEmail(@Param('token') token: string) {
     return this.authService.confirmerEmail(token);
+  }
+
+  @Public()
+  @Post('mot-de-passe-oublie')
+  @HttpCode(HttpStatus.OK)
+  async motDePasseOublie(@Body('email') email: string) {
+    return this.authService.demanderResetPassword(email);
+  }
+
+  @Public()
+  @Post('reinitialiser-mot-de-passe/:token')
+  @HttpCode(HttpStatus.OK)
+  async reinitialiserMotDePasse(
+    @Param('token') token: string,
+    @Body('motDePasse') motDePasse: string,
+  ) {
+    return this.authService.reinitialiserMotDePasse(token, motDePasse);
   }
 
   @Get('profil')

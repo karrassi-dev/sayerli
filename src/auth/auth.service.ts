@@ -187,6 +187,58 @@ export class AuthService {
     };
   }
 
+  async demanderResetPassword(email: string) {
+    const utilisateur = await this.prisma.utilisateur.findFirst({ where: { email } });
+
+    // Always return success to avoid email enumeration
+    if (!utilisateur || !utilisateur.emailConfirme) {
+      return { message: 'Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.' };
+    }
+
+    const token = uuidv4();
+    const expiration = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await this.prisma.utilisateur.update({
+      where: { id: utilisateur.id },
+      data: { resetPasswordToken: token, resetPasswordExpiration: expiration },
+    });
+
+    await this.emailService.sendResetPasswordEmail({
+      toEmail: utilisateur.email,
+      toName: utilisateur.nom,
+      token,
+    });
+
+    return { message: 'Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.' };
+  }
+
+  async reinitialiserMotDePasse(token: string, nouveauMotDePasse: string) {
+    const utilisateur = await this.prisma.utilisateur.findFirst({
+      where: { resetPasswordToken: token },
+    });
+
+    if (!utilisateur) {
+      throw new BadRequestException('Lien de réinitialisation invalide.');
+    }
+
+    if (utilisateur.resetPasswordExpiration && utilisateur.resetPasswordExpiration < new Date()) {
+      throw new BadRequestException('Ce lien a expiré. Veuillez faire une nouvelle demande.');
+    }
+
+    const motDePasseHash = await bcrypt.hash(nouveauMotDePasse, 12);
+
+    await this.prisma.utilisateur.update({
+      where: { id: utilisateur.id },
+      data: {
+        motDePasseHash,
+        resetPasswordToken: null,
+        resetPasswordExpiration: null,
+      },
+    });
+
+    return { message: 'Mot de passe réinitialisé avec succès. Vous pouvez maintenant vous connecter.' };
+  }
+
   async profil(utilisateurId: string) {
     const utilisateur = await this.prisma.utilisateur.findUnique({
       where: { id: utilisateurId },
