@@ -8,6 +8,7 @@ import { Prisma, StatutFacture, StatutDeclaration } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { retryOnConflict } from '../../common/utils/retry';
 import { PrismaService } from '../../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
 import { DeclarerPaiementDto } from './dto/declarer-paiement.dto';
@@ -15,7 +16,10 @@ import { RejeterDeclarationDto } from './dto/rejeter-declaration.dto';
 
 @Injectable()
 export class FacturesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   private calculerTotaux(lignes: { quantite: number; prixUnitaire: number }[], taxe: number) {
     const totalHT = lignes.reduce((sum, l) => sum + l.quantite * l.prixUnitaire, 0);
@@ -190,20 +194,16 @@ export class FacturesService {
     if (!facture) throw new NotFoundException('Facture introuvable.');
 
     if (facture.statut === StatutFacture.BROUILLON) {
-      await this.prisma.$transaction([
-        this.prisma.facture.update({
-          where: { id },
-          data: { statut: StatutFacture.ENVOYEE, dateEnvoi: new Date() },
-        }),
-        this.prisma.notification.create({
-          data: {
-            entrepriseId,
-            type: 'FACTURE_ENVOYEE',
-            message: `La facture ${facture.numeroFacture} a été envoyée au client.`,
-            lien: `/dashboard/factures`,
-          },
-        }),
-      ]);
+      await this.prisma.facture.update({
+        where: { id },
+        data: { statut: StatutFacture.ENVOYEE, dateEnvoi: new Date() },
+      });
+      this.notificationsService.creerEtEnvoyer({
+        entrepriseId,
+        type: 'FACTURE_ENVOYEE',
+        message: `La facture ${facture.numeroFacture} a été envoyée au client.`,
+        lien: `/dashboard/factures`,
+      });
     }
 
     const updated = await this.prisma.facture.findUnique({ where: { id } });
@@ -287,17 +287,13 @@ export class FacturesService {
 
     if (facture.statut === StatutFacture.ENVOYEE) {
       trackingData.statut = StatutFacture.VUE;
-      await this.prisma.$transaction([
-        this.prisma.facture.update({ where: { publicToken: token }, data: trackingData }),
-        this.prisma.notification.create({
-          data: {
-            entrepriseId: facture.entrepriseId,
-            type: 'FACTURE_VUE',
-            message: `La facture ${facture.numeroFacture} a été consultée par ${facture.client.nom}.`,
-            lien: `/dashboard/factures`,
-          },
-        }),
-      ]);
+      await this.prisma.facture.update({ where: { publicToken: token }, data: trackingData });
+      this.notificationsService.creerEtEnvoyer({
+        entrepriseId: facture.entrepriseId,
+        type: 'FACTURE_VUE',
+        message: `La facture ${facture.numeroFacture} a été consultée par ${facture.client.nom}.`,
+        lien: `/dashboard/factures`,
+      });
     } else {
       await this.prisma.facture.update({ where: { publicToken: token }, data: trackingData });
     }
@@ -324,27 +320,24 @@ export class FacturesService {
       throw new BadRequestException('Le montant déclaré dépasse le reste à payer.');
     }
 
-    const [declaration] = await this.prisma.$transaction([
-      this.prisma.declarationPaiement.create({
-        data: {
-          entrepriseId: facture.entrepriseId,
-          factureId: facture.id,
-          montant: dto.montant,
-          methode: dto.methode,
-          reference: dto.reference,
-          message: dto.message,
-          datePaiement: dto.datePaiement ? new Date(dto.datePaiement) : new Date(),
-        },
-      }),
-      this.prisma.notification.create({
-        data: {
-          entrepriseId: facture.entrepriseId,
-          type: 'DECLARATION_RECUE',
-          message: `Nouvelle déclaration de paiement reçue pour la facture ${facture.numeroFacture} — ${dto.montant} MAD.`,
-          lien: `/dashboard/declarations`,
-        },
-      }),
-    ]);
+    const declaration = await this.prisma.declarationPaiement.create({
+      data: {
+        entrepriseId: facture.entrepriseId,
+        factureId: facture.id,
+        montant: dto.montant,
+        methode: dto.methode,
+        reference: dto.reference,
+        message: dto.message,
+        datePaiement: dto.datePaiement ? new Date(dto.datePaiement) : new Date(),
+      },
+    });
+
+    this.notificationsService.creerEtEnvoyer({
+      entrepriseId: facture.entrepriseId,
+      type: 'DECLARATION_RECUE',
+      message: `Nouvelle déclaration de paiement reçue pour la facture ${facture.numeroFacture} — ${dto.montant} MAD.`,
+      lien: `/dashboard/declarations`,
+    });
 
     return declaration;
   }
@@ -408,15 +401,14 @@ export class FacturesService {
         where: { id },
         data: { statut: StatutDeclaration.APPROVED, reviewedAt: new Date() },
       }),
-      this.prisma.notification.create({
-        data: {
-          entrepriseId,
-          type: nouveauStatut === StatutFacture.PAYEE ? 'FACTURE_PAYEE' : 'FACTURE_PARTIELLE',
-          message: `Déclaration approuvée : ${Number(declaration.montant)} MAD reçus pour la facture ${facture.numeroFacture}.`,
-          lien: `/dashboard/factures`,
-        },
-      }),
     ]);
+
+    this.notificationsService.creerEtEnvoyer({
+      entrepriseId,
+      type: nouveauStatut === StatutFacture.PAYEE ? 'FACTURE_PAYEE' : 'FACTURE_PARTIELLE',
+      message: `Déclaration approuvée : ${Number(declaration.montant)} MAD reçus pour la facture ${facture.numeroFacture}.`,
+      lien: `/dashboard/factures`,
+    });
 
     return { message: 'Déclaration approuvée et paiement enregistré.' };
   }

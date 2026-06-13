@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, StatutDevis } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { CreerDevisDto } from './dto/creer-devis.dto';
 import { ModifierStatutDevisDto } from './dto/modifier-statut-devis.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,7 +14,10 @@ import { retryOnConflict } from '../../common/utils/retry';
 
 @Injectable()
 export class DevisService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   private calculerTotaux(
     lignes: { quantite: number; prixUnitaire: number }[],
@@ -190,17 +194,14 @@ export class DevisService {
       dto.statut === StatutDevis.ENVOYE  ? 'DEVIS_ENVOYE'  :
       'DEVIS_VU';
 
-    const [devisMaj] = await this.prisma.$transaction([
-      this.prisma.devis.update({ where: { id }, data }),
-      this.prisma.notification.create({
-        data: {
-          entrepriseId,
-          type: typeNotif,
-          message: `Le devis ${devis.reference} est maintenant ${dto.statut.toLowerCase()}.`,
-          lien: `/devis/${id}`,
-        },
-      }),
-    ]);
+    const devisMaj = await this.prisma.devis.update({ where: { id }, data });
+
+    this.notificationsService.creerEtEnvoyer({
+      entrepriseId,
+      type: typeNotif,
+      message: `Le devis ${devis.reference} est maintenant ${dto.statut.toLowerCase()}.`,
+      lien: `/devis/${id}`,
+    });
 
     return devisMaj;
   }
@@ -288,17 +289,14 @@ export class DevisService {
     if (newStatut === StatutDevis.ACCEPTE) data.dateAcceptation = new Date();
     if (newStatut === StatutDevis.REFUSE)  data.dateRefus = new Date();
 
-    await this.prisma.$transaction([
-      this.prisma.devis.update({ where: { id: devis.id }, data }),
-      this.prisma.notification.create({
-        data: {
-          entrepriseId: devis.entrepriseId,
-          type: newStatut === StatutDevis.ACCEPTE ? 'DEVIS_ACCEPTE' : 'DEVIS_REFUSE',
-          message: `Le devis ${devis.reference} a été ${newStatut === StatutDevis.ACCEPTE ? 'accepté' : 'refusé'} par le client.`,
-          lien: `/dashboard/devis`,
-        },
-      }),
-    ]);
+    await this.prisma.devis.update({ where: { id: devis.id }, data });
+
+    this.notificationsService.creerEtEnvoyer({
+      entrepriseId: devis.entrepriseId,
+      type: newStatut === StatutDevis.ACCEPTE ? 'DEVIS_ACCEPTE' : 'DEVIS_REFUSE',
+      message: `Le devis ${devis.reference} a été ${newStatut === StatutDevis.ACCEPTE ? 'accepté' : 'refusé'} par le client.`,
+      lien: `/dashboard/devis`,
+    });
 
     return { statut: newStatut };
   }

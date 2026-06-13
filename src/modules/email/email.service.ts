@@ -83,6 +83,61 @@ export class EmailService {
     }
   }
 
+  async sendNotificationEmail(opts: { toEmail: string; toName: string; message: string; lien?: string }) {
+    const url = opts.lien ? `${this.frontendUrl}${opts.lien}` : this.frontendUrl;
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Notification Sayerli</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:28px 40px;text-align:center;">
+              <span style="color:#fff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">sayerli</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:36px 40px;">
+              <p style="margin:0 0 8px;font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Notification</p>
+              <p style="margin:0 0 28px;font-size:16px;color:#0f172a;line-height:1.6;">${opts.message}</p>
+              ${opts.lien ? `<div style="text-align:center;">
+                <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#0d9488);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:12px 32px;border-radius:10px;">
+                  Voir dans Sayerli
+                </a>
+              </div>` : ''}
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#f8fafc;padding:16px 40px;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;">Sayerli · Vous recevez cet email car les notifications sont activées dans vos paramètres.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    try {
+      const { error } = await this.resend.emails.send({
+        from: this.from,
+        to: opts.toEmail,
+        subject: opts.message.length > 60 ? opts.message.substring(0, 57) + '...' : opts.message,
+        html,
+      });
+      if (error) this.logger.error(`Resend error: ${JSON.stringify(error)}`);
+    } catch (err) {
+      this.logger.error(`Failed to send notification email: ${err}`);
+    }
+  }
+
   async sendInvitation(opts: {
     toEmail: string;
     toName: string;
