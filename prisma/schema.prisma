@@ -75,11 +75,11 @@ model Utilisateur {
 model PreferencesNotification {
   id                     String      @id @default(uuid())
   utilisateurId          String      @unique
-  emailNotifications     Boolean     @default(true)
-  notificationsDevis     Boolean     @default(true)
-  notificationsFactures  Boolean     @default(true)
-  notificationsPaiements Boolean     @default(true)
-  notificationsSysteme   Boolean     @default(true)
+  emailNotifications     Boolean     @default(false)
+  notificationsDevis     Boolean     @default(false)
+  notificationsFactures  Boolean     @default(false)
+  notificationsPaiements Boolean     @default(false)
+  notificationsSysteme   Boolean     @default(false)
   inAppDevis             Boolean     @default(true)
   inAppFactures          Boolean     @default(true)
   inAppPaiements         Boolean     @default(true)
