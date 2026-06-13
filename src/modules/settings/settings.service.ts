@@ -258,10 +258,28 @@ export class SettingsService {
   }
 
   async updateNotifications(userId: string, dto: UpdateNotificationsDto) {
+    const user = await this.prisma.utilisateur.findUnique({
+      where: { id: userId },
+      select: { entreprise: { select: { plan: true } } },
+    });
+
+    const isStarter = user?.entreprise?.plan === 'STARTER';
+
+    const data = isStarter
+      ? {
+          ...dto,
+          emailNotifications: false,
+          notificationsDevis: false,
+          notificationsFactures: false,
+          notificationsPaiements: false,
+          notificationsSysteme: false,
+        }
+      : dto;
+
     return this.prisma.preferencesNotification.upsert({
       where: { utilisateurId: userId },
-      update: { ...dto },
-      create: { utilisateurId: userId, ...dto },
+      update: { ...data },
+      create: { utilisateurId: userId, ...data },
       select: {
         emailNotifications: true,
         notificationsDevis: true,

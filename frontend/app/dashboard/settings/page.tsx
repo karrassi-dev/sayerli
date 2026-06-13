@@ -754,32 +754,45 @@ export default function SettingsPage() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 mb-1">
                     <Mail className="w-4 h-4 text-slate-500" />
-                    <div>
+                    <div className="flex-1">
                       <p className="text-sm font-bold text-slate-900 dark:text-white">{t(`${p}.emailSection`)}</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">{t(`${p}.emailSectionDesc`)}</p>
                     </div>
+                    {billing?.plan === 'STARTER' && (
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                        Pro & Business
+                      </span>
+                    )}
                   </div>
 
-                  {/* Master email toggle */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border-2 border-primary-200 dark:border-primary-800 bg-primary-50/50 dark:bg-primary-950/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-950/60 flex items-center justify-center">
-                        <Mail className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                  <div className={cn('space-y-3', billing?.plan === 'STARTER' && 'opacity-50 pointer-events-none select-none')}>
+                    {/* Master email toggle */}
+                    <div className="flex items-center justify-between p-4 rounded-xl border-2 border-primary-200 dark:border-primary-800 bg-primary-50/50 dark:bg-primary-950/20">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-950/60 flex items-center justify-center">
+                          <Mail className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{t(`${p}.masterEmail`)}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{t(`${p}.masterEmailDesc`)}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{t(`${p}.masterEmail`)}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{t(`${p}.masterEmailDesc`)}</p>
-                      </div>
+                      <Toggle fieldKey="emailNotifications" />
                     </div>
-                    <Toggle fieldKey="emailNotifications" />
+
+                    {/* Per-type email toggles */}
+                    <div className={cn('space-y-2 transition-opacity', !notifs.emailNotifications && 'opacity-40 pointer-events-none')}>
+                      {rows.map(r => (
+                        <NotifRow key={r.emailKey} icon={r.icon} iconColor={r.iconColor} iconBg={r.iconBg} label={r.label} desc={r.desc} fieldKey={r.emailKey} />
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Per-type email toggles */}
-                  <div className={cn('space-y-2 transition-opacity', !notifs.emailNotifications && 'opacity-40 pointer-events-none')}>
-                    {rows.map(r => (
-                      <NotifRow key={r.emailKey} icon={r.icon} iconColor={r.iconColor} iconBg={r.iconBg} label={r.label} desc={r.desc} fieldKey={r.emailKey} />
-                    ))}
-                  </div>
+                  {billing?.plan === 'STARTER' && (
+                    <p className="text-xs text-amber-600 dark:text-amber-400 text-center pt-1">
+                      Passez au plan <strong>Pro</strong> ou <strong>Business</strong> pour activer les notifications par email.
+                    </p>
+                  )}
                 </div>
 
                 <div className="border-t border-slate-100 dark:border-slate-800" />
