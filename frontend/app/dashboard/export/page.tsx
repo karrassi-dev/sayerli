@@ -81,69 +81,71 @@ async function generateExcel(data: ExportData, entrepriseName: string, periode: 
   const XLSX = (xlsxMod as any).default ?? xlsxMod
 
   const wb = XLSX.utils.book_new()
+  const today = fmtDate(new Date().toISOString())
 
-  /* Info sheet */
-  const info = XLSX.utils.aoa_to_sheet([
-    ['Export Sayerli'],
-    ['Entreprise',    entrepriseName],
-    ['Période',       periode],
-    ['Généré le',     fmtDate(new Date().toISOString())],
-  ])
-  XLSX.utils.book_append_sheet(wb, info, 'Informations')
+  // Each sheet starts with 3 metadata rows then the column headers on row 4
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function makeSheet(headers: string[], rows: any[][], colWidths: { wch: number }[]) {
+    const ws = XLSX.utils.aoa_to_sheet([
+      [`Export Sayerli — ${entrepriseName}`],
+      [`Période : ${periode}   ·   Généré le : ${today}`],
+      [],
+      headers,
+      ...rows,
+    ])
+    ws['!cols'] = colWidths
+    return ws
+  }
 
   if (data.clients) {
-    const rows = [
+    const ws = makeSheet(
       ['Nom', 'Email', 'Téléphone', 'Entreprise', 'Statut', 'Date création'],
-      ...data.clients.map(c => [
+      data.clients.map(c => [
         c.nom, c.email || '', c.telephone || '', c.nomEntreprise || '',
         c.actif ? 'Actif' : 'Inactif', fmtDate(c.createdAt),
       ]),
-    ]
-    const ws = XLSX.utils.aoa_to_sheet(rows)
-    ws['!cols'] = [{ wch: 26 }, { wch: 30 }, { wch: 18 }, { wch: 26 }, { wch: 10 }, { wch: 16 }]
+      [{ wch: 26 }, { wch: 30 }, { wch: 18 }, { wch: 26 }, { wch: 10 }, { wch: 16 }],
+    )
     XLSX.utils.book_append_sheet(wb, ws, 'Clients')
   }
 
   if (data.devis) {
-    const rows = [
+    const ws = makeSheet(
       ['Référence', 'Client', 'Statut', 'Total HT', 'Total TTC', 'Expiration', 'Date création'],
-      ...data.devis.map(d => [
+      data.devis.map(d => [
         d.reference, d.client?.nom || '', STATUS_FR[d.statut] || d.statut,
         fmtMoney(d.totalHT), fmtMoney(d.totalTTC),
         fmtDate(d.dateExpiration), fmtDate(d.createdAt),
       ]),
-    ]
-    const ws = XLSX.utils.aoa_to_sheet(rows)
-    ws['!cols'] = [{ wch: 18 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 15 }]
+      [{ wch: 18 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 15 }],
+    )
     XLSX.utils.book_append_sheet(wb, ws, 'Devis')
   }
 
   if (data.factures) {
-    const rows = [
+    const ws = makeSheet(
       ['N° Facture', 'Client', 'Statut', 'Total TTC', 'Payé', 'Reste', 'Échéance', 'Date création'],
-      ...data.factures.map(f => [
+      data.factures.map(f => [
         f.numeroFacture, f.client?.nom || '', STATUS_FR[f.statut] || f.statut,
         fmtMoney(f.totalTTC), fmtMoney(f.montantPaye),
         fmtMoney(Number(f.totalTTC) - Number(f.montantPaye)),
         fmtDate(f.dateEcheance), fmtDate(f.createdAt),
       ]),
-    ]
-    const ws = XLSX.utils.aoa_to_sheet(rows)
-    ws['!cols'] = [{ wch: 16 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 15 }]
+      [{ wch: 16 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 15 }],
+    )
     XLSX.utils.book_append_sheet(wb, ws, 'Factures')
   }
 
   if (data.paiements) {
-    const rows = [
+    const ws = makeSheet(
       ['Facture', 'Client', 'Montant', 'Méthode', 'Référence', 'Date paiement'],
-      ...data.paiements.map(p => [
+      data.paiements.map(p => [
         p.facture?.numeroFacture || '', p.facture?.client?.nom || '',
         fmtMoney(p.montant), STATUS_FR[p.methode] || p.methode,
         p.reference || '', fmtDate(p.datePaiement),
       ]),
-    ]
-    const ws = XLSX.utils.aoa_to_sheet(rows)
-    ws['!cols'] = [{ wch: 16 }, { wch: 26 }, { wch: 18 }, { wch: 14 }, { wch: 22 }, { wch: 16 }]
+      [{ wch: 16 }, { wch: 26 }, { wch: 18 }, { wch: 14 }, { wch: 22 }, { wch: 16 }],
+    )
     XLSX.utils.book_append_sheet(wb, ws, 'Paiements')
   }
 
