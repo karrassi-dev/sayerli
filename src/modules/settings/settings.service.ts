@@ -6,8 +6,7 @@ import {
 } from '@nestjs/common';
 import { PLAN_LIMITS } from '../../common/utils/plan-limits';
 import * as bcrypt from 'bcrypt';
-import * as path from 'path';
-import * as fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -18,7 +17,13 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class SettingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+  }
 
   // ─── PROFILE ──────────────────────────────────────────────────────────────
 
@@ -156,31 +161,34 @@ export class SettingsService {
   }
 
   async uploadLogo(entrepriseId: string, file: Express.Multer.File) {
-    const ALLOWED_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
-    const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+    const ALLOWED_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/svg+xml'];
+    const MAX_SIZE = 2 * 1024 * 1024;
 
     if (!ALLOWED_TYPES.includes(file.mimetype)) {
-      throw new BadRequestException('Format non supporté. Utilisez PNG ou JPG.');
+      throw new BadRequestException('Format non supporté. Utilisez PNG, JPG ou SVG.');
     }
     if (file.size > MAX_SIZE) {
       throw new BadRequestException('Le fichier ne doit pas dépasser 2MB.');
     }
 
-    const uploadsDir = path.join(process.cwd(), 'uploads', 'logos');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-
-    const ext = path.extname(file.originalname);
-    const filename = `logo-${entrepriseId}-${Date.now()}${ext}`;
-    const filepath = path.join(uploadsDir, filename);
-    fs.writeFileSync(filepath, file.buffer);
-
-    const logoUrl = `/uploads/logos/${filename}`;
+    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: 'sayerli/logos',
+          public_id: `logo-${entrepriseId}`,
+          overwrite: true,
+          resource_type: 'image',
+        },
+        (error, result) => {
+          if (error || !result) return reject(error);
+          resolve(result);
+        },
+      ).end(file.buffer);
+    });
 
     const company = await this.prisma.entreprise.update({
       where: { id: entrepriseId },
-      data: { logo: logoUrl },
+      data: { logo: result.secure_url },
       select: { logo: true, updatedAt: true },
     });
 
