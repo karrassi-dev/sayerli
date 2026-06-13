@@ -84,14 +84,8 @@ export function useAuth() {
     try {
       const res = await authApi.register(formData)
       const data = res.data?.data || res.data
-      setToken(data.accessToken)
-      setState({
-        user: data.utilisateur,
-        entreprise: data.entreprise,
-        loading: false,
-        error: null,
-      })
-      router.push('/dashboard')
+      setState((s) => ({ ...s, loading: false, error: null }))
+      router.push(`/verification-email?email=${encodeURIComponent(formData.emailAdmin)}`)
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Erreur d\'inscription'
       setState((s) => ({ ...s, loading: false, error: msg }))

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { ConnexionDto } from './dto/connexion.dto';
@@ -23,6 +23,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async connexion(@Body() dto: ConnexionDto) {
     return this.authService.connexion(dto);
+  }
+
+  @Public()
+  @Get('confirmer-email/:token')
+  async confirmerEmail(@Param('token') token: string) {
+    return this.authService.confirmerEmail(token);
   }
 
   @Get('profil')

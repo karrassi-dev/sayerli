@@ -56,10 +56,13 @@ model Utilisateur {
   langue                    String?                  @default("fr")
   telephone                 String?
   theme                     String?                  @default("system")
-  dernierAcces              DateTime?
-  invitationToken           String?                  @unique
-  invitationTokenExpiration DateTime?
-  prenom                    String?
+  dernierAcces                  DateTime?
+  invitationToken               String?                  @unique
+  invitationTokenExpiration     DateTime?
+  prenom                        String?
+  emailConfirme                 Boolean                  @default(false)
+  emailConfirmationToken        String?                  @unique
+  emailConfirmationExpiration   DateTime?
   preferencesNotification   PreferencesNotification?
   entreprise                Entreprise               @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
 

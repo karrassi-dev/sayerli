@@ -6,7 +6,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../modules/email/email.service';
 import { ConnexionDto } from './dto/connexion.dto';
 import { InscriptionDto } from './dto/inscription.dto';
 
@@ -15,6 +17,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ) {}
 
   async inscription(dto: InscriptionDto) {
@@ -26,6 +29,8 @@ export class AuthService {
     }
 
     const motDePasseHash = await bcrypt.hash(dto.motDePasse, 12);
+    const confirmationToken = uuidv4();
+    const confirmationExpiration = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     const entreprise = await this.prisma.entreprise.create({
       data: {
@@ -40,33 +45,81 @@ export class AuthService {
             email: dto.emailAdmin,
             motDePasseHash,
             role: 'ADMIN',
+            actif: false,
+            emailConfirme: false,
+            emailConfirmationToken: confirmationToken,
+            emailConfirmationExpiration: confirmationExpiration,
           },
         },
       },
       include: {
-        utilisateurs: {
-          where: { email: dto.emailAdmin },
-        },
+        utilisateurs: { where: { email: dto.emailAdmin } },
       },
     });
 
     const admin = entreprise.utilisateurs[0];
-    const tokens = await this.genererTokens(admin.id, admin.email, entreprise.id, admin.role);
+
+    await this.emailService.sendConfirmationEmail({
+      toEmail: dto.emailAdmin,
+      toName: dto.nomAdmin,
+      token: confirmationToken,
+    });
 
     return {
-      message: `Bienvenue sur Sayerli, ${admin.nom} ! Votre compte a été créé avec succès.`,
+      message: `Un email de confirmation a été envoyé à ${dto.emailAdmin}. Vérifiez votre boîte mail pour activer votre compte.`,
+      emailEnvoye: true,
+    };
+  }
+
+  async confirmerEmail(token: string) {
+    const utilisateur = await this.prisma.utilisateur.findFirst({
+      where: { emailConfirmationToken: token },
+      include: { entreprise: true },
+    });
+
+    if (!utilisateur) {
+      throw new BadRequestException('Lien de confirmation invalide.');
+    }
+
+    if (utilisateur.emailConfirmationExpiration && utilisateur.emailConfirmationExpiration < new Date()) {
+      throw new BadRequestException('Ce lien de confirmation a expiré. Veuillez vous réinscrire.');
+    }
+
+    if (utilisateur.emailConfirme) {
+      throw new BadRequestException('Cet email a déjà été confirmé.');
+    }
+
+    await this.prisma.utilisateur.update({
+      where: { id: utilisateur.id },
+      data: {
+        emailConfirme: true,
+        actif: true,
+        emailConfirmationToken: null,
+        emailConfirmationExpiration: null,
+      },
+    });
+
+    const tokens = await this.genererTokens(
+      utilisateur.id,
+      utilisateur.email,
+      utilisateur.entrepriseId,
+      utilisateur.role,
+    );
+
+    return {
+      message: `Bienvenue sur Sayerli, ${utilisateur.nom} ! Votre compte est maintenant activé.`,
       utilisateur: {
-        id: admin.id,
-        nom: admin.nom,
-        email: admin.email,
-        role: admin.role,
+        id: utilisateur.id,
+        nom: utilisateur.nom,
+        email: utilisateur.email,
+        role: utilisateur.role,
       },
       entreprise: {
-        id: entreprise.id,
-        nom: entreprise.nom,
-        email: entreprise.email,
-        devise: entreprise.devise,
-        plan: entreprise.plan,
+        id: utilisateur.entreprise.id,
+        nom: utilisateur.entreprise.nom,
+        email: utilisateur.entreprise.email,
+        devise: utilisateur.entreprise.devise,
+        plan: utilisateur.entreprise.plan,
       },
       ...tokens,
     };
@@ -81,6 +134,10 @@ export class AuthService {
 
     if (!utilisateur) {
       throw new UnauthorizedException('Email ou mot de passe incorrect.');
+    }
+
+    if (!utilisateur.emailConfirme && !utilisateur.invitationToken) {
+      throw new UnauthorizedException('Veuillez confirmer votre adresse email avant de vous connecter.');
     }
 
     if (!utilisateur.actif) {
