@@ -6,6 +6,7 @@ export class EmailService {
   private readonly resend = new Resend(process.env.RESEND_API_KEY);
   private readonly from = 'Sayerli <invitations@sayerli.com>';
   private readonly frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
+  private readonly logoUrl = `${process.env.FRONTEND_URL ?? 'http://localhost:3000'}/sayerlilogopng.png`;
   private readonly logger = new Logger(EmailService.name);
 
   async sendConfirmationEmail(opts: { toEmail: string; toName: string; token: string }) {
@@ -24,12 +25,16 @@ export class EmailService {
         <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
           <tr>
             <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:32px 40px;text-align:center;">
-              <div style="display:inline-flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:10px;display:inline-flex;align-items:center;justify-content:center;">
-                  <span style="color:#fff;font-weight:900;font-size:18px;">S</span>
-                </div>
-                <span style="color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">sayerli</span>
-              </div>
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="38" height="38" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#06D6B0;font-size:24px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
@@ -99,7 +104,16 @@ export class EmailService {
         <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
           <tr>
             <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:32px 40px;text-align:center;">
-              <span style="color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">sayerli</span>
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="38" height="38" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#06D6B0;font-size:24px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
@@ -168,7 +182,16 @@ export class EmailService {
         <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
           <tr>
             <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:28px 40px;text-align:center;">
-              <span style="color:#fff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">sayerli</span>
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="34" height="34" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#06D6B0;font-size:22px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
@@ -239,12 +262,16 @@ export class EmailService {
           <!-- Header -->
           <tr>
             <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:32px 40px;text-align:center;">
-              <div style="display:inline-flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:10px;display:inline-flex;align-items:center;justify-content:center;">
-                  <span style="color:#fff;font-weight:900;font-size:18px;">S</span>
-                </div>
-                <span style="color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">sayerli</span>
-              </div>
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="38" height="38" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#06D6B0;font-size:24px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 

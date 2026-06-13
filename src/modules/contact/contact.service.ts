@@ -64,12 +64,16 @@ export class ContactService {
           <!-- Header -->
           <tr>
             <td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:28px 40px;">
-              <div style="display:inline-flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:10px;display:inline-block;text-align:center;line-height:36px;">
-                  <span style="color:#fff;font-weight:900;font-size:18px;">S</span>
-                </div>
-                <span style="color:#fff;font-size:22px;font-weight:900;letter-spacing:-0.5px;vertical-align:middle;">sayerli</span>
-              </div>
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${process.env.FRONTEND_URL ?? 'http://localhost:3000'}/sayerlilogopng.png" alt="Sayerli" width="36" height="36" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#06D6B0;font-size:22px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
               <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">Nouveau message de contact</p>
             </td>
           </tr>
