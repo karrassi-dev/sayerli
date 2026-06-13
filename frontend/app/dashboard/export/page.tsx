@@ -75,7 +75,10 @@ function periodLabel(period: Period, t: (k: string) => string, customFrom?: stri
 }
 
 async function generateExcel(data: ExportData, entrepriseName: string, periode: string) {
-  const XLSX = (await import('xlsx')).default
+  const xlsxMod = await import('xlsx')
+  // xlsx CE doesn't always have a proper ESM default — fall back to the module itself
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const XLSX = (xlsxMod as any).default ?? xlsxMod
 
   const wb = XLSX.utils.book_new()
 
@@ -148,7 +151,12 @@ async function generateExcel(data: ExportData, entrepriseName: string, periode: 
   XLSX.writeFile(wb, filename)
 }
 
-async function generatePDF(data: ExportData, meta: { entrepriseName: string; periode: string; generatedAt: string }) {
+async function generatePDF(data: ExportData, meta: {
+  entrepriseName: string; periode: string; generatedAt: string
+  logo?: string | null; adresse?: string | null; ville?: string | null
+  telephone?: string | null; email?: string | null
+  ice?: string | null; rc?: string | null; couleurPrimaire?: string | null
+}) {
   const { pdf }              = await import('@react-pdf/renderer')
   const { default: ExportPDF } = await import('@/components/pdf/ExportPDF')
   const React                = (await import('react')).default
@@ -218,7 +226,24 @@ export default function ExportPage() {
       if (format === 'excel') {
         await generateExcel(data, entName, periode)
       } else {
-        await generatePDF(data, { entrepriseName: entName, periode, generatedAt })
+        let company: Record<string, string | null> = {}
+        try {
+          const compRes = await api.get('/settings/company')
+          company = compRes.data.data ?? compRes.data ?? {}
+        } catch { /* non-blocking */ }
+        await generatePDF(data, {
+          entrepriseName: entName,
+          periode,
+          generatedAt,
+          logo: company.logo ?? null,
+          adresse: company.adresse ?? null,
+          ville: company.ville ?? null,
+          telephone: company.telephone ?? null,
+          email: company.email ?? null,
+          ice: company.ice ?? null,
+          rc: company.rc ?? null,
+          couleurPrimaire: company.couleurPrimaire ?? null,
+        })
       }
     } catch {
       setError('Une erreur est survenue lors de la génération. Réessayez.')
