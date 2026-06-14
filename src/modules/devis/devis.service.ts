@@ -55,7 +55,7 @@ export class DevisService {
       },
       include: {
         client: { select: { id: true, nom: true, email: true, nomEntreprise: true } },
-        _count: { select: { lignes: true } },
+        _count: { select: { lignes: true, factures: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -309,6 +309,10 @@ export class DevisService {
     if (!devis) throw new NotFoundException('Devis introuvable.');
     if (devis.statut !== StatutDevis.ACCEPTE) {
       throw new BadRequestException('Seuls les devis acceptés peuvent être convertis en facture.');
+    }
+    const factureExistante = await this.prisma.facture.findFirst({ where: { devisId: id } });
+    if (factureExistante) {
+      throw new BadRequestException('Ce devis a déjà été converti en facture.');
     }
 
     return retryOnConflict(() =>

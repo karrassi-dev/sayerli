@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   CreditCard, TrendingUp, Clock, CheckCircle,
-  Eye, Pencil, Trash2, Plus, Calendar, Hash,
+  Eye, Trash2, Plus, Calendar, Hash,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -127,7 +127,6 @@ export default function PaiementsPage() {
 
   const [selected, setSelected] = useState<ApiPaiement | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
-  const [editTarget, setEditTarget] = useState<ApiPaiement | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ApiPaiement | null>(null)
 
   const [form, setForm] = useState<PaiementForm>(EMPTY_FORM)
@@ -232,19 +231,6 @@ export default function PaiementsPage() {
     setCreateOpen(true)
   }
 
-  function openEdit(p: ApiPaiement) {
-    setForm({
-      factureId: p.factureId,
-      montant: String(n(p.montant)),
-      methode: p.methode,
-      reference: p.reference ?? '',
-      datePaiement: p.datePaiement.split('T')[0],
-      notes: p.notes ?? '',
-    })
-    setFormErrors({})
-    setEditTarget(p)
-  }
-
   async function handleCreate() {
     if (!validateForm(false)) return
     setSaving(true)
@@ -263,29 +249,6 @@ export default function PaiementsPage() {
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible d\'enregistrer le paiement.'))
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  async function handleEdit() {
-    if (!validateForm(true)) return
-    if (!editTarget) return
-    setSaving(true)
-    try {
-      await paiementsApi.update(editTarget.id, {
-        montant: parseFloat(form.montant),
-        methode: form.methode,
-        reference: form.reference.trim() || undefined,
-        datePaiement: form.datePaiement || undefined,
-        notes: form.notes.trim() || undefined,
-      })
-      success(t('pages.paiements.editSuccess') ?? 'Paiement mis à jour.')
-      setEditTarget(null)
-      fetchAll()
-    } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de modifier le paiement.'))
     } finally {
       setSaving(false)
     }
@@ -475,7 +438,6 @@ export default function PaiementsPage() {
                               align="right"
                               items={[
                                 { label: 'Voir', icon: Eye, onClick: () => setSelected(p) },
-                                { label: 'Modifier', icon: Pencil, onClick: () => openEdit(p) },
                               ]}
                             />
                           </td>
@@ -631,15 +593,6 @@ export default function PaiementsPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => { setSelected(null); openEdit(selected) }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
-              >
-                <Pencil className="w-4 h-4" />
-                Modifier
-              </button>
-            </div>
           </div>
         )}
       </Modal>
@@ -677,52 +630,6 @@ export default function PaiementsPage() {
           onFactureSelect={handleFactureSelect}
           t={t}
         />
-      </Modal>
-
-      {/* ── Edit Modal ────────────────────────────────────────────────────────── */}
-      <Modal
-        open={!!editTarget}
-        onClose={() => setEditTarget(null)}
-        title="Modifier le paiement"
-        size="md"
-        footer={
-          <>
-            <button
-              onClick={() => setEditTarget(null)}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
-            >
-              Annuler
-            </button>
-            <button
-              onClick={handleEdit}
-              disabled={saving}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50 transition-all"
-            >
-              {saving ? 'Enregistrement…' : 'Modifier'}
-            </button>
-          </>
-        }
-      >
-        {editTarget && (
-          <div className="space-y-4">
-            {/* Invoice info (read-only in edit) */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-              <p className="text-xs text-slate-400 mb-1">{t('pages.paiements.form.facture')}</p>
-              <p className="text-sm font-mono font-semibold text-primary-600 dark:text-primary-400">
-                {editTarget.facture.numeroFacture} — {editTarget.facture.client.nom}
-              </p>
-            </div>
-            <PaiementFormFields
-              form={form}
-              errors={formErrors}
-              isEdit={true}
-              facturesPayables={facturesPayables}
-              onFieldChange={setField}
-              onFactureSelect={handleFactureSelect}
-              t={t}
-            />
-          </div>
-        )}
       </Modal>
 
       {/* ── Delete Modal ──────────────────────────────────────────────────────── */}

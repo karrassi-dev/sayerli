@@ -59,7 +59,7 @@ interface ApiDevis {
   client: { id: string; nom: string; email: string | null; nomEntreprise: string | null }
   lignes?: Ligne[]
   lienPublic?: { token: string; expiration: string } | null
-  _count?: { lignes: number }
+  _count?: { lignes: number; factures: number }
 }
 
 interface LigneForm {
@@ -699,7 +699,7 @@ export default function DevisPage() {
                           { label: t('pages.devis.actions.send'), icon: Send, onClick: () => handleSend(devis) },
                           { label: t('pages.devis.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(devis) },
                           { label: t('pages.devis.actions.duplicate'), icon: Copy, onClick: () => handleDuplicate(devis) },
-                          ...(devis.statut === 'ACCEPTE' ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
+                          ...(devis.statut === 'ACCEPTE' && (devis._count?.factures ?? 0) === 0 ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
                           ...(devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
                         ]} />
                       </td>
@@ -852,7 +852,7 @@ export default function DevisPage() {
                 <Copy className="w-3.5 h-3.5" />
                 {t('pages.devis.actions.duplicate')}
               </button>
-              {selected.statut === 'ACCEPTE' && (
+              {selected.statut === 'ACCEPTE' && (selected._count?.factures ?? 0) === 0 && (
                 <button
                   onClick={() => handleConvert(selected)}
                   disabled={actionLoading === `convert_${selected.id}`}
