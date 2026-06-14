@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   CreditCard, TrendingUp, Clock, CheckCircle,
-  Eye, Trash2, Plus, Calendar, Hash,
+  Eye, Trash2, Plus, Calendar, Hash, ChevronDown,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -128,6 +128,16 @@ export default function PaiementsPage() {
   const [selected, setSelected] = useState<ApiPaiement | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<ApiPaiement | null>(null)
+  const [collapsedFactures, setCollapsedFactures] = useState<Set<string>>(new Set())
+
+  function toggleGroup(factureId: string) {
+    setCollapsedFactures(prev => {
+      const next = new Set(prev)
+      if (next.has(factureId)) next.delete(factureId)
+      else next.add(factureId)
+      return next
+    })
+  }
 
   const [form, setForm] = useState<PaiementForm>(EMPTY_FORM)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
@@ -192,7 +202,18 @@ export default function PaiementsPage() {
     return matchSearch && matchMethod
   })
 
-  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+  // Group payments by facture — order of groups follows first appearance (API sorts by date desc)
+  type FactureGroup = { factureId: string; facture: ApiPaiement['facture']; paiements: ApiPaiement[] }
+  const grouped: FactureGroup[] = (() => {
+    const map = new Map<string, FactureGroup>()
+    filtered.forEach(p => {
+      if (!map.has(p.factureId)) map.set(p.factureId, { factureId: p.factureId, facture: p.facture, paiements: [] })
+      map.get(p.factureId)!.paiements.push(p)
+    })
+    return Array.from(map.values())
+  })()
+
+  const paginatedGroups = grouped.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
   // ── Form helpers ───────────────────────────────────────────────────────────
 
@@ -373,7 +394,7 @@ export default function PaiementsPage() {
           <div className="card rounded-2xl overflow-hidden">
             {loading ? (
               <div className="p-12 text-center text-slate-400 text-sm">Chargement…</div>
-            ) : paginated.length === 0 ? (
+            ) : grouped.length === 0 ? (
               <EmptyState
                 icon={CreditCard}
                 title={t('pages.paiements.empty.title')}
@@ -382,102 +403,90 @@ export default function PaiementsPage() {
               />
             ) : (
               <>
-                {/* Desktop table */}
-                <div className="hidden md:block overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-                        {[
-                          t('pages.paiements.col.client'),
-                          t('pages.paiements.col.facture'),
-                          t('pages.paiements.col.methode'),
-                          t('pages.paiements.col.montant'),
-                          t('pages.paiements.col.date'),
-                          t('pages.paiements.col.reference'),
-                          '',
-                        ].map((h, i) => (
-                          <th key={i} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
-                      {paginated.map(p => (
-                        <tr
-                          key={p.id}
-                          className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors cursor-pointer"
-                          onClick={() => setSelected(p)}
+                <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {paginatedGroups.map(group => {
+                    const collapsed = collapsedFactures.has(group.factureId)
+                    const pct = Math.min(100, n(group.facture.totalTTC) > 0 ? (n(group.facture.montantPaye) / n(group.facture.totalTTC)) * 100 : 0)
+                    const fullyPaid = n(group.facture.montantPaye) >= n(group.facture.totalTTC) - 0.01
+                    const initials = group.facture.client.nom.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+                    return (
+                      <div key={group.factureId}>
+                        {/* ── Group header ── */}
+                        <div
+                          className="flex items-center gap-3 px-4 py-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors"
+                          onClick={() => toggleGroup(group.factureId)}
                         >
-                          <td className="px-4 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center flex-shrink-0">
-                                <span className="text-white text-xs font-bold">
-                                  {p.facture.client.nom.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                                </span>
-                              </div>
-                              <span className="text-sm font-semibold text-slate-900 dark:text-white">{p.facture.client.nom}</span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <span className="text-sm font-mono text-primary-600 dark:text-primary-400 font-semibold">{p.facture.numeroFacture}</span>
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <div className="flex items-center gap-2">
-                              <span className="text-base">{METHOD_ICONS[p.methode] ?? '💰'}</span>
-                              <StatusBadge variant={methodeUI(p.methode)} />
-                            </div>
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <span className="text-sm font-black text-green-600 dark:text-green-400">{formatMAD(p.montant)}</span>
-                          </td>
-                          <td className="px-4 py-3.5 text-xs text-slate-500">{formatDate(p.datePaiement)}</td>
-                          <td className="px-4 py-3.5">
-                            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{p.reference ?? '—'}</span>
-                          </td>
-                          <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
-                            <ActionMenu
-                              align="right"
-                              items={[
-                                { label: 'Voir', icon: Eye, onClick: () => setSelected(p) },
-                              ]}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Mobile cards */}
-                <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
-                  {paginated.map(p => (
-                    <div key={p.id} className="p-4 cursor-pointer" onClick={() => setSelected(p)}>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2.5">
                           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center flex-shrink-0">
-                            <span className="text-white text-xs font-bold">
-                              {p.facture.client.nom.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                            </span>
+                            <span className="text-white text-xs font-bold">{initials}</span>
                           </div>
-                          <div>
-                            <p className="text-sm font-semibold text-slate-900 dark:text-white">{p.facture.client.nom}</p>
-                            <p className="text-xs font-mono text-primary-600 dark:text-primary-400">{p.facture.numeroFacture}</p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                              <span className="text-sm font-semibold text-slate-900 dark:text-white">{group.facture.client.nom}</span>
+                              <span className="text-xs font-mono font-semibold text-primary-600 dark:text-primary-400">{group.facture.numeroFacture}</span>
+                              <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full px-2 py-0.5">
+                                {group.paiements.length} versement{group.paiements.length > 1 ? 's' : ''}
+                              </span>
+                              {fullyPaid && (
+                                <span className="text-xs bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400 rounded-full px-2 py-0.5 font-semibold">
+                                  Payée
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
+                                <div
+                                  className={cn('h-1.5 rounded-full transition-all', fullyPaid ? 'bg-green-500' : 'bg-teal-500')}
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                              <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                                {formatMAD(group.facture.montantPaye)} / {formatMAD(group.facture.totalTTC)}
+                              </span>
+                            </div>
                           </div>
+                          <ChevronDown className={cn('w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-200', collapsed && '-rotate-90')} />
                         </div>
-                        <span className="text-sm font-black text-green-600 dark:text-green-400">{formatMAD(p.montant)}</span>
+
+                        {/* ── Individual payments ── */}
+                        {!collapsed && (
+                          <div className="border-t border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20">
+                            {group.paiements.map((p, i) => (
+                              <div
+                                key={p.id}
+                                className={cn(
+                                  'flex items-center gap-3 pl-8 pr-4 py-3 cursor-pointer hover:bg-slate-100/60 dark:hover:bg-slate-700/30 transition-colors',
+                                  i < group.paiements.length - 1 && 'border-b border-slate-100 dark:border-slate-800/60',
+                                )}
+                                onClick={() => setSelected(p)}
+                              >
+                                <div className="w-px h-8 bg-slate-200 dark:bg-slate-700 flex-shrink-0" />
+                                <div className="flex items-center gap-2 w-36 flex-shrink-0">
+                                  <span className="text-base">{METHOD_ICONS[p.methode] ?? '💰'}</span>
+                                  <StatusBadge variant={methodeUI(p.methode)} size="sm" />
+                                </div>
+                                <span className="text-sm font-black text-green-600 dark:text-green-400 w-32 flex-shrink-0">{formatMAD(p.montant)}</span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400 w-28 flex-shrink-0">{formatDate(p.datePaiement)}</span>
+                                <span className="text-xs font-mono text-slate-400 flex-1 min-w-0 truncate">{p.reference ?? '—'}</span>
+                                <div onClick={e => e.stopPropagation()}>
+                                  <ActionMenu
+                                    align="right"
+                                    items={[
+                                      { label: 'Voir', icon: Eye, onClick: () => setSelected(p) },
+                                      { label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(p), variant: 'danger' as const },
+                                    ]}
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">{METHOD_ICONS[p.methode] ?? '💰'}</span>
-                          <StatusBadge variant={methodeUI(p.methode)} size="sm" />
-                        </div>
-                        <span className="text-xs text-slate-400">{formatDate(p.datePaiement)}</span>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
 
                 <div className="px-4 py-3">
-                  <Pagination page={page} total={filtered.length} perPage={PER_PAGE} onChange={setPage} />
+                  <Pagination page={page} total={grouped.length} perPage={PER_PAGE} onChange={setPage} />
                 </div>
               </>
             )}
