@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Receipt, Plus, Eye, Pencil, Trash2, Send, CreditCard,
-  TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle,
+  TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle, ChevronRight,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -786,18 +786,33 @@ export default function FacturesPage() {
               {paginated.map(facture => (
                 <div
                   key={facture.id}
-                  className={cn('p-4 cursor-pointer', facture.statut === 'EN_RETARD' && 'bg-red-50/40 dark:bg-red-950/10')}
+                  className={cn('p-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors', facture.statut === 'EN_RETARD' && 'bg-red-50/40 dark:bg-red-950/10')}
                   onClick={() => handleOpenDetail(facture)}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-mono text-slate-500">{facture.numeroFacture}</span>
                     <StatusBadge variant={toStatutUI(facture.statut) as never} dot size="sm" />
                   </div>
-                  <div className="flex justify-between">
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">{facture.client.nom}</p>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(facture.totalTTC)}</span>
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{facture.client.nom}</p>
+                    <span className="text-sm font-bold text-slate-900 dark:text-white flex-shrink-0">{formatMAD(facture.totalTTC)}</span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5">{t('pages.factures.col.dueDate')}: {formatDate(facture.dateEcheance)}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs text-slate-400">{t('pages.factures.col.dueDate')}: {formatDate(facture.dateEcheance)}</p>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <button
+                        onClick={e => { e.stopPropagation(); handleWhatsApp(facture) }}
+                        disabled={actionLoading === `wa_${facture.id}`}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+                      >
+                        {actionLoading === `wa_${facture.id}`
+                          ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                          : <MessageCircle className="w-3 h-3" />}
+                        {t('pages.factures.actions.whatsapp')}
+                      </button>
+                      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

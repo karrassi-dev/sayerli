@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   FileText, Plus, Eye, Pencil, Trash2, Copy, Send, CheckCircle,
-  Link, AlertCircle, X, MessageCircle,
+  Link, AlertCircle, X, MessageCircle, ChevronRight,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -732,15 +732,33 @@ export default function DevisPage() {
             {/* Mobile */}
             <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
               {paginated.map(devis => (
-                <div key={devis.id} className="p-4 cursor-pointer" onClick={() => handleOpenDetail(devis)}>
+                <div key={devis.id} className="p-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors" onClick={() => handleOpenDetail(devis)}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-mono font-semibold text-slate-500">{devis.reference}</span>
-                    <StatusBadge variant={toStatutUI(devis.statut) as never} dot size="sm" />
+                    <div className="flex items-center gap-2">
+                      <StatusBadge variant={toStatutUI(devis.statut) as never} dot size="sm" />
+                      <MessageCircle className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+                    </div>
                   </div>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">{devis.client.nom}</p>
-                  <div className="flex justify-between">
-                    <span className="text-xs text-slate-400">{devis.client.nomEntreprise || '—'}</span>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</span>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{devis.client.nom}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs text-slate-400 truncate">{devis.client.nomEntreprise || '—'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <button
+                        onClick={e => { e.stopPropagation(); handleWhatsApp(devis) }}
+                        disabled={actionLoading === `wa_${devis.id}`}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+                      >
+                        {actionLoading === `wa_${devis.id}`
+                          ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                          : <MessageCircle className="w-3 h-3" />}
+                        {t('pages.devis.actions.whatsapp')}
+                      </button>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</span>
+                      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                    </div>
                   </div>
                 </div>
               ))}

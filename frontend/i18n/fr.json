@@ -708,7 +708,8 @@
         "send": "Envoyer",
         "copyLink": "Copier le lien",
         "duplicate": "Dupliquer",
-        "convert": "Convertir en facture"
+        "convert": "Convertir en facture",
+        "whatsapp": "WhatsApp"
       },
       "empty": {
         "title": "Aucun devis pour le moment",
@@ -803,7 +804,8 @@
         "send": "Envoyer & copier le lien",
         "copyLink": "Copier le lien client",
         "download": "Télécharger PDF",
-        "cancel": "Annuler la facture"
+        "cancel": "Annuler la facture",
+        "whatsapp": "WhatsApp"
       },
       "linkCopied": "Lien copié dans le presse-papier.",
       "linkError": "Impossible de générer le lien.",

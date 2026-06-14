@@ -707,7 +707,8 @@
         "send": "Send",
         "copyLink": "Copy link",
         "duplicate": "Duplicate",
-        "convert": "Convert to Invoice"
+        "convert": "Convert to Invoice",
+        "whatsapp": "WhatsApp"
       },
       "empty": {
         "title": "No quotes yet",
@@ -804,7 +805,8 @@
         "send": "Send & Copy Link",
         "copyLink": "Copy Client Link",
         "download": "Download PDF",
-        "cancel": "Cancel Invoice"
+        "cancel": "Cancel Invoice",
+        "whatsapp": "WhatsApp"
       },
       "empty": {
         "title": "No invoices yet",
