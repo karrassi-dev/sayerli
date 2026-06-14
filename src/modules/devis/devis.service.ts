@@ -79,7 +79,8 @@ export class DevisService {
       where: { id: entrepriseId },
       select: { plan: true },
     });
-    const limite = PLAN_LIMITS[entreprise!.plan].devisParMois;
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limite = PLAN_LIMITS[entreprise.plan].devisParMois;
     const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const actuel = await this.prisma.devis.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
     verifierLimite('devis', actuel, limite);

@@ -57,7 +57,8 @@ export class ClientsService {
       where: { id: entrepriseId },
       select: { plan: true },
     });
-    const limite = PLAN_LIMITS[entreprise!.plan].clients;
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limite = PLAN_LIMITS[entreprise.plan].clients;
     const actuel = await this.prisma.client.count({ where: { entrepriseId, actif: true } });
     verifierLimite('clients', actuel, limite);
 

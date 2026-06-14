@@ -108,7 +108,8 @@ export class UsersService {
       this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true, nom: true } }),
       this.prisma.utilisateur.count({ where: { entrepriseId } }),
     ]);
-    verifierLimite('utilisateurs', actuelUtilisateurs, PLAN_LIMITS[entreprise!.plan].utilisateurs);
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    verifierLimite('utilisateurs', actuelUtilisateurs, PLAN_LIMITS[entreprise.plan].utilisateurs);
 
     const existant = await this.prisma.utilisateur.findFirst({
       where: { email: dto.email, entrepriseId },
