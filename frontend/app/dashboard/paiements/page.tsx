@@ -202,7 +202,7 @@ export default function PaiementsPage() {
     return matchSearch && matchMethod
   })
 
-  // Group payments by facture — order of groups follows first appearance (API sorts by date desc)
+  // Group payments by facture, sorted by most recent datePaiement desc (tiebreak: facture number desc)
   type FactureGroup = { factureId: string; facture: ApiPaiement['facture']; paiements: ApiPaiement[] }
   const grouped: FactureGroup[] = (() => {
     const map = new Map<string, FactureGroup>()
@@ -210,7 +210,33 @@ export default function PaiementsPage() {
       if (!map.has(p.factureId)) map.set(p.factureId, { factureId: p.factureId, facture: p.facture, paiements: [] })
       map.get(p.factureId)!.paiements.push(p)
     })
-    return Array.from(map.values())
+    return Array.from(map.values()).sort((a, b) => {
+      const aMax = Math.max(...a.paiements.map(p => new Date(p.datePaiement).getTime()))
+      const bMax = Math.max(...b.paiements.map(p => new Date(p.datePaiement).getTime()))
+      if (bMax !== aMax) return bMax - aMax
+      return b.facture.numeroFacture.localeCompare(a.facture.numeroFacture)
+    })
+  })()
+
+  // Group all payments by day for the timeline view
+  type DayGroup = { date: string; label: string; total: number; paiements: ApiPaiement[] }
+  const byDay: DayGroup[] = (() => {
+    const map = new Map<string, DayGroup>()
+    paiements.forEach(p => {
+      const d = p.datePaiement.split('T')[0]
+      if (!map.has(d)) {
+        map.set(d, {
+          date: d,
+          label: new Date(d + 'T12:00:00').toLocaleDateString('fr-MA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+          total: 0,
+          paiements: [],
+        })
+      }
+      const g = map.get(d)!
+      g.total += n(p.montant)
+      g.paiements.push(p)
+    })
+    return Array.from(map.values()).sort((a, b) => b.date.localeCompare(a.date))
   })()
 
   const paginatedGroups = grouped.slice((page - 1) * PER_PAGE, page * PER_PAGE)
@@ -493,45 +519,54 @@ export default function PaiementsPage() {
           </div>
         </>
       ) : (
-        /* Timeline view */
+        /* Timeline view — daily digest */
         <div className="card rounded-2xl p-6">
-          <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-6">{t('pages.paiements.timeline.title')}</h2>
           {paiements.length === 0 && !loading ? (
             <EmptyState icon={CreditCard} title={t('pages.paiements.empty.title')} desc={t('pages.paiements.empty.desc')} color="teal" />
           ) : (
-            <div className="relative">
-              <div className="absolute left-5 top-0 bottom-0 w-px bg-slate-200 dark:bg-slate-700" />
-              <div className="space-y-6">
-                {paiements.slice(0, 20).map(p => (
-                  <div key={p.id} className="relative flex gap-4 pl-12">
-                    <div className="absolute left-0 w-10 h-10 rounded-full bg-green-50 dark:bg-green-950/50 border-2 border-green-200 dark:border-green-800 flex items-center justify-center flex-shrink-0 z-10">
-                      <span className="text-base">{METHOD_ICONS[p.methode] ?? '💰'}</span>
+            <div className="space-y-8">
+              {byDay.map(day => (
+                <div key={day.date}>
+                  {/* Day header */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 flex-shrink-0">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 capitalize">{day.label}</span>
                     </div>
-                    <div
-                      className="flex-1 card rounded-xl p-4 hover:shadow-md transition-shadow cursor-pointer"
-                      onClick={() => setSelected(p)}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{p.facture.client.nom}</p>
-                          <p className="text-xs font-mono text-primary-600 dark:text-primary-400 mt-0.5">{p.facture.numeroFacture}</p>
-                          <div className="flex items-center gap-2 mt-1">
+                    <div className="px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-950/50 flex-shrink-0">
+                      <span className="text-xs font-black text-green-700 dark:text-green-400">+{formatMAD(day.total)}</span>
+                    </div>
+                    <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
+                  </div>
+
+                  {/* Payments for this day */}
+                  <div className="space-y-2">
+                    {day.paiements.map(p => (
+                      <div
+                        key={p.id}
+                        className="flex items-center gap-3 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 cursor-pointer transition-all"
+                        onClick={() => setSelected(p)}
+                      >
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-xs font-bold">
+                            {p.facture.client.nom.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{p.facture.client.nom}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-xs font-mono text-primary-600 dark:text-primary-400">{p.facture.numeroFacture}</span>
                             <StatusBadge variant={methodeUI(p.methode)} size="sm" />
-                            {p.reference && <span className="text-xs font-mono text-slate-400">{p.reference}</span>}
+                            {p.reference && <span className="text-xs font-mono text-slate-400 truncate">{p.reference}</span>}
                           </div>
                         </div>
-                        <div className="text-right flex-shrink-0">
-                          <p className="text-sm font-black text-green-600 dark:text-green-400">{formatMAD(p.montant)}</p>
-                          <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1 justify-end">
-                            <Calendar className="w-3 h-3" />
-                            {formatDate(p.datePaiement)}
-                          </p>
-                        </div>
+                        <span className="text-sm font-black text-green-600 dark:text-green-400 flex-shrink-0">{formatMAD(p.montant)}</span>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
