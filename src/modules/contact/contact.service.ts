@@ -135,9 +135,10 @@ export class ContactService {
 
     try {
       const { error } = await this.resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'Sayerli Support <support@sayerli.com>',
         to: 'karrassi.hamza@gmail.com',
-        subject: `[Nouveau Contact Sayerli] ${dto.subject}`,
+        replyTo: dto.email,
+        subject: `[Contact Sayerli] ${dto.subject}`,
         html,
       });
       if (error) this.logger.error(`Resend error: ${JSON.stringify(error)}`);
