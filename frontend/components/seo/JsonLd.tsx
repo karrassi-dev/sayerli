@@ -20,7 +20,7 @@ export function OrganizationJsonLd() {
     ],
     description:
       'Sayerli est un logiciel de gestion commerciale pour les PME marocaines. CRM, devis, facturation et suivi des paiements dans une seule plateforme.',
-    foundingDate: '2024',
+    foundingDate: '2026',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'MA',

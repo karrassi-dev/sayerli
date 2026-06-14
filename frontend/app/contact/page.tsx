@@ -182,10 +182,10 @@ export default function ContactPage() {
                         {t('contact.info.emailLabel')}
                       </div>
                       <a
-                        href="mailto:karrassi.hamza@gmail.com"
+                        href="mailto:support@sayerli.com"
                         className="text-sm font-semibold text-primary-600 dark:text-primary-400 hover:underline break-all"
                       >
-                        karrassi.hamza@gmail.com
+                        support@sayerli.com
                       </a>
                     </div>
                   </div>

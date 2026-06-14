@@ -152,7 +152,7 @@
     "contact": "Contact",
     "privacy": "Confidentialité",
     "terms": "Conditions",
-    "copyright": "© 2024 Sayerli. Tous droits réservés.",
+    "copyright": "© 2026 Sayerli. Tous droits réservés.",
     "madeIn": "Fait avec ❤️ au Maroc 🇲🇦"
   },
   "auth": {
@@ -348,9 +348,9 @@
     },
     "chart": {
       "title": "Chiffre d'affaires mensuel",
-      "sub": "En MAD — Année 2024",
-      "badge": "+34% vs 2023",
-      "tooltipMonth": "Décembre 2024",
+      "sub": "En MAD — Année 2026",
+      "badge": "+34% vs 2025",
+      "tooltipMonth": "Décembre 2026",
       "tooltipValue": "102,000 MAD"
     },
     "topClients": {
@@ -583,11 +583,11 @@
     },
     "floating2": {
       "label": "Devis accepté",
-      "sub": "DEV-2024-0052 · 24K MAD"
+      "sub": "DEV-2026-0052 · 24K MAD"
     },
     "floating3": {
       "label": "Facture payée",
-      "sub": "FAC-2024-0031 · 8,400 MAD"
+      "sub": "FAC-2026-0031 · 8,400 MAD"
     },
     "floating4": {
       "label": "CA mensuel",
