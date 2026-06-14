@@ -500,15 +500,22 @@ export default function FacturesPage() {
     finally { setActionLoading(null) }
   }
 
-  const handleWhatsApp = (f: ApiFacture) => {
+  const handleWhatsApp = async (f: ApiFacture) => {
     const phone = toWhatsAppNumber(f.client.telephone)
     if (!phone) {
       toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
       return
     }
-    const url = `${window.location.origin}/public/factures/${f.publicToken}`
-    const msg = `Bonjour ${f.client.nom}, veuillez consulter votre facture ${f.numeroFacture} ici : ${url}`
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+    setActionLoading(`wa_${f.id}`)
+    try {
+      const res = await facturesApi.send(f.id)
+      const data = res.data?.data ?? res.data
+      const url = `${window.location.origin}/public/factures/${data.publicToken}`
+      const msg = `Bonjour ${f.client.nom}, veuillez consulter votre facture ${f.numeroFacture} ici : ${url}`
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+      fetchFactures(search.trim() || undefined, filters.statut)
+    } catch { toastError('Erreur', 'Impossible de générer le lien.') }
+    finally { setActionLoading(null) }
   }
 
   const handleOpenDetail = async (f: ApiFacture) => {
@@ -914,9 +921,10 @@ export default function FacturesPage() {
                 )}
                 <button
                   onClick={() => handleWhatsApp(selected)}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] transition-all"
+                  disabled={actionLoading === `wa_${selected.id}`}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
+                  {actionLoading === `wa_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <MessageCircle className="w-3.5 h-3.5" />}
                   WhatsApp
                 </button>
                 {(selected.statut === 'BROUILLON' || selected.statut === 'ENVOYEE') && (
