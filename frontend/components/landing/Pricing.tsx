@@ -86,9 +86,10 @@ export function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {plans.map(({ key, name, price, desc, features, popular, cta, href }) => {
             const numPrice = parseInt(price)
+            // yearly shows the per-month equivalent at -20%, not the annual total
             const displayPrice = yearly && numPrice > 0
-              ? Math.round(numPrice * 12 * 0.8)
-              : numPrice * (yearly ? 12 : 1)
+              ? Math.round(numPrice * 0.8)
+              : numPrice
 
             return (
               <div
@@ -121,25 +122,26 @@ export function Pricing() {
 
                   <div className="mb-6">
                     <div className="flex items-baseline gap-1">
-                      <span className={cn('text-4xl font-black', popular ? 'text-white' : 'text-slate-900 dark:text-white')}>
-                        {numPrice === 0 ? t('pricing.ctaFree') === t('pricing.ctaFree') ? '0' : '0' : displayPrice}
-                      </span>
-                      {numPrice > 0 && (
-                        <>
-                          <span className={cn('text-sm font-medium', popular ? 'text-primary-200' : 'text-slate-500')}>
-                            MAD
-                          </span>
-                          <span className={cn('text-sm', popular ? 'text-primary-200' : 'text-slate-400')}>
-                            /{yearly ? 'an' : 'mois'}
-                          </span>
-                        </>
-                      )}
-                      {numPrice === 0 && (
-                        <span className={cn('text-sm font-medium', popular ? 'text-primary-200' : 'text-slate-500')}>
-                          MAD
+                      {yearly && numPrice > 0 && (
+                        <span className={cn('text-lg line-through opacity-50 font-medium', popular ? 'text-primary-200' : 'text-slate-400')}>
+                          {numPrice}
                         </span>
                       )}
+                      <span className={cn('text-4xl font-black', popular ? 'text-white' : 'text-slate-900 dark:text-white')}>
+                        {displayPrice}
+                      </span>
+                      <span className={cn('text-sm font-medium', popular ? 'text-primary-200' : 'text-slate-500')}>
+                        MAD
+                      </span>
+                      <span className={cn('text-sm', popular ? 'text-primary-200' : 'text-slate-400')}>
+                        /mois
+                      </span>
                     </div>
+                    {yearly && numPrice > 0 && (
+                      <p className={cn('text-xs mt-1', popular ? 'text-primary-200' : 'text-slate-400')}>
+                        facturé annuellement · économisez 20%
+                      </p>
+                    )}
                   </div>
 
                   <ul className="space-y-3 mb-6">

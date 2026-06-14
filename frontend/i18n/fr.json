@@ -108,11 +108,11 @@
       "features": [
         "Tout dans Pro",
         "Utilisateurs illimités",
-        "Multi-entreprises",
-        "API accès",
-        "Manager de compte dédié",
-        "SLA garanti",
-        "Onboarding personnalisé"
+        "Export PDF & Excel",
+        "Notifications email avancées",
+        "Tableau de bord analytique",
+        "Support prioritaire",
+        "Accès anticipé aux nouveautés"
       ]
     }
   },
@@ -558,7 +558,7 @@
     }
   },
   "finalMegaCta": {
-    "badge": "Rejoignez plus de 500 PME marocaines",
+    "badge": "Essai gratuit · Sans carte bancaire",
     "title": "Arrêtez de gérer votre business avec des",
     "strikethrough": "tableurs",
     "sub": "Rejoignez Sayerli et gérez vos clients, factures, paiements et votre croissance en un seul endroit. Simple. Rapide. Fait pour le Maroc.",
@@ -566,20 +566,20 @@
     "ctaSecondary": "Réserver une démo",
     "disclaimer": "Aucune carte bancaire requise · Annulation à tout moment · Support en français 🇲🇦",
     "stat1": {
-      "value": "500+",
-      "label": "PME actives"
+      "value": "0 MAD",
+      "label": "Pour démarrer"
     },
     "stat2": {
-      "value": "12,000+",
-      "label": "Factures générées"
+      "value": "2 min",
+      "label": "Pour votre premier devis"
     },
     "stat3": {
-      "value": "8M+ MAD",
-      "label": "Encaissés"
+      "value": "100%",
+      "label": "Données sécurisées"
     },
     "stat4": {
-      "value": "4.9/5",
-      "label": "Satisfaction client"
+      "value": "FR · EN · AR",
+      "label": "Multi-langue"
     },
     "floating1": {
       "label": "Nouveau client",

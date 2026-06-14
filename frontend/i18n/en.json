@@ -108,11 +108,11 @@
       "features": [
         "Everything in Pro",
         "Unlimited users",
-        "Multi-company",
-        "API access",
-        "Dedicated account manager",
-        "SLA guarantee",
-        "Custom onboarding"
+        "PDF & Excel export",
+        "Advanced email notifications",
+        "Analytics dashboard",
+        "Priority support",
+        "Early access to new features"
       ]
     }
   },
@@ -558,7 +558,7 @@
     }
   },
   "finalMegaCta": {
-    "badge": "Join 500+ Moroccan SMEs",
+    "badge": "Free trial · No credit card needed",
     "title": "Stop managing your business with",
     "strikethrough": "spreadsheets",
     "sub": "Join Sayerli and manage clients, invoices, payments, and growth in one place. Simple. Fast. Made for Morocco.",
@@ -566,20 +566,20 @@
     "ctaSecondary": "Book a Demo",
     "disclaimer": "No credit card required · Cancel anytime · French support 🇲🇦",
     "stat1": {
-      "value": "500+",
-      "label": "Active SMEs"
+      "value": "0 MAD",
+      "label": "To get started"
     },
     "stat2": {
-      "value": "12,000+",
-      "label": "Invoices generated"
+      "value": "2 min",
+      "label": "For your first quote"
     },
     "stat3": {
-      "value": "8M+ MAD",
-      "label": "Collected"
+      "value": "100%",
+      "label": "Secure data"
     },
     "stat4": {
-      "value": "4.9/5",
-      "label": "Client satisfaction"
+      "value": "FR · EN · AR",
+      "label": "Multilingual"
     },
     "floating1": {
       "label": "New client",
