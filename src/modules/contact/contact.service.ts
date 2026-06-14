@@ -135,8 +135,8 @@ export class ContactService {
 
     try {
       const { error } = await this.resend.emails.send({
-        from: 'Sayerli Support <support@sayerli.com>',
-        to: 'karrassi.hamza@gmail.com',
+        from: 'Sayerli Contact <no-reply@sayerli.com>',
+        to: 'support@sayerli.com',
         replyTo: dto.email,
         subject: `[Contact Sayerli] ${dto.subject}`,
         html,
