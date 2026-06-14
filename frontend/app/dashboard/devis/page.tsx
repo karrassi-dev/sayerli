@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   FileText, Plus, Eye, Pencil, Trash2, Copy, Send, CheckCircle,
-  Link, AlertCircle, X,
+  Link, AlertCircle, X, MessageCircle,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -19,7 +19,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { devisApi, clientsApi } from '@/lib/api'
-import { cn } from '@/lib/utils'
+import { cn, toWhatsAppNumber } from '@/lib/utils'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ interface ApiDevis {
   nombreConsultations: number
   notes: string | null
   createdAt: string
-  client: { id: string; nom: string; email: string | null; nomEntreprise: string | null }
+  client: { id: string; nom: string; email: string | null; nomEntreprise: string | null; telephone: string | null }
   lignes?: Ligne[]
   lienPublic?: { token: string; expiration: string } | null
   _count?: { lignes: number; factures: number }
@@ -522,6 +522,25 @@ export default function DevisPage() {
     finally { setActionLoading(null) }
   }
 
+  const handleWhatsApp = async (d: ApiDevis) => {
+    const phone = toWhatsAppNumber(d.client.telephone)
+    if (!phone) {
+      toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
+      return
+    }
+    setActionLoading(`wa_${d.id}`)
+    try {
+      if (d.statut === 'BROUILLON') await devisApi.updateStatus(d.id, 'ENVOYE')
+      const res = await devisApi.generateLink(d.id)
+      const data = res.data?.data ?? res.data
+      const url = `${window.location.origin}/public/devis/${data.token}`
+      const msg = `Bonjour ${d.client.nom}, veuillez consulter votre devis ${d.reference} ici : ${url}`
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+      fetchDevis(search.trim() || undefined, filters.statut)
+    } catch { toastError('Erreur', 'Impossible de générer le lien.') }
+    finally { setActionLoading(null) }
+  }
+
   const handleDuplicate = async (d: ApiDevis) => {
     setActionLoading(`dup_${d.id}`)
     try {
@@ -699,6 +718,7 @@ export default function DevisPage() {
                           { label: t('pages.devis.actions.send'), icon: Send, onClick: () => handleSend(devis) },
                           { label: t('pages.devis.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(devis) },
                           { label: t('pages.devis.actions.duplicate'), icon: Copy, onClick: () => handleDuplicate(devis) },
+                          { label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(devis) },
                           ...(devis.statut === 'ACCEPTE' && (devis._count?.factures ?? 0) === 0 ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
                           ...(devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
                         ]} />
@@ -843,6 +863,14 @@ export default function DevisPage() {
               >
                 <Link className="w-3.5 h-3.5" />
                 {t('pages.devis.actions.copyLink')}
+              </button>
+              <button
+                onClick={() => handleWhatsApp(selected)}
+                disabled={actionLoading === `wa_${selected.id}`}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+              >
+                {actionLoading === `wa_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <MessageCircle className="w-3.5 h-3.5" />}
+                WhatsApp
               </button>
               <button
                 onClick={() => { handleDuplicate(selected); setSelected(null) }}

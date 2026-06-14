@@ -54,7 +54,7 @@ export class DevisService {
         }),
       },
       include: {
-        client: { select: { id: true, nom: true, email: true, nomEntreprise: true } },
+        client: { select: { id: true, nom: true, email: true, nomEntreprise: true, telephone: true } },
         _count: { select: { lignes: true, factures: true } },
       },
       orderBy: { createdAt: 'desc' },

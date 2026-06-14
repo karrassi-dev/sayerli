@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Receipt, Plus, Eye, Pencil, Trash2, Send, CreditCard,
-  TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban,
+  TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -17,7 +17,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { facturesApi, clientsApi, paiementsApi } from '@/lib/api'
-import { cn } from '@/lib/utils'
+import { cn, toWhatsAppNumber } from '@/lib/utils'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -50,7 +50,7 @@ interface ApiFacture {
   devisId: string | null
   publicToken: string
   createdAt: string
-  client: { id: string; nom: string; email: string | null; nomEntreprise: string | null }
+  client: { id: string; nom: string; email: string | null; nomEntreprise: string | null; telephone: string | null }
   lignes?: FactureLigne[]
   devis?: { id: string; reference: string } | null
   paiements?: { id: string; montant: number | string; methode: string; reference: string | null; datePaiement: string }[]
@@ -500,6 +500,17 @@ export default function FacturesPage() {
     finally { setActionLoading(null) }
   }
 
+  const handleWhatsApp = (f: ApiFacture) => {
+    const phone = toWhatsAppNumber(f.client.telephone)
+    if (!phone) {
+      toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
+      return
+    }
+    const url = `${window.location.origin}/public/factures/${f.publicToken}`
+    const msg = `Bonjour ${f.client.nom}, veuillez consulter votre facture ${f.numeroFacture} ici : ${url}`
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+  }
+
   const handleOpenDetail = async (f: ApiFacture) => {
     if (f.lignes) { setSelected(f); return }
     try {
@@ -749,6 +760,7 @@ export default function FacturesPage() {
                             { label: t('common.view'), icon: Eye, onClick: () => handleOpenDetail(facture) },
                             ...(facture.statut === 'BROUILLON' ? [{ label: t('pages.factures.actions.send'), icon: Send, onClick: () => handleSend(facture) }] : []),
                             ...(facture.statut !== 'BROUILLON' ? [{ label: t('pages.factures.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(facture) }] : []),
+                            { label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(facture) },
                             ...(facture.statut === 'BROUILLON' || facture.statut === 'ENVOYEE' ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(facture) }] : []),
                             ...(facture.statut !== 'PAYEE' && facture.statut !== 'BROUILLON' ? [{ label: t('pages.factures.actions.recordPayment'), icon: CreditCard, onClick: () => openPaiement(facture) }] : []),
                             ...(facture.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(facture), variant: 'danger' as const, separator: true }] : []),
@@ -900,6 +912,13 @@ export default function FacturesPage() {
                     {t('pages.factures.actions.copyLink')}
                   </button>
                 )}
+                <button
+                  onClick={() => handleWhatsApp(selected)}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] transition-all"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  WhatsApp
+                </button>
                 {(selected.statut === 'BROUILLON' || selected.statut === 'ENVOYEE') && (
                   <button
                     onClick={() => openEdit(selected)}

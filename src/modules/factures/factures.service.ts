@@ -46,7 +46,7 @@ export class FacturesService {
         }),
       },
       include: {
-        client: { select: { id: true, nom: true, email: true, nomEntreprise: true } },
+        client: { select: { id: true, nom: true, email: true, nomEntreprise: true, telephone: true } },
         _count: { select: { lignes: true, paiements: true, declarationsPaiement: true } },
       },
       orderBy: { createdAt: 'desc' },
