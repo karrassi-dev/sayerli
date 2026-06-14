@@ -88,3 +88,9 @@
 }
 .action-menu-down { animation: action-menu-in-down 130ms cubic-bezier(0.16,1,0.3,1) both; }
 .action-menu-up   { animation: action-menu-in-up   130ms cubic-bezier(0.16,1,0.3,1) both; }
+
+/* WhatsApp upgrade banner marquee */
+@keyframes marquee-ltr { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes marquee-rtl { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.animate-marquee-ltr { animation: marquee-ltr 30s linear infinite; }
+.animate-marquee-rtl { animation: marquee-rtl 30s linear infinite; }

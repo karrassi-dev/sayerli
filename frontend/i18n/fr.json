@@ -1219,5 +1219,9 @@
       "excelDesc": "Feuilles de calcul, idéal pour analyses et comptable",
       "pdfDesc": "Rapport formaté, prêt à imprimer ou archiver"
     }
+  },
+  "upgradeBanner": {
+    "text": "✨ Vous souhaitez changer de plan ? Contactez-nous directement sur WhatsApp et nous nous occupons de tout pour vous",
+    "cta": "Nous contacter"
   }
 }

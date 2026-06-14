@@ -1218,5 +1218,9 @@
       "excelDesc": "Spreadsheet, ideal for analysis and accountant",
       "pdfDesc": "Formatted report, ready to print or archive"
     }
+  },
+  "upgradeBanner": {
+    "text": "✨ Want to upgrade or change your plan? Reach out on WhatsApp and we'll take care of everything for you",
+    "cta": "Contact us"
   }
 }

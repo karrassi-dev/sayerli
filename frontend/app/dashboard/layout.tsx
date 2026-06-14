@@ -1,5 +1,6 @@
 import { Sidebar } from '@/components/dashboard/Sidebar'
 import { NotificationProvider } from '@/components/providers/NotificationProvider'
+import { UpgradeBanner } from '@/components/dashboard/UpgradeBanner'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <NotificationProvider>
           <Sidebar />
           <main className="flex-1 overflow-y-auto md:pt-0 pt-16">
+            <UpgradeBanner />
             <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
               {children}
             </div>
