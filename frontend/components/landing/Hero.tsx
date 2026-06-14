@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, MapPin, Zap } from 'lucide-react'
+import { ArrowRight, CheckCircle, MapPin, Zap, LayoutDashboard } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useIsLoggedIn } from '@/hooks/useIsLoggedIn'
 
 export function Hero() {
   const { t } = useTranslation()
+  const loggedIn = useIsLoggedIn()
 
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
@@ -41,13 +43,23 @@ export function Hero() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <Link href="/register" className="btn-primary text-base px-8 py-4 group">
-                {t('hero.cta')}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link href="/login" className="btn-secondary text-base px-8 py-4">
-                {t('hero.ctaSecondary')}
-              </Link>
+              {loggedIn ? (
+                <Link href="/dashboard" className="btn-primary text-base px-8 py-4 group">
+                  <LayoutDashboard className="w-4 h-4" />
+                  {t('hero.ctaDashboard')}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <>
+                  <Link href="/register" className="btn-primary text-base px-8 py-4 group">
+                    {t('hero.cta')}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link href="/login" className="btn-secondary text-base px-8 py-4">
+                    {t('hero.ctaSecondary')}
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Trust signals */}

@@ -6,7 +6,8 @@
     "testimonials": "Témoignages",
     "login": "Connexion",
     "startFree": "Essai gratuit",
-    "contact": "Contact"
+    "contact": "Contact",
+    "dashboard": "Tableau de bord"
   },
   "hero": {
     "badge": "🇲🇦 Fait pour les PME marocaines",
@@ -17,7 +18,8 @@
     "ctaSecondary": "Se connecter",
     "stat1": "Sans carte bancaire",
     "stat2": "Conçu pour le Maroc",
-    "stat3": "Pour envoyer un devis"
+    "stat3": "Pour envoyer un devis",
+    "ctaDashboard": "Accéder au tableau de bord"
   },
   "features": {
     "badge": "Fonctionnalités",

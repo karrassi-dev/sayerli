@@ -8,10 +8,12 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { LOCALES, type Locale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/ui/LogoMark'
+import { useIsLoggedIn } from '@/hooks/useIsLoggedIn'
 
 export function Navbar() {
   const { t, locale, setLocale } = useTranslation()
   const { theme, setTheme } = useTheme()
+  const loggedIn = useIsLoggedIn()
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -106,15 +108,23 @@ export function Navbar() {
               </button>
             )}
 
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-            >
-              {t('nav.login')}
-            </Link>
-            <Link href="/register" className="btn-primary text-sm py-2">
-              {t('nav.startFree')}
-            </Link>
+            {loggedIn ? (
+              <Link href="/dashboard" className="btn-primary text-sm py-2">
+                {t('nav.dashboard')}
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
+                  {t('nav.login')}
+                </Link>
+                <Link href="/register" className="btn-primary text-sm py-2">
+                  {t('nav.startFree')}
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -166,6 +176,16 @@ export function Navbar() {
               ))}
             </div>
             <div className="border-t border-slate-200 dark:border-slate-700 pt-2 space-y-1">
+              {loggedIn ? (
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  className="block btn-primary text-center"
+                >
+                  {t('nav.dashboard')}
+                </Link>
+              ) : (
+              <>
               <Link
                 href="/login"
                 onClick={() => setMobileOpen(false)}
@@ -180,6 +200,8 @@ export function Navbar() {
               >
                 {t('nav.startFree')}
               </Link>
+              </>
+              )}
             </div>
           </div>
         )}

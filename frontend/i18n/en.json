@@ -6,7 +6,8 @@
     "testimonials": "Testimonials",
     "login": "Login",
     "startFree": "Start Free",
-    "contact": "Contact"
+    "contact": "Contact",
+    "dashboard": "Dashboard"
   },
   "hero": {
     "badge": "🇲🇦 Built for Moroccan SMEs",
@@ -17,7 +18,8 @@
     "ctaSecondary": "Log In",
     "stat1": "No credit card needed",
     "stat2": "Built for Morocco",
-    "stat3": "To send a quote"
+    "stat3": "To send a quote",
+    "ctaDashboard": "Go to Dashboard"
   },
   "features": {
     "badge": "Features",
