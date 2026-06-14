@@ -3,7 +3,7 @@
     "features": "Fonctionnalités",
     "howItWorks": "Comment ça marche",
     "pricing": "Tarifs",
-    "testimonials": "Témoignages",
+    "testimonials": "Accès anticipé",
     "login": "Connexion",
     "startFree": "Essai gratuit",
     "contact": "Contact",
@@ -118,25 +118,19 @@
       ]
     }
   },
-  "testimonials": {
-    "badge": "Témoignages",
-    "title": "Ils nous font confiance",
-    "sub": "Des entreprises marocaines de toutes tailles utilisent Sayerli au quotidien.",
-    "t1": {
-      "name": "Karim El Fassi",
-      "company": "Atlas Marketing, Casablanca",
-      "text": "Avant Sayerli, je passais des heures sur Excel. Maintenant mes devis partent en 2 minutes et je suis payé plus vite. Franchement, c'est révolutionnaire pour les PME."
-    },
-    "t2": {
-      "name": "Nadia Bensouda",
-      "company": "Casablanca Studio Design",
-      "text": "Interface super simple, même mon assistante qui n'est pas technique l'utilise sans problème. Le suivi des impayés m'a sauvé plus d'une fois !"
-    },
-    "t3": {
-      "name": "Youssef Alaoui",
-      "company": "Rabat Consulting Group",
-      "text": "La meilleure décision pour mon cabinet. On a réduit notre temps de facturation de 80%. Le rapport qualité-prix en MAD est imbattable."
-    }
+  "earlyAccess": {
+    "badge": "Accès Fondateur — Places limitées",
+    "title": "Soyez parmi les premiers à utiliser Sayerli",
+    "sub": "On construit Sayerli pour les PMEs marocaines — avec les PMEs marocaines. Rejoignez les premiers utilisateurs et bénéficiez d'avantages exclusifs.",
+    "perk1Title": "3 mois Pro offerts",
+    "perk1Desc": "Les premiers inscrits bénéficient de 3 mois sur le plan Pro gratuitement. Aucune carte bancaire requise.",
+    "perk2Title": "Support direct WhatsApp",
+    "perk2Desc": "Accès direct au fondateur sur WhatsApp pour toute question, suggestion ou problème. Réponse garantie.",
+    "perk3Title": "Votre avis façonne le produit",
+    "perk3Desc": "Vos retours influencent directement les prochaines fonctionnalités. Vous construisez Sayerli avec nous.",
+    "ctaWhatsapp": "Rejoindre via WhatsApp",
+    "ctaFree": "Commencer gratuitement",
+    "ctaSub": "Gratuit · Sans carte bancaire · Support WhatsApp direct"
   },
   "cta": {
     "title": "Commencez à organiser votre business dès aujourd'hui avec Sayerli",

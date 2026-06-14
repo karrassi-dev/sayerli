@@ -3,7 +3,7 @@
     "features": "Features",
     "howItWorks": "How It Works",
     "pricing": "Pricing",
-    "testimonials": "Testimonials",
+    "testimonials": "Early Access",
     "login": "Login",
     "startFree": "Start Free",
     "contact": "Contact",
@@ -118,25 +118,19 @@
       ]
     }
   },
-  "testimonials": {
-    "badge": "Testimonials",
-    "title": "Trusted by Moroccan businesses",
-    "sub": "Moroccan companies of all sizes use Sayerli every day.",
-    "t1": {
-      "name": "Karim El Fassi",
-      "company": "Atlas Marketing, Casablanca",
-      "text": "Before Sayerli, I spent hours on Excel. Now my quotes go out in 2 minutes and I get paid faster. It's truly revolutionary for SMEs."
-    },
-    "t2": {
-      "name": "Nadia Bensouda",
-      "company": "Casablanca Studio Design",
-      "text": "Super simple interface — even my non-technical assistant uses it effortlessly. The overdue tracking has saved me more than once!"
-    },
-    "t3": {
-      "name": "Youssef Alaoui",
-      "company": "Rabat Consulting Group",
-      "text": "Best decision for my firm. We reduced our invoicing time by 80%. The value for money in MAD is unbeatable."
-    }
+  "earlyAccess": {
+    "badge": "Founder Access — Limited spots",
+    "title": "Be among the first to use Sayerli",
+    "sub": "We're building Sayerli for Moroccan SMEs — with Moroccan SMEs. Join early users and get exclusive benefits.",
+    "perk1Title": "3 months Pro free",
+    "perk1Desc": "First sign-ups get 3 months on the Pro plan for free. No credit card required.",
+    "perk2Title": "Direct WhatsApp support",
+    "perk2Desc": "Direct access to the founder on WhatsApp for any question, suggestion or issue. Response guaranteed.",
+    "perk3Title": "Your feedback shapes the product",
+    "perk3Desc": "Your input directly influences upcoming features. You help build Sayerli with us.",
+    "ctaWhatsapp": "Join via WhatsApp",
+    "ctaFree": "Start for free",
+    "ctaSub": "Free · No credit card · Direct WhatsApp support"
   },
   "cta": {
     "title": "Start organizing your business today with Sayerli",
