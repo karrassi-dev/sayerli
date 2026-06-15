@@ -50,6 +50,7 @@ interface PublicFacture {
   entreprise: {
     nom: string; email: string | null; telephone: string | null
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
+    templateDocument: string | null
     ice: string | null; rc: string | null; website: string | null
     titulaireCompte: string | null; banque: string | null
     rib: string | null; iban: string | null; swift: string | null
@@ -468,11 +469,25 @@ export default function PublicFacturePage() {
   }
 
   const brand = facture.entreprise.couleurPrimaire || '#2563eb'
+  const template = facture.entreprise.templateDocument ?? 'classic'
   const montantRestant = Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))
   const isPayee = facture.statut === 'PAYEE'
   const canDeclare = ['ENVOYEE', 'VUE', 'PARTIELLE', 'EN_RETARD'].includes(facture.statut) && montantRestant > 0.01
   const hasBankInfo = facture.entreprise.titulaireCompte || facture.entreprise.rib || facture.entreprise.iban || facture.entreprise.banque
   const isOverdue = facture.dateEcheance && new Date(facture.dateEcheance) < new Date() && !isPayee
+
+  // Template-specific styles
+  const isBanded = ['stripe', 'corporate', 'bold'].includes(template)
+  const headerBandBg = template === 'bold' ? '#111827' : brand
+  const tableHeadBg = template === 'minimal' ? 'transparent'
+    : (template === 'bold' || template === 'classic') ? '#111827' : brand
+  const tableHeadTextColor = template === 'minimal' ? brand : 'white'
+  const tableHeadBorderStyle = template === 'minimal' ? `2px solid ${brand}` : undefined
+  const totalBg = (template === 'classic' || template === 'bold') ? '#111827' : brand
+  const totalTextColor = template === 'minimal' ? brand : 'white'
+  const totalBgStyle = template === 'minimal' ? undefined : { backgroundColor: totalBg }
+  const labelColor = ['minimal', 'elegant', 'bold'].includes(template) ? brand : undefined
+  const labelClass = ['minimal', 'elegant', 'bold'].includes(template) ? '' : 'text-gray-400'
 
   const pdfLogoUrl = facture.entreprise.logo
     ? facture.entreprise.logo.startsWith('http')
@@ -489,6 +504,7 @@ export default function PublicFacturePage() {
     taxe: n(facture.taxe),
     totalTTC: n(facture.totalTTC),
     devisReference: facture.devis?.reference ?? null,
+    template,
     lignes: facture.lignes.map(l => ({
       description: l.description,
       quantite: n(l.quantite),
@@ -511,6 +527,11 @@ export default function PublicFacturePage() {
     },
   }
 
+  // Shared logo node
+  const logoNode = facture.entreprise.logo ? (
+    <img src={resolveLogoUrl(facture.entreprise.logo)} alt={facture.entreprise.nom} className="h-12 w-auto object-contain flex-shrink-0" />
+  ) : null
+
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-3xl mx-auto space-y-4">
@@ -518,39 +539,92 @@ export default function PublicFacturePage() {
         {/* ── DOCUMENT ── */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
 
-          {/* Header */}
-          <div className="px-8 sm:px-12 pt-10 pb-7 flex items-start justify-between gap-6">
-            <div className="flex items-center gap-4">
-              {facture.entreprise.logo ? (
-                <img
-                  src={resolveLogoUrl(facture.entreprise.logo)}
-                  alt={facture.entreprise.nom}
-                  className="h-14 w-auto object-contain"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded bg-gray-900 flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                  {facture.entreprise.nom.charAt(0)}
+          {/* Minimal: thin colored top line */}
+          {template === 'minimal' && <div style={{ height: 3, backgroundColor: brand }} />}
+
+          {/* ── HEADER — template-specific ── */}
+          {isBanded ? (
+            /* Corporate / Stripe / Bold: full colored or dark band */
+            <div className="px-8 sm:px-12 py-6 flex items-start justify-between gap-6" style={{ backgroundColor: headerBandBg }}>
+              <div className="flex items-center gap-4">
+                {facture.entreprise.logo ? (
+                  <div className="bg-white/20 rounded p-1 flex-shrink-0">
+                    <img src={resolveLogoUrl(facture.entreprise.logo)} alt={facture.entreprise.nom} className="h-10 w-auto object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 rounded flex items-center justify-center font-black text-xl flex-shrink-0"
+                    style={{ backgroundColor: template === 'bold' ? brand : 'rgba(255,255,255,0.2)', color: 'white' }}>
+                    {facture.entreprise.nom.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <h1 className="text-lg font-bold text-white">{facture.entreprise.nom}</h1>
+                  {facture.entreprise.email && <p className="text-sm text-white/70">{facture.entreprise.email}</p>}
+                  {facture.entreprise.telephone && <p className="text-sm text-white/70">{facture.entreprise.telephone}</p>}
                 </div>
-              )}
-              <div>
-                <h1 className="text-lg font-bold text-gray-900">{facture.entreprise.nom}</h1>
-                {facture.entreprise.email && <p className="text-sm text-gray-500">{facture.entreprise.email}</p>}
-                {facture.entreprise.telephone && <p className="text-sm text-gray-500">{facture.entreprise.telephone}</p>}
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-[10px] font-bold text-white/60 tracking-[0.2em]">FACTURE</p>
+                <p className="text-2xl font-black text-white">{facture.numeroFacture}</p>
+                {facture.devis && <p className="text-xs text-white/50 mt-1">Devis : {facture.devis.reference}</p>}
               </div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em]">FACTURE</p>
-              <p className="text-2xl font-black text-gray-900">{facture.numeroFacture}</p>
-              {facture.devis && <p className="text-xs text-gray-400 mt-1">Devis : {facture.devis.reference}</p>}
+          ) : template === 'elegant' ? (
+            /* Elegant: white header with left colored strip */
+            <div className="flex">
+              <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: brand }} />
+              <div className="flex-1 px-8 sm:px-10 pt-8 pb-6 flex items-start justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  {logoNode ?? (
+                    <div className="w-12 h-12 rounded border-2 flex items-center justify-center font-black text-xl flex-shrink-0"
+                      style={{ borderColor: brand, color: brand }}>
+                      {facture.entreprise.nom.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <h1 className="text-lg font-bold text-gray-900">{facture.entreprise.nom}</h1>
+                    {facture.entreprise.email && <p className="text-sm text-gray-500">{facture.entreprise.email}</p>}
+                    {facture.entreprise.telephone && <p className="text-sm text-gray-500">{facture.entreprise.telephone}</p>}
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-[10px] font-bold tracking-[0.2em] mb-1" style={{ color: brand }}>FACTURE</p>
+                  <p className="text-2xl font-black text-gray-900">{facture.numeroFacture}</p>
+                  {facture.devis && <p className="text-xs text-gray-400 mt-1">Devis : {facture.devis.reference}</p>}
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            /* Classic / Minimal: standard white header */
+            <div className="px-8 sm:px-12 pt-10 pb-7 flex items-start justify-between gap-6">
+              <div className="flex items-center gap-4">
+                {logoNode ?? (
+                  <div className="w-12 h-12 rounded flex items-center justify-center text-white font-black text-xl flex-shrink-0"
+                    style={{ backgroundColor: template === 'minimal' ? brand : '#111827' }}>
+                    {facture.entreprise.nom.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <h1 className="text-lg font-bold text-gray-900">{facture.entreprise.nom}</h1>
+                  {facture.entreprise.email && <p className="text-sm text-gray-500">{facture.entreprise.email}</p>}
+                  {facture.entreprise.telephone && <p className="text-sm text-gray-500">{facture.entreprise.telephone}</p>}
+                </div>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em]">FACTURE</p>
+                <p className="text-2xl font-black text-gray-900">{facture.numeroFacture}</p>
+                {facture.devis && <p className="text-xs text-gray-400 mt-1">Devis : {facture.devis.reference}</p>}
+              </div>
+            </div>
+          )}
 
-          <div className="border-t border-gray-200" />
+          {!isBanded && <div className="border-t border-gray-200" />}
 
           {/* Emetteur / Destinataire */}
           <div className="px-8 sm:px-12 py-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3">ÉMETTEUR</p>
+              <p className={cn('text-[10px] font-bold tracking-[0.2em] mb-3', labelClass)}
+                style={labelColor ? { color: labelColor } : undefined}>ÉMETTEUR</p>
               <p className="text-sm font-semibold text-gray-900">{facture.entreprise.nom}</p>
               {facture.entreprise.adresse && (
                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
@@ -571,7 +645,8 @@ export default function PublicFacturePage() {
               {facture.entreprise.rc && <p className="text-xs text-gray-500 mt-1">RC : {facture.entreprise.rc}</p>}
             </div>
             <div>
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3">DESTINATAIRE</p>
+              <p className={cn('text-[10px] font-bold tracking-[0.2em] mb-3', labelClass)}
+                style={labelColor ? { color: labelColor } : undefined}>DESTINATAIRE</p>
               <p className="text-sm font-semibold text-gray-900">{facture.client.nom}</p>
               {facture.client.nomEntreprise && (
                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
@@ -612,11 +687,11 @@ export default function PublicFacturePage() {
           <div className="px-8 sm:px-12 pb-8">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-900">
-                  <th className="px-4 py-3 text-left text-[10px] font-bold text-white tracking-[0.15em]">DÉSIGNATION</th>
-                  <th className="px-4 py-3 text-center text-[10px] font-bold text-white tracking-[0.15em] w-16 hidden sm:table-cell">QTÉ</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold text-white tracking-[0.15em] w-28 hidden sm:table-cell">P.U. HT</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold text-white tracking-[0.15em] w-28">TOTAL HT</th>
+                <tr style={{ backgroundColor: tableHeadBg !== 'transparent' ? tableHeadBg : undefined, borderBottom: tableHeadBorderStyle }}>
+                  <th className="px-4 py-3 text-left text-[10px] font-bold tracking-[0.15em]" style={{ color: tableHeadTextColor }}>DÉSIGNATION</th>
+                  <th className="px-4 py-3 text-center text-[10px] font-bold tracking-[0.15em] w-16 hidden sm:table-cell" style={{ color: tableHeadTextColor }}>QTÉ</th>
+                  <th className="px-4 py-3 text-right text-[10px] font-bold tracking-[0.15em] w-28 hidden sm:table-cell" style={{ color: tableHeadTextColor }}>P.U. HT</th>
+                  <th className="px-4 py-3 text-right text-[10px] font-bold tracking-[0.15em] w-28" style={{ color: tableHeadTextColor }}>TOTAL HT</th>
                 </tr>
               </thead>
               <tbody>
@@ -643,7 +718,7 @@ export default function PublicFacturePage() {
                 <span>TVA {n(facture.taxe)}%</span>
                 <span>{formatMAD(n(facture.totalTTC) - n(facture.totalHT))}</span>
               </div>
-              <div className="flex justify-between bg-gray-900 text-white font-bold px-4 py-3 mt-2">
+              <div className="flex justify-between font-bold px-4 py-3 mt-2" style={{ ...totalBgStyle, color: totalTextColor }}>
                 <span className="text-sm tracking-wide">TOTAL TTC</span>
                 <span className="text-base">{formatMAD(facture.totalTTC)}</span>
               </div>
@@ -773,6 +848,7 @@ export default function PublicFacturePage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <FactureSimpleDownloadButton
               data={simplePdfData}
+              template={template}
               label="Télécharger la facture PDF"
               loadingLabel="Génération..."
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded text-sm font-semibold text-gray-700 border border-gray-200 bg-white hover:bg-gray-50 transition-all"

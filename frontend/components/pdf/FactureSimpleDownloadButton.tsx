@@ -9,15 +9,17 @@ export default function FactureSimpleDownloadButton({
   label = 'Télécharger la facture PDF',
   loadingLabel = 'Génération en cours...',
   className,
+  template,
 }: {
   data: FactureSimplePDFProps
   label?: string
   loadingLabel?: string
   className?: string
+  template?: string
 }) {
   return (
     <PDFDownloadLink
-      document={<FactureSimplePDF {...data} />}
+      document={<FactureSimplePDF {...data} template={template ?? data.template} />}
       fileName={`facture-${data.numeroFacture}.pdf`}
     >
       {({ loading }) => (

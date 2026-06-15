@@ -239,7 +239,7 @@ export class DevisService {
             entreprise: {
               select: {
                 nom: true, email: true, telephone: true, adresse: true,
-                logo: true, couleurPrimaire: true, ice: true, rc: true, website: true,
+                logo: true, couleurPrimaire: true, templateDocument: true, ice: true, rc: true, website: true,
               },
             },
           },

@@ -45,6 +45,7 @@ interface PublicDevis {
   entreprise: {
     nom: string; email: string | null; telephone: string | null
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
+    templateDocument: string | null
     ice: string | null; rc: string | null; website: string | null
   }
 }
@@ -325,12 +326,30 @@ export default function PublicDevisPage() {
 
   const canRespond = devis.statut === 'ENVOYE' || devis.statut === 'VU'
   const sousTotal = devis.lignes.reduce((s, l) => s + n(l.quantite) * n(l.prixUnitaire), 0)
+  const template = devis.entreprise.templateDocument ?? 'classic'
+
+  // Template-specific styles
+  const isBanded = ['stripe', 'corporate', 'bold'].includes(template)
+  const headerBandBg = template === 'bold' ? '#111827' : brand
+  const tableHeadBg = template === 'minimal' ? 'transparent'
+    : (template === 'bold' || template === 'classic') ? '#111827' : brand
+  const tableHeadTextColor = template === 'minimal' ? brand : 'white'
+  const tableHeadBorderStyle = template === 'minimal' ? `2px solid ${brand}` : undefined
+  const totalBg = (template === 'classic' || template === 'bold') ? '#111827' : brand
+  const totalTextColor = template === 'minimal' ? brand : 'white'
+  const totalBgStyle = template === 'minimal' ? undefined : { backgroundColor: totalBg }
+  const labelColor = ['minimal', 'elegant', 'bold'].includes(template) ? brand : undefined
+  const labelClass = ['minimal', 'elegant', 'bold'].includes(template) ? '' : 'text-gray-400'
 
   const pdfLogoUrl = devis.entreprise.logo
     ? devis.entreprise.logo.startsWith('http')
       ? devis.entreprise.logo
       : `${API_ORIGIN}${devis.entreprise.logo}`
     : null
+
+  const logoNode = devis.entreprise.logo ? (
+    <img src={resolveLogoUrl(devis.entreprise.logo)} alt={devis.entreprise.nom} className="h-12 w-auto object-contain flex-shrink-0" />
+  ) : null
 
   const pdfData = {
     reference: devis.reference,
@@ -359,39 +378,89 @@ export default function PublicDevisPage() {
         {/* ── DOCUMENT ── */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
 
-          {/* Header */}
-          <div className="px-8 sm:px-12 pt-10 pb-7 flex items-start justify-between gap-6">
-            <div className="flex items-center gap-4">
-              {devis.entreprise.logo ? (
-                <img
-                  src={resolveLogoUrl(devis.entreprise.logo)}
-                  alt={devis.entreprise.nom}
-                  className="h-14 w-auto object-contain"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded bg-gray-900 flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                  {devis.entreprise.nom.charAt(0)}
+          {/* Minimal: thin colored top line */}
+          {template === 'minimal' && <div style={{ height: 3, backgroundColor: brand }} />}
+
+          {/* ── HEADER — template-specific ── */}
+          {isBanded ? (
+            <div className="px-8 sm:px-12 py-6 flex items-start justify-between gap-6" style={{ backgroundColor: headerBandBg }}>
+              <div className="flex items-center gap-4">
+                {devis.entreprise.logo ? (
+                  <div className="bg-white/20 rounded p-1 flex-shrink-0">
+                    <img src={resolveLogoUrl(devis.entreprise.logo)} alt={devis.entreprise.nom} className="h-10 w-auto object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 rounded flex items-center justify-center font-black text-xl flex-shrink-0"
+                    style={{ backgroundColor: template === 'bold' ? brand : 'rgba(255,255,255,0.2)', color: 'white' }}>
+                    {devis.entreprise.nom.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <h1 className="text-lg font-bold text-white">{devis.entreprise.nom}</h1>
+                  {devis.entreprise.email && <p className="text-sm text-white/70">{devis.entreprise.email}</p>}
+                  {devis.entreprise.telephone && <p className="text-sm text-white/70">{devis.entreprise.telephone}</p>}
                 </div>
-              )}
-              <div>
-                <h1 className="text-lg font-bold text-gray-900">{devis.entreprise.nom}</h1>
-                {devis.entreprise.email && <p className="text-sm text-gray-500">{devis.entreprise.email}</p>}
-                {devis.entreprise.telephone && <p className="text-sm text-gray-500">{devis.entreprise.telephone}</p>}
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-[10px] font-bold text-white/60 tracking-[0.2em]">DEVIS</p>
+                <p className="text-2xl font-black text-white">{devis.reference}</p>
+                <p className="text-xs text-white/50 mt-1">{formatDate(devis.createdAt)}</p>
               </div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em]">DEVIS</p>
-              <p className="text-2xl font-black text-gray-900">{devis.reference}</p>
-              <p className="text-xs text-gray-400 mt-1">{formatDate(devis.createdAt)}</p>
+          ) : template === 'elegant' ? (
+            <div className="flex">
+              <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: brand }} />
+              <div className="flex-1 px-8 sm:px-10 pt-8 pb-6 flex items-start justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  {logoNode ?? (
+                    <div className="w-12 h-12 rounded border-2 flex items-center justify-center font-black text-xl flex-shrink-0"
+                      style={{ borderColor: brand, color: brand }}>
+                      {devis.entreprise.nom.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <h1 className="text-lg font-bold text-gray-900">{devis.entreprise.nom}</h1>
+                    {devis.entreprise.email && <p className="text-sm text-gray-500">{devis.entreprise.email}</p>}
+                    {devis.entreprise.telephone && <p className="text-sm text-gray-500">{devis.entreprise.telephone}</p>}
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-[10px] font-bold tracking-[0.2em] mb-1" style={{ color: brand }}>DEVIS</p>
+                  <p className="text-2xl font-black text-gray-900">{devis.reference}</p>
+                  <p className="text-xs text-gray-400 mt-1">{formatDate(devis.createdAt)}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="px-8 sm:px-12 pt-10 pb-7 flex items-start justify-between gap-6">
+              <div className="flex items-center gap-4">
+                {logoNode ?? (
+                  <div className="w-12 h-12 rounded flex items-center justify-center text-white font-black text-xl flex-shrink-0"
+                    style={{ backgroundColor: template === 'minimal' ? brand : '#111827' }}>
+                    {devis.entreprise.nom.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <h1 className="text-lg font-bold text-gray-900">{devis.entreprise.nom}</h1>
+                  {devis.entreprise.email && <p className="text-sm text-gray-500">{devis.entreprise.email}</p>}
+                  {devis.entreprise.telephone && <p className="text-sm text-gray-500">{devis.entreprise.telephone}</p>}
+                </div>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em]">DEVIS</p>
+                <p className="text-2xl font-black text-gray-900">{devis.reference}</p>
+                <p className="text-xs text-gray-400 mt-1">{formatDate(devis.createdAt)}</p>
+              </div>
+            </div>
+          )}
 
-          <div className="border-t border-gray-200" />
+          {!isBanded && <div className="border-t border-gray-200" />}
 
           {/* Emetteur / Destinataire */}
           <div className="px-8 sm:px-12 py-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3">ÉMETTEUR</p>
+              <p className={cn('text-[10px] font-bold tracking-[0.2em] mb-3', labelClass)}
+                style={labelColor ? { color: labelColor } : undefined}>ÉMETTEUR</p>
               <p className="text-sm font-semibold text-gray-900">{devis.entreprise.nom}</p>
               {devis.entreprise.adresse && (
                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
@@ -412,7 +481,8 @@ export default function PublicDevisPage() {
               {devis.entreprise.rc && <p className="text-xs text-gray-500 mt-1">RC : {devis.entreprise.rc}</p>}
             </div>
             <div>
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3">DESTINATAIRE</p>
+              <p className={cn('text-[10px] font-bold tracking-[0.2em] mb-3', labelClass)}
+                style={labelColor ? { color: labelColor } : undefined}>DESTINATAIRE</p>
               <p className="text-sm font-semibold text-gray-900">{devis.client.nom}</p>
               {devis.client.nomEntreprise && (
                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
@@ -449,11 +519,11 @@ export default function PublicDevisPage() {
           <div className="px-8 sm:px-12 pb-8">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-900">
-                  <th className="px-4 py-3 text-left text-[10px] font-bold text-white tracking-[0.15em]">DÉSIGNATION</th>
-                  <th className="px-4 py-3 text-center text-[10px] font-bold text-white tracking-[0.15em] w-16 hidden sm:table-cell">QTÉ</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold text-white tracking-[0.15em] w-28 hidden sm:table-cell">P.U. HT</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold text-white tracking-[0.15em] w-28">TOTAL HT</th>
+                <tr style={{ backgroundColor: tableHeadBg !== 'transparent' ? tableHeadBg : undefined, borderBottom: tableHeadBorderStyle }}>
+                  <th className="px-4 py-3 text-left text-[10px] font-bold tracking-[0.15em]" style={{ color: tableHeadTextColor }}>DÉSIGNATION</th>
+                  <th className="px-4 py-3 text-center text-[10px] font-bold tracking-[0.15em] w-16 hidden sm:table-cell" style={{ color: tableHeadTextColor }}>QTÉ</th>
+                  <th className="px-4 py-3 text-right text-[10px] font-bold tracking-[0.15em] w-28 hidden sm:table-cell" style={{ color: tableHeadTextColor }}>P.U. HT</th>
+                  <th className="px-4 py-3 text-right text-[10px] font-bold tracking-[0.15em] w-28" style={{ color: tableHeadTextColor }}>TOTAL HT</th>
                 </tr>
               </thead>
               <tbody>
@@ -486,7 +556,7 @@ export default function PublicDevisPage() {
                 <span>TVA {n(devis.taxe)}%</span>
                 <span>{formatMAD(n(devis.totalTTC) - n(devis.totalHT))}</span>
               </div>
-              <div className="flex justify-between bg-gray-900 text-white font-bold px-4 py-3 mt-2">
+              <div className="flex justify-between font-bold px-4 py-3 mt-2" style={{ ...totalBgStyle, color: totalTextColor }}>
                 <span className="text-sm tracking-wide">TOTAL TTC</span>
                 <span className="text-base">{formatMAD(devis.totalTTC)}</span>
               </div>
