@@ -165,6 +165,7 @@ function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt:
     remise: parseFloat(String(devis.remise)) || 0,
     taxe: parseFloat(String(devis.taxe)) || 0,
     totalTTC: parseFloat(String(devis.totalTTC)) || 0,
+    template: devis.entreprise.templateDocument ?? 'classic',
     lignes: devis.lignes.map(l => ({
       description: l.description,
       quantite: parseFloat(String(l.quantite)) || 0,
@@ -361,6 +362,7 @@ export default function PublicDevisPage() {
     remise: parseFloat(String(devis.remise)) || 0,
     taxe: parseFloat(String(devis.taxe)) || 0,
     totalTTC: parseFloat(String(devis.totalTTC)) || 0,
+    template,
     lignes: devis.lignes.map(l => ({
       description: l.description,
       quantite: parseFloat(String(l.quantite)) || 0,

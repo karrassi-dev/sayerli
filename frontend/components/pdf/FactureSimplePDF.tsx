@@ -33,6 +33,7 @@ export interface FactureSimplePDFProps {
     telephone: string | null
     adresse: string | null
     logoUrl: string | null
+    couleurPrimaire: string | null
     ice: string | null
     rc: string | null
     titulaireCompte: string | null
@@ -145,7 +146,7 @@ export default function FactureSimplePDF({
   numeroFacture, createdAt, dateEcheance, notes, totalHT, taxe, totalTTC,
   devisReference, template = 'classic', lignes, client, entreprise,
 }: FactureSimplePDFProps) {
-  const brand = '#2563eb' // brand color comes via template config, but entreprise doesn't pass it here
+  const brand = entreprise.couleurPrimaire || '#2563eb'
   const tva = totalTTC - totalHT
   const hasBankInfo = entreprise.titulaireCompte || entreprise.rib || entreprise.iban || entreprise.banque
   const cfg = tplConfig(template, brand)

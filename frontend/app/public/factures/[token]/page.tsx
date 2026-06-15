@@ -517,6 +517,7 @@ export default function PublicFacturePage() {
       telephone: facture.entreprise.telephone,
       adresse: facture.entreprise.adresse,
       logoUrl: pdfLogoUrl,
+      couleurPrimaire: facture.entreprise.couleurPrimaire,
       ice: facture.entreprise.ice,
       rc: facture.entreprise.rc,
       titulaireCompte: facture.entreprise.titulaireCompte,
