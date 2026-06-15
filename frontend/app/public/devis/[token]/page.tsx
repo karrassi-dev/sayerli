@@ -619,6 +619,44 @@ export default function PublicDevisPage() {
                   </p>
                 </div>
               </div>
+
+              {/* Download PDF for accepted devis on revisit */}
+              {devis.statut === 'ACCEPTE' && (() => {
+                const pdfLogoUrl = devis.entreprise.logo
+                  ? devis.entreprise.logo.startsWith('http')
+                    ? devis.entreprise.logo
+                    : `${API_ORIGIN}${devis.entreprise.logo}`
+                  : null
+                const pdfData = {
+                  reference: devis.reference,
+                  createdAt: devis.createdAt,
+                  dateExpiration: devis.dateExpiration,
+                  dateAcceptation: devis.dateAcceptation ?? new Date().toISOString(),
+                  notes: devis.notes,
+                  totalHT: parseFloat(String(devis.totalHT)) || 0,
+                  remise: parseFloat(String(devis.remise)) || 0,
+                  taxe: parseFloat(String(devis.taxe)) || 0,
+                  totalTTC: parseFloat(String(devis.totalTTC)) || 0,
+                  lignes: devis.lignes.map(l => ({
+                    description: l.description,
+                    quantite: parseFloat(String(l.quantite)) || 0,
+                    prixUnitaire: parseFloat(String(l.prixUnitaire)) || 0,
+                    total: parseFloat(String(l.total)) || 0,
+                  })),
+                  client: devis.client,
+                  entreprise: { ...devis.entreprise, logoUrl: pdfLogoUrl },
+                }
+                return (
+                  <div className="mt-3 flex justify-center">
+                    <DevisDownloadButton
+                      data={pdfData}
+                      brand={brand}
+                      label="Télécharger le devis PDF"
+                      loadingLabel="Génération en cours..."
+                    />
+                  </div>
+                )
+              })()}
             </div>
           )}
 

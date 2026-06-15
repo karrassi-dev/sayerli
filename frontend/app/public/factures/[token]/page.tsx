@@ -17,6 +17,11 @@ const FactureDownloadButton = dynamic(
   { ssr: false },
 )
 
+const FactureSimpleDownloadButton = dynamic(
+  () => import('@/components/pdf/FactureSimpleDownloadButton'),
+  { ssr: false },
+)
+
 // ── Types ───────────────────────────────────────────────────────────────────
 
 interface Ligne {
@@ -680,6 +685,44 @@ export default function PublicFacturePage() {
 
   const brand = facture.entreprise.couleurPrimaire || '#2563eb'
   const montantRestant = Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))
+
+  const pdfLogoUrl = facture.entreprise.logo
+    ? facture.entreprise.logo.startsWith('http')
+      ? facture.entreprise.logo
+      : `${API_ORIGIN}${facture.entreprise.logo}`
+    : null
+
+  const simplePdfData = {
+    numeroFacture: facture.numeroFacture,
+    createdAt: facture.createdAt,
+    dateEcheance: facture.dateEcheance,
+    notes: facture.notes,
+    totalHT: n(facture.totalHT),
+    taxe: n(facture.taxe),
+    totalTTC: n(facture.totalTTC),
+    devisReference: facture.devis?.reference ?? null,
+    lignes: facture.lignes.map(l => ({
+      description: l.description,
+      quantite: n(l.quantite),
+      prixUnitaire: n(l.prixUnitaire),
+    })),
+    client: facture.client,
+    entreprise: {
+      nom: facture.entreprise.nom,
+      email: facture.entreprise.email,
+      telephone: facture.entreprise.telephone,
+      adresse: facture.entreprise.adresse,
+      logoUrl: pdfLogoUrl,
+      ice: facture.entreprise.ice,
+      rc: facture.entreprise.rc,
+      titulaireCompte: facture.entreprise.titulaireCompte,
+      banque: facture.entreprise.banque,
+      rib: facture.entreprise.rib,
+      iban: facture.entreprise.iban,
+      swift: facture.entreprise.swift,
+    },
+  }
+
   const pctPaid = n(facture.totalTTC) > 0
     ? Math.min(100, (n(facture.montantPaye) / n(facture.totalTTC)) * 100)
     : 0
@@ -738,8 +781,14 @@ export default function PublicFacturePage() {
             </div>
           </div>
 
+          {/* Download button — always visible so client can take PDF to bank before paying */}
+          <div className="px-6 sm:px-8 pb-4 flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 mb-2">
+            <p className="text-xs text-slate-400">Téléchargez la facture pour effectuer votre virement en agence.</p>
+            <FactureSimpleDownloadButton data={simplePdfData} />
+          </div>
+
           {/* Company + Client */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-6 sm:px-8 pb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-6 sm:px-8 pb-6 pt-4">
             <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl space-y-1">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">De</p>
               <p className="text-sm font-semibold text-slate-900 dark:text-white">{facture.entreprise.nom}</p>
