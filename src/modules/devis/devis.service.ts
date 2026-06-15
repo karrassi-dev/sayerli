@@ -329,6 +329,7 @@ export class DevisService {
             numeroFacture,
             publicToken: uuidv4(),
             statut: 'BROUILLON',
+            dateEcheance: devis.dateExpiration ?? null,
             taxe: devis.taxe,
             totalHT: devis.totalHT,
             totalTTC: devis.totalTTC,
