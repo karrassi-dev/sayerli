@@ -143,7 +143,7 @@ export class SettingsService {
   async getBranding(entrepriseId: string) {
     const company = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
-      select: { logo: true, couleurPrimaire: true },
+      select: { logo: true, couleurPrimaire: true, templateDocument: true },
     });
     if (!company) throw new NotFoundException('Entreprise introuvable.');
     return company;
@@ -152,11 +152,12 @@ export class SettingsService {
   async updateBranding(entrepriseId: string, dto: UpdateBrandingDto) {
     const data: Record<string, unknown> = {};
     if (dto.couleurPrimaire) data.couleurPrimaire = dto.couleurPrimaire;
+    if (dto.templateDocument) data.templateDocument = dto.templateDocument;
 
     return this.prisma.entreprise.update({
       where: { id: entrepriseId },
       data,
-      select: { logo: true, couleurPrimaire: true, updatedAt: true },
+      select: { logo: true, couleurPrimaire: true, templateDocument: true, updatedAt: true },
     });
   }
 

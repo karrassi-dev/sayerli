@@ -177,7 +177,7 @@ export const settingsApi = {
 
   // Branding
   getBranding: () => api.get('/settings/branding'),
-  updateBranding: (data: { couleurPrimaire?: string; logo?: string }) =>
+  updateBranding: (data: { couleurPrimaire?: string; logo?: string; templateDocument?: string }) =>
     api.patch('/settings/branding', data),
   uploadLogo: (file: File) => {
     const form = new FormData()

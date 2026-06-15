@@ -15,6 +15,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { settingsApi } from '@/lib/api'
 import { LOCALES } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import TemplateChooser from '@/components/settings/TemplateChooser'
 
 const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1').replace(/\/api\/v1\/?$/, '')
 function logoUrl(path: string) {
@@ -137,9 +138,10 @@ export default function SettingsPage() {
   const [companyLoading, setCompanyLoading] = useState(true)
 
   // ─── Branding state ──────────────────────────────────────────────────────
-  const [branding, setBranding] = useState({ logo: '', couleurPrimaire: '#2563eb' })
+  const [branding, setBranding] = useState({ logo: '', couleurPrimaire: '#2563eb', templateDocument: 'classic' })
   const [brandingLoading, setBrandingLoading] = useState(true)
   const [selectedColor, setSelectedColor] = useState('#2563eb')
+  const [selectedTemplate, setSelectedTemplate] = useState('classic')
   const logoInputRef = useRef<HTMLInputElement>(null)
   const [logoUploading, setLogoUploading] = useState(false)
 
@@ -200,8 +202,9 @@ export default function SettingsPage() {
 
     settingsApi.getBranding().then(r => {
       const d = r.data?.data ?? r.data
-      setBranding({ logo: d.logo ?? '', couleurPrimaire: d.couleurPrimaire ?? '#2563eb' })
+      setBranding({ logo: d.logo ?? '', couleurPrimaire: d.couleurPrimaire ?? '#2563eb', templateDocument: d.templateDocument ?? 'classic' })
       setSelectedColor(d.couleurPrimaire ?? '#2563eb')
+      setSelectedTemplate(d.templateDocument ?? 'classic')
     }).catch(() => {}).finally(() => setBrandingLoading(false))
 
     settingsApi.getPreferences().then(r => {
@@ -276,9 +279,9 @@ export default function SettingsPage() {
   const saveBranding = async () => {
     setSaving(true)
     try {
-      await settingsApi.updateBranding({ couleurPrimaire: selectedColor })
-      setBranding(b => ({ ...b, couleurPrimaire: selectedColor }))
-      success('Identité mise à jour', 'Votre couleur principale a été enregistrée.')
+      await settingsApi.updateBranding({ couleurPrimaire: selectedColor, templateDocument: selectedTemplate })
+      setBranding(b => ({ ...b, couleurPrimaire: selectedColor, templateDocument: selectedTemplate }))
+      success('Identité mise à jour', 'Votre modèle et couleur ont été enregistrés.')
       triggerSaved()
     } catch (err) { handleApiError(err) }
     finally { setSaving(false) }
@@ -504,18 +507,19 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.branding.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Personnalisez l&apos;apparence de vos documents</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Choisissez le modèle et la couleur utilisés sur tous vos documents</p>
             </div>
 
+            {/* Logo upload */}
             <div>
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 block">{t('pages.settings.branding.logo')}</label>
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                <div className="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
                   {branding.logo ? (
                     <img src={logoUrl(branding.logo)} alt="Logo" className="w-full h-full object-contain p-1" />
                   ) : (
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center">
-                      <span className="text-white font-black">S</span>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center">
+                      <span className="text-white font-black text-sm">S</span>
                     </div>
                   )}
                 </div>
@@ -540,43 +544,22 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div>
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-3 block">{t('pages.settings.branding.primaryColor')}</label>
-              {brandingLoading ? (
-                <div className="flex gap-3">{[1,2,3,4,5,6].map(i => <div key={i} className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
-              ) : (
-                <div className="flex flex-wrap gap-3 items-center">
-                  {PRESET_COLORS.map(c => (
-                    <button
-                      key={c.color}
-                      onClick={() => setSelectedColor(c.color)}
-                      title={c.name}
-                      className={cn('w-9 h-9 rounded-xl transition-all hover:scale-110 relative', c.class)}
-                    >
-                      {selectedColor === c.color && (
-                        <span className="absolute inset-0 flex items-center justify-center">
-                          <Check className="w-4 h-4 text-white" />
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-9 h-9">
-                      <input
-                        type="color"
-                        value={selectedColor}
-                        onChange={e => setSelectedColor(e.target.value)}
-                        className="w-9 h-9 rounded-xl border-0 cursor-pointer p-0 opacity-0 absolute inset-0"
-                      />
-                      <div className="w-9 h-9 rounded-xl border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center pointer-events-none" style={{ backgroundColor: selectedColor }}>
-                        {!PRESET_COLORS.find(c => c.color === selectedColor) && <Check className="w-4 h-4 text-white" />}
-                      </div>
-                    </div>
-                    <span className="text-xs text-slate-500 font-mono">{selectedColor}</span>
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* Template chooser + color picker */}
+            {brandingLoading ? (
+              <div className="space-y-3">
+                {[1,2,3].map(i => <div key={i} className="h-16 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}
+              </div>
+            ) : (
+              <TemplateChooser
+                userPlan={billing?.plan ?? 'STARTER'}
+                selectedTemplate={selectedTemplate}
+                selectedColor={selectedColor}
+                onTemplateChange={setSelectedTemplate}
+                onColorChange={setSelectedColor}
+                logoUrl={branding.logo ? logoUrl(branding.logo) : undefined}
+                companyName={company.nom || undefined}
+              />
+            )}
 
             <div className="flex justify-end pt-2">
               <SaveButton onClick={saveBranding} saving={saving} saved={saved} />

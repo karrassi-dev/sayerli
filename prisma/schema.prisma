@@ -19,6 +19,7 @@ model Entreprise {
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   couleurPrimaire      String?               @default("#2563eb")
+  templateDocument     String                @default("classic")
   formatDate           String?               @default("DD/MM/YYYY")
   ice                  String?
   pays                 String?               @default("Maroc")

@@ -1,5 +1,7 @@
 import { IsOptional, IsString, Matches } from 'class-validator';
 
+const VALID_TEMPLATES = ['classic', 'minimal', 'stripe', 'corporate', 'bold', 'elegant'];
+
 export class UpdateBrandingDto {
   @IsOptional()
   @IsString()
@@ -7,4 +9,8 @@ export class UpdateBrandingDto {
     message: 'La couleur doit être un code hexadécimal valide (ex: #2563eb)',
   })
   couleurPrimaire?: string;
+
+  @IsOptional()
+  @IsString()
+  templateDocument?: string;
 }
