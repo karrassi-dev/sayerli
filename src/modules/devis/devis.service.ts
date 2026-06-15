@@ -329,7 +329,7 @@ export class DevisService {
             numeroFacture,
             publicToken: uuidv4(),
             statut: 'BROUILLON',
-            dateEcheance: devis.dateExpiration ?? null,
+            dateEcheance: devis.dateExpiration ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             taxe: devis.taxe,
             totalHT: devis.totalHT,
             totalTTC: devis.totalTTC,
