@@ -195,7 +195,7 @@ export function Sidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <>
-          <div className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity" onClick={() => setMobileOpen(false)} />
+          <div className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity" onClick={() => setMobileOpen(false)} />
           <aside className="md:hidden fixed left-0 top-0 bottom-0 w-64 z-50 bg-white dark:bg-slate-900 shadow-2xl transform transition-transform">
             <SidebarContent isMobile />
           </aside>
