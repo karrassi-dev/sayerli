@@ -62,13 +62,14 @@ export function Footer() {
             <h4 className="text-white font-semibold mb-4 text-sm">{t('footer.legal')}</h4>
             <ul className="space-y-2.5">
               {[
-                { href: '#', label: t('footer.privacy') },
-                { href: '#', label: t('footer.terms') },
+                { href: '/legal/privacy', label: t('footer.privacy') },
+                { href: '/legal/terms', label: t('footer.terms') },
+                { href: '/legal/refund', label: t('footer.refund') },
               ].map(item => (
-                <li key={item.label}>
-                  <a href={item.href} className="text-sm hover:text-white transition-colors">
+                <li key={item.href}>
+                  <Link href={item.href} className="text-sm hover:text-white transition-colors">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
