@@ -19,6 +19,7 @@ export function RegisterForm() {
     motDePasse: '',
   })
   const [showPassword, setShowPassword] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm(f => ({ ...f, [key]: e.target.value }))
@@ -129,9 +130,36 @@ export function RegisterForm() {
         </div>
       </div>
 
+      <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+        <input
+          id="terms"
+          type="checkbox"
+          required
+          checked={agreedToTerms}
+          onChange={e => setAgreedToTerms(e.target.checked)}
+          className="mt-0.5 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer flex-shrink-0"
+        />
+        <label htmlFor="terms" className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed cursor-pointer">
+          En créant un compte, j'accepte les{' '}
+          <Link href="/legal/terms" target="_blank" className="text-primary-600 dark:text-primary-400 font-medium hover:underline">
+            Conditions d'utilisation
+          </Link>
+          {', '}
+          la{' '}
+          <Link href="/legal/privacy" target="_blank" className="text-primary-600 dark:text-primary-400 font-medium hover:underline">
+            Politique de confidentialité
+          </Link>
+          {' et la '}
+          <Link href="/legal/refund" target="_blank" className="text-primary-600 dark:text-primary-400 font-medium hover:underline">
+            Politique de remboursement
+          </Link>{' '}
+          de Sayerli.
+        </label>
+      </div>
+
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !agreedToTerms}
         className="w-full btn-primary py-3.5 text-base disabled:opacity-50 disabled:cursor-not-allowed mt-2"
       >
         {loading ? t('auth.registering') : t('auth.registerBtn')}
