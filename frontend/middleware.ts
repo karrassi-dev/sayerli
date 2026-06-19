@@ -3,14 +3,17 @@ import { ROUTE_ROLE_MAP } from '@/lib/permissions'
 
 const TOKEN_KEY = 'sayerli_token'
 
-function decodeJwtRole(token: string): string | null {
+function decodeJwt(token: string): { role: string | null; superAdmin: boolean } {
   try {
     const payload = token.split('.')[1]?.replace(/-/g, '+').replace(/_/g, '/')
-    if (!payload) return null
+    if (!payload) return { role: null, superAdmin: false }
     const decoded = JSON.parse(atob(payload))
-    return decoded?.role ? String(decoded.role).toLowerCase() : null
+    return {
+      role: decoded?.role ? String(decoded.role).toLowerCase() : null,
+      superAdmin: decoded?.superAdmin === true,
+    }
   } catch {
-    return null
+    return { role: null, superAdmin: false }
   }
 }
 
@@ -28,6 +31,16 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get(TOKEN_KEY)?.value
 
+  if (pathname.startsWith('/superadmin')) {
+    if (!token) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    const { superAdmin } = decodeJwt(token)
+    if (!superAdmin) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
   if (pathname.startsWith('/dashboard')) {
     if (!token) {
       const loginUrl = new URL('/login', request.url)
@@ -35,7 +48,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl)
     }
 
-    const role = decodeJwtRole(token)
+    const { role } = decodeJwt(token)
     if (!role) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
@@ -54,5 +67,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/register'],
+  matcher: ['/superadmin/:path*', '/dashboard/:path*', '/login', '/register'],
 }

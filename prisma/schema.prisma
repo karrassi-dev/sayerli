@@ -66,6 +66,7 @@ model Utilisateur {
   emailConfirmationExpiration   DateTime?
   resetPasswordToken            String?                  @unique
   resetPasswordExpiration       DateTime?
+  superAdmin                    Boolean                  @default(false)
   preferencesNotification   PreferencesNotification?
   entreprise                Entreprise               @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
 

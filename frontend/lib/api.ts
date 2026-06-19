@@ -226,6 +226,12 @@ export const contactApi = {
   }) => api.post('/contact', data),
 }
 
+// Super Admin
+export const superAdminApi = {
+  getEntreprises: () => api.get('/super-admin/entreprises'),
+  getEntrepriseDetail: (id: string) => api.get(`/super-admin/entreprises/${id}`),
+}
+
 // Token helpers
 export const setToken = (token: string) =>
   Cookies.set(TOKEN_KEY, token, { expires: 7, sameSite: 'strict' })

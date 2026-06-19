@@ -104,6 +104,7 @@ export class AuthService {
       utilisateur.email,
       utilisateur.entrepriseId,
       utilisateur.role,
+      utilisateur.superAdmin,
     );
 
     return {
@@ -166,6 +167,7 @@ export class AuthService {
       utilisateur.email,
       utilisateur.entrepriseId,
       utilisateur.role,
+      utilisateur.superAdmin,
     );
 
     return {
@@ -255,8 +257,9 @@ export class AuthService {
     email: string,
     entrepriseId: string,
     role: string,
+    superAdmin = false,
   ) {
-    const payload = { sub: userId, email, entrepriseId, role };
+    const payload = { sub: userId, email, entrepriseId, role, superAdmin };
     const accessToken = await this.jwtService.signAsync(payload);
     return { accessToken };
   }
