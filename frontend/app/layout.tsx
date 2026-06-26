@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { LanguageProvider } from '@/components/providers/LanguageProvider'
 import { SITE_URL, SITE_NAME, ALL_KEYWORDS } from '@/lib/seo'
 import GoogleAnalytics from '@/components/seo/GoogleAnalytics'
+import MetaPixel from '@/components/seo/MetaPixel'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -117,6 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <GoogleAnalytics />
+        <MetaPixel />
         <ThemeProvider>
           <LanguageProvider>
             {children}
