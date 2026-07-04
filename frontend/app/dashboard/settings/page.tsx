@@ -134,6 +134,7 @@ export default function SettingsPage() {
   const [company, setCompany] = useState({
     nom: '', email: '', telephone: '', adresse: '', ville: '', pays: '', website: '', ice: '', rc: '',
     titulaireCompte: '', banque: '', rib: '', iban: '', swift: '',
+    typeCompte: 'pme', activite: '',
   })
   const [companyLoading, setCompanyLoading] = useState(true)
 
@@ -197,6 +198,7 @@ export default function SettingsPage() {
         website: d.website ?? '', ice: d.ice ?? '', rc: d.rc ?? '',
         titulaireCompte: d.titulaireCompte ?? '', banque: d.banque ?? '',
         rib: d.rib ?? '', iban: d.iban ?? '', swift: d.swift ?? '',
+        typeCompte: d.typeCompte ?? 'pme', activite: d.activite ?? '',
       })
     }).catch(() => {}).finally(() => setCompanyLoading(false))
 
@@ -429,30 +431,139 @@ export default function SettingsPage() {
         )
 
       // ── COMPANY ──────────────────────────────────────────────────────────
-      case 'company':
+      case 'company': {
+        const isFreelancer = company.typeCompte === 'freelancer'
+        const isEntrepreneur = company.typeCompte === 'entrepreneur'
+        const isPme = company.typeCompte === 'pme'
+        const isSimple = isFreelancer || isEntrepreneur
+
+        const nameLabel = isFreelancer
+          ? t('pages.settings.company.nameLabelFreelancer')
+          : isEntrepreneur
+          ? t('pages.settings.company.nameLabelEntrepreneur')
+          : t('pages.settings.company.name')
+
+        const PROFILE_TYPE_OPTIONS = [
+          { key: 'freelancer',   label: t('pages.settings.company.profileTypeFreelancer') },
+          { key: 'entrepreneur', label: t('pages.settings.company.profileTypeEntrepreneur') },
+          { key: 'pme',          label: t('pages.settings.company.profileTypePme') },
+        ]
+
         return (
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.company.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Informations légales et coordonnées de votre entreprise</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {isSimple ? t('pages.settings.company.activiteHint') : 'Informations légales et coordonnées de votre entreprise'}
+              </p>
             </div>
+
+            {/* ── Profile type selector ── */}
+            {!companyLoading && (
+              <div>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
+                  {t('pages.settings.company.profileType')}
+                </label>
+                <div className="flex gap-2 flex-wrap">
+                  {PROFILE_TYPE_OPTIONS.map(opt => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => setCompany(c => ({ ...c, typeCompte: opt.key }))}
+                      className={cn(
+                        'px-3.5 py-2 rounded-xl text-xs font-semibold border-2 transition-all',
+                        company.typeCompte === opt.key
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-300'
+                          : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600',
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {companyLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[1,2,3,4,5,6,7,8,9].map(i => <div key={i} className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}
+                {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {/* Name — label changes by type */}
+                <div className="sm:col-span-2">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">{nameLabel}</label>
+                  <input
+                    type="text"
+                    value={company.nom}
+                    onChange={e => setCompany(c => ({ ...c, nom: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                  />
+                  <FieldError msg={fieldErrors.companyNom} />
+                </div>
+
+                {/* Activité — only for freelancer/entrepreneur */}
+                {isSimple && (
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
+                      {t('pages.settings.company.activite')}
+                      <span className="ml-1.5 text-slate-400 font-normal text-[10px]">
+                        — {t('pages.settings.company.activiteHint')}
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={company.activite}
+                      onChange={e => setCompany(c => ({ ...c, activite: e.target.value }))}
+                      placeholder={t('pages.settings.company.activitePlaceholder')}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                  </div>
+                )}
+
+                {/* ICE — all types, optional note for auto-entrepreneur */}
+                {!isFreelancer && (
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
+                      {t('pages.settings.company.ice')}
+                      {isEntrepreneur && (
+                        <span className="ml-1.5 text-slate-400 font-normal text-[10px]">(optionnel)</span>
+                      )}
+                    </label>
+                    <input
+                      type="text"
+                      value={company.ice}
+                      onChange={e => setCompany(c => ({ ...c, ice: e.target.value }))}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                  </div>
+                )}
+
+                {/* RC — PME only */}
+                {isPme && (
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
+                      {t('pages.settings.company.rc')}
+                    </label>
+                    <input
+                      type="text"
+                      value={company.rc}
+                      onChange={e => setCompany(c => ({ ...c, rc: e.target.value }))}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                  </div>
+                )}
+
+                {/* Common fields */}
                 {([
-                  { key: 'nom', label: t('pages.settings.company.name'), colSpan: true, errorKey: 'companyNom' },
-                  { key: 'ice', label: t('pages.settings.company.ice') },
-                  { key: 'rc', label: t('pages.settings.company.rc') },
                   { key: 'telephone', label: t('pages.settings.company.phone') },
-                  { key: 'email', label: t('pages.settings.company.email'), type: 'email' },
-                  { key: 'website', label: t('pages.settings.company.website') },
-                  { key: 'adresse', label: t('pages.settings.company.address'), colSpan: true },
-                  { key: 'ville', label: t('pages.settings.company.city') },
-                  { key: 'pays', label: t('pages.settings.company.country') },
-                ] as { key: keyof typeof company; label: string; colSpan?: boolean; type?: string; errorKey?: string }[]).map(field => (
+                  { key: 'email',     label: t('pages.settings.company.email'), type: 'email' },
+                  { key: 'website',   label: t('pages.settings.company.website') },
+                  { key: 'adresse',   label: t('pages.settings.company.address'), colSpan: true },
+                  { key: 'ville',     label: t('pages.settings.company.city') },
+                  { key: 'pays',      label: t('pages.settings.company.country') },
+                ] as { key: keyof typeof company; label: string; colSpan?: boolean; type?: string }[]).map(field => (
                   <div key={field.key} className={field.colSpan ? 'sm:col-span-2' : ''}>
                     <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">{field.label}</label>
                     <input
@@ -461,7 +572,6 @@ export default function SettingsPage() {
                       onChange={e => setCompany(c => ({ ...c, [field.key]: e.target.value }))}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
                     />
-                    {field.errorKey && <FieldError msg={fieldErrors[field.errorKey]} />}
                   </div>
                 ))}
               </div>
@@ -500,6 +610,7 @@ export default function SettingsPage() {
             </div>
           </div>
         )
+      }
 
       // ── BRANDING ─────────────────────────────────────────────────────────
       case 'branding':

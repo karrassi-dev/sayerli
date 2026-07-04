@@ -39,6 +39,7 @@ export class AuthService {
         telephone: dto.telephoneEntreprise,
         adresse: dto.adresseEntreprise,
         devise: 'MAD',
+        typeCompte: dto.typeCompte ?? 'pme',
         utilisateurs: {
           create: {
             nom: dto.nomAdmin,

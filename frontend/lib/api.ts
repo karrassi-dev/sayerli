@@ -36,6 +36,7 @@ export const authApi = {
     emailAdmin: string
     motDePasse: string
     telephoneEntreprise?: string
+    typeCompte?: string
   }) => api.post('/auth/inscription', data),
   profile: () => api.get('/auth/profil'),
 }

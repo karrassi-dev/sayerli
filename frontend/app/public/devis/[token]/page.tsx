@@ -47,6 +47,7 @@ interface PublicDevis {
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
     templateDocument: string | null
     ice: string | null; rc: string | null; website: string | null
+    activite: string | null
   }
 }
 
@@ -399,6 +400,7 @@ export default function PublicDevisPage() {
                 )}
                 <div>
                   <h1 className="text-lg font-bold text-white">{devis.entreprise.nom}</h1>
+                  {devis.entreprise.activite && <p className="text-sm text-white/60">{devis.entreprise.activite}</p>}
                   {devis.entreprise.email && <p className="text-sm text-white/70">{devis.entreprise.email}</p>}
                   {devis.entreprise.telephone && <p className="text-sm text-white/70">{devis.entreprise.telephone}</p>}
                 </div>
@@ -422,6 +424,7 @@ export default function PublicDevisPage() {
                   )}
                   <div>
                     <h1 className="text-lg font-bold text-gray-900">{devis.entreprise.nom}</h1>
+                    {devis.entreprise.activite && <p className="text-xs text-gray-400">{devis.entreprise.activite}</p>}
                     {devis.entreprise.email && <p className="text-sm text-gray-500">{devis.entreprise.email}</p>}
                     {devis.entreprise.telephone && <p className="text-sm text-gray-500">{devis.entreprise.telephone}</p>}
                   </div>
@@ -444,6 +447,7 @@ export default function PublicDevisPage() {
                 )}
                 <div>
                   <h1 className="text-lg font-bold text-gray-900">{devis.entreprise.nom}</h1>
+                  {devis.entreprise.activite && <p className="text-xs text-gray-400">{devis.entreprise.activite}</p>}
                   {devis.entreprise.email && <p className="text-sm text-gray-500">{devis.entreprise.email}</p>}
                   {devis.entreprise.telephone && <p className="text-sm text-gray-500">{devis.entreprise.telephone}</p>}
                 </div>
@@ -464,6 +468,9 @@ export default function PublicDevisPage() {
               <p className={cn('text-[10px] font-bold tracking-[0.2em] mb-3', labelClass)}
                 style={labelColor ? { color: labelColor } : undefined}>ÉMETTEUR</p>
               <p className="text-sm font-semibold text-gray-900">{devis.entreprise.nom}</p>
+              {devis.entreprise.activite && (
+                <p className="text-xs text-gray-500 mt-0.5">{devis.entreprise.activite}</p>
+              )}
               {devis.entreprise.adresse && (
                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
                   <MapPin className="w-3 h-3 flex-shrink-0" />{devis.entreprise.adresse}

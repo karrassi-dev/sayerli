@@ -33,6 +33,8 @@ model Entreprise {
   rib                  String?
   iban                 String?
   swift                String?
+  typeCompte           String?               @default("pme")
+  activite             String?
   clients              Client[]
   declarationsPaiement DeclarationPaiement[]
   devis                Devis[]

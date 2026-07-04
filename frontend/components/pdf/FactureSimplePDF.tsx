@@ -36,6 +36,7 @@ export interface FactureSimplePDFProps {
     couleurPrimaire: string | null
     ice: string | null
     rc: string | null
+    activite?: string | null
     titulaireCompte: string | null
     banque: string | null
     rib: string | null
@@ -247,6 +248,7 @@ export default function FactureSimplePDF({
       {logoNode}
       <View>
         <Text style={s.coName}>{entreprise.nom}</Text>
+        {entreprise.activite && <Text style={s.coDetail}>{entreprise.activite}</Text>}
         {entreprise.adresse && <Text style={s.coDetail}>{entreprise.adresse}</Text>}
         {entreprise.email && <Text style={s.coDetail}>{entreprise.email}</Text>}
         {entreprise.telephone && <Text style={s.coDetail}>{entreprise.telephone}</Text>}
@@ -282,6 +284,7 @@ export default function FactureSimplePDF({
         <View style={s.colFirst}>
           <Text style={s.colLbl}>ÉMETTEUR</Text>
           <Text style={s.colName}>{entreprise.nom}</Text>
+          {entreprise.activite && <Text style={s.colDetail}>{entreprise.activite}</Text>}
           {entreprise.adresse && <Text style={s.colDetail}>{entreprise.adresse}</Text>}
           {entreprise.email && <Text style={s.colDetail}>{entreprise.email}</Text>}
           {entreprise.telephone && <Text style={s.colDetail}>{entreprise.telephone}</Text>}

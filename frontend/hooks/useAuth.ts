@@ -79,6 +79,7 @@ export function useAuth() {
     emailAdmin: string
     motDePasse: string
     telephoneEntreprise?: string
+    typeCompte?: string
   }) => {
     setState((s) => ({ ...s, loading: true, error: null }))
     try {

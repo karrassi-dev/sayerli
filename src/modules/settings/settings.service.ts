@@ -91,6 +91,8 @@ export class SettingsService {
         rib: true,
         iban: true,
         swift: true,
+        typeCompte: true,
+        activite: true,
       },
     });
     if (!company) throw new NotFoundException('Entreprise introuvable.');
@@ -113,6 +115,8 @@ export class SettingsService {
     if (dto.rib !== undefined) data.rib = dto.rib;
     if (dto.iban !== undefined) data.iban = dto.iban;
     if (dto.swift !== undefined) data.swift = dto.swift;
+    if (dto.typeCompte !== undefined) data.typeCompte = dto.typeCompte;
+    if (dto.activite !== undefined) data.activite = dto.activite;
 
     return this.prisma.entreprise.update({
       where: { id: entrepriseId },

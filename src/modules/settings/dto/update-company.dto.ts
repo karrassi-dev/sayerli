@@ -56,4 +56,12 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   swift?: string;
+
+  @IsOptional()
+  @IsString()
+  typeCompte?: string;
+
+  @IsOptional()
+  @IsString()
+  activite?: string;
 }

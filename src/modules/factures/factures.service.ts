@@ -266,7 +266,7 @@ export class FacturesService {
         entreprise: {
           select: {
             nom: true, email: true, telephone: true, adresse: true,
-            logo: true, couleurPrimaire: true, templateDocument: true, ice: true, rc: true, website: true,
+            logo: true, couleurPrimaire: true, templateDocument: true, ice: true, rc: true, website: true, activite: true,
             titulaireCompte: true, banque: true, rib: true, iban: true, swift: true,
           },
         },

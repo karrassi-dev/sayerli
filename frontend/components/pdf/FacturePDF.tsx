@@ -44,6 +44,7 @@ export interface FacturePDFProps {
   entreprise: {
     nom: string; email: string | null; telephone: string | null; adresse: string | null
     logoUrl: string | null; couleurPrimaire: string | null; ice: string | null; rc: string | null
+    activite?: string | null
   }
   declaration: {
     montant: number
@@ -224,6 +225,7 @@ export default function FacturePDF({
               }
               <View>
                 <Text style={s.coName}>{entreprise.nom}</Text>
+                {entreprise.activite && <Text style={s.coDetail}>{entreprise.activite}</Text>}
                 {entreprise.email && <Text style={s.coDetail}>{entreprise.email}</Text>}
                 {entreprise.telephone && <Text style={s.coDetail}>{entreprise.telephone}</Text>}
                 {entreprise.adresse ? <Text style={s.coDetail}>{entreprise.adresse}</Text> : null}
@@ -244,6 +246,7 @@ export default function FacturePDF({
             <View style={s.col}>
               <Text style={s.colLbl}>DE</Text>
               <Text style={s.colName}>{entreprise.nom}</Text>
+              {entreprise.activite ? <Text style={s.colDetail}>{entreprise.activite}</Text> : null}
               {entreprise.adresse ? <Text style={s.colDetail}>{entreprise.adresse}</Text> : null}
               {entreprise.email ? <Text style={s.colDetail}>{entreprise.email}</Text> : null}
               {entreprise.telephone ? <Text style={s.colDetail}>{entreprise.telephone}</Text> : null}

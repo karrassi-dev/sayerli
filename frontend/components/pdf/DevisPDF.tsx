@@ -29,6 +29,7 @@ export interface DevisPDFProps {
   entreprise: {
     nom: string; email: string | null; telephone: string | null; adresse: string | null
     logoUrl: string | null; couleurPrimaire: string | null; ice: string | null; rc: string | null
+    activite?: string | null
   }
 }
 
@@ -242,6 +243,7 @@ export default function DevisPDF({
       {logoNode}
       <View>
         <Text style={s.coName}>{entreprise.nom}</Text>
+        {entreprise.activite && <Text style={s.coDetail}>{entreprise.activite}</Text>}
         {entreprise.adresse && <Text style={s.coDetail}>{entreprise.adresse}</Text>}
         {entreprise.email && <Text style={s.coDetail}>{entreprise.email}</Text>}
         {entreprise.telephone && <Text style={s.coDetail}>{entreprise.telephone}</Text>}
@@ -279,6 +281,7 @@ export default function DevisPDF({
         <View style={s.colFirst}>
           <Text style={s.colLbl}>ÉMETTEUR</Text>
           <Text style={s.colName}>{entreprise.nom}</Text>
+          {entreprise.activite && <Text style={s.colDetail}>{entreprise.activite}</Text>}
           {entreprise.adresse && <Text style={s.colDetail}>{entreprise.adresse}</Text>}
           {entreprise.email && <Text style={s.colDetail}>{entreprise.email}</Text>}
           {entreprise.telephone && <Text style={s.colDetail}>{entreprise.telephone}</Text>}

@@ -52,6 +52,7 @@ interface PublicFacture {
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
     templateDocument: string | null
     ice: string | null; rc: string | null; website: string | null
+    activite: string | null
     titulaireCompte: string | null; banque: string | null
     rib: string | null; iban: string | null; swift: string | null
   }
@@ -520,6 +521,7 @@ export default function PublicFacturePage() {
       couleurPrimaire: facture.entreprise.couleurPrimaire,
       ice: facture.entreprise.ice,
       rc: facture.entreprise.rc,
+      activite: facture.entreprise.activite,
       titulaireCompte: facture.entreprise.titulaireCompte,
       banque: facture.entreprise.banque,
       rib: facture.entreprise.rib,
@@ -627,6 +629,9 @@ export default function PublicFacturePage() {
               <p className={cn('text-[10px] font-bold tracking-[0.2em] mb-3', labelClass)}
                 style={labelColor ? { color: labelColor } : undefined}>ÉMETTEUR</p>
               <p className="text-sm font-semibold text-gray-900">{facture.entreprise.nom}</p>
+              {facture.entreprise.activite && (
+                <p className="text-xs text-gray-500 mt-0.5">{facture.entreprise.activite}</p>
+              )}
               {facture.entreprise.adresse && (
                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
                   <MapPin className="w-3 h-3 flex-shrink-0" />{facture.entreprise.adresse}
