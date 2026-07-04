@@ -196,7 +196,14 @@
     "termsPrivacyLink": "سياسة الخصوصية",
     "termsAndThe": " و",
     "termsRefundLink": "سياسة الاسترداد",
-    "termsBrand": "الخاصة بـ Sayerli."
+    "termsBrand": "الخاصة بـ Sayerli.",
+    "panelLine1": "أنت تشتغل…",
+    "panelLine2": "سايرلي يسيّر",
+    "panelLine3": "ليك الباقي.",
+    "panelSub": "منصة الإدارة للمستقلين، المقاولين وأصحاب المقاولات بالمغرب.",
+    "statUsers": "مستخدم",
+    "statInvoices": "فاتورة",
+    "statRevenue": "درهم"
   },
   "dashboard": {
     "welcome": "مرحباً",

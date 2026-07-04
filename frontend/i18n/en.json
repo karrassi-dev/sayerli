@@ -196,7 +196,14 @@
     "termsPrivacyLink": "Privacy Policy",
     "termsAndThe": " and the",
     "termsRefundLink": "Refund Policy",
-    "termsBrand": "of Sayerli."
+    "termsBrand": "of Sayerli.",
+    "panelLine1": "You work…",
+    "panelLine2": "Sayerli handles",
+    "panelLine3": "the rest.",
+    "panelSub": "The management solution for Moroccan freelancers, entrepreneurs & SMEs.",
+    "statUsers": "Users",
+    "statInvoices": "Invoices",
+    "statRevenue": "MAD"
   },
   "dashboard": {
     "welcome": "Hello",
