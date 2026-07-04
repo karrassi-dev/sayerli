@@ -27,10 +27,10 @@ export function Navbar() {
   }, [])
 
   const navLinks = [
-    { href: '#features', label: t('nav.features') },
-    { href: '#how-it-works', label: t('nav.howItWorks') },
-    { href: '#pricing', label: t('nav.pricing') },
-    { href: '#testimonials', label: t('nav.testimonials') },
+    { href: '/fonctionnalites', label: t('nav.features') },
+    { href: '/#pricing', label: t('nav.pricing') },
+    { href: '/faq', label: t('nav.faq') },
+    { href: '/blog', label: t('nav.blog') },
     { href: '/contact', label: t('nav.contact') },
   ]
 

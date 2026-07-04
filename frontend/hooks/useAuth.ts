@@ -18,6 +18,8 @@ interface Entreprise {
   email: string
   devise: string
   plan: string
+  typeCompte: string
+  activite: string | null
 }
 
 interface AuthState {

@@ -1,92 +1,74 @@
 'use client'
 
-import { Gift, MessageCircle, Sparkles, ArrowRight } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
+import { cn } from '@/lib/utils'
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+
+const QUOTE_KEYS = [
+  { key: 'q1', initial: 'Y', color: 'bg-primary-600' },
+  { key: 'q2', initial: 'S', color: 'bg-teal-600' },
+  { key: 'q3', initial: 'H', color: 'bg-purple-600' },
+] as const
 
 export function Testimonials() {
   const { t } = useTranslation()
-
-  const perks = [
-    {
-      icon: Gift,
-      iconBg: 'bg-primary-100 dark:bg-primary-950/60',
-      iconColor: 'text-primary-600 dark:text-primary-400',
-      title: t('earlyAccess.perk1Title'),
-      desc: t('earlyAccess.perk1Desc'),
-    },
-    {
-      icon: MessageCircle,
-      iconBg: 'bg-[#25D366]/10 dark:bg-[#25D366]/10',
-      iconColor: 'text-[#25D366]',
-      title: t('earlyAccess.perk2Title'),
-      desc: t('earlyAccess.perk2Desc'),
-    },
-    {
-      icon: Sparkles,
-      iconBg: 'bg-amber-100 dark:bg-amber-950/60',
-      iconColor: 'text-amber-600 dark:text-amber-400',
-      title: t('earlyAccess.perk3Title'),
-      desc: t('earlyAccess.perk3Desc'),
-    },
-  ]
+  const { ref, visible } = useScrollAnimation()
 
   return (
-    <section id="testimonials" className="py-24 relative overflow-hidden">
-      {/* Background */}
+    <section id="testimonials" ref={ref} className="py-16 sm:py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-primary-950/30" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(20,184,166,0.08),transparent_60%)]" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className={cn('text-center mb-10 sm:mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-950/60 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-sm font-semibold mb-6">
             <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-            {t('earlyAccess.badge')}
+            {t('testimonials.badge')}
           </span>
-          <h2 className="section-title mb-4">{t('earlyAccess.title')}</h2>
-          <p className="section-sub max-w-2xl mx-auto">{t('earlyAccess.sub')}</p>
+          <h2 className="section-title mb-4">{t('testimonials.title')}</h2>
+          <p className="section-sub max-w-2xl mx-auto">{t('testimonials.sub')}</p>
         </div>
 
-        {/* Perk cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-          {perks.map(({ icon: Icon, iconBg, iconColor, title, desc }) => (
+        {/* Cards */}
+        <div className={cn(
+          'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 transition-all duration-700 delay-100',
+          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        )}>
+          {QUOTE_KEYS.map(({ key, initial, color }) => (
             <div
-              key={title}
-              className="card p-7 rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 dark:border-slate-800 group"
+              key={key}
+              className="card p-5 sm:p-7 rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 dark:border-slate-800 flex flex-col gap-4"
             >
-              <div className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className={`w-6 h-6 ${iconColor}`} />
+              {/* Stars */}
+              <div className="flex gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                ))}
               </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">{title}</h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
+
+              {/* Quote */}
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed flex-1">
+                &ldquo;{t(`testimonials.${key}quote`)}&rdquo;
+              </p>
+
+              {/* Author */}
+              <div className="flex items-center gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <div className={`w-10 h-10 rounded-full ${color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+                  {initial}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{t(`testimonials.${key}name`)}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    {t(`testimonials.${key}role`)} · {t(`testimonials.${key}city`)}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-
-        {/* CTA block */}
-        <div className="text-center">
-          <div className="inline-flex flex-col sm:flex-row items-center gap-3 mb-4">
-            <a
-              href="https://wa.me/447476607473?text=Bonjour%2C%20je%20voudrais%20rejoindre%20l%27acc%C3%A8s%20fondateur%20de%20Sayerli"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-[#25D366] hover:bg-[#1ebe5d] transition-all shadow-lg shadow-[#25D366]/20 hover:shadow-[#25D366]/30 hover:-translate-y-0.5"
-            >
-              <MessageCircle className="w-4 h-4" />
-              {t('earlyAccess.ctaWhatsapp')}
-            </a>
-            <a
-              href="/register"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-950 border border-primary-200 dark:border-primary-800 transition-all hover:-translate-y-0.5"
-            >
-              {t('earlyAccess.ctaFree')}
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500">{t('earlyAccess.ctaSub')}</p>
-        </div>
-
       </div>
     </section>
   )

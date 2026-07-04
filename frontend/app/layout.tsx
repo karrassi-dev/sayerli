@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/components/providers/LanguageProvider'
 import { SITE_URL, SITE_NAME, ALL_KEYWORDS } from '@/lib/seo'
 import GoogleAnalytics from '@/components/seo/GoogleAnalytics'
 import MetaPixel from '@/components/seo/MetaPixel'
+import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <LanguageProvider>
             {children}
+            <FloatingWhatsApp />
           </LanguageProvider>
         </ThemeProvider>
       </body>

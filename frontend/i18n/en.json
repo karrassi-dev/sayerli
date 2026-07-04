@@ -7,7 +7,9 @@
     "login": "Login",
     "startFree": "Start Free",
     "contact": "Contact",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "faq": "FAQ",
+    "blog": "Blog"
   },
   "hero": {
     "badge": "🇲🇦 Built for Moroccan SMEs",
@@ -1249,5 +1251,27 @@
   "upgradeBanner": {
     "text": "✨ Want to upgrade or change your plan? Reach out on WhatsApp and we'll take care of everything for you",
     "cta": "Contact us"
+  },
+  "testimonials": {
+    "badge": "Trusted by entrepreneurs",
+    "title": "Moroccan entrepreneurs saving time every day",
+    "sub": "Join hundreds of freelancers, auto-entrepreneurs and SMEs managing their business with Sayerli.",
+    "q1name": "Youssef B.",
+    "q1role": "Freelance Web Developer",
+    "q1city": "Casablanca",
+    "q1quote": "Before Sayerli, I spent hours on Excel making quotes. Now I send them in 2 minutes and my clients receive something professional. The time saved is incredible.",
+    "q2name": "Salma A.",
+    "q2role": "Self-employed, HR Consulting",
+    "q2city": "Rabat",
+    "q2quote": "Sayerli lets me track my payments without stress. I know exactly who has paid and who still owes. It's simple, fast, and it really works.",
+    "q3name": "Hassan M.",
+    "q3role": "SME Manager, Import/Export",
+    "q3city": "Tangier",
+    "q3quote": "We manage a team of 5 with Sayerli. Invoices come out cleanly in MAD and we have the entire client history one click away. I recommend it to every Moroccan business owner."
+  },
+  "completeProfile": {
+    "title": "Complete your profile",
+    "desc": "Add your activity so it appears on your quotes and invoices.",
+    "cta": "Complete now"
   }
 }

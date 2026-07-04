@@ -7,7 +7,9 @@
     "login": "Connexion",
     "startFree": "Essai gratuit",
     "contact": "Contact",
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "faq": "FAQ",
+    "blog": "Blog"
   },
   "hero": {
     "badge": "🇲🇦 Fait pour les PME marocaines",
@@ -1250,5 +1252,27 @@
   "upgradeBanner": {
     "text": "✨ Vous souhaitez changer de plan ? Contactez-nous directement sur WhatsApp et nous nous occupons de tout pour vous",
     "cta": "Nous contacter"
+  },
+  "testimonials": {
+    "badge": "Ils nous font confiance",
+    "title": "Des entrepreneurs marocains qui gagnent du temps",
+    "sub": "Rejoignez des centaines de freelancers, auto-entrepreneurs et PME qui gèrent leur activité avec Sayerli.",
+    "q1name": "Youssef B.",
+    "q1role": "Freelance Développeur Web",
+    "q1city": "Casablanca",
+    "q1quote": "Avant Sayerli, je passais des heures sur Excel pour faire mes devis. Maintenant je les envoie en 2 minutes, et mes clients reçoivent quelque chose de professionnel. Le temps gagné est incroyable.",
+    "q2name": "Salma A.",
+    "q2role": "Auto-entrepreneuse, Conseil RH",
+    "q2city": "Rabat",
+    "q2quote": "Sayerli m'a permis de suivre mes paiements sans stress. Je sais exactement qui m'a payé et qui doit encore payer. C'est simple, rapide, et ça marche vraiment.",
+    "q3name": "Hassan M.",
+    "q3role": "Gérant PME, Import/Export",
+    "q3city": "Tanger",
+    "q3quote": "On gère une équipe de 5 personnes avec Sayerli. Les factures sortent proprement en MAD et on a tout l'historique client accessible d'un clic. Je le recommande à tous les patrons marocains."
+  },
+  "completeProfile": {
+    "title": "Complétez votre profil",
+    "desc": "Ajoutez votre activité pour qu'elle apparaisse sur vos devis et factures.",
+    "cta": "Compléter"
   }
 }

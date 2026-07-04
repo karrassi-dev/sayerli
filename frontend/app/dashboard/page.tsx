@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart } from 'lucide-react'
+import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -93,9 +93,16 @@ function CardHeader({ title, sub, badge }: {
 
 export default function DashboardPage() {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, entreprise } = useAuth()
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null)
   const [loading, setLoading] = useState(true)
+  const [bannerDismissed, setBannerDismissed] = useState(false)
+
+  const showProfileBanner =
+    !bannerDismissed &&
+    entreprise !== null &&
+    ['freelancer', 'auto-entrepreneur'].includes(entreprise.typeCompte ?? '') &&
+    !entreprise.activite
 
   const currentYear       = new Date().getFullYear()
   const currentMonthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
@@ -112,6 +119,34 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-5 pb-8">
+
+      {/* ── Profile completion banner ───────────────────────────────────────── */}
+      {showProfileBanner && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+          <div className="flex items-start sm:items-center gap-3 min-w-0">
+            <span className="text-lg flex-shrink-0 mt-0.5 sm:mt-0">✏️</span>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">{t('completeProfile.title')}</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">{t('completeProfile.desc')}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0 ps-7 sm:ps-0">
+            <Link
+              href="/dashboard/settings?tab=company"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white transition-colors"
+            >
+              {t('completeProfile.cta')}
+            </Link>
+            <button
+              onClick={() => setBannerDismissed(true)}
+              className="p-1 text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 transition-colors"
+              aria-label="Fermer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
