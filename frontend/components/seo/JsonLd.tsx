@@ -19,7 +19,7 @@ export function OrganizationJsonLd() {
       'https://twitter.com/sayerli_ma',
     ],
     description:
-      'Sayerli est un logiciel de gestion commerciale pour les PME marocaines. CRM, devis, facturation et suivi des paiements dans une seule plateforme.',
+      'Sayerli est un logiciel de gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. CRM, devis, facturation et suivi des paiements dans une seule plateforme.',
     foundingDate: '2026',
     address: {
       '@type': 'PostalAddress',
@@ -39,7 +39,7 @@ export function OrganizationJsonLd() {
     knowsAbout: [
       'Logiciel de facturation',
       'CRM Maroc',
-      'Gestion commerciale PME',
+      'Gestion commerciale Freelancers & PME',
       'Devis en ligne',
       'Factures en ligne',
     ],
@@ -62,7 +62,7 @@ export function SoftwareApplicationJsonLd() {
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      'Logiciel de gestion commerciale tout-en-un pour les PME marocaines. Créez des devis, générez des factures, gérez vos clients et suivez vos paiements.',
+      'Logiciel de gestion commerciale tout-en-un pour freelancers, auto-entrepreneurs et PME au Maroc. Créez des devis, générez des factures, gérez vos clients et suivez vos paiements.',
     applicationCategory: 'BusinessApplication',
     applicationSubCategory: [
       'CRM',
@@ -82,7 +82,7 @@ export function SoftwareApplicationJsonLd() {
         price: '0',
         priceCurrency: 'MAD',
         priceValidUntil: '2026-12-31',
-        description: 'Plan gratuit pour PME débutantes',
+        description: 'Plan gratuit pour freelancers et petites entreprises',
         url: `${SITE_URL}/register`,
       },
       {
@@ -91,7 +91,7 @@ export function SoftwareApplicationJsonLd() {
         price: '299',
         priceCurrency: 'MAD',
         priceValidUntil: '2026-12-31',
-        description: 'Plan Pro pour PME en croissance',
+        description: 'Plan Pro pour freelancers, auto-entrepreneurs et PME en croissance',
         url: `${SITE_URL}/register`,
       },
       {
@@ -205,7 +205,7 @@ export function WebSiteJsonLd() {
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      'Logiciel de gestion commerciale pour PME marocaines — CRM, Devis, Facturation, Paiements.',
+      'Logiciel de gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc — CRM, Devis, Facturation, Paiements.',
     inLanguage: ['fr', 'ar', 'en'],
     publisher: {
       '@type': 'Organization',

@@ -16,8 +16,12 @@ export const PRIMARY_KEYWORDS = [
   'facture en ligne maroc',
   'logiciel de gestion maroc',
   'logiciel pme maroc',
+  'logiciel freelance maroc',
+  'logiciel auto entrepreneur maroc',
   'logiciel entreprise maroc',
   'logiciel facturation pme maroc',
+  'facturation freelance maroc',
+  'devis freelance maroc',
 ]
 
 export const SECONDARY_KEYWORDS = [
@@ -27,6 +31,8 @@ export const SECONDARY_KEYWORDS = [
   'plateforme de gestion commerciale',
   'gestion clients et factures',
   'logiciel pour auto entrepreneur maroc',
+  'application freelance maroc',
+  'gestion auto entrepreneur maroc',
   'facturation pour agence',
   'gestion commerciale pour pme',
 ]
@@ -37,7 +43,9 @@ export const LONG_TAIL_KEYWORDS = [
   'logiciel crm pour petites entreprises maroc',
   'outil pour gérer clients et factures',
   'alternative excel gestion entreprise maroc',
+  'logiciel devis facture freelancer maroc',
   'logiciel devis facture pour pme marocaine',
+  'gestion commerciale simple pour freelancer maroc',
   'gestion commerciale simple pour entreprise marocaine',
 ]
 
@@ -52,7 +60,7 @@ export const OG_IMAGE = {
   url: `${SITE_URL}/og-image.jpg`,
   width: 1200,
   height: 630,
-  alt: 'Sayerli — CRM, Devis et Facturation pour PME au Maroc',
+  alt: 'Sayerli — Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc',
 }
 
 // ── Metadata builders ──────────────────────────────────────────────────────────

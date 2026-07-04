@@ -5,9 +5,9 @@ import { OrganizationJsonLd } from '@/components/seo/JsonLd'
 import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Blog Sayerli | Guides Facturation, CRM et Gestion PME Maroc',
+  title: 'Blog Sayerli | Guides Facturation, CRM et Gestion — Freelancers & PME Maroc',
   description:
-    'Guides et tutoriels sur la facturation, le CRM, les devis et la gestion commerciale pour les PME marocaines. Apprenez à optimiser votre gestion d\'entreprise au Maroc.',
+    'Guides et tutoriels sur la facturation, le CRM, les devis et la gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Apprenez à optimiser votre gestion d\'entreprise.',
   path: '/blog',
 })
 

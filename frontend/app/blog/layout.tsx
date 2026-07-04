@@ -10,9 +10,9 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Blog | Guides CRM, Facturation et Gestion PME au Maroc',
+  title: 'Blog | Guides Facturation, CRM et Gestion — Freelancers & PME Maroc',
   description:
-    'Guides pratiques sur la facturation, le CRM, les devis et la gestion commerciale pour les PME marocaines. Conseils, tutoriels et comparatifs logiciels.',
+    'Guides pratiques sur la facturation, le CRM, les devis et la gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Conseils, tutoriels et comparatifs logiciels.',
   path: '/blog',
   keywords: [
     'guide facturation maroc',

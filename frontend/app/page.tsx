@@ -15,9 +15,9 @@ import { Testimonials } from '@/components/landing/Testimonials'
 import { FinalCta } from '@/components/landing/FinalCta'
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Sayerli | CRM, Devis et Facturation pour PME au Maroc',
+  title: 'Sayerli | Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc',
   description:
-    'Sayerli est le logiciel de gestion commerciale pour PME marocaines. Créez des devis professionnels, générez des factures conformes, gérez vos clients et suivez vos paiements en MAD. Essai gratuit — sans carte bancaire.',
+    'Sayerli est le logiciel de gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Créez des devis professionnels, générez des factures en MAD, gérez vos clients et suivez vos paiements. Essai gratuit — sans carte bancaire.',
   path: '/',
 })
 

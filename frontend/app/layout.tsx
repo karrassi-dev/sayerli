@@ -10,11 +10,11 @@ import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} | CRM, Devis et Facturation pour PME au Maroc`,
+    default: `${SITE_NAME} | Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    'Sayerli aide les entreprises marocaines à gérer leurs clients, devis, factures et paiements dans une seule plateforme simple et moderne. Logiciel de gestion commerciale pour PME au Maroc.',
+    'Sayerli est le logiciel de gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Créez des devis professionnels, générez des factures en MAD, gérez vos clients et suivez vos paiements. Essai gratuit.',
   keywords: ALL_KEYWORDS.join(', '),
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
@@ -50,15 +50,15 @@ export const metadata: Metadata = {
     alternateLocale: ['ar_MA', 'en_MA'],
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | CRM, Devis et Facturation pour PME au Maroc`,
+    title: `${SITE_NAME} | Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc`,
     description:
-      'Logiciel de gestion commerciale pour PME marocaines. Créez des devis, générez des factures, gérez vos clients et suivez vos paiements en MAD.',
+      'Logiciel de gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Créez des devis, générez des factures en MAD, gérez vos clients et suivez vos paiements.',
     images: [
       {
         url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: 'Sayerli — Logiciel CRM, Devis et Facturation pour PME au Maroc',
+        alt: 'Sayerli — Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc',
         type: 'image/jpeg',
       },
     ],
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@sayerli_ma',
     creator: '@sayerli_ma',
-    title: `${SITE_NAME} | CRM, Devis et Facturation pour PME au Maroc`,
+    title: `${SITE_NAME} | Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc`,
     description:
-      'Logiciel de gestion commerciale pour PME marocaines. Devis, Factures, CRM et paiements — tout en un.',
+      'Logiciel de gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Devis, Factures, CRM et paiements — tout en un.',
     images: [`${SITE_URL}/og-image.jpg`],
   },
   alternates: {
