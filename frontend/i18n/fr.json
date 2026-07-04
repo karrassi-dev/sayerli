@@ -203,7 +203,10 @@
     "panelSub": "La solution de gestion pour freelancers, auto-entrepreneurs et PME marocaines.",
     "statUsers": "Utilisateurs",
     "statInvoices": "Factures",
-    "statRevenue": "MAD"
+    "statRevenue": "MAD",
+    "feat1": "2 min pour envoyer un devis",
+    "feat2": "Données 100% sécurisées",
+    "feat3": "Conçu pour le Maroc"
   },
   "dashboard": {
     "welcome": "Bonjour",

@@ -203,7 +203,10 @@
     "panelSub": "The management solution for Moroccan freelancers, entrepreneurs & SMEs.",
     "statUsers": "Users",
     "statInvoices": "Invoices",
-    "statRevenue": "MAD"
+    "statRevenue": "MAD",
+    "feat1": "2 min to send a quote",
+    "feat2": "100% secure data",
+    "feat3": "Built for Morocco"
   },
   "dashboard": {
     "welcome": "Hello",
