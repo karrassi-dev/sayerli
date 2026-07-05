@@ -190,7 +190,7 @@ export default function DashboardPage() {
               )
             })}
           </div>
-          <Link href="/dashboard/devis/new" className="btn-primary text-sm hidden sm:flex">
+          <Link href="/dashboard/devis?action=create" className="btn-primary text-sm hidden sm:flex">
             <Plus className="w-4 h-4" />
             {t('dashboard.newQuote')}
           </Link>
