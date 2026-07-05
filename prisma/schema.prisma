@@ -96,17 +96,18 @@ model PreferencesNotification {
 }
 
 model Client {
-  id            String     @id @default(uuid())
+  id            String      @id @default(uuid())
   entrepriseId  String
   nom           String
   email         String?
   telephone     String?
   nomEntreprise String?
   notes         String?
-  actif         Boolean    @default(true)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  entreprise    Entreprise @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  actif         Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  typeClient    TypeClient  @default(PARTICULIER)
+  entreprise    Entreprise  @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
   devis         Devis[]
   factures      Facture[]
 
@@ -329,6 +330,12 @@ enum StatutDeclaration {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum TypeClient {
+  PARTICULIER
+  ENTREPRISE
+  FREELANCE
 }
 
 model ContactSubmission {

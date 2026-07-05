@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { Users, UserPlus, Eye, Pencil, Trash2, Phone, Mail, Building2, TrendingUp, AlertCircle } from 'lucide-react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
+import { Users, UserPlus, Eye, Pencil, Trash2, Phone, Mail, Building2, TrendingUp, AlertCircle, User, Briefcase } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
 import { StatusBadge } from '@/components/dashboard/ui/StatusBadge'
@@ -18,6 +18,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { clientsApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
+type TypeClient = 'PARTICULIER' | 'ENTREPRISE' | 'FREELANCE'
+
 interface ApiClient {
   id: string
   nom: string
@@ -26,6 +28,7 @@ interface ApiClient {
   nomEntreprise: string | null
   notes: string | null
   actif: boolean
+  typeClient: TypeClient
   createdAt: string
   updatedAt: string
   _count?: { devis: number; factures: number }
@@ -37,9 +40,10 @@ interface ClientForm {
   telephone: string
   nomEntreprise: string
   notes: string
+  typeClient: TypeClient
 }
 
-const EMPTY_FORM: ClientForm = { nom: '', email: '', telephone: '', nomEntreprise: '', notes: '' }
+const EMPTY_FORM: ClientForm = { nom: '', email: '', telephone: '', nomEntreprise: '', notes: '', typeClient: 'PARTICULIER' }
 const PER_PAGE = 6
 
 function formatDate(d: string) {
@@ -49,6 +53,12 @@ function formatDate(d: string) {
 function initials(nom: string) {
   return nom.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
 }
+
+const TYPE_OPTIONS: { value: TypeClient; icon: React.ElementType; labelKey: string }[] = [
+  { value: 'PARTICULIER', icon: User,      labelKey: 'pages.clients.form.typeParticulier' },
+  { value: 'ENTREPRISE',  icon: Building2, labelKey: 'pages.clients.form.typeEntreprise'  },
+  { value: 'FREELANCE',   icon: Briefcase, labelKey: 'pages.clients.form.typeFreelance'   },
+]
 
 function ClientFormFields({
   form, formErrors, onChange,
@@ -63,6 +73,33 @@ function ClientFormFields({
 
   return (
     <div className="space-y-4">
+      {/* Type selector */}
+      <div>
+        <label className={labelClass}>{t('pages.clients.form.typeClient')}</label>
+        <div className="grid grid-cols-3 gap-2">
+          {TYPE_OPTIONS.map(({ value, icon: Icon, labelKey }) => {
+            const active = form.typeClient === value
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => { onChange('typeClient', value); onChange('nomEntreprise', '') }}
+                className={cn(
+                  'flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl border text-xs font-semibold transition-all',
+                  active
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-300'
+                    : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                )}
+              >
+                <Icon className={cn('w-4 h-4 flex-shrink-0', active ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400')} />
+                <span className="text-center leading-tight">{t(labelKey)}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Full name */}
       <div>
         <label className={labelClass}>
           {t('pages.clients.form.nom')} <span className="text-red-500">*</span>
@@ -81,7 +118,8 @@ function ClientFormFields({
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Email + Phone */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className={labelClass}>{t('pages.clients.form.email')}</label>
           <input
@@ -108,16 +146,32 @@ function ClientFormFields({
         </div>
       </div>
 
-      <div>
-        <label className={labelClass}>{t('pages.clients.form.company')}</label>
-        <input
-          type="text"
-          value={form.nomEntreprise}
-          onChange={e => onChange('nomEntreprise', e.target.value)}
-          className={inputClass}
-        />
-      </div>
+      {/* Conditional company / commercial name field */}
+      {form.typeClient === 'ENTREPRISE' && (
+        <div>
+          <label className={labelClass}>{t('pages.clients.form.company')}</label>
+          <input
+            type="text"
+            value={form.nomEntreprise}
+            onChange={e => onChange('nomEntreprise', e.target.value)}
+            className={inputClass}
+          />
+        </div>
+      )}
+      {form.typeClient === 'FREELANCE' && (
+        <div>
+          <label className={labelClass}>{t('pages.clients.form.nomCommercial')}</label>
+          <input
+            type="text"
+            value={form.nomEntreprise}
+            onChange={e => onChange('nomEntreprise', e.target.value)}
+            placeholder={t('pages.clients.form.nomCommercialPlaceholder')}
+            className={inputClass}
+          />
+        </div>
+      )}
 
+      {/* Notes */}
       <div>
         <label className={labelClass}>{t('pages.clients.form.notes')}</label>
         <textarea
@@ -248,10 +302,10 @@ export default function ClientsPage() {
     if (!validateForm()) return
     setSaving(true)
     try {
-      const payload: Record<string, string> = { nom: form.nom.trim() }
+      const payload: Record<string, string> = { nom: form.nom.trim(), typeClient: form.typeClient }
       if (form.email.trim()) payload.email = form.email.trim()
       if (form.telephone.trim()) payload.telephone = form.telephone.trim()
-      if (form.nomEntreprise.trim()) payload.nomEntreprise = form.nomEntreprise.trim()
+      if (form.nomEntreprise.trim() && form.typeClient !== 'PARTICULIER') payload.nomEntreprise = form.nomEntreprise.trim()
       if (form.notes.trim()) payload.notes = form.notes.trim()
       await clientsApi.create(payload)
       setCreateOpen(false)
@@ -279,6 +333,7 @@ export default function ClientsPage() {
       telephone: c.telephone ?? '',
       nomEntreprise: c.nomEntreprise ?? '',
       notes: c.notes ?? '',
+      typeClient: c.typeClient ?? 'PARTICULIER',
     })
     setFormErrors({})
     setSelectedClient(null)
@@ -291,9 +346,10 @@ export default function ClientsPage() {
     try {
       const payload: Record<string, string | undefined> = {
         nom: form.nom.trim(),
+        typeClient: form.typeClient,
         email: form.email.trim() || undefined,
         telephone: form.telephone.trim() || undefined,
-        nomEntreprise: form.nomEntreprise.trim() || undefined,
+        nomEntreprise: (form.typeClient !== 'PARTICULIER' && form.nomEntreprise.trim()) ? form.nomEntreprise.trim() : undefined,
         notes: form.notes.trim() || undefined,
       }
       await clientsApi.update(editTarget.id, payload)
@@ -455,10 +511,22 @@ export default function ClientsPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3.5">
-                        <span className="text-sm text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
-                          <Building2 className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                          {client.nomEntreprise || '—'}
-                        </span>
+                        <div className="flex flex-col gap-1">
+                          <span className={cn(
+                            'inline-flex items-center gap-1 self-start px-2 py-0.5 rounded-full text-xs font-semibold',
+                            client.typeClient === 'ENTREPRISE'  ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300' :
+                            client.typeClient === 'FREELANCE'   ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300' :
+                                                                   'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                          )}>
+                            {client.typeClient === 'ENTREPRISE' ? <Building2 className="w-3 h-3" /> :
+                             client.typeClient === 'FREELANCE'  ? <Briefcase className="w-3 h-3" /> :
+                                                                  <User className="w-3 h-3" />}
+                            {t(`pages.clients.types.${client.typeClient}`)}
+                          </span>
+                          {client.nomEntreprise && (
+                            <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[140px]">{client.nomEntreprise}</span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3.5">
                         <div className="space-y-0.5">
@@ -507,7 +575,20 @@ export default function ClientsPage() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-900 dark:text-white">{client.nom}</p>
-                        <p className="text-xs text-slate-500">{client.nomEntreprise || '—'}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                          <span className={cn(
+                            'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-semibold',
+                            client.typeClient === 'ENTREPRISE'  ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300' :
+                            client.typeClient === 'FREELANCE'   ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300' :
+                                                                   'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                          )}>
+                            {client.typeClient === 'ENTREPRISE' ? <Building2 className="w-2.5 h-2.5" /> :
+                             client.typeClient === 'FREELANCE'  ? <Briefcase className="w-2.5 h-2.5" /> :
+                                                                  <User className="w-2.5 h-2.5" />}
+                            {t(`pages.clients.types.${client.typeClient}`)}
+                          </span>
+                          {client.nomEntreprise && <span className="text-xs text-slate-500 truncate">{client.nomEntreprise}</span>}
+                        </div>
                       </div>
                     </div>
                     <StatusBadge variant={client.actif ? 'actif' : 'inactif'} dot size="sm" />
@@ -542,8 +623,21 @@ export default function ClientsPage() {
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white">{selectedClient.nom}</h3>
-                <p className="text-sm text-slate-500">{selectedClient.nomEntreprise || '—'}</p>
-                <StatusBadge variant={selectedClient.actif ? 'actif' : 'inactif'} dot size="sm" />
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <span className={cn(
+                    'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold',
+                    selectedClient.typeClient === 'ENTREPRISE'  ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300' :
+                    selectedClient.typeClient === 'FREELANCE'   ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300' :
+                                                                   'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                  )}>
+                    {selectedClient.typeClient === 'ENTREPRISE' ? <Building2 className="w-3 h-3" /> :
+                     selectedClient.typeClient === 'FREELANCE'  ? <Briefcase className="w-3 h-3" /> :
+                                                                  <User className="w-3 h-3" />}
+                    {t(`pages.clients.types.${selectedClient.typeClient ?? 'PARTICULIER'}`)}
+                  </span>
+                  {selectedClient.nomEntreprise && <span className="text-sm text-slate-500">{selectedClient.nomEntreprise}</span>}
+                  <StatusBadge variant={selectedClient.actif ? 'actif' : 'inactif'} dot size="sm" />
+                </div>
               </div>
             </div>
 

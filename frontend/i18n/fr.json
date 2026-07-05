@@ -713,10 +713,21 @@
         "email": "Adresse email",
         "phone": "Téléphone",
         "company": "Nom de l'entreprise",
+        "nomCommercial": "Nom commercial",
+        "nomCommercialPlaceholder": "Votre nom de marque ou enseigne...",
         "notes": "Notes",
         "notesPlaceholder": "Informations utiles sur ce client...",
         "nomRequired": "Le nom est requis.",
-        "emailInvalid": "Adresse email invalide."
+        "emailInvalid": "Adresse email invalide.",
+        "typeClient": "Type de client",
+        "typeParticulier": "Particulier",
+        "typeEntreprise": "Entreprise / PME",
+        "typeFreelance": "Freelancer / Auto-entrepreneur"
+      },
+      "types": {
+        "PARTICULIER": "Particulier",
+        "ENTREPRISE": "Entreprise",
+        "FREELANCE": "Freelance"
       }
     },
     "devis": {

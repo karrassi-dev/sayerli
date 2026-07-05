@@ -712,10 +712,21 @@
         "email": "البريد الإلكتروني",
         "phone": "الهاتف",
         "company": "اسم الشركة",
+        "nomCommercial": "الاسم التجاري",
+        "nomCommercialPlaceholder": "اسم العلامة التجارية أو المحل...",
         "notes": "ملاحظات",
         "notesPlaceholder": "معلومات مفيدة عن هذا العميل...",
         "nomRequired": "الاسم مطلوب.",
-        "emailInvalid": "عنوان البريد الإلكتروني غير صالح."
+        "emailInvalid": "عنوان البريد الإلكتروني غير صالح.",
+        "typeClient": "نوع العميل",
+        "typeParticulier": "فرد",
+        "typeEntreprise": "شركة / مقاولة",
+        "typeFreelance": "مستقل / مقاول ذاتي"
+      },
+      "types": {
+        "PARTICULIER": "فرد",
+        "ENTREPRISE": "شركة",
+        "FREELANCE": "مستقل"
       }
     },
     "devis": {

@@ -712,10 +712,21 @@
         "email": "Email Address",
         "phone": "Phone",
         "company": "Company Name",
+        "nomCommercial": "Business Name",
+        "nomCommercialPlaceholder": "Your brand or trade name...",
         "notes": "Notes",
         "notesPlaceholder": "Useful information about this client...",
         "nomRequired": "Name is required.",
-        "emailInvalid": "Invalid email address."
+        "emailInvalid": "Invalid email address.",
+        "typeClient": "Client Type",
+        "typeParticulier": "Individual",
+        "typeEntreprise": "Company / SME",
+        "typeFreelance": "Freelancer / Self-employed"
+      },
+      "types": {
+        "PARTICULIER": "Individual",
+        "ENTREPRISE": "Company",
+        "FREELANCE": "Freelance"
       }
     },
     "devis": {

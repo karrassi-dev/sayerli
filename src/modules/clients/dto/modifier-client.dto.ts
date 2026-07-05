@@ -1,4 +1,5 @@
-import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { TypeClient } from './creer-client.dto';
 
 export class ModifierClientDto {
   @IsOptional()
@@ -24,4 +25,8 @@ export class ModifierClientDto {
   @IsOptional()
   @IsBoolean()
   actif?: boolean;
+
+  @IsOptional()
+  @IsEnum(TypeClient)
+  typeClient?: TypeClient;
 }

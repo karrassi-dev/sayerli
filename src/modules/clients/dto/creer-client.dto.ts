@@ -1,4 +1,10 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+
+export enum TypeClient {
+  PARTICULIER = 'PARTICULIER',
+  ENTREPRISE = 'ENTREPRISE',
+  FREELANCE = 'FREELANCE',
+}
 
 export class CreerClientDto {
   @IsString({ message: 'Le nom du client est requis.' })
@@ -19,4 +25,8 @@ export class CreerClientDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @IsOptional()
+  @IsEnum(TypeClient)
+  typeClient?: TypeClient;
 }

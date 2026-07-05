@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "TypeClient" AS ENUM ('PARTICULIER', 'ENTREPRISE', 'FREELANCE');
+
+-- AlterTable
+ALTER TABLE "clients" ADD COLUMN "typeClient" "TypeClient" NOT NULL DEFAULT 'PARTICULIER';
