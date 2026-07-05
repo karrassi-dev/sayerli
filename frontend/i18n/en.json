@@ -235,7 +235,8 @@
       "notifications": "Notifications",
       "export": "Export",
       "settings": "Settings",
-      "logout": "Logout"
+      "logout": "Logout",
+      "catalogue": "Catalog"
     },
     "payments": "Payments",
     "thisMonth": "this month",
@@ -681,6 +682,68 @@
     "showingResults": "Showing {start} to {end} of {total}"
   },
   "pages": {
+    "catalogue": {
+      "title": "Catalog",
+      "sub": "Manage your products and services to use them in your quotes.",
+      "add": "New product/service",
+      "searchPlaceholder": "Search a product or service...",
+      "empty": {
+        "title": "Empty catalog",
+        "desc": "Add your products and services to insert them quickly into your quotes."
+      },
+      "stats": {
+        "total": "Total items",
+        "produits": "Products",
+        "services": "Services"
+      },
+      "col": {
+        "name": "Name",
+        "type": "Type",
+        "price": "Unit price",
+        "unit": "Unit",
+        "desc": "Description"
+      },
+      "filter": {
+        "all": "All",
+        "produit": "Products",
+        "service": "Services"
+      },
+      "types": {
+        "PRODUIT": "Product",
+        "SERVICE": "Service"
+      },
+      "form": {
+        "nom": "Name",
+        "nomPlaceholder": "E.g. Website development",
+        "nomRequired": "Name is required.",
+        "type": "Type",
+        "typeProduit": "Product",
+        "typeService": "Service",
+        "description": "Description",
+        "descPlaceholder": "Briefly describe this product or service...",
+        "prix": "Unit price (MAD)",
+        "unite": "Unit",
+        "unites": {
+          "heure": "Hour",
+          "jour": "Day",
+          "forfait": "Package",
+          "piece": "Unit",
+          "mois": "Month",
+          "annee": "Year",
+          "page": "Page",
+          "mot": "Word",
+          "m2": "m²",
+          "kg": "Kg"
+        }
+      },
+      "create": "Add to catalog",
+      "edit": "Edit item",
+      "createSuccess": "Item added to catalog.",
+      "editSuccess": "Item updated.",
+      "deleteSuccess": "Item deleted.",
+      "deleteTitle": "Delete item",
+      "deleteMessage": "Are you sure you want to delete \"{nom}\" from the catalog?"
+    },
     "clients": {
       "title": "Clients",
       "sub": "Manage your client base and track their activities.",
@@ -787,6 +850,9 @@
         "notes": "Notes",
         "notesPlaceholder": "Terms, remarks...",
         "addLine": "Add Line",
+        "fromCatalogue": "From Catalog",
+        "cataloguePickerTitle": "Pick from catalog",
+        "cataloguePickerEmpty": "No items found.",
         "removeLine": "Remove",
         "designation": "Designation",
         "description": "Description",

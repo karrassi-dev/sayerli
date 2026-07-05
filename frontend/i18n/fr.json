@@ -235,7 +235,8 @@
       "notifications": "Notifications",
       "export": "Exporter",
       "settings": "Paramètres",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "catalogue": "Catalogue"
     },
     "payments": "Paiements",
     "thisMonth": "ce mois",
@@ -682,6 +683,68 @@
     "showingResults": "Affichage de {start} à {end} sur {total}"
   },
   "pages": {
+    "catalogue": {
+      "title": "Catalogue",
+      "sub": "Gérez vos produits et services pour les utiliser dans vos devis.",
+      "add": "Nouveau produit/service",
+      "searchPlaceholder": "Rechercher un produit ou service...",
+      "empty": {
+        "title": "Catalogue vide",
+        "desc": "Ajoutez vos produits et services pour les insérer rapidement dans vos devis."
+      },
+      "stats": {
+        "total": "Total articles",
+        "produits": "Produits",
+        "services": "Services"
+      },
+      "col": {
+        "name": "Nom",
+        "type": "Type",
+        "price": "Prix unitaire",
+        "unit": "Unité",
+        "desc": "Description"
+      },
+      "filter": {
+        "all": "Tous",
+        "produit": "Produits",
+        "service": "Services"
+      },
+      "types": {
+        "PRODUIT": "Produit",
+        "SERVICE": "Service"
+      },
+      "form": {
+        "nom": "Nom",
+        "nomPlaceholder": "Ex: Développement page web",
+        "nomRequired": "Le nom est requis.",
+        "type": "Type",
+        "typeProduit": "Produit",
+        "typeService": "Service",
+        "description": "Description",
+        "descPlaceholder": "Décrivez brièvement ce produit ou service...",
+        "prix": "Prix unitaire (MAD)",
+        "unite": "Unité",
+        "unites": {
+          "heure": "Heure",
+          "jour": "Jour",
+          "forfait": "Forfait",
+          "piece": "Pièce",
+          "mois": "Mois",
+          "annee": "Année",
+          "page": "Page",
+          "mot": "Mot",
+          "m2": "m²",
+          "kg": "Kg"
+        }
+      },
+      "create": "Ajouter au catalogue",
+      "edit": "Modifier l'article",
+      "createSuccess": "Article ajouté au catalogue.",
+      "editSuccess": "Article mis à jour.",
+      "deleteSuccess": "Article supprimé.",
+      "deleteTitle": "Supprimer l'article",
+      "deleteMessage": "Êtes-vous sûr de vouloir supprimer \"{nom}\" du catalogue ?"
+    },
     "clients": {
       "title": "Clients",
       "sub": "Gérez votre base clients et suivez leurs activités.",
@@ -788,6 +851,9 @@
         "notes": "Notes",
         "notesPlaceholder": "Conditions, remarques...",
         "addLine": "Ajouter une ligne",
+        "fromCatalogue": "Depuis le catalogue",
+        "cataloguePickerTitle": "Choisir depuis le catalogue",
+        "cataloguePickerEmpty": "Aucun article trouvé.",
         "removeLine": "Supprimer",
         "designation": "Désignation",
         "description": "Description",

@@ -156,6 +156,14 @@ export const entrepriseApi = {
   update: (data: unknown) => api.patch('/entreprise', data),
 }
 
+// Catalogue produits & services
+export const catalogueApi = {
+  list:   (recherche?: string, type?: string) => api.get('/catalogue', { params: { ...(recherche ? { recherche } : {}), ...(type ? { type } : {}) } }),
+  create: (data: unknown) => api.post('/catalogue', data),
+  update: (id: string, data: unknown) => api.patch(`/catalogue/${id}`, data),
+  delete: (id: string) => api.delete(`/catalogue/${id}`),
+}
+
 // Dashboard Analytics
 export const dashboardApi = {
   analytics: (typeClient?: string) => api.get('/dashboard/analytics', { params: typeClient ? { typeClient } : undefined }),

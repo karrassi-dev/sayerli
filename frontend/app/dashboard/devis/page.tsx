@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   FileText, Plus, Eye, Pencil, Trash2, Copy, Send, CheckCircle,
-  Link, AlertCircle, X, MessageCircle, ChevronRight, Mail,
+  Link, AlertCircle, X, MessageCircle, ChevronRight, Mail, BookOpen,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -19,6 +19,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { devisApi, clientsApi } from '@/lib/api'
+import { CataloguePicker } from '@/components/dashboard/ui/CataloguePicker'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -132,6 +133,7 @@ function DevisFormFields({
   removeLigne: (i: number) => void
 }) {
   const { t } = useTranslation()
+  const [pickerOpen, setPickerOpen] = useState(false)
   const inputClass = 'w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
   const labelClass = 'text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block'
 
@@ -229,14 +231,37 @@ function DevisFormFields({
           ))}
         </div>
 
-        <button
-          onClick={addLigne}
-          className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          {t('pages.devis.form.addLine')}
-        </button>
+        <div className="mt-2 flex items-center gap-3">
+          <button
+            onClick={addLigne}
+            className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            {t('pages.devis.form.addLine')}
+          </button>
+          <button
+            onClick={() => setPickerOpen(true)}
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-lg hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/30"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            {t('pages.devis.form.fromCatalogue')}
+          </button>
+        </div>
       </div>
+
+      {pickerOpen && (
+        <CataloguePicker
+          onClose={() => setPickerOpen(false)}
+          onSelect={item => {
+            addLigne()
+            setTimeout(() => {
+              const idx = form.lignes.length
+              onLigneChange(idx, 'description', item.description)
+              onLigneChange(idx, 'prixUnitaire', item.prixUnitaire)
+            }, 0)
+          }}
+        />
+      )}
 
       {/* Notes */}
       <div>

@@ -235,7 +235,8 @@
       "notifications": "الإشعارات",
       "export": "تصدير",
       "settings": "الإعدادات",
-      "logout": "تسجيل الخروج"
+      "logout": "تسجيل الخروج",
+      "catalogue": "الكتالوج"
     },
     "payments": "المدفوعات",
     "thisMonth": "هذا الشهر",
@@ -681,6 +682,68 @@
     "showingResults": "عرض {start} إلى {end} من {total}"
   },
   "pages": {
+    "catalogue": {
+      "title": "الكتالوج",
+      "sub": "إدارة منتجاتك وخدماتك لاستخدامها في عروضك.",
+      "add": "منتج/خدمة جديدة",
+      "searchPlaceholder": "البحث عن منتج أو خدمة...",
+      "empty": {
+        "title": "الكتالوج فارغ",
+        "desc": "أضف منتجاتك وخدماتك لإدراجها بسرعة في عروضك."
+      },
+      "stats": {
+        "total": "إجمالي العناصر",
+        "produits": "المنتجات",
+        "services": "الخدمات"
+      },
+      "col": {
+        "name": "الاسم",
+        "type": "النوع",
+        "price": "سعر الوحدة",
+        "unit": "الوحدة",
+        "desc": "الوصف"
+      },
+      "filter": {
+        "all": "الكل",
+        "produit": "المنتجات",
+        "service": "الخدمات"
+      },
+      "types": {
+        "PRODUIT": "منتج",
+        "SERVICE": "خدمة"
+      },
+      "form": {
+        "nom": "الاسم",
+        "nomPlaceholder": "مثال: تطوير صفحة ويب",
+        "nomRequired": "الاسم مطلوب.",
+        "type": "النوع",
+        "typeProduit": "منتج",
+        "typeService": "خدمة",
+        "description": "الوصف",
+        "descPlaceholder": "وصف مختصر لهذا المنتج أو الخدمة...",
+        "prix": "سعر الوحدة (MAD)",
+        "unite": "الوحدة",
+        "unites": {
+          "heure": "ساعة",
+          "jour": "يوم",
+          "forfait": "مقطوعة",
+          "piece": "قطعة",
+          "mois": "شهر",
+          "annee": "سنة",
+          "page": "صفحة",
+          "mot": "كلمة",
+          "m2": "م²",
+          "kg": "كغ"
+        }
+      },
+      "create": "إضافة إلى الكتالوج",
+      "edit": "تعديل العنصر",
+      "createSuccess": "تمت إضافة العنصر إلى الكتالوج.",
+      "editSuccess": "تم تحديث العنصر.",
+      "deleteSuccess": "تم حذف العنصر.",
+      "deleteTitle": "حذف العنصر",
+      "deleteMessage": "هل أنت متأكد من حذف \"{nom}\" من الكتالوج؟"
+    },
     "clients": {
       "title": "العملاء",
       "sub": "إدارة قاعدة عملائك وتتبع أنشطتهم.",
@@ -787,6 +850,9 @@
         "notes": "ملاحظات",
         "notesPlaceholder": "شروط، ملاحظات...",
         "addLine": "إضافة سطر",
+        "fromCatalogue": "من الكتالوج",
+        "cataloguePickerTitle": "اختر من الكتالوج",
+        "cataloguePickerEmpty": "لا توجد عناصر.",
         "removeLine": "حذف",
         "designation": "التسمية",
         "description": "الوصف",

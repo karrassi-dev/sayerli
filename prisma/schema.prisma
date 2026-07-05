@@ -36,6 +36,7 @@ model Entreprise {
   typeCompte           String?               @default("pme")
   activite             String?
   clients              Client[]
+  produitsServices     ProduitService[]
   declarationsPaiement DeclarationPaiement[]
   devis                Devis[]
   factures             Facture[]
@@ -336,6 +337,28 @@ enum TypeClient {
   PARTICULIER
   ENTREPRISE
   FREELANCE
+}
+
+enum TypeItem {
+  PRODUIT
+  SERVICE
+}
+
+model ProduitService {
+  id           String     @id @default(uuid())
+  entrepriseId String
+  nom          String
+  description  String?
+  type         TypeItem   @default(SERVICE)
+  prixUnitaire Decimal    @default(0) @db.Decimal(12, 2)
+  unite        String?    @default("forfait")
+  actif        Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  entreprise   Entreprise @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+
+  @@index([entrepriseId])
+  @@map("produits_services")
 }
 
 model ContactSubmission {
