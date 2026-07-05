@@ -915,8 +915,11 @@
         "copyLink": "نسخ رابط العميل",
         "download": "تحميل PDF",
         "cancel": "إلغاء الفاتورة",
-        "whatsapp": "واتساب"
+        "whatsapp": "واتساب",
+        "relancer": "تذكير",
+        "relancerWhatsApp": "تذكير عبر واتساب"
       },
+      "lastReminderSent": "آخر تذكير أُرسل",
       "empty": {
         "title": "لا توجد فواتير بعد",
         "desc": "أنشئ أول فاتورة أو حوّل عرضاً مقبولاً."

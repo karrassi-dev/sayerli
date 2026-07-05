@@ -914,8 +914,11 @@
         "copyLink": "Copier le lien client",
         "download": "Télécharger PDF",
         "cancel": "Annuler la facture",
-        "whatsapp": "WhatsApp"
+        "whatsapp": "WhatsApp",
+        "relancer": "Relancer",
+        "relancerWhatsApp": "Relancer par WhatsApp"
       },
+      "lastReminderSent": "Dernier rappel envoyé",
       "linkCopied": "Lien copié dans le presse-papier.",
       "linkError": "Impossible de générer le lien.",
       "cancelSuccess": "Facture annulée.",

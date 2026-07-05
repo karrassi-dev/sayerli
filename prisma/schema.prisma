@@ -192,6 +192,7 @@ model Facture {
   dateConsultation         DateTime?
   dateDerniereConsultation DateTime?
   nombreConsultations      Int                   @default(0)
+  lastReminderSentAt       DateTime?
   declarationsPaiement     DeclarationPaiement[]
   lignes                   FactureLigne[]
   client                   Client                @relation(fields: [clientId], references: [id])

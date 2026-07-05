@@ -915,8 +915,11 @@
         "copyLink": "Copy Client Link",
         "download": "Download PDF",
         "cancel": "Cancel Invoice",
-        "whatsapp": "WhatsApp"
+        "whatsapp": "WhatsApp",
+        "relancer": "Remind",
+        "relancerWhatsApp": "Remind via WhatsApp"
       },
+      "lastReminderSent": "Last reminder sent",
       "empty": {
         "title": "No invoices yet",
         "desc": "Create your first invoice or convert an accepted quote."

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Receipt, Plus, Eye, Pencil, Trash2, Send, CreditCard,
-  TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle, ChevronRight, Mail,
+  TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle, ChevronRight, Mail, Bell,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -50,6 +50,7 @@ interface ApiFacture {
   devisId: string | null
   publicToken: string
   createdAt: string
+  lastReminderSentAt?: string | null
   client: { id: string; nom: string; email: string | null; nomEntreprise: string | null; telephone: string | null }
   lignes?: FactureLigne[]
   devis?: { id: string; reference: string } | null
@@ -537,6 +538,28 @@ export default function FacturesPage() {
     finally { setActionLoading(null) }
   }
 
+  const handleRelanceWhatsApp = (f: ApiFacture) => {
+    const phone = toWhatsAppNumber(f.client.telephone)
+    if (!phone) {
+      toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
+      return
+    }
+    const url = `${window.location.origin}/public/factures/${f.publicToken}`
+    const montant = n(f.totalTTC).toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
+    const lines = [
+      `Bonjour ${f.client.nom},`,
+      '',
+      `Nous vous contactons au sujet de votre facture *${f.numeroFacture}* d'un montant de *${montant}*${f.dateEcheance ? `, dont l'échéance était le *${formatDate(f.dateEcheance)}*` : ''}.`,
+      '',
+      `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
+      '',
+      `Consultez votre facture ici : ${url}`,
+      '',
+      'Merci pour votre confiance.',
+    ]
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank')
+  }
+
   const handleOpenDetail = async (f: ApiFacture) => {
     if (f.lignes) { setSelected(f); return }
     try {
@@ -788,6 +811,7 @@ export default function FacturesPage() {
                             ...(facture.statut !== 'BROUILLON' ? [{ label: t('pages.factures.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(facture) }] : []),
                             { label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(facture) },
                             { label: 'Email', icon: Mail, onClick: () => handleEmail(facture) },
+                            ...(facture.statut === 'EN_RETARD' ? [{ label: t('pages.factures.actions.relancerWhatsApp'), icon: Bell, onClick: () => handleRelanceWhatsApp(facture) }] : []),
                             ...(facture.statut === 'BROUILLON' || facture.statut === 'ENVOYEE' ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(facture) }] : []),
                             ...(facture.statut !== 'PAYEE' && facture.statut !== 'BROUILLON' ? [{ label: t('pages.factures.actions.recordPayment'), icon: CreditCard, onClick: () => openPaiement(facture) }] : []),
                             ...(facture.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(facture), variant: 'danger' as const, separator: true }] : []),
@@ -840,6 +864,15 @@ export default function FacturesPage() {
                           : <Mail className="w-3 h-3" />}
                         Email
                       </button>
+                      {facture.statut === 'EN_RETARD' && (
+                        <button
+                          onClick={e => { e.stopPropagation(); handleRelanceWhatsApp(facture) }}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-all"
+                        >
+                          <Bell className="w-3 h-3" />
+                          {t('pages.factures.actions.relancer')}
+                        </button>
+                      )}
                       <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
                     </div>
                   </div>
@@ -941,6 +974,11 @@ export default function FacturesPage() {
                 {selected.dateEcheance && (
                   <div><span className="font-medium">Échéance :</span> {formatDate(selected.dateEcheance)}</div>
                 )}
+                {selected.lastReminderSentAt && (
+                  <div className="text-orange-600 dark:text-orange-400">
+                    <span className="font-medium">{t('pages.factures.lastReminderSent')} :</span> {formatDate(selected.lastReminderSentAt)}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-wrap gap-2 pt-2">
@@ -980,6 +1018,15 @@ export default function FacturesPage() {
                   {actionLoading === `email_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Mail className="w-3.5 h-3.5" />}
                   Email
                 </button>
+                {selected.statut === 'EN_RETARD' && (
+                  <button
+                    onClick={() => handleRelanceWhatsApp(selected)}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-all"
+                  >
+                    <Bell className="w-3.5 h-3.5" />
+                    {t('pages.factures.actions.relancerWhatsApp')}
+                  </button>
+                )}
                 {(selected.statut === 'BROUILLON' || selected.statut === 'ENVOYEE') && (
                   <button
                     onClick={() => openEdit(selected)}

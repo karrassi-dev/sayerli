@@ -230,6 +230,124 @@ export class EmailService {
     }
   }
 
+  async sendReminderEmail(opts: {
+    toEmail: string;
+    clientNom: string;
+    entrepriseNom: string;
+    numeroFacture: string;
+    montantTTC: number;
+    dateEcheance: Date | null;
+    publicToken: string;
+    level: 1 | 2 | 3;
+  }) {
+    const url = `${this.frontendUrl}/public/factures/${opts.publicToken}`;
+    const montantStr = new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(opts.montantTTC) + ' MAD';
+    const dateStr = opts.dateEcheance
+      ? opts.dateEcheance.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+      : null;
+    const levelLabel = opts.level === 1 ? '1er rappel' : opts.level === 2 ? '2ème rappel' : '3ème rappel';
+    const urgency = opts.level === 3 ? 'urgent ' : '';
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Rappel de paiement — ${opts.numeroFacture}</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#dc2626,#b91c1c);padding:28px 40px;text-align:center;">
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="34" height="34" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#fca5a5;font-size:22px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:12px 0 0;color:#fecaca;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">${levelLabel} — Facture impayée</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:36px 40px;">
+              <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#0f172a;">
+                Rappel de paiement ${urgency}
+              </h1>
+              <p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">
+                Bonjour <strong style="color:#0f172a;">${opts.clientNom}</strong>,<br/>
+                Ceci est un rappel ${urgency}concernant la facture ci-dessous, qui reste impayée à ce jour.
+              </p>
+
+              <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding-bottom:12px;">
+                      <p style="margin:0;font-size:12px;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Facture</p>
+                      <p style="margin:4px 0 0;font-size:18px;font-weight:800;color:#0f172a;">${opts.numeroFacture}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="width:50%;padding-top:8px;border-top:1px solid #fecaca;">
+                            <p style="margin:0;font-size:12px;color:#94a3b8;">Montant dû</p>
+                            <p style="margin:4px 0 0;font-size:16px;font-weight:800;color:#dc2626;">${montantStr}</p>
+                          </td>
+                          ${dateStr ? `<td style="width:50%;padding-top:8px;border-top:1px solid #fecaca;">
+                            <p style="margin:0;font-size:12px;color:#94a3b8;">Échéance</p>
+                            <p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#0f172a;">${dateStr}</p>
+                          </td>` : ''}
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="margin:0 0 24px;font-size:14px;color:#64748b;line-height:1.6;">
+                Nous vous prions de bien vouloir procéder au règlement de cette facture dans les meilleurs délais. En cas de doute ou de difficulté, n'hésitez pas à contacter <strong style="color:#0f172a;">${opts.entrepriseNom}</strong>.
+              </p>
+
+              <div style="text-align:center;margin-bottom:8px;">
+                <a href="${url}"
+                   style="display:inline-block;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:12px;letter-spacing:0.2px;">
+                  Voir ma facture
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#f8fafc;padding:16px 40px;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;">Sayerli · Logiciel de gestion pour PME marocaines<br/>Ce message a été envoyé automatiquement par ${opts.entrepriseNom}.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    try {
+      const { error } = await this.resend.emails.send({
+        from: this.from,
+        to: opts.toEmail,
+        subject: `${opts.level === 3 ? '[URGENT] ' : ''}Rappel de paiement — ${opts.numeroFacture} (${montantStr})`,
+        html,
+      });
+      if (error) this.logger.error(`Resend error: ${JSON.stringify(error)}`);
+    } catch (err) {
+      this.logger.error(`Failed to send reminder email: ${err}`);
+    }
+  }
+
   async sendInvitation(opts: {
     toEmail: string;
     toName: string;
