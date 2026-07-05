@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatutDevis, StatutFacture } from '@prisma/client';
+import { StatutDevis, StatutFacture, TypeClient } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 const MOIS_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
@@ -8,12 +8,21 @@ const MOIS_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep'
 export class DashboardAnalyticsService {
   constructor(private prisma: PrismaService) {}
 
-  async getAnalytics(entrepriseId: string) {
+  async getAnalytics(entrepriseId: string, typeClient?: TypeClient) {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
     const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+    const clientFilter = typeClient ? { typeClient } : {};
+    const clientWhere  = { entrepriseId, ...clientFilter };
+    const devisWhere   = { entrepriseId, ...(typeClient ? { client: { typeClient } } : {}) };
+    const factureWhere = { entrepriseId, ...(typeClient ? { client: { typeClient } } : {}) };
+    const paiementWhere = {
+      entrepriseId,
+      ...(typeClient ? { facture: { client: { typeClient } } } : {}),
+    };
 
     const [
       totalClients,
@@ -26,50 +35,49 @@ export class DashboardAnalyticsService {
       paiementsLastMonth,
       recentInvoices,
       recentActivity,
-      monthlyRevenue,
     ] = await Promise.all([
-      this.prisma.client.count({ where: { entrepriseId } }),
+      this.prisma.client.count({ where: clientWhere }),
 
       this.prisma.client.count({
-        where: { entrepriseId, createdAt: { gte: startOfMonth } },
+        where: { ...clientWhere, createdAt: { gte: startOfMonth } },
       }),
 
-      this.prisma.client.count({ where: { entrepriseId, actif: true } }),
+      this.prisma.client.count({ where: { ...clientWhere, actif: true } }),
 
       this.prisma.devis.groupBy({
         by: ['statut'],
-        where: { entrepriseId },
+        where: devisWhere,
         _count: { _all: true },
       }),
 
       this.prisma.facture.groupBy({
         by: ['statut'],
-        where: { entrepriseId },
+        where: factureWhere,
         _count: { _all: true },
         _sum: { montantPaye: true },
       }),
 
       this.prisma.paiement.aggregate({
-        where: { entrepriseId },
+        where: paiementWhere,
         _sum: { montant: true },
         _count: true,
       }),
 
       this.prisma.paiement.aggregate({
-        where: { entrepriseId, datePaiement: { gte: startOfMonth } },
+        where: { ...paiementWhere, datePaiement: { gte: startOfMonth } },
         _sum: { montant: true },
       }),
 
       this.prisma.paiement.aggregate({
         where: {
-          entrepriseId,
+          ...paiementWhere,
           datePaiement: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
         _sum: { montant: true },
       }),
 
       this.prisma.facture.findMany({
-        where: { entrepriseId },
+        where: factureWhere,
         take: 5,
         orderBy: { createdAt: 'desc' },
         select: {
@@ -94,18 +102,13 @@ export class DashboardAnalyticsService {
           createdAt: true,
         },
       }),
-
-      this.prisma.$queryRaw<{ mois: number | bigint; total: number }[]>`
-        SELECT
-          EXTRACT(MONTH FROM "datePaiement")::int AS mois,
-          SUM(montant)::float AS total
-        FROM paiements
-        WHERE "entrepriseId" = ${entrepriseId}
-          AND "datePaiement" >= ${startOfYear}
-        GROUP BY EXTRACT(MONTH FROM "datePaiement")
-        ORDER BY mois
-      `,
     ]);
+
+    // Monthly revenue — use Prisma aggregate so typeClient filter works cleanly
+    const monthlyPaiements = await this.prisma.paiement.findMany({
+      where: { ...paiementWhere, datePaiement: { gte: startOfYear } },
+      select: { montant: true, datePaiement: true },
+    });
 
     // ── Devis stats ───────────────────────────────────────────────────────────
     const devis = {
@@ -168,10 +171,12 @@ export class DashboardAnalyticsService {
         ? 100
         : 0;
 
-    // ── Monthly revenue chart (12 months) ─────────────────────────────────────
-    const monthMap = new Map<number, number>(
-      monthlyRevenue.map((r) => [Number(r.mois), Number(r.total)]),
-    );
+    // ── Monthly revenue chart (12 months) ────────────────────────────────────
+    const monthMap = new Map<number, number>();
+    for (const p of monthlyPaiements) {
+      const m = p.datePaiement.getMonth() + 1;
+      monthMap.set(m, (monthMap.get(m) ?? 0) + Number(p.montant));
+    }
     const revenueMensuel = MOIS_FR.map((mois, i) => ({
       mois,
       valeur: monthMap.get(i + 1) ?? 0,

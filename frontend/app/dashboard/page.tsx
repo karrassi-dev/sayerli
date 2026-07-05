@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X, User, Building2, Briefcase, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -17,6 +17,7 @@ import {
 } from '@/components/dashboard/ui/Charts'
 import { dashboardApi } from '@/lib/api'
 import { formatMAD } from '@/lib/mock-data'
+import { cn } from '@/lib/utils'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,15 @@ const ACTIVITY_COLORS: Record<string, string> = {
 
 const EMPTY_MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']
   .map(mois => ({ mois, valeur: 0 }))
+
+type TypeClientFilter = 'ALL' | 'PARTICULIER' | 'ENTREPRISE' | 'FREELANCE'
+
+const TYPE_FILTERS: { value: TypeClientFilter; icon: React.ElementType; labelKey: string }[] = [
+  { value: 'ALL',         icon: Users,     labelKey: 'dashboard.filterAll'         },
+  { value: 'PARTICULIER', icon: User,      labelKey: 'dashboard.filterParticulier' },
+  { value: 'ENTREPRISE',  icon: Building2, labelKey: 'dashboard.filterEntreprise'  },
+  { value: 'FREELANCE',   icon: Briefcase, labelKey: 'dashboard.filterFreelance'   },
+]
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -97,6 +107,7 @@ export default function DashboardPage() {
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null)
   const [loading, setLoading] = useState(true)
   const [bannerDismissed, setBannerDismissed] = useState(false)
+  const [typeFilter, setTypeFilter] = useState<TypeClientFilter>('ALL')
 
   const showProfileBanner =
     !bannerDismissed &&
@@ -108,12 +119,13 @@ export default function DashboardPage() {
   const currentMonthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
 
   useEffect(() => {
+    setLoading(true)
     dashboardApi
-      .analytics()
+      .analytics(typeFilter === 'ALL' ? undefined : typeFilter)
       .then(res => setAnalytics(res.data?.data ?? res.data))
       .catch(console.error)
       .finally(() => setLoading(false))
-  }, [])
+  }, [typeFilter])
 
   const monthlyData = analytics?.revenus.mensuel ?? EMPTY_MONTHS
 
@@ -156,10 +168,33 @@ export default function DashboardPage() {
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">{t('dashboard.overview')}</p>
         </div>
-        <Link href="/dashboard/devis/new" className="btn-primary text-sm hidden sm:flex">
-          <Plus className="w-4 h-4" />
-          {t('dashboard.newQuote')}
-        </Link>
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Client type filter pills */}
+          <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+            {TYPE_FILTERS.map(({ value, icon: Icon, labelKey }) => {
+              const active = typeFilter === value
+              return (
+                <button
+                  key={value}
+                  onClick={() => setTypeFilter(value)}
+                  className={cn(
+                    'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap',
+                    active
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="hidden sm:inline">{t(labelKey)}</span>
+                </button>
+              )
+            })}
+          </div>
+          <Link href="/dashboard/devis/new" className="btn-primary text-sm hidden sm:flex">
+            <Plus className="w-4 h-4" />
+            {t('dashboard.newQuote')}
+          </Link>
+        </div>
       </div>
 
       {/* ── Row 1 · KPI cards ──────────────────────────────────────────────── */}

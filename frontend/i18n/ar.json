@@ -211,6 +211,10 @@
   "dashboard": {
     "welcome": "مرحباً",
     "overview": "نظرة عامة",
+    "filterAll": "الكل",
+    "filterParticulier": "فرد",
+    "filterEntreprise": "شركة",
+    "filterFreelance": "مستقل",
     "totalRevenue": "رقم الأعمال",
     "clients": "العملاء",
     "quotes": "العروض",

@@ -158,7 +158,7 @@ export const entrepriseApi = {
 
 // Dashboard Analytics
 export const dashboardApi = {
-  analytics: () => api.get('/dashboard/analytics'),
+  analytics: (typeClient?: string) => api.get('/dashboard/analytics', { params: typeClient ? { typeClient } : undefined }),
 }
 
 // Settings

@@ -211,6 +211,10 @@
   "dashboard": {
     "welcome": "Bonjour",
     "overview": "Vue d'ensemble",
+    "filterAll": "Tous",
+    "filterParticulier": "Particulier",
+    "filterEntreprise": "Entreprise",
+    "filterFreelance": "Freelance",
     "totalRevenue": "Chiffre d'affaires",
     "clients": "Clients",
     "quotes": "Devis",
