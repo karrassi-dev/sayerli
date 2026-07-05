@@ -1,16 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle, MapPin, Zap, LayoutDashboard, Play } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useIsLoggedIn } from '@/hooks/useIsLoggedIn'
-import { VideoModal } from '@/components/ui/VideoModal'
+import { VideoDemoButton } from '@/components/ui/VideoDemoButton'
 
 export function Hero() {
   const { t } = useTranslation()
   const loggedIn = useIsLoggedIn()
-  const [videoOpen, setVideoOpen] = useState(false)
 
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
@@ -58,15 +56,7 @@ export function Hero() {
                     {t('hero.cta')}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                  <button
-                    onClick={() => setVideoOpen(true)}
-                    className="btn-secondary text-base px-8 py-4 group inline-flex items-center gap-2"
-                  >
-                    <span className="w-7 h-7 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center group-hover:bg-primary-200 dark:group-hover:bg-primary-800 transition-colors">
-                      <Play className="w-3 h-3 text-primary-600 dark:text-primary-400 fill-current ml-0.5" />
-                    </span>
-                    Voir une démo
-                  </button>
+                  <VideoDemoButton />
                 </>
               )}
             </div>
@@ -166,14 +156,11 @@ export function Hero() {
               </div>
 
               {/* Play button overlay — click to watch demo */}
-              <button
-                onClick={() => setVideoOpen(true)}
-                className="absolute inset-0 flex items-center justify-center group rounded-3xl"
-              >
+              <div className="absolute inset-0 flex items-center justify-center group rounded-3xl pointer-events-none">
                 <div className="w-16 h-16 rounded-full bg-white/90 dark:bg-slate-900/90 shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
                   <Play className="w-6 h-6 text-primary-600 fill-current ml-1" />
                 </div>
-              </button>
+              </div>
 
               {/* Floating cards */}
               <div className="absolute -top-4 -right-4 card shadow-lg p-3 rounded-xl border border-slate-100 dark:border-slate-700">
@@ -201,7 +188,6 @@ export function Hero() {
         </div>
       </div>
 
-      {videoOpen && <VideoModal onClose={() => setVideoOpen(false)} />}
     </section>
   )
 }

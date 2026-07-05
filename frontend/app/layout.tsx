@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 import { LanguageProvider } from '@/components/providers/LanguageProvider'
 import { SITE_URL, SITE_NAME, ALL_KEYWORDS } from '@/lib/seo'
 import GoogleAnalytics from '@/components/seo/GoogleAnalytics'
@@ -102,7 +109,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning className={inter.variable}>
       <head>
         {/* hreflang — Multilingual SEO */}
         <link rel="alternate" hrefLang="fr" href={SITE_URL} />
