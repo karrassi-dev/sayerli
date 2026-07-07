@@ -25,14 +25,14 @@ export function Footer() {
             <h4 className="text-white font-semibold mb-4 text-sm">{t('footer.product')}</h4>
             <ul className="space-y-2.5">
               {[
-                { href: '#features', label: t('footer.features') },
-                { href: '#pricing', label: t('footer.pricing') },
-                { href: '#', label: t('footer.changelog') },
+                { href: '/fonctionnalites', label: t('footer.features') },
+                { href: '/#pricing',        label: t('footer.pricing') },
+                { href: '/blog',            label: t('footer.changelog') },
               ].map(item => (
                 <li key={item.href}>
-                  <a href={item.href} className="text-sm hover:text-white transition-colors">
+                  <Link href={item.href} className="text-sm hover:text-white transition-colors">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -43,15 +43,15 @@ export function Footer() {
             <h4 className="text-white font-semibold mb-4 text-sm">{t('footer.company')}</h4>
             <ul className="space-y-2.5">
               {[
-                { href: '#', label: t('footer.about') },
-                { href: '#', label: t('footer.blog') },
-                { href: '#', label: t('footer.careers') },
+                { href: '/contact', label: t('footer.about') },
+                { href: '/blog',    label: t('footer.blog') },
+                { href: '/contact', label: t('footer.careers') },
                 { href: '/contact', label: t('footer.contact') },
               ].map(item => (
                 <li key={item.label}>
-                  <a href={item.href} className="text-sm hover:text-white transition-colors">
+                  <Link href={item.href} className="text-sm hover:text-white transition-colors">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
