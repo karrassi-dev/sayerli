@@ -7,6 +7,7 @@ import {
 import { Prisma, StatutFacture, StatutDeclaration } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { retryOnConflict } from '../../common/utils/retry';
+import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
@@ -72,6 +73,16 @@ export class FacturesService {
   }
 
   async creerFacture(dto: CreerFactureDto, entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
+    });
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limite = PLAN_LIMITS[entreprise.plan].facturesParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('factures', actuel, limite);
+
     const client = await this.prisma.client.findFirst({
       where: { id: dto.clientId, entrepriseId },
     });

@@ -303,6 +303,16 @@ export class DevisService {
   }
 
   async convertirEnFacture(id: string, entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
+    });
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limite = PLAN_LIMITS[entreprise.plan].facturesParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('factures', actuel, limite);
+
     const devis = await this.prisma.devis.findFirst({
       where: { id, entrepriseId },
       include: { lignes: true },

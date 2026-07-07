@@ -16,7 +16,9 @@ import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useAuth } from '@/hooks/useAuth'
 import { facturesApi, clientsApi, paiementsApi } from '@/lib/api'
+import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -258,9 +260,12 @@ function FactureFormFields({
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
+const FACTURE_LIMIT: Record<string, number> = { STARTER: 10, PRO: -1, BUSINESS: -1 }
+
 export default function FacturesPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
+  const { entreprise } = useAuth()
 
   const [facturesList, setFacturesList] = useState<ApiFacture[]>([])
   const [clients, setClients] = useState<ApiClient[]>([])
@@ -286,6 +291,7 @@ export default function FacturesPage() {
   const [paiementForm, setPaiementForm] = useState<PaiementForm>(EMPTY_PAIEMENT)
   const [paiementErrors, setPaiementErrors] = useState<Record<string, string>>({})
   const [savingPaiement, setSavingPaiement] = useState(false)
+  const [limitModal, setLimitModal] = useState<{ resource: 'factures'; limite: number; actuel: number } | null>(null)
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -382,7 +388,18 @@ export default function FacturesPage() {
   })
 
   // ── Handlers ──
+  const facturesLimite = FACTURE_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 10
+  const now = new Date()
+  const facturesCeMois = facturesList.filter(f => {
+    const created = new Date(f.createdAt)
+    return created.getFullYear() === now.getFullYear() && created.getMonth() === now.getMonth()
+  }).length
+
   const openCreate = () => {
+    if (facturesLimite !== -1 && facturesCeMois >= facturesLimite) {
+      setLimitModal({ resource: 'factures', limite: facturesLimite, actuel: facturesCeMois })
+      return
+    }
     setForm(EMPTY_FORM)
     setFormErrors({})
     setCreateOpen(true)
@@ -397,9 +414,15 @@ export default function FacturesPage() {
       success(t('pages.factures.createSuccess'))
       fetchFactures(search.trim() || undefined, filters.statut)
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
+        setCreateOpen(false)
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'factures', limite: errs?.limite ?? 10, actuel: errs?.actuel ?? 10 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Une erreur est survenue.'))
+      }
     } finally {
       setSaving(false)
     }
@@ -1225,6 +1248,15 @@ export default function FacturesPage() {
       />
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      {limitModal && (
+        <PlanLimitModal
+          open={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          resource={limitModal.resource}
+          limite={limitModal.limite}
+          actuel={limitModal.actuel}
+        />
+      )}
     </div>
   )
 }
