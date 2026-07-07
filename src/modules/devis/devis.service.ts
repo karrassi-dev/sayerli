@@ -341,7 +341,6 @@ export class DevisService {
             statut: 'BROUILLON',
             dateEcheance: devis.dateExpiration ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             taxe: devis.taxe,
-            remise: devis.remise,
             totalHT: devis.totalHT,
             totalTTC: devis.totalTTC,
             lignes: {
