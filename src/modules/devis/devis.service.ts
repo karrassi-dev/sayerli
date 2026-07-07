@@ -350,6 +350,16 @@ export class DevisService {
   }
 
   async dupliquerDevis(id: string, entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
+    });
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limite = PLAN_LIMITS[entreprise.plan].devisParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.devis.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('devis', actuel, limite);
+
     const devis = await this.prisma.devis.findFirst({
       where: { id, entrepriseId },
       include: { lignes: true },
