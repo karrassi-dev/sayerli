@@ -165,22 +165,22 @@ function ClientFormFields({
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className={labelClass}>ICE</label>
+              <label className={labelClass}>{t('pages.clients.form.ice')}</label>
               <input
                 type="text"
                 value={form.ice}
                 onChange={e => onChange('ice', e.target.value)}
-                placeholder="ex: 001234567000012"
+                placeholder={t('pages.clients.form.icePlaceholder')}
                 className={inputClass}
               />
             </div>
             <div>
-              <label className={labelClass}>IF (Identifiant Fiscal)</label>
+              <label className={labelClass}>{t('pages.clients.form.ifFiscal')}</label>
               <input
                 type="text"
                 value={form.ifFiscal}
                 onChange={e => onChange('ifFiscal', e.target.value)}
-                placeholder="ex: 12345678"
+                placeholder={t('pages.clients.form.ifFiscalPlaceholder')}
                 className={inputClass}
               />
             </div>
@@ -200,12 +200,12 @@ function ClientFormFields({
             />
           </div>
           <div>
-            <label className={labelClass}>IF (Identifiant Fiscal)</label>
+            <label className={labelClass}>{t('pages.clients.form.ifFiscal')}</label>
             <input
               type="text"
               value={form.ifFiscal}
               onChange={e => onChange('ifFiscal', e.target.value)}
-              placeholder="ex: 12345678"
+              placeholder={t('pages.clients.form.ifFiscalPlaceholder')}
               className={inputClass}
             />
           </div>
@@ -709,10 +709,10 @@ export default function ClientsPage() {
                 { label: t('pages.clients.col.created'), value: formatDate(selectedClient.createdAt) },
                 { label: 'Devis', value: String(selectedClient._count?.devis ?? '—') },
                 ...(selectedClient.typeClient === 'ENTREPRISE' ? [
-                  { label: 'ICE', value: selectedClient.ice || '—' },
-                  { label: 'IF Fiscal', value: selectedClient.ifFiscal || '—' },
+                  { label: t('pages.clients.form.ice'), value: selectedClient.ice || '—' },
+                  { label: t('pages.clients.form.ifFiscal'), value: selectedClient.ifFiscal || '—' },
                 ] : selectedClient.typeClient === 'FREELANCE' ? [
-                  { label: 'IF Fiscal', value: selectedClient.ifFiscal || '—' },
+                  { label: t('pages.clients.form.ifFiscal'), value: selectedClient.ifFiscal || '—' },
                 ] : []),
               ].map(row => (
                 <div key={row.label} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">

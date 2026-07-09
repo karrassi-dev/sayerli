@@ -788,7 +788,11 @@
         "typeClient": "Client Type",
         "typeParticulier": "Individual",
         "typeEntreprise": "Company / SME",
-        "typeFreelance": "Freelancer / Self-employed"
+        "typeFreelance": "Freelancer / Self-employed",
+        "ice": "ICE (Business Common Identifier)",
+        "icePlaceholder": "e.g. 001234567000012",
+        "ifFiscal": "IF (Tax Identifier)",
+        "ifFiscalPlaceholder": "e.g. 12345678"
       },
       "types": {
         "PARTICULIER": "Individual",

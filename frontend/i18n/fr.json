@@ -789,7 +789,11 @@
         "typeClient": "Type de client",
         "typeParticulier": "Particulier",
         "typeEntreprise": "Entreprise / PME",
-        "typeFreelance": "Freelancer / Auto-entrepreneur"
+        "typeFreelance": "Freelancer / Auto-entrepreneur",
+        "ice": "ICE (Identifiant Commun de l'Entreprise)",
+        "icePlaceholder": "ex : 001234567000012",
+        "ifFiscal": "IF (Identifiant Fiscal)",
+        "ifFiscalPlaceholder": "ex : 12345678"
       },
       "types": {
         "PARTICULIER": "Particulier",

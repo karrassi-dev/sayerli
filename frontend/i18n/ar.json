@@ -788,7 +788,11 @@
         "typeClient": "نوع العميل",
         "typeParticulier": "فرد",
         "typeEntreprise": "شركة / مقاولة",
-        "typeFreelance": "مستقل / مقاول ذاتي"
+        "typeFreelance": "مستقل / مقاول ذاتي",
+        "ice": "ICE (المعرف المشترك للمقاولة)",
+        "icePlaceholder": "مثال: 001234567000012",
+        "ifFiscal": "IF (المعرف الجبائي)",
+        "ifFiscalPlaceholder": "مثال: 12345678"
       },
       "types": {
         "PARTICULIER": "فرد",
