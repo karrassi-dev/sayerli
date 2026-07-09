@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Users, UserPlus, Eye, Pencil, Trash2, Phone, Mail, Building2, TrendingUp, AlertCircle, User, Briefcase } from 'lucide-react'
+import { Users, UserPlus, Eye, Pencil, Trash2, Phone, Mail, Building2, TrendingUp, AlertCircle, User, Briefcase, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
 import { StatusBadge } from '@/components/dashboard/ui/StatusBadge'
@@ -31,6 +31,7 @@ interface ApiClient {
   typeClient: TypeClient
   createdAt: string
   updatedAt: string
+  portalToken?: string
   _count?: { devis: number; factures: number }
 }
 
@@ -380,6 +381,19 @@ export default function ClientsPage() {
     }
   }
 
+  const copyPortalLink = async (client: ApiClient) => {
+    try {
+      const frontendUrl = typeof window !== 'undefined' ? window.location.origin : 'https://sayerli.com'
+      const url = client.portalToken
+        ? `${frontendUrl}/portal/${client.portalToken}`
+        : (await clientsApi.portalLink(client.id)).data?.data?.url ?? ''
+      await navigator.clipboard.writeText(url)
+      success('Lien portail copié !')
+    } catch {
+      toastError('Erreur', 'Impossible de copier le lien.')
+    }
+  }
+
   const formFooter = (onSubmit: () => void) => (
     <>
       <button
@@ -551,6 +565,7 @@ export default function ClientsPage() {
                         <ActionMenu items={[
                           { label: t('common.view'), icon: Eye, onClick: () => setSelectedClient(client) },
                           { label: t('common.edit'), icon: Pencil, onClick: () => openEdit(client) },
+                          { label: 'Lien portail', icon: Link2, onClick: () => copyPortalLink(client), separator: true },
                           { label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(client), variant: 'danger', separator: true },
                         ]} />
                       </td>

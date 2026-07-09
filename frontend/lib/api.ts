@@ -50,6 +50,7 @@ export const clientsApi = {
   update: (id: string, data: unknown) => api.patch(`/clients/${id}`, data),
   delete: (id: string) => api.delete(`/clients/${id}`),
   stats: (id: string) => api.get(`/clients/${id}/statistiques`),
+  portalLink: (id: string) => api.get(`/clients/${id}/lien-portal`),
 }
 
 // Devis
@@ -77,6 +78,12 @@ export const publicDevisApi = {
   get: (token: string) => publicApi.get(`/public/devis/${token}`),
   accept: (token: string) => publicApi.post(`/public/devis/${token}/accepter`),
   refuse: (token: string) => publicApi.post(`/public/devis/${token}/refuser`),
+}
+
+export const portalApi = {
+  get: (token: string) => publicApi.get(`/public/portal/${token}`),
+  acceptDevis: (token: string, devisId: string) =>
+    publicApi.post(`/public/portal/${token}/devis/${devisId}/accepter`),
 }
 
 // Factures

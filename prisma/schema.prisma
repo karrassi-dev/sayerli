@@ -108,6 +108,7 @@ model Client {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   typeClient    TypeClient  @default(PARTICULIER)
+  portalToken   String      @unique @default(uuid())
   entreprise    Entreprise  @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
   devis         Devis[]
   factures      Facture[]

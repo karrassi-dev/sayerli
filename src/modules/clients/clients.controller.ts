@@ -37,6 +37,15 @@ export class ClientsController {
     return this.clientsService.obtenirClient(id, entrepriseId);
   }
 
+  @Get(':id/lien-portal')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  async lienPortal(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.clientsService.lienPortal(id, entrepriseId);
+  }
+
   @Get(':id/statistiques')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
   async statistiques(

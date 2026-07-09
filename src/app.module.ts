@@ -23,6 +23,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { CatalogueModule } from './modules/catalogue/catalogue.module';
 import { RelancesModule } from './modules/relances/relances.module';
+import { PortalModule } from './modules/portal/portal.module';
 
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -55,6 +56,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     WebhooksModule,
     CatalogueModule,
     RelancesModule,
+    PortalModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

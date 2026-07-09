@@ -22,10 +22,12 @@ export class ClientsService {
           ],
         }),
       },
-      include: {
-        _count: {
-          select: { devis: true, factures: true },
-        },
+      select: {
+        id: true, nom: true, email: true, telephone: true,
+        nomEntreprise: true, notes: true, actif: true,
+        typeClient: true, createdAt: true, updatedAt: true,
+        portalToken: true,
+        _count: { select: { devis: true, factures: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -84,6 +86,16 @@ export class ClientsService {
       data: { actif: false },
     });
     return { message: 'Client archivé avec succès.' };
+  }
+
+  async lienPortal(id: string, entrepriseId: string) {
+    const client = await this.prisma.client.findFirst({
+      where: { id, entrepriseId },
+      select: { portalToken: true },
+    });
+    if (!client) throw new NotFoundException('Client introuvable.');
+    const frontendUrl = process.env.FRONTEND_URL || 'https://sayerli.com';
+    return { url: `${frontendUrl}/portal/${client.portalToken}` };
   }
 
   async statistiquesClient(id: string, entrepriseId: string) {
