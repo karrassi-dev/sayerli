@@ -4,7 +4,7 @@ import { useState } from 'react'
 import {
   Download, FileSpreadsheet, FileText,
   Users, File, Receipt, CreditCard, Calendar,
-  CheckSquare, Square, ChevronRight,
+  CheckSquare, Square, ChevronRight, BookOpen,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -13,9 +13,10 @@ import { cn } from '@/lib/utils'
 
 /* ─── types ─────────────────────────────────────────────────── */
 
-type EntityKey = 'clients' | 'devis' | 'factures' | 'paiements'
-type Period    = 'thisMonth' | 'lastMonth' | 'last3Months' | 'thisYear' | 'all' | 'custom'
-type Format    = 'excel' | 'pdf'
+type EntityKey  = 'clients' | 'devis' | 'factures' | 'paiements'
+type Period     = 'thisMonth' | 'lastMonth' | 'last3Months' | 'thisYear' | 'all' | 'custom'
+type Format     = 'excel' | 'pdf'
+type ExportMode = 'general' | 'journal'
 
 interface ExportData {
   clients?:   any[]
@@ -153,6 +154,91 @@ async function generateExcel(data: ExportData, entrepriseName: string, periode: 
   XLSX.writeFile(wb, filename)
 }
 
+async function generateJournalDesVentes(factures: any[], entrepriseName: string, periode: string) {
+  const xlsxMod = await import('xlsx')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const XLSX = (xlsxMod as any).default ?? xlsxMod
+
+  const today = fmtDate(new Date().toISOString())
+
+  const headers = [
+    'Date Facture',
+    'N° Facture',
+    'Client',
+    'Entreprise Client',
+    'ICE Client',
+    'Montant HT (MAD)',
+    'TVA %',
+    'Montant TVA (MAD)',
+    'Montant TTC (MAD)',
+    'Montant Payé (MAD)',
+    'Reste à Payer (MAD)',
+    'Statut',
+  ]
+
+  const STATUS_JV: Record<string, string> = {
+    ENVOYEE: 'Envoyée', PAYEE: 'Payée', PARTIELLE: 'Paiement partiel',
+    EN_RETARD: 'En retard', VUE: 'Vue', ANNULEE: 'Annulée',
+  }
+
+  const rows = factures.map(f => {
+    const ht       = Number(f.totalHT)   || 0
+    const ttc      = Number(f.totalTTC)  || 0
+    const paye     = Number(f.montantPaye) || 0
+    const tva      = Number(f.taxe)      || 0
+    const montantTva = ttc - ht
+    const reste    = ttc - paye
+
+    return [
+      fmtDate(f.createdAt),
+      f.numeroFacture,
+      f.client?.nom || '',
+      f.client?.nomEntreprise || '—',
+      '—',
+      ht,
+      `${tva}%`,
+      montantTva,
+      ttc,
+      paye,
+      reste,
+      STATUS_JV[f.statut] || f.statut,
+    ]
+  })
+
+  const ws = XLSX.utils.aoa_to_sheet([
+    [`Journal des Ventes — ${entrepriseName}`],
+    [`Période : ${periode}   ·   Généré le : ${today}`],
+    [`Note : La colonne ICE Client peut être complétée manuellement si non renseignée.`],
+    [],
+    headers,
+    ...rows,
+  ])
+
+  ws['!cols'] = [
+    { wch: 14 }, { wch: 18 }, { wch: 24 }, { wch: 24 }, { wch: 16 },
+    { wch: 18 }, { wch: 8  }, { wch: 18 }, { wch: 18 }, { wch: 18 },
+    { wch: 18 }, { wch: 16 },
+  ]
+
+  // Format number columns (columns 6,8,9,10,11 = index 5,7,8,9,10)
+  const numCols = [5, 7, 8, 9, 10]
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1')
+  for (let R = 5; R <= range.e.r; R++) {
+    for (const C of numCols) {
+      const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })]
+      if (cell && typeof cell.v === 'number') {
+        cell.z = '#,##0.00'
+      }
+    }
+  }
+
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Journal des Ventes')
+
+  const filename = `journal-ventes-${new Date().toISOString().split('T')[0]}.xlsx`
+  XLSX.writeFile(wb, filename)
+}
+
 async function generatePDF(data: ExportData, meta: {
   entrepriseName: string; periode: string; generatedAt: string
   logo?: string | null; adresse?: string | null; ville?: string | null
@@ -190,6 +276,7 @@ export default function ExportPage() {
   const { t }         = useTranslation()
   const { entreprise } = useAuth()
 
+  const [exportMode,  setExportMode] = useState<ExportMode>('general')
   const [selected, setSelected] = useState<Set<EntityKey>>(
     new Set(['clients', 'devis', 'factures', 'paiements'])
   )
@@ -208,21 +295,31 @@ export default function ExportPage() {
     })
 
   const handleExport = async () => {
-    if (selected.size === 0) { setError(t('export.selectAtLeastOne')); return }
+    if (exportMode === 'general' && selected.size === 0) { setError(t('export.selectAtLeastOne')); return }
     setError('')
     setLoading(true)
 
     try {
       const { dateDebut, dateFin } = getDateRange(period, customFrom, customTo)
+      const periode  = periodLabel(period, t, customFrom, customTo)
+      const entName  = entreprise?.nom || 'Sayerli'
+
+      if (exportMode === 'journal') {
+        const params: Record<string, string> = { types: 'factures' }
+        if (dateDebut) params.dateDebut = dateDebut
+        if (dateFin)   params.dateFin   = dateFin
+        const res = await api.get('/export/data', { params })
+        const factures = (res.data.data ?? res.data)?.factures ?? []
+        await generateJournalDesVentes(factures, entName, periode)
+        return
+      }
+
       const params: Record<string, string> = { types: [...selected].join(',') }
       if (dateDebut) params.dateDebut = dateDebut
       if (dateFin)   params.dateFin   = dateFin
 
       const res  = await api.get('/export/data', { params })
       const data: ExportData = res.data.data
-
-      const periode     = periodLabel(period, t, customFrom, customTo)
-      const entName     = entreprise?.nom || 'Sayerli'
       const generatedAt = fmtDate(new Date().toISOString())
 
       if (format === 'excel') {
@@ -268,8 +365,61 @@ export default function ExportPage() {
         </p>
       </div>
 
-      {/* Step 1 — entities */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
+      {/* Export mode selector */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button
+          onClick={() => setExportMode('general')}
+          className={cn(
+            'flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-all',
+            exportMode === 'general'
+              ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/30'
+              : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-300',
+          )}
+        >
+          <div className={cn(
+            'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5',
+            exportMode === 'general' ? 'bg-primary-100 dark:bg-primary-900' : 'bg-slate-100 dark:bg-slate-800',
+          )}>
+            <FileSpreadsheet className={cn('w-4 h-4', exportMode === 'general' ? 'text-primary-600' : 'text-slate-500')} />
+          </div>
+          <div>
+            <p className={cn('text-sm font-bold', exportMode === 'general' ? 'text-primary-700 dark:text-primary-300' : 'text-slate-800 dark:text-slate-200')}>
+              Export général
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Clients, devis, factures, paiements — format libre
+            </p>
+          </div>
+        </button>
+
+        <button
+          onClick={() => setExportMode('journal')}
+          className={cn(
+            'flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-all',
+            exportMode === 'journal'
+              ? 'border-teal-500 bg-teal-50 dark:bg-teal-950/30'
+              : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-300',
+          )}
+        >
+          <div className={cn(
+            'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5',
+            exportMode === 'journal' ? 'bg-teal-100 dark:bg-teal-900' : 'bg-slate-100 dark:bg-slate-800',
+          )}>
+            <BookOpen className={cn('w-4 h-4', exportMode === 'journal' ? 'text-teal-600' : 'text-slate-500')} />
+          </div>
+          <div>
+            <p className={cn('text-sm font-bold', exportMode === 'journal' ? 'text-teal-700 dark:text-teal-300' : 'text-slate-800 dark:text-slate-200')}>
+              Journal des ventes
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Format comptable — HT, TVA, TTC, payé, reste à payer
+            </p>
+          </div>
+        </button>
+      </div>
+
+      {/* Step 1 — entities (hidden in journal mode) */}
+      <div className={cn('bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm', exportMode === 'journal' && 'hidden')}>
         <div className="flex items-center gap-2 mb-4">
           <span className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-950 text-primary-600 dark:text-primary-400 text-xs font-bold flex items-center justify-center">1</span>
           <h2 className="text-sm font-bold text-slate-900 dark:text-white">{t('export.step1Title')}</h2>
@@ -354,8 +504,8 @@ export default function ExportPage() {
         )}
       </div>
 
-      {/* Step 3 — format */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
+      {/* Step 3 — format (hidden in journal mode, always Excel) */}
+      <div className={cn('bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm', exportMode === 'journal' && 'hidden')}>
         <div className="flex items-center gap-2 mb-4">
           <span className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-950 text-primary-600 dark:text-primary-400 text-xs font-bold flex items-center justify-center">3</span>
           <h2 className="text-sm font-bold text-slate-900 dark:text-white">{t('export.step3Title')}</h2>
