@@ -309,7 +309,10 @@ export default function ExportPage() {
         if (dateDebut) params.dateDebut = dateDebut
         if (dateFin)   params.dateFin   = dateFin
         const res = await api.get('/export/data', { params })
-        const factures = (res.data.data ?? res.data)?.factures ?? []
+        const allFactures = (res.data.data ?? res.data)?.factures ?? []
+        const factures = allFactures.filter((f: { statut: string }) =>
+          !['BROUILLON', 'ANNULEE'].includes(f.statut)
+        )
         await generateJournalDesVentes(factures, entName, periode)
         return
       }
@@ -393,7 +396,7 @@ export default function ExportPage() {
         </button>
 
         <button
-          onClick={() => setExportMode('journal')}
+          onClick={() => { setExportMode('journal'); setPeriod('all') }}
           className={cn(
             'flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-all',
             exportMode === 'journal'
