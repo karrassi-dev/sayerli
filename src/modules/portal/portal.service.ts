@@ -92,7 +92,7 @@ export class PortalService {
 
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
-    const acceptable = [StatutDevis.ENVOYE, StatutDevis.VU];
+    const acceptable: StatutDevis[] = [StatutDevis.ENVOYE, StatutDevis.VU];
     if (!acceptable.includes(devis.statut)) {
       throw new BadRequestException('Ce devis ne peut plus être accepté.');
     }
