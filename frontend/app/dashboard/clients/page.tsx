@@ -26,6 +26,8 @@ interface ApiClient {
   email: string | null
   telephone: string | null
   nomEntreprise: string | null
+  ice: string | null
+  ifFiscal: string | null
   notes: string | null
   actif: boolean
   typeClient: TypeClient
@@ -40,11 +42,13 @@ interface ClientForm {
   email: string
   telephone: string
   nomEntreprise: string
+  ice: string
+  ifFiscal: string
   notes: string
   typeClient: TypeClient
 }
 
-const EMPTY_FORM: ClientForm = { nom: '', email: '', telephone: '', nomEntreprise: '', notes: '', typeClient: 'PARTICULIER' }
+const EMPTY_FORM: ClientForm = { nom: '', email: '', telephone: '', nomEntreprise: '', ice: '', ifFiscal: '', notes: '', typeClient: 'PARTICULIER' }
 const PER_PAGE = 6
 
 function formatDate(d: string) {
@@ -84,7 +88,7 @@ function ClientFormFields({
               <button
                 key={value}
                 type="button"
-                onClick={() => { onChange('typeClient', value); onChange('nomEntreprise', '') }}
+                onClick={() => { onChange('typeClient', value); onChange('nomEntreprise', ''); onChange('ice', ''); onChange('ifFiscal', '') }}
                 className={cn(
                   'flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl border text-xs font-semibold transition-all',
                   active
@@ -149,27 +153,63 @@ function ClientFormFields({
 
       {/* Conditional company / commercial name field */}
       {form.typeClient === 'ENTREPRISE' && (
-        <div>
-          <label className={labelClass}>{t('pages.clients.form.company')}</label>
-          <input
-            type="text"
-            value={form.nomEntreprise}
-            onChange={e => onChange('nomEntreprise', e.target.value)}
-            className={inputClass}
-          />
-        </div>
+        <>
+          <div>
+            <label className={labelClass}>{t('pages.clients.form.company')}</label>
+            <input
+              type="text"
+              value={form.nomEntreprise}
+              onChange={e => onChange('nomEntreprise', e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className={labelClass}>ICE</label>
+              <input
+                type="text"
+                value={form.ice}
+                onChange={e => onChange('ice', e.target.value)}
+                placeholder="ex: 001234567000012"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>IF (Identifiant Fiscal)</label>
+              <input
+                type="text"
+                value={form.ifFiscal}
+                onChange={e => onChange('ifFiscal', e.target.value)}
+                placeholder="ex: 12345678"
+                className={inputClass}
+              />
+            </div>
+          </div>
+        </>
       )}
       {form.typeClient === 'FREELANCE' && (
-        <div>
-          <label className={labelClass}>{t('pages.clients.form.nomCommercial')}</label>
-          <input
-            type="text"
-            value={form.nomEntreprise}
-            onChange={e => onChange('nomEntreprise', e.target.value)}
-            placeholder={t('pages.clients.form.nomCommercialPlaceholder')}
-            className={inputClass}
-          />
-        </div>
+        <>
+          <div>
+            <label className={labelClass}>{t('pages.clients.form.nomCommercial')}</label>
+            <input
+              type="text"
+              value={form.nomEntreprise}
+              onChange={e => onChange('nomEntreprise', e.target.value)}
+              placeholder={t('pages.clients.form.nomCommercialPlaceholder')}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>IF (Identifiant Fiscal)</label>
+            <input
+              type="text"
+              value={form.ifFiscal}
+              onChange={e => onChange('ifFiscal', e.target.value)}
+              placeholder="ex: 12345678"
+              className={inputClass}
+            />
+          </div>
+        </>
       )}
 
       {/* Notes */}
@@ -307,6 +347,8 @@ export default function ClientsPage() {
       if (form.email.trim()) payload.email = form.email.trim()
       if (form.telephone.trim()) payload.telephone = form.telephone.trim()
       if (form.nomEntreprise.trim() && form.typeClient !== 'PARTICULIER') payload.nomEntreprise = form.nomEntreprise.trim()
+      if (form.ice.trim() && form.typeClient === 'ENTREPRISE') payload.ice = form.ice.trim()
+      if (form.ifFiscal.trim() && form.typeClient !== 'PARTICULIER') payload.ifFiscal = form.ifFiscal.trim()
       if (form.notes.trim()) payload.notes = form.notes.trim()
       await clientsApi.create(payload)
       setCreateOpen(false)
@@ -333,6 +375,8 @@ export default function ClientsPage() {
       email: c.email ?? '',
       telephone: c.telephone ?? '',
       nomEntreprise: c.nomEntreprise ?? '',
+      ice: c.ice ?? '',
+      ifFiscal: c.ifFiscal ?? '',
       notes: c.notes ?? '',
       typeClient: c.typeClient ?? 'PARTICULIER',
     })
@@ -351,6 +395,8 @@ export default function ClientsPage() {
         email: form.email.trim() || undefined,
         telephone: form.telephone.trim() || undefined,
         nomEntreprise: (form.typeClient !== 'PARTICULIER' && form.nomEntreprise.trim()) ? form.nomEntreprise.trim() : undefined,
+        ice: (form.typeClient === 'ENTREPRISE' && form.ice.trim()) ? form.ice.trim() : undefined,
+        ifFiscal: (form.typeClient !== 'PARTICULIER' && form.ifFiscal.trim()) ? form.ifFiscal.trim() : undefined,
         notes: form.notes.trim() || undefined,
       }
       await clientsApi.update(editTarget.id, payload)
@@ -662,6 +708,12 @@ export default function ClientsPage() {
                 { label: t('pages.clients.form.phone'), value: selectedClient.telephone || '—' },
                 { label: t('pages.clients.col.created'), value: formatDate(selectedClient.createdAt) },
                 { label: 'Devis', value: String(selectedClient._count?.devis ?? '—') },
+                ...(selectedClient.typeClient === 'ENTREPRISE' ? [
+                  { label: 'ICE', value: selectedClient.ice || '—' },
+                  { label: 'IF Fiscal', value: selectedClient.ifFiscal || '—' },
+                ] : selectedClient.typeClient === 'FREELANCE' ? [
+                  { label: 'IF Fiscal', value: selectedClient.ifFiscal || '—' },
+                ] : []),
               ].map(row => (
                 <div key={row.label} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                   <p className="text-xs text-slate-400 mb-1">{row.label}</p>

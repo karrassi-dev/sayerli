@@ -78,7 +78,7 @@ export class ExportService {
           montantPaye: true,
           dateEcheance: true,
           createdAt: true,
-          client: { select: { nom: true, nomEntreprise: true } },
+          client: { select: { nom: true, nomEntreprise: true, ice: true, ifFiscal: true } },
         },
         orderBy: { createdAt: 'desc' },
       });

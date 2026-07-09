@@ -103,6 +103,8 @@ model Client {
   email         String?
   telephone     String?
   nomEntreprise String?
+  ice           String?
+  ifFiscal      String?
   notes         String?
   actif         Boolean     @default(true)
   createdAt     DateTime    @default(now())

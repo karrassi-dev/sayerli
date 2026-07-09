@@ -20,6 +20,14 @@ export class ModifierClientDto {
 
   @IsOptional()
   @IsString()
+  ice?: string;
+
+  @IsOptional()
+  @IsString()
+  ifFiscal?: string;
+
+  @IsOptional()
+  @IsString()
   notes?: string;
 
   @IsOptional()

@@ -24,7 +24,7 @@ export class ClientsService {
       },
       select: {
         id: true, nom: true, email: true, telephone: true,
-        nomEntreprise: true, notes: true, actif: true,
+        nomEntreprise: true, ice: true, ifFiscal: true, notes: true, actif: true,
         typeClient: true, createdAt: true, updatedAt: true,
         portalToken: true,
         _count: { select: { devis: true, factures: true } },

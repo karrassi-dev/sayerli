@@ -167,6 +167,7 @@ async function generateJournalDesVentes(factures: any[], entrepriseName: string,
     'Client',
     'Entreprise Client',
     'ICE Client',
+    'IF Fiscal',
     'Montant HT (MAD)',
     'TVA %',
     'Montant TVA (MAD)',
@@ -194,7 +195,8 @@ async function generateJournalDesVentes(factures: any[], entrepriseName: string,
       f.numeroFacture,
       f.client?.nom || '',
       f.client?.nomEntreprise || '—',
-      '—',
+      f.client?.ice || '—',
+      f.client?.ifFiscal || '—',
       ht,
       `${tva}%`,
       montantTva,
@@ -208,7 +210,7 @@ async function generateJournalDesVentes(factures: any[], entrepriseName: string,
   const ws = XLSX.utils.aoa_to_sheet([
     [`Journal des Ventes — ${entrepriseName}`],
     [`Période : ${periode}   ·   Généré le : ${today}`],
-    [`Note : La colonne ICE Client peut être complétée manuellement si non renseignée.`],
+    [`Note : ICE et IF Fiscal sont renseignés automatiquement depuis la fiche client.`],
     [],
     headers,
     ...rows,
@@ -216,12 +218,12 @@ async function generateJournalDesVentes(factures: any[], entrepriseName: string,
 
   ws['!cols'] = [
     { wch: 14 }, { wch: 18 }, { wch: 24 }, { wch: 24 }, { wch: 16 },
-    { wch: 18 }, { wch: 8  }, { wch: 18 }, { wch: 18 }, { wch: 18 },
-    { wch: 18 }, { wch: 16 },
+    { wch: 14 }, { wch: 18 }, { wch: 8  }, { wch: 18 }, { wch: 18 },
+    { wch: 18 }, { wch: 18 }, { wch: 16 },
   ]
 
-  // Format number columns (columns 6,8,9,10,11 = index 5,7,8,9,10)
-  const numCols = [5, 7, 8, 9, 10]
+  // Format number columns (index 6,8,9,10,11)
+  const numCols = [6, 8, 9, 10, 11]
   const range = XLSX.utils.decode_range(ws['!ref'] || 'A1')
   for (let R = 5; R <= range.e.r; R++) {
     for (const C of numCols) {
