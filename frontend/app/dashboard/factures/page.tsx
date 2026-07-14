@@ -584,6 +584,54 @@ export default function FacturesPage() {
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank')
   }
 
+  const handleRecuWhatsApp = (f: ApiFacture) => {
+    const phone = toWhatsAppNumber(f.client.telephone)
+    if (!phone) {
+      toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
+      return
+    }
+    const url = `${window.location.origin}/public/factures/${f.publicToken}`
+    const fmt = (v: number) => v.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
+    const montantPaye = n(f.montantPaye)
+    const restant = Math.max(0, n(f.totalTTC) - montantPaye)
+    const isFullyPaid = restant < 0.01
+
+    const sorted = [...(f.paiements ?? [])].sort(
+      (a, b) => new Date(b.datePaiement).getTime() - new Date(a.datePaiement).getTime()
+    )
+    const lastDate = sorted[0] ? formatDate(sorted[0].datePaiement) : null
+
+    const lines = isFullyPaid
+      ? [
+          `Bonjour ${f.client.nom},`,
+          '',
+          `✅ Votre facture *${f.numeroFacture}* est entièrement réglée — merci !`,
+          '',
+          `💰 Total payé : *${fmt(montantPaye)}*`,
+          ...(lastDate ? [`📅 Dernier paiement : ${lastDate}`] : []),
+          '',
+          'Votre reçu complet :',
+          url,
+          '',
+          'Merci pour votre confiance.',
+        ]
+      : [
+          `Bonjour ${f.client.nom},`,
+          '',
+          `✅ Nous confirmons la réception de votre paiement pour la facture *${f.numeroFacture}*.`,
+          '',
+          `💰 Montant payé à ce jour : *${fmt(montantPaye)}*`,
+          `🔸 Reste à payer : *${fmt(restant)}*`,
+          ...(lastDate ? [`📅 Dernier paiement : ${lastDate}`] : []),
+          '',
+          'Votre reçu :',
+          url,
+          '',
+          'Merci pour votre confiance.',
+        ]
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank')
+  }
+
   const handleOpenDetail = async (f: ApiFacture) => {
     if (f.lignes) { setSelected(f); return }
     try {
@@ -834,6 +882,7 @@ export default function FacturesPage() {
                             ...(facture.statut === 'BROUILLON' ? [{ label: t('pages.factures.actions.send'), icon: Send, onClick: () => handleSend(facture) }] : []),
                             ...(facture.statut !== 'BROUILLON' ? [{ label: t('pages.factures.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(facture) }] : []),
                             { label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(facture) },
+                            ...(n(facture.montantPaye) > 0 ? [{ label: 'Reçu WhatsApp', icon: Receipt, onClick: () => handleRecuWhatsApp(facture) }] : []),
                             { label: 'Email', icon: Mail, onClick: () => handleEmail(facture) },
                             ...(facture.statut === 'EN_RETARD' ? [{ label: t('pages.factures.actions.relancerWhatsApp'), icon: Bell, onClick: () => handleRelanceWhatsApp(facture) }] : []),
                             ...(facture.statut === 'BROUILLON' || facture.statut === 'ENVOYEE' ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(facture) }] : []),
@@ -1040,6 +1089,15 @@ export default function FacturesPage() {
                   {actionLoading === `wa_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <MessageCircle className="w-3.5 h-3.5" />}
                   WhatsApp
                 </button>
+                {selected.paiements && selected.paiements.length > 0 && (
+                  <button
+                    onClick={() => handleRecuWhatsApp(selected)}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all"
+                  >
+                    <Receipt className="w-3.5 h-3.5" />
+                    Reçu WhatsApp
+                  </button>
+                )}
                 <button
                   onClick={() => handleEmail(selected)}
                   disabled={actionLoading === `email_${selected.id}`}

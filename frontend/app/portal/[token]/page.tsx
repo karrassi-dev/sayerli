@@ -40,6 +40,14 @@ interface PortalDevis {
   lienPublic: { token: string; expiration: string } | null
 }
 
+interface PortalPaiement {
+  id: string
+  montant: number | string
+  methode: string
+  datePaiement: string
+  reference: string | null
+}
+
 interface PortalFacture {
   id: string
   numeroFacture: string
@@ -51,6 +59,7 @@ interface PortalFacture {
   dateEcheance: string | null
   createdAt: string
   publicToken: string
+  paiements: PortalPaiement[]
 }
 
 interface PortalData {
@@ -234,45 +243,98 @@ export default function PortalPage() {
             <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
               Factures
             </h2>
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-              {data.factures.map((facture, i) => (
-                <div
-                  key={facture.id}
-                  className={cn(
-                    'flex items-center justify-between px-5 py-4 gap-4',
-                    i < data.factures.length - 1 && 'border-b border-slate-100',
-                  )}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
-                      <Receipt className="w-4 h-4 text-slate-500" />
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden divide-y divide-slate-100">
+              {data.factures.map(facture => {
+                const hasPaiements = facture.paiements && facture.paiements.length > 0
+                const restant = Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))
+                const METHODE: Record<string, string> = {
+                  VIREMENT: 'Virement', CASH: 'Espèces', CHEQUE: 'Chèque',
+                  CARTE: 'Carte', MOBILE: 'Mobile', AUTRE: 'Autre',
+                }
+                return (
+                  <div key={facture.id}>
+                    {/* Main facture row */}
+                    <div className="flex items-center justify-between px-5 py-4 gap-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={cn(
+                          'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0',
+                          facture.statut === 'PAYEE' ? 'bg-green-100' : 'bg-slate-100'
+                        )}>
+                          <Receipt className={cn('w-4 h-4', facture.statut === 'PAYEE' ? 'text-green-600' : 'text-slate-500')} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-slate-900 truncate">{facture.numeroFacture}</p>
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            {facture.dateEcheance ? `Échéance ${formatDate(facture.dateEcheance)}` : formatDate(facture.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <div className="text-right hidden sm:block">
+                          <p className="text-sm font-bold text-slate-900">{formatMAD(facture.totalTTC)}</p>
+                          {facture.statut === 'PARTIELLE' && (
+                            <p className="text-xs text-amber-600">Payé: {formatMAD(facture.montantPaye)}</p>
+                          )}
+                        </div>
+                        <StatusBadge statut={facture.statut} type="facture" />
+                        <a
+                          href={`/public/factures/${facture.publicToken}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-medium text-slate-500 hover:text-slate-800 underline underline-offset-2 hidden sm:block"
+                        >
+                          Voir
+                        </a>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-slate-900 truncate">{facture.numeroFacture}</p>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {facture.dateEcheance ? `Échéance ${formatDate(facture.dateEcheance)}` : formatDate(facture.createdAt)}
-                      </p>
-                    </div>
+
+                    {/* Payment history */}
+                    {hasPaiements && (
+                      <div className="px-5 pb-4 bg-slate-50/60">
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2 pt-1">
+                          Historique des paiements
+                        </p>
+                        <div className="space-y-1.5">
+                          {facture.paiements.map((p, pi) => (
+                            <div key={p.id} className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-2 text-slate-500">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0" />
+                                <span>{formatDate(p.datePaiement)}</span>
+                                <span className="text-slate-300">·</span>
+                                <span>{METHODE[p.methode] ?? p.methode}</span>
+                                {p.reference && (
+                                  <>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="font-mono text-slate-400">{p.reference}</span>
+                                  </>
+                                )}
+                              </div>
+                              <span className="font-semibold text-green-600">{formatMAD(p.montant)}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {/* Balance summary */}
+                        <div className="mt-3 pt-2.5 border-t border-slate-200 flex items-center justify-between text-xs">
+                          <span className="text-slate-500 font-medium">Total payé</span>
+                          <span className="font-bold text-slate-700">{formatMAD(facture.montantPaye)}</span>
+                        </div>
+                        {restant > 0.01 && (
+                          <div className="flex items-center justify-between text-xs mt-1">
+                            <span className="text-amber-600 font-medium">Reste à payer</span>
+                            <span className="font-bold text-amber-600">{formatMAD(restant)}</span>
+                          </div>
+                        )}
+                        {restant <= 0.01 && (
+                          <div className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-green-600">
+                            <CheckCircle className="w-3.5 h-3.5" />
+                            Facture entièrement réglée
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <div className="text-right hidden sm:block">
-                      <p className="text-sm font-bold text-slate-900">{formatMAD(facture.totalTTC)}</p>
-                      {['PARTIELLE'].includes(facture.statut) && (
-                        <p className="text-xs text-amber-600">Payé: {formatMAD(facture.montantPaye)}</p>
-                      )}
-                    </div>
-                    <StatusBadge statut={facture.statut} type="facture" />
-                    <a
-                      href={`/public/factures/${facture.publicToken}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-medium text-slate-500 hover:text-slate-800 underline underline-offset-2 hidden sm:block"
-                    >
-                      Voir
-                    </a>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </section>
         )}
