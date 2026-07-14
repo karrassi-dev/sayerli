@@ -96,6 +96,15 @@ export class FacturesController {
     return this.facturesService.envoyerFacture(id, entrepriseId);
   }
 
+  @Post(':id/relancer')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  async relancer(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.facturesService.relancerFacture(id, entrepriseId);
+  }
+
   @Patch('declarations/:id/approuver')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
   async approuverDeclaration(

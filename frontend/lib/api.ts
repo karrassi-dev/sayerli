@@ -96,6 +96,7 @@ export const facturesApi = {
   updateStatus: (id: string, statut: string) =>
     api.patch(`/factures/${id}/statut`, { statut }),
   send: (id: string) => api.post(`/factures/${id}/envoyer`),
+  relancer: (id: string) => api.post(`/factures/${id}/relancer`),
   annuler: (id: string) => api.patch(`/factures/${id}/annuler`),
   dashboard: () => api.get('/factures/tableau-de-bord'),
   delete: (id: string) => api.delete(`/factures/${id}`),

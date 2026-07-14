@@ -15,7 +15,7 @@ import {
   ClientStatsVisual,
   ChartSkeleton,
 } from '@/components/dashboard/ui/Charts'
-import { dashboardApi } from '@/lib/api'
+import { dashboardApi, facturesApi } from '@/lib/api'
 import { formatMAD } from '@/lib/mock-data'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
 
@@ -63,7 +63,7 @@ interface DashboardAnalytics {
   caEnAttente: number
   tauxRecouvrement: number
   top5Clients: { clientId: string; nom: string; total: number }[]
-  facturesEnRetard: { id: string; numero: string; clientNom: string; clientTelephone: string | null; totalTTC: number; dateEcheance: string | null; publicToken: string }[]
+  facturesEnRetard: { id: string; numero: string; clientNom: string; clientTelephone: string | null; totalTTC: number; montantPaye: number; dateEcheance: string | null; publicToken: string }[]
   facturesRecentes: { id: string; numero: string; clientNom: string; totalTTC: number; statut: string }[]
   activite: { id: string; type: string; message: string; lien: string | null; lu: boolean; createdAt: string }[]
 }
@@ -117,6 +117,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [bannerDismissed, setBannerDismissed] = useState(false)
   const [typeFilter, setTypeFilter] = useState<TypeClientFilter>('ALL')
+  const [relancingId, setRelancingId] = useState<string | null>(null)
 
   const showProfileBanner =
     !bannerDismissed &&
@@ -456,18 +457,42 @@ export default function DashboardPage() {
               {analytics.facturesEnRetard.map(f => {
                 const days = daysOverdue(f.dateEcheance)
                 const phone = toWhatsAppNumber(f.clientTelephone)
+                const reste = Math.max(0, f.totalTTC - f.montantPaye)
+                const fmtMAD = (n: number) => n.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
                 const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://sayerli.com'}/public/factures/${f.publicToken}`
-                const msg = [
-                  `Bonjour ${f.clientNom},`,
-                  '',
-                  `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${f.totalTTC.toLocaleString('fr-MA', { minimumFractionDigits: 2 })} MAD*.`,
-                  '',
-                  `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
-                  '',
-                  `Consultez votre facture ici : ${url}`,
-                  '',
-                  'Merci pour votre confiance.',
-                ].join('\n')
+                const msg = f.montantPaye > 0
+                  ? [
+                      `Bonjour ${f.clientNom},`,
+                      '',
+                      `Nous avons bien reçu votre paiement de *${fmtMAD(f.montantPaye)}* sur votre facture *${f.numero}* d'un montant total de *${fmtMAD(f.totalTTC)}*.`,
+                      '',
+                      `Il reste un solde de *${fmtMAD(reste)}* à régler. Pourriez-vous régulariser ce solde dans les meilleurs délais ?`,
+                      '',
+                      `Consultez votre facture ici : ${url}`,
+                      '',
+                      'Merci pour votre confiance.',
+                    ].join('\n')
+                  : [
+                      `Bonjour ${f.clientNom},`,
+                      '',
+                      `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${fmtMAD(f.totalTTC)}*.`,
+                      '',
+                      `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
+                      '',
+                      `Consultez votre facture ici : ${url}`,
+                      '',
+                      'Merci pour votre confiance.',
+                    ].join('\n')
+
+                const handleRelancer = async () => {
+                  setRelancingId(f.id)
+                  try {
+                    await facturesApi.relancer(f.id)
+                  } catch { /* email failed silently — still open WhatsApp */ }
+                  finally { setRelancingId(null) }
+                  if (phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+                }
+
                 return (
                   <div key={f.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/40">
                     <div className="flex-1 min-w-0">
@@ -476,7 +501,14 @@ export default function DashboardPage() {
                         <span className="text-[10px] text-slate-400 flex-shrink-0">{f.numero}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        <span className="text-xs font-bold text-red-600 dark:text-red-400">{formatMAD(f.totalTTC)}</span>
+                        <span className="text-xs font-bold text-red-600 dark:text-red-400">
+                          {f.montantPaye > 0 ? `${fmtMAD(reste)} restant` : fmtMAD(f.totalTTC)}
+                        </span>
+                        {f.montantPaye > 0 && (
+                          <span className="text-[10px] text-green-600 dark:text-green-400 flex-shrink-0">
+                            {fmtMAD(f.montantPaye)} payé
+                          </span>
+                        )}
                         {days > 0 && (
                           <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">
                             {days} {t('dashboard.joursRetard')}
@@ -485,20 +517,15 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <button
-                      onClick={() => {
-                        if (!phone) return
-                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
-                      }}
-                      disabled={!phone}
-                      title={phone ? t('dashboard.relancer') : t('dashboard.noPhone')}
-                      className={cn(
-                        'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all',
-                        phone
-                          ? 'bg-[#25D366] hover:bg-[#1ebe5d] text-white'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
-                      )}
+                      onClick={handleRelancer}
+                      disabled={relancingId === f.id}
+                      title={t('dashboard.relancer')}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all bg-[#25D366] hover:bg-[#1ebe5d] text-white disabled:opacity-60"
                     >
-                      <Bell className="w-3 h-3" />
+                      {relancingId === f.id
+                        ? <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        : <Bell className="w-3 h-3" />
+                      }
                       <span className="hidden sm:inline">{t('dashboard.relancer')}</span>
                     </button>
                   </div>

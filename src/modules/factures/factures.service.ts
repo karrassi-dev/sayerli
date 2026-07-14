@@ -10,6 +10,7 @@ import { retryOnConflict } from '../../common/utils/retry';
 import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { EmailService } from '../email/email.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
 import { DeclarerPaiementDto } from './dto/declarer-paiement.dto';
@@ -20,6 +21,7 @@ export class FacturesService {
   constructor(
     private prisma: PrismaService,
     private notificationsService: NotificationsService,
+    private emailService: EmailService,
   ) {}
 
   private calculerTotaux(lignes: { quantite: number; prixUnitaire: number }[], taxe: number, remise = 0) {
@@ -446,6 +448,58 @@ export class FacturesService {
         reviewedAt: new Date(),
       },
     });
+  }
+
+  // ── Relance manuelle ─────────────────────────────────────────────────────────
+
+  async relancerFacture(id: string, entrepriseId: string) {
+    const facture = await this.prisma.facture.findFirst({
+      where: { id, entrepriseId },
+      select: {
+        id: true,
+        numeroFacture: true,
+        totalTTC: true,
+        montantPaye: true,
+        dateEcheance: true,
+        publicToken: true,
+        statut: true,
+        lastReminderSentAt: true,
+        client: { select: { nom: true, email: true } },
+        entreprise: { select: { nom: true } },
+      },
+    });
+    if (!facture) throw new NotFoundException('Facture introuvable.');
+    if (!facture.client.email) {
+      throw new BadRequestException('Ce client n\'a pas d\'adresse email.');
+    }
+
+    const now = new Date();
+    const lastReminder = facture.lastReminderSentAt;
+    let level: 1 | 2 | 3 = 1;
+    if (lastReminder) {
+      const daysSinceLast = Math.floor((now.getTime() - lastReminder.getTime()) / 86400000);
+      if (daysSinceLast >= 7) level = 3;
+      else if (daysSinceLast >= 3) level = 2;
+    }
+
+    await this.emailService.sendReminderEmail({
+      toEmail: facture.client.email,
+      clientNom: facture.client.nom,
+      entrepriseNom: facture.entreprise.nom,
+      numeroFacture: facture.numeroFacture,
+      montantTTC: Number(facture.totalTTC),
+      montantPaye: Number(facture.montantPaye),
+      dateEcheance: facture.dateEcheance,
+      publicToken: facture.publicToken,
+      level,
+    });
+
+    await this.prisma.facture.update({
+      where: { id },
+      data: { lastReminderSentAt: now },
+    });
+
+    return { message: 'Relance envoyée par email.' };
   }
 
   // ── Dashboard ────────────────────────────────────────────────────────────────

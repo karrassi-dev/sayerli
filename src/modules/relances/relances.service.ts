@@ -30,7 +30,14 @@ export class RelancesService {
         dateEcheance: { not: null },
         client: { email: { not: null } },
       },
-      include: {
+      select: {
+        id: true,
+        numeroFacture: true,
+        totalTTC: true,
+        montantPaye: true,
+        dateEcheance: true,
+        publicToken: true,
+        lastReminderSentAt: true,
         client: { select: { nom: true, email: true } },
         entreprise: { select: { nom: true } },
       },
@@ -81,6 +88,7 @@ export class RelancesService {
         entrepriseNom: facture.entreprise.nom,
         numeroFacture: facture.numeroFacture,
         montantTTC: Number(facture.totalTTC),
+        montantPaye: Number(facture.montantPaye),
         dateEcheance: facture.dateEcheance,
         publicToken: facture.publicToken,
         level,

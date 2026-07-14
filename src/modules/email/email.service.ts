@@ -236,17 +236,55 @@ export class EmailService {
     entrepriseNom: string;
     numeroFacture: string;
     montantTTC: number;
+    montantPaye?: number;
     dateEcheance: Date | null;
     publicToken: string;
     level: 1 | 2 | 3;
   }) {
     const url = `${this.frontendUrl}/public/factures/${opts.publicToken}`;
-    const montantStr = new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(opts.montantTTC) + ' MAD';
+    const fmt = (n: number) => new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' MAD';
+    const paye = opts.montantPaye ?? 0;
+    const reste = Math.max(0, opts.montantTTC - paye);
+    const resteStr = fmt(reste);
+    const totalStr = fmt(opts.montantTTC);
+    const payeStr = fmt(paye);
+    const isPartial = paye > 0;
     const dateStr = opts.dateEcheance
       ? opts.dateEcheance.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
       : null;
     const levelLabel = opts.level === 1 ? '1er rappel' : opts.level === 2 ? '2ème rappel' : '3ème rappel';
     const urgency = opts.level === 3 ? 'urgent ' : '';
+
+    const paymentBlock = isPartial
+      ? `<tr>
+           <td style="width:33%;padding-top:8px;border-top:1px solid #fecaca;">
+             <p style="margin:0;font-size:12px;color:#94a3b8;">Total facture</p>
+             <p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#0f172a;">${totalStr}</p>
+           </td>
+           <td style="width:33%;padding-top:8px;border-top:1px solid #fecaca;">
+             <p style="margin:0;font-size:12px;color:#94a3b8;">Déjà payé</p>
+             <p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#16a34a;">${payeStr}</p>
+           </td>
+           <td style="width:33%;padding-top:8px;border-top:1px solid #fecaca;">
+             <p style="margin:0;font-size:12px;color:#94a3b8;">Reste à payer</p>
+             <p style="margin:4px 0 0;font-size:16px;font-weight:800;color:#dc2626;">${resteStr}</p>
+           </td>
+         </tr>`
+      : `<tr>
+           <td style="width:50%;padding-top:8px;border-top:1px solid #fecaca;">
+             <p style="margin:0;font-size:12px;color:#94a3b8;">Montant dû</p>
+             <p style="margin:4px 0 0;font-size:16px;font-weight:800;color:#dc2626;">${resteStr}</p>
+           </td>
+           ${dateStr ? `<td style="width:50%;padding-top:8px;border-top:1px solid #fecaca;">
+             <p style="margin:0;font-size:12px;color:#94a3b8;">Échéance</p>
+             <p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#0f172a;">${dateStr}</p>
+           </td>` : ''}
+         </tr>`;
+
+    const introText = isPartial
+      ? `Nous avons bien reçu votre paiement partiel de <strong style="color:#16a34a;">${payeStr}</strong>. Il reste un solde de <strong style="color:#dc2626;">${resteStr}</strong> à régler sur votre facture <strong>${opts.numeroFacture}</strong>.`
+      : `Ceci est un rappel ${urgency}concernant la facture <strong>${opts.numeroFacture}</strong> d'un montant de <strong>${resteStr}</strong>, qui reste impayée à ce jour.`;
+
     const html = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -271,7 +309,7 @@ export class EmailService {
                   </td>
                 </tr>
               </table>
-              <p style="margin:12px 0 0;color:#fecaca;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">${levelLabel} — Facture impayée</p>
+              <p style="margin:12px 0 0;color:#fecaca;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">${levelLabel} — ${isPartial ? 'Solde restant' : 'Facture impayée'}</p>
             </td>
           </tr>
           <tr>
@@ -281,9 +319,8 @@ export class EmailService {
               </h1>
               <p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">
                 Bonjour <strong style="color:#0f172a;">${opts.clientNom}</strong>,<br/>
-                Ceci est un rappel ${urgency}concernant la facture ci-dessous, qui reste impayée à ce jour.
+                ${introText}
               </p>
-
               <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
@@ -295,29 +332,17 @@ export class EmailService {
                   <tr>
                     <td>
                       <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td style="width:50%;padding-top:8px;border-top:1px solid #fecaca;">
-                            <p style="margin:0;font-size:12px;color:#94a3b8;">Montant dû</p>
-                            <p style="margin:4px 0 0;font-size:16px;font-weight:800;color:#dc2626;">${montantStr}</p>
-                          </td>
-                          ${dateStr ? `<td style="width:50%;padding-top:8px;border-top:1px solid #fecaca;">
-                            <p style="margin:0;font-size:12px;color:#94a3b8;">Échéance</p>
-                            <p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#0f172a;">${dateStr}</p>
-                          </td>` : ''}
-                        </tr>
+                        ${paymentBlock}
                       </table>
                     </td>
                   </tr>
                 </table>
               </div>
-
               <p style="margin:0 0 24px;font-size:14px;color:#64748b;line-height:1.6;">
-                Nous vous prions de bien vouloir procéder au règlement de cette facture dans les meilleurs délais. En cas de doute ou de difficulté, n'hésitez pas à contacter <strong style="color:#0f172a;">${opts.entrepriseNom}</strong>.
+                Nous vous prions de bien vouloir procéder au règlement ${isPartial ? 'du solde restant' : 'de cette facture'} dans les meilleurs délais. En cas de doute ou de difficulté, n'hésitez pas à contacter <strong style="color:#0f172a;">${opts.entrepriseNom}</strong>.
               </p>
-
               <div style="text-align:center;margin-bottom:8px;">
-                <a href="${url}"
-                   style="display:inline-block;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:12px;letter-spacing:0.2px;">
+                <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:12px;letter-spacing:0.2px;">
                   Voir ma facture
                 </a>
               </div>
@@ -339,7 +364,7 @@ export class EmailService {
       const { error } = await this.resend.emails.send({
         from: this.from,
         to: opts.toEmail,
-        subject: `${opts.level === 3 ? '[URGENT] ' : ''}Rappel de paiement — ${opts.numeroFacture} (${montantStr})`,
+        subject: `${opts.level === 3 ? '[URGENT] ' : ''}Rappel de paiement — ${opts.numeroFacture} (${resteStr} restant)`,
         html,
       });
       if (error) this.logger.error(`Resend error: ${JSON.stringify(error)}`);
