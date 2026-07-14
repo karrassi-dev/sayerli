@@ -1,13 +1,19 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import {
   FileText, Receipt, CheckCircle, XCircle, Clock, AlertCircle,
-  Building2, Mail, Phone, Globe, Loader2, Check,
+  Building2, Mail, Phone, Globe, Loader2, Check, Download,
 } from 'lucide-react'
 import { portalApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+
+const RecuDownloadButton = dynamic(
+  () => import('@/components/pdf/RecuDownloadButton'),
+  { ssr: false, loading: () => <span className="w-6 h-6 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin inline-block" /> },
+)
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -338,6 +344,126 @@ export default function PortalPage() {
             </div>
           </section>
         )}
+
+        {/* Reçus */}
+        {(() => {
+          const facturesAvecPaiements = data.factures.filter(f => f.paiements && f.paiements.length > 0)
+          if (facturesAvecPaiements.length === 0) return null
+          const METHODE: Record<string, string> = {
+            VIREMENT: 'Virement', CASH: 'Espèces', CHEQUE: 'Chèque',
+            CARTE: 'Carte', MOBILE: 'Mobile', AUTRE: 'Autre',
+          }
+          return (
+            <section>
+              <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                Reçus de paiement
+              </h2>
+              <div className="space-y-3">
+                {facturesAvecPaiements.map(facture => {
+                  const montantPaye = n(facture.montantPaye)
+                  const restant     = Math.max(0, n(facture.totalTTC) - montantPaye)
+                  const isFullyPaid = restant < 0.01
+                  const logoUrl     = data.entreprise.logo ?? undefined
+                  const recuData    = {
+                    numeroFacture: facture.numeroFacture,
+                    client: { nom: data.nom, nomEntreprise: data.nomEntreprise },
+                    entreprise: {
+                      nom: data.entreprise.nom,
+                      logoUrl,
+                      adresse: data.entreprise.adresse,
+                      telephone: data.entreprise.telephone,
+                      email: data.entreprise.email,
+                      couleurPrimaire: data.entreprise.couleurPrimaire,
+                    },
+                    paiements: facture.paiements.map(p => ({ ...p, montant: n(p.montant) })),
+                    totalTTC: n(facture.totalTTC),
+                    montantPaye,
+                    generatedAt: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }),
+                  }
+                  return (
+                    <div key={facture.id} className="bg-white rounded-2xl border border-slate-200 p-5">
+                      {/* Header */}
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className={cn(
+                            'w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0',
+                            isFullyPaid ? 'bg-emerald-100' : 'bg-amber-100'
+                          )}>
+                            <Receipt className={cn('w-5 h-5', isFullyPaid ? 'text-emerald-600' : 'text-amber-600')} />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-slate-900">{facture.numeroFacture}</p>
+                            <p className="text-xs text-slate-400 mt-0.5">
+                              {facture.paiements.length} paiement{facture.paiements.length > 1 ? 's' : ''} enregistré{facture.paiements.length > 1 ? 's' : ''}
+                            </p>
+                          </div>
+                        </div>
+                        <span className={cn(
+                          'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0',
+                          isFullyPaid
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-amber-100 text-amber-700'
+                        )}>
+                          {isFullyPaid ? <CheckCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+                          {isFullyPaid ? 'Intégralement réglé' : 'Partiel'}
+                        </span>
+                      </div>
+
+                      {/* Payment rows */}
+                      <div className="space-y-1.5 mb-4">
+                        {facture.paiements.map((p, pi) => (
+                          <div key={p.id} className="flex items-center justify-between text-xs bg-slate-50 rounded-lg px-3 py-2">
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                              <span>{formatDate(p.datePaiement)}</span>
+                              <span className="text-slate-300">·</span>
+                              <span>{METHODE[p.methode] ?? p.methode}</span>
+                              {p.reference && (
+                                <>
+                                  <span className="text-slate-300">·</span>
+                                  <span className="font-mono text-slate-400">{p.reference}</span>
+                                </>
+                              )}
+                            </div>
+                            <span className="font-semibold text-emerald-600">{formatMAD(p.montant)}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Summary */}
+                      <div className="border-t border-slate-100 pt-3 flex items-center justify-between mb-4">
+                        <div>
+                          <p className="text-xs text-slate-400">Total payé</p>
+                          <p className="text-base font-black text-emerald-600">{formatMAD(montantPaye)}</p>
+                        </div>
+                        {!isFullyPaid && (
+                          <div className="text-right">
+                            <p className="text-xs text-slate-400">Reste à payer</p>
+                            <p className="text-sm font-bold text-amber-600">{formatMAD(restant)}</p>
+                          </div>
+                        )}
+                        {isFullyPaid && (
+                          <div className="flex items-center gap-1.5 text-sm font-semibold text-emerald-600">
+                            <CheckCircle className="w-4 h-4" />
+                            Facture réglée
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Download button */}
+                      <RecuDownloadButton
+                        data={recuData}
+                        label="Télécharger le reçu (PDF)"
+                        loadingLabel="Génération…"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all disabled:opacity-60"
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          )
+        })()}
 
         {/* Other devis (accepted/refused/expired) */}
         {otherDevis.length > 0 && (

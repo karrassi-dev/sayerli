@@ -288,6 +288,10 @@ export class FacturesService {
             titulaireCompte: true, banque: true, rib: true, iban: true, swift: true,
           },
         },
+        paiements: {
+          select: { id: true, montant: true, methode: true, datePaiement: true, reference: true },
+          orderBy: { datePaiement: 'asc' },
+        },
       },
     });
 

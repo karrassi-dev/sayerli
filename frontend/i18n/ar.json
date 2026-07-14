@@ -1276,6 +1276,19 @@
         "CARTE": "بطاقة بنكية",
         "AUTRE": "أخرى"
       }
+    },
+    "recu": {
+      "title": "إيصالات الدفع",
+      "download": "تنزيل الإيصال (PDF)",
+      "downloadLoading": "جارٍ إنشاء الإيصال…",
+      "paymentHistory": "سجل المدفوعات",
+      "totalPaid": "إجمالي المدفوع",
+      "remaining": "المبلغ المتبقي",
+      "fullyPaid": "مسدد بالكامل",
+      "partial": "جزئي",
+      "paymentsRegistered": "دفعة(دفعات) مسجلة",
+      "invoiceSettled": "الفاتورة مسددة",
+      "confirmMsg": "نؤكد استلام دفعتك. يمكنك تنزيل إيصالك الرسمي من هنا."
     }
   },
   "contact": {

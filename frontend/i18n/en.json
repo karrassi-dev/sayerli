@@ -1276,6 +1276,19 @@
         "CARTE": "Bank card",
         "AUTRE": "Other"
       }
+    },
+    "recu": {
+      "title": "Payment receipts",
+      "download": "Download receipt (PDF)",
+      "downloadLoading": "Generating receipt…",
+      "paymentHistory": "Payment history",
+      "totalPaid": "Total paid",
+      "remaining": "Remaining balance",
+      "fullyPaid": "Fully settled",
+      "partial": "Partial",
+      "paymentsRegistered": "payment(s) recorded",
+      "invoiceSettled": "Invoice settled",
+      "confirmMsg": "We confirm receipt of your payment. You can download your official receipt here."
     }
   },
   "contact": {

@@ -1277,6 +1277,19 @@
         "CARTE": "Carte bancaire",
         "AUTRE": "Autre"
       }
+    },
+    "recu": {
+      "title": "Reçus de paiement",
+      "download": "Télécharger le reçu (PDF)",
+      "downloadLoading": "Génération du reçu…",
+      "paymentHistory": "Historique des paiements",
+      "totalPaid": "Total payé",
+      "remaining": "Reste à payer",
+      "fullyPaid": "Payé intégralement",
+      "partial": "Partiel",
+      "paymentsRegistered": "paiement(s) enregistré(s)",
+      "invoiceSettled": "Facture réglée",
+      "confirmMsg": "Nous confirmons la réception de votre paiement. Vous pouvez télécharger votre reçu officiel ici."
     }
   },
   "contact": {

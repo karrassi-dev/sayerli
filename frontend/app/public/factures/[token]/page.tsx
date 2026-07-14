@@ -21,6 +21,11 @@ const FactureSimpleDownloadButton = dynamic(
   { ssr: false },
 )
 
+const RecuDownloadButton = dynamic(
+  () => import('@/components/pdf/RecuDownloadButton'),
+  { ssr: false },
+)
+
 // ── Types ────────────────────────────────────────────────────────────────────
 
 interface Ligne {
@@ -30,6 +35,14 @@ interface Ligne {
   prixUnitaire: number | string
   total: number | string
   ordre: number
+}
+
+interface PublicPaiement {
+  id: string
+  montant: number | string
+  methode: string
+  datePaiement: string
+  reference: string | null
 }
 
 interface PublicFacture {
@@ -48,6 +61,7 @@ interface PublicFacture {
   devis: { reference: string } | null
   client: { nom: string; email: string | null; telephone: string | null; nomEntreprise: string | null }
   lignes: Ligne[]
+  paiements: PublicPaiement[]
   entreprise: {
     nom: string; email: string | null; telephone: string | null
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
@@ -862,6 +876,33 @@ export default function PublicFacturePage() {
               loadingLabel="Génération..."
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded text-sm font-semibold text-gray-700 border border-gray-200 bg-white hover:bg-gray-50 transition-all"
             />
+            {facture.paiements && facture.paiements.length > 0 && (
+              <RecuDownloadButton
+                data={{
+                  numeroFacture: facture.numeroFacture,
+                  client: { nom: facture.client.nom, nomEntreprise: facture.client.nomEntreprise, email: facture.client.email },
+                  entreprise: {
+                    nom: facture.entreprise.nom,
+                    logoUrl: pdfLogoUrl,
+                    adresse: facture.entreprise.adresse,
+                    telephone: facture.entreprise.telephone,
+                    email: facture.entreprise.email,
+                    couleurPrimaire: facture.entreprise.couleurPrimaire,
+                    ice: facture.entreprise.ice,
+                  },
+                  paiements: facture.paiements.map(p => ({
+                    ...p,
+                    montant: n(p.montant),
+                  })),
+                  totalTTC: n(facture.totalTTC),
+                  montantPaye: n(facture.montantPaye),
+                  generatedAt: new Date().toLocaleDateString('fr-MA', { day: '2-digit', month: 'long', year: 'numeric' }),
+                }}
+                label="Télécharger le reçu (PDF)"
+                loadingLabel="Génération…"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all"
+              />
+            )}
             {canDeclare && (
               <button
                 onClick={() => setDeclarationOpen(true)}

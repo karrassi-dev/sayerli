@@ -517,7 +517,7 @@ export class EmailService {
               <!-- CTA -->
               <div style="text-align:center;">
                 <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#16a34a,#0d9488);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:12px;letter-spacing:0.2px;">
-                  Voir ma facture
+                  ⬇ Télécharger mon reçu
                 </a>
               </div>
             </td>
