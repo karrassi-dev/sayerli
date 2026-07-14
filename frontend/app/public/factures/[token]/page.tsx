@@ -39,6 +39,7 @@ interface PublicFacture {
   totalHT: number | string
   taxe: number | string
   totalTTC: number | string
+  remise: number | string
   montantPaye: number | string
   dateEcheance: string | null
   dateEnvoi: string | null
@@ -136,6 +137,7 @@ function DeclarationSuccessScreen({
     totalHT: n(facture.totalHT),
     taxe: n(facture.taxe),
     totalTTC: n(facture.totalTTC),
+    remise: n(facture.remise ?? 0),
     montantDejaPayeAvant: n(facture.montantPaye),
     devisReference: facture.devis?.reference ?? null,
     lignes: facture.lignes.map(l => ({
@@ -504,6 +506,7 @@ export default function PublicFacturePage() {
     totalHT: n(facture.totalHT),
     taxe: n(facture.taxe),
     totalTTC: n(facture.totalTTC),
+    remise: n(facture.remise ?? 0),
     devisReference: facture.devis?.reference ?? null,
     template,
     lignes: facture.lignes.map(l => ({

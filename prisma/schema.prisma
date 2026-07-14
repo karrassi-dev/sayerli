@@ -185,6 +185,7 @@ model Facture {
   totalHT                  Decimal               @default(0) @db.Decimal(12, 2)
   taxe                     Decimal               @default(20) @db.Decimal(5, 2)
   totalTTC                 Decimal               @default(0) @db.Decimal(12, 2)
+  remise                   Decimal               @default(0) @db.Decimal(12, 2)
   montantPaye              Decimal               @default(0) @db.Decimal(12, 2)
   dateEcheance             DateTime?
   notes                    String?

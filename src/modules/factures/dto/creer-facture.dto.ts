@@ -41,6 +41,11 @@ export class CreerFactureDto {
   taxe?: number;
 
   @IsOptional()
+  @IsNumber()
+  @Min(0)
+  remise?: number;
+
+  @IsOptional()
   @IsString()
   notes?: string;
 

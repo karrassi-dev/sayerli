@@ -18,6 +18,7 @@ export interface FactureSimplePDFProps {
   totalHT: number
   taxe: number
   totalTTC: number
+  remise?: number
   devisReference: string | null
   template?: string
   lignes: { description: string; quantite: number; prixUnitaire: number }[]
@@ -145,9 +146,10 @@ function tplConfig(template: string, brand: string) {
 
 export default function FactureSimplePDF({
   numeroFacture, createdAt, dateEcheance, notes, totalHT, taxe, totalTTC,
-  devisReference, template = 'classic', lignes, client, entreprise,
+  remise = 0, devisReference, template = 'classic', lignes, client, entreprise,
 }: FactureSimplePDFProps) {
   const brand = entreprise.couleurPrimaire || '#2563eb'
+  const sousTotal = lignes.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0)
   const tva = totalTTC - totalHT
   const hasBankInfo = entreprise.titulaireCompte || entreprise.rib || entreprise.iban || entreprise.banque
   const cfg = tplConfig(template, brand)
@@ -338,8 +340,14 @@ export default function FactureSimplePDF({
         <View style={s.totalsBox}>
           <View style={s.totRow}>
             <Text style={s.totLbl}>Sous-total HT</Text>
-            <Text style={s.totVal}>{fmt(totalHT)}</Text>
+            <Text style={s.totVal}>{fmt(sousTotal)}</Text>
           </View>
+          {remise > 0 && (
+            <View style={s.totRow}>
+              <Text style={s.totLbl}>Remise</Text>
+              <Text style={[s.totVal, { color: '#dc2626' }]}>−{fmt(remise)}</Text>
+            </View>
+          )}
           <View style={s.totRow}>
             <Text style={s.totLbl}>TVA {taxe}%</Text>
             <Text style={s.totVal}>{fmt(totalTTC - totalHT)}</Text>

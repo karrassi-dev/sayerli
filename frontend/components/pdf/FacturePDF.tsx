@@ -37,6 +37,7 @@ export interface FacturePDFProps {
   totalHT: number
   taxe: number
   totalTTC: number
+  remise?: number
   montantDejaPayeAvant: number
   lignes: { description: string; quantite: number; prixUnitaire: number }[]
   devisReference: string | null
@@ -69,9 +70,10 @@ function fmtDateTime(d: string) {
 
 export default function FacturePDF({
   numeroFacture, createdAt, dateEcheance, notes, totalHT, taxe, totalTTC,
-  montantDejaPayeAvant, lignes, devisReference, client, entreprise, declaration,
+  remise = 0, montantDejaPayeAvant, lignes, devisReference, client, entreprise, declaration,
 }: FacturePDFProps) {
   const brand = entreprise.couleurPrimaire || '#2563eb'
+  const sousTotal = lignes.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0)
   const tva = totalTTC - totalHT
   const totalPaidAfter = montantDejaPayeAvant + declaration.montant
   const resteApres = Math.max(0, totalTTC - totalPaidAfter)
@@ -297,8 +299,14 @@ export default function FacturePDF({
             <View style={s.totalsBox}>
               <View style={s.totRow}>
                 <Text style={s.totLbl}>Sous-total HT</Text>
-                <Text style={s.totVal}>{fmt(totalHT)}</Text>
+                <Text style={s.totVal}>{fmt(sousTotal)}</Text>
               </View>
+              {remise > 0 && (
+                <View style={s.totRow}>
+                  <Text style={s.totLbl}>Remise</Text>
+                  <Text style={[s.totVal, { color: '#dc2626' }]}>−{fmt(remise)}</Text>
+                </View>
+              )}
               <View style={s.totRow}>
                 <Text style={s.totLbl}>TVA {taxe}%</Text>
                 <Text style={s.totVal}>{fmt(tva)}</Text>

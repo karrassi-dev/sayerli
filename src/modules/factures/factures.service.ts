@@ -22,8 +22,9 @@ export class FacturesService {
     private notificationsService: NotificationsService,
   ) {}
 
-  private calculerTotaux(lignes: { quantite: number; prixUnitaire: number }[], taxe: number) {
-    const totalHT = lignes.reduce((sum, l) => sum + l.quantite * l.prixUnitaire, 0);
+  private calculerTotaux(lignes: { quantite: number; prixUnitaire: number }[], taxe: number, remise = 0) {
+    const sousTotal = lignes.reduce((sum, l) => sum + l.quantite * l.prixUnitaire, 0);
+    const totalHT = Math.max(0, sousTotal - remise);
     const totalTTC = totalHT + totalHT * (taxe / 100);
     return { totalHT, totalTTC };
   }
@@ -96,7 +97,8 @@ export class FacturesService {
     }
 
     const taxe = dto.taxe ?? 20;
-    const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe);
+    const remise = dto.remise ?? 0;
+    const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
 
     return retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
@@ -112,6 +114,7 @@ export class FacturesService {
             publicToken: uuidv4(),
             statut: StatutFacture.BROUILLON,
             taxe,
+            remise,
             totalHT,
             totalTTC,
             dateEcheance: dto.dateEcheance ? new Date(dto.dateEcheance) : null,
@@ -146,7 +149,8 @@ export class FacturesService {
     if (!client) throw new NotFoundException('Client introuvable.');
 
     const taxe = dto.taxe ?? Number(facture.taxe);
-    const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe);
+    const remise = dto.remise ?? Number(facture.remise);
+    const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
 
     await this.prisma.factureLigne.deleteMany({ where: { factureId: id } });
 
@@ -155,6 +159,7 @@ export class FacturesService {
       data: {
         clientId: dto.clientId,
         taxe,
+        remise,
         totalHT,
         totalTTC,
         dateEcheance: dto.dateEcheance ? new Date(dto.dateEcheance) : null,

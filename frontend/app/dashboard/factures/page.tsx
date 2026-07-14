@@ -46,6 +46,7 @@ interface ApiFacture {
   totalHT: number | string
   taxe: number | string
   totalTTC: number | string
+  remise: number | string
   montantPaye: number | string
   dateEcheance: string | null
   notes: string | null
@@ -942,6 +943,12 @@ export default function FacturesPage() {
                   <p className="font-black text-primary-700 dark:text-primary-300 text-sm">{formatMAD(selected.totalTTC)}</p>
                 </div>
               </div>
+              {n(selected.remise) > 0 && (
+                <div className="flex items-center justify-between px-3 py-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl text-sm">
+                  <span className="text-amber-700 dark:text-amber-400 font-medium">Remise appliquée</span>
+                  <span className="font-bold text-amber-700 dark:text-amber-400">−{formatMAD(selected.remise)}</span>
+                </div>
+              )}
 
               {/* Payment progress */}
               <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
