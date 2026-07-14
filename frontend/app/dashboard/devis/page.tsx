@@ -326,7 +326,7 @@ export default function DevisPage() {
   const [editTarget, setEditTarget] = useState<ApiDevis | null>(null)
   const [form, setForm] = useState<DevisForm>(EMPTY_FORM)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
-  const [limitModal, setLimitModal] = useState<{ resource: 'devis'; limite: number; actuel: number } | null>(null)
+  const [limitModal, setLimitModal] = useState<{ resource: 'devis' | 'factures'; limite: number; actuel: number } | null>(null)
   const [saving, setSaving] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
@@ -593,11 +593,15 @@ export default function DevisPage() {
       success(t('pages.devis.duplicateSuccess'))
       fetchDevis(search.trim() || undefined, filters.statut)
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de dupliquer ce devis.'))
-    }
-    finally { setActionLoading(null) }
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'devis', limite: errs?.limite ?? 10, actuel: errs?.actuel ?? 10 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de dupliquer ce devis.'))
+      }
+    } finally { setActionLoading(null) }
   }
 
   const handleConvert = async (d: ApiDevis) => {
@@ -607,11 +611,16 @@ export default function DevisPage() {
       setSelected(null)
       success(t('pages.devis.convertSuccess'))
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de convertir.'))
-    }
-    finally { setActionLoading(null) }
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
+        setSelected(null)
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'factures', limite: errs?.limite ?? 10, actuel: errs?.actuel ?? 10 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de convertir.'))
+      }
+    } finally { setActionLoading(null) }
   }
 
   const handleOpenDetail = async (d: ApiDevis) => {
