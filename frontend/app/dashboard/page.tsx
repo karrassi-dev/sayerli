@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X, User, Building2, Briefcase, ChevronDown } from 'lucide-react'
+import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -17,7 +17,7 @@ import {
 } from '@/components/dashboard/ui/Charts'
 import { dashboardApi } from '@/lib/api'
 import { formatMAD } from '@/lib/mock-data'
-import { cn } from '@/lib/utils'
+import { cn, toWhatsAppNumber } from '@/lib/utils'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -60,6 +60,10 @@ interface DashboardAnalytics {
   factures: { total: number; brouillon: number; envoyee: number; payee: number; partielle: number; enRetard: number; totalRevenus: number }
   paiements:{ total: number; ceMois: number; moisDernier: number; moyenne: number; count: number }
   revenus:  { mensuel: { mois: string; valeur: number }[]; ceMois: number; moisDernier: number; evolution: number }
+  caEnAttente: number
+  tauxRecouvrement: number
+  top5Clients: { clientId: string; nom: string; total: number }[]
+  facturesEnRetard: { id: string; numero: string; clientNom: string; clientTelephone: string | null; totalTTC: number; dateEcheance: string | null; publicToken: string }[]
   facturesRecentes: { id: string; numero: string; clientNom: string; totalTTC: number; statut: string }[]
   activite: { id: string; type: string; message: string; lien: string | null; lu: boolean; createdAt: string }[]
 }
@@ -79,6 +83,11 @@ function formatRelativeTime(dateStr: string): string {
   if (day === 1) return 'Hier'
   if (day < 7)  return `Il y a ${day}j`
   return d.toLocaleDateString('fr-MA', { day: '2-digit', month: 'short' })
+}
+
+function daysOverdue(dateEcheance: string | null): number {
+  if (!dateEcheance) return 0
+  return Math.max(0, Math.floor((Date.now() - new Date(dateEcheance).getTime()) / 86400000))
 }
 
 // ── Card shell ───────────────────────────────────────────────────────────────
@@ -203,7 +212,7 @@ export default function DashboardPage() {
           loading={loading}
           label={t('dashboard.totalRevenue')}
           value={analytics ? formatMAD(analytics.paiements.total) : '—'}
-          sub={analytics ? `${formatMAD(analytics.revenus.ceMois)} ${t('dashboard.thisMonth')}` : undefined}
+          sub={analytics ? `${formatMAD(analytics.caEnAttente)} ${t('dashboard.caEnAttenteDesc')}` : undefined}
           icon={TrendingUp}
           trend={analytics?.revenus.evolution}
           color="blue"
@@ -228,7 +237,7 @@ export default function DashboardPage() {
           loading={loading}
           label={t('dashboard.invoices')}
           value={analytics ? `${analytics.factures.payee}/${analytics.factures.total}` : '—'}
-          sub={analytics ? `${analytics.factures.enRetard} ${t('dashboard.overdue')}` : undefined}
+          sub={analytics ? `${analytics.tauxRecouvrement}% ${t('dashboard.tauxRecouvrement')}` : undefined}
           icon={CreditCard}
           color="orange"
         />
@@ -385,7 +394,129 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Row 5 · Recent activity ─────────────────────────────────────────── */}
+      {/* ── Row 5 · Top 5 clients + Factures en retard ─────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+
+        {/* Top 5 clients */}
+        <div className="card rounded-2xl p-5">
+          <CardHeader
+            title={t('dashboard.top5Clients')}
+            sub={t('dashboard.top5Desc')}
+            badge={<Users className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
+          />
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-8 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              ))}
+            </div>
+          ) : analytics?.top5Clients.length ? (() => {
+            const max = analytics.top5Clients[0].total
+            return (
+              <div className="space-y-3">
+                {analytics.top5Clients.map((c, i) => (
+                  <div key={c.clientId} className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-slate-400 w-4 flex-shrink-0">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">{c.nom}</span>
+                        <span className="text-xs font-bold text-slate-900 dark:text-white flex-shrink-0 ms-2">{formatMAD(c.total)}</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-primary-500 to-teal-500 transition-all"
+                          style={{ width: `${max > 0 ? (c.total / max) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          })() : (
+            <p className="text-xs text-slate-400 text-center py-6">{t('common.noResults')}</p>
+          )}
+        </div>
+
+        {/* Factures en retard */}
+        <div className="card rounded-2xl p-5">
+          <CardHeader
+            title={t('dashboard.facturesEnRetard')}
+            sub={analytics ? `${analytics.factures.enRetard} ${t('dashboard.overdue')}` : '—'}
+            badge={<AlertCircle className="w-4 h-4 text-red-400" />}
+          />
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-12 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              ))}
+            </div>
+          ) : analytics?.facturesEnRetard.length ? (
+            <div className="space-y-2">
+              {analytics.facturesEnRetard.map(f => {
+                const days = daysOverdue(f.dateEcheance)
+                const phone = toWhatsAppNumber(f.clientTelephone)
+                const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://sayerli.com'}/public/factures/${f.publicToken}`
+                const msg = [
+                  `Bonjour ${f.clientNom},`,
+                  '',
+                  `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${f.totalTTC.toLocaleString('fr-MA', { minimumFractionDigits: 2 })} MAD*.`,
+                  '',
+                  `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
+                  '',
+                  `Consultez votre facture ici : ${url}`,
+                  '',
+                  'Merci pour votre confiance.',
+                ].join('\n')
+                return (
+                  <div key={f.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/40">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{f.clientNom}</span>
+                        <span className="text-[10px] text-slate-400 flex-shrink-0">{f.numero}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        <span className="text-xs font-bold text-red-600 dark:text-red-400">{formatMAD(f.totalTTC)}</span>
+                        {days > 0 && (
+                          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">
+                            {days} {t('dashboard.joursRetard')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (!phone) return
+                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+                      }}
+                      disabled={!phone}
+                      title={phone ? t('dashboard.relancer') : t('dashboard.noPhone')}
+                      className={cn(
+                        'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all',
+                        phone
+                          ? 'bg-[#25D366] hover:bg-[#1ebe5d] text-white'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
+                      )}
+                    >
+                      <Bell className="w-3 h-3" />
+                      <span className="hidden sm:inline">{t('dashboard.relancer')}</span>
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-6 gap-2 text-slate-400">
+              <div className="w-8 h-8 rounded-full bg-green-50 dark:bg-green-950/30 flex items-center justify-center">
+                <Receipt className="w-4 h-4 text-green-500" />
+              </div>
+              <p className="text-xs">{t('dashboard.aucunRetard')}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Row 6 · Recent activity ─────────────────────────────────────────── */}
       <div className="card rounded-2xl p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('dashboard.recentActivity')}</h2>

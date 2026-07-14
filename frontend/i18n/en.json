@@ -244,7 +244,17 @@
     "overdue": "Overdue",
     "revenueChart": "Revenue Overview",
     "invoiceStatus": "Invoice Status",
-    "recentInvoices": "Recent Invoices"
+    "recentInvoices": "Recent Invoices",
+    "caEnAttente": "Pending Revenue",
+    "caEnAttenteDesc": "outstanding amount",
+    "tauxRecouvrement": "Collection Rate",
+    "top5Clients": "Top 5 Clients",
+    "top5Desc": "by total billed",
+    "facturesEnRetard": "Overdue Invoices",
+    "aucunRetard": "No overdue invoices",
+    "joursRetard": "days overdue",
+    "relancer": "Follow up",
+    "noPhone": "No phone number"
   },
   "dashboardShowcase": {
     "badge": "Product in Action",

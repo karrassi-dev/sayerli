@@ -244,7 +244,17 @@
     "overdue": "En retard",
     "revenueChart": "Évolution du chiffre d'affaires",
     "invoiceStatus": "Statut des factures",
-    "recentInvoices": "Dernières factures"
+    "recentInvoices": "Dernières factures",
+    "caEnAttente": "CA en attente",
+    "caEnAttenteDesc": "montant dû non encaissé",
+    "tauxRecouvrement": "Taux de recouvrement",
+    "top5Clients": "Top 5 clients",
+    "top5Desc": "par CA facturé",
+    "facturesEnRetard": "Factures en retard",
+    "aucunRetard": "Aucune facture en retard",
+    "joursRetard": "j de retard",
+    "relancer": "Relancer",
+    "noPhone": "Pas de téléphone"
   },
   "dashboardShowcase": {
     "badge": "Produit en action",

@@ -244,7 +244,17 @@
     "overdue": "متأخرة",
     "revenueChart": "تطور رقم الأعمال",
     "invoiceStatus": "حالة الفواتير",
-    "recentInvoices": "آخر الفواتير"
+    "recentInvoices": "آخر الفواتير",
+    "caEnAttente": "رقم الأعمال المنتظر",
+    "caEnAttenteDesc": "مبلغ غير محصّل",
+    "tauxRecouvrement": "نسبة التحصيل",
+    "top5Clients": "أفضل 5 عملاء",
+    "top5Desc": "حسب إجمالي الفوترة",
+    "facturesEnRetard": "الفواتير المتأخرة",
+    "aucunRetard": "لا توجد فواتير متأخرة",
+    "joursRetard": "يوم تأخير",
+    "relancer": "تذكير",
+    "noPhone": "لا يوجد هاتف"
   },
   "dashboardShowcase": {
     "badge": "المنتج في العمل",
