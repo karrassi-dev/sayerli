@@ -385,7 +385,14 @@ export class FacturesService {
   async approuverDeclaration(id: string, entrepriseId: string) {
     const declaration = await this.prisma.declarationPaiement.findFirst({
       where: { id, entrepriseId },
-      include: { facture: true },
+      include: {
+        facture: {
+          include: {
+            client: { select: { nom: true, email: true } },
+            entreprise: { select: { nom: true } },
+          },
+        },
+      },
     });
     if (!declaration) throw new NotFoundException('Déclaration introuvable.');
     if (declaration.statut !== StatutDeclaration.PENDING) {
@@ -394,7 +401,7 @@ export class FacturesService {
 
     const facture = declaration.facture;
     const montantPaye = Number(facture.montantPaye) + Number(declaration.montant);
-    const montantRestant = Number(facture.totalTTC) - montantPaye;
+    const montantRestant = Math.max(0, Number(facture.totalTTC) - montantPaye);
     const nouveauStatut = montantRestant <= 0.01
       ? StatutFacture.PAYEE
       : StatutFacture.PARTIELLE;
@@ -427,6 +434,23 @@ export class FacturesService {
       message: `Déclaration approuvée : ${Number(declaration.montant)} MAD reçus pour la facture ${facture.numeroFacture}.`,
       lien: `/dashboard/factures`,
     });
+
+    if (facture.client.email) {
+      this.emailService.sendPaymentReceiptEmail({
+        toEmail: facture.client.email,
+        clientNom: facture.client.nom,
+        entrepriseNom: facture.entreprise.nom,
+        numeroFacture: facture.numeroFacture,
+        montantCePaiement: Number(declaration.montant),
+        montantTotalPaye: montantPaye,
+        montantTotal: Number(facture.totalTTC),
+        montantRestant,
+        methodePaiement: declaration.methode,
+        datePaiement: declaration.datePaiement,
+        publicToken: facture.publicToken,
+        isFullyPaid: nouveauStatut === StatutFacture.PAYEE,
+      });
+    }
 
     return { message: 'Déclaration approuvée et paiement enregistré.' };
   }

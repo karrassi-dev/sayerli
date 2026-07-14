@@ -63,6 +63,16 @@ export class PortalService {
             dateEcheance: true,
             createdAt: true,
             publicToken: true,
+            paiements: {
+              select: {
+                id: true,
+                montant: true,
+                methode: true,
+                datePaiement: true,
+                reference: true,
+              },
+              orderBy: { datePaiement: 'asc' },
+            },
           },
           orderBy: { createdAt: 'desc' },
         },

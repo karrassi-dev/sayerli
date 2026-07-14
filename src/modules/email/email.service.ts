@@ -373,6 +373,188 @@ export class EmailService {
     }
   }
 
+  async sendPaymentReceiptEmail(opts: {
+    toEmail: string
+    clientNom: string
+    entrepriseNom: string
+    numeroFacture: string
+    montantCePaiement: number
+    montantTotalPaye: number
+    montantTotal: number
+    montantRestant: number
+    methodePaiement: string
+    datePaiement: Date
+    publicToken: string
+    isFullyPaid: boolean
+  }) {
+    const url = `${this.frontendUrl}/public/factures/${opts.publicToken}`
+    const fmt = (n: number) =>
+      new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' MAD'
+    const dateStr = opts.datePaiement.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+
+    const METHODE_LABELS: Record<string, string> = {
+      VIREMENT: 'Virement bancaire',
+      CASH: 'Espèces',
+      CHEQUE: 'Chèque',
+      CARTE: 'Carte bancaire',
+      MOBILE: 'Mobile',
+      AUTRE: 'Autre',
+    }
+    const methodeLabel = METHODE_LABELS[opts.methodePaiement] ?? opts.methodePaiement
+
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirmation de paiement — ${opts.numeroFacture}</title>
+</head>
+<body style="margin:0;padding:0;background:#f0fdf4;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#16a34a,#0d9488);padding:32px 40px;text-align:center;">
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="38" height="38" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#bbf7d0;font-size:24px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:12px 0 0;color:#bbf7d0;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">
+                ${opts.isFullyPaid ? 'Facture entièrement réglée ✓' : 'Paiement reçu ✓'}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+              <h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#0f172a;">
+                ${opts.isFullyPaid ? 'Merci, votre paiement est confirmé !' : 'Paiement bien reçu'}
+              </h1>
+              <p style="margin:0 0 28px;font-size:15px;color:#64748b;line-height:1.6;">
+                Bonjour <strong style="color:#0f172a;">${opts.clientNom}</strong>,<br/>
+                ${opts.isFullyPaid
+                  ? `<strong style="color:#0f172a;">${opts.entrepriseNom}</strong> confirme la réception de votre paiement. La facture <strong>${opts.numeroFacture}</strong> est désormais <strong style="color:#16a34a;">entièrement réglée</strong>.`
+                  : `<strong style="color:#0f172a;">${opts.entrepriseNom}</strong> confirme la réception de votre paiement de <strong style="color:#16a34a;">${fmt(opts.montantCePaiement)}</strong> sur la facture <strong>${opts.numeroFacture}</strong>.`
+                }
+              </p>
+
+              <!-- Payment detail card -->
+              <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:24px;margin-bottom:28px;">
+                <p style="margin:0 0 16px;font-size:12px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Détail du paiement</p>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding-bottom:10px;border-bottom:1px solid #dcfce7;">
+                      <p style="margin:0;font-size:12px;color:#64748b;">Facture</p>
+                      <p style="margin:3px 0 0;font-size:15px;font-weight:700;color:#0f172a;">${opts.numeroFacture}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:12px 0;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="width:50%;padding-right:8px;">
+                            <p style="margin:0;font-size:12px;color:#64748b;">Montant reçu</p>
+                            <p style="margin:3px 0 0;font-size:20px;font-weight:800;color:#16a34a;">${fmt(opts.montantCePaiement)}</p>
+                          </td>
+                          <td style="width:50%;padding-left:8px;">
+                            <p style="margin:0;font-size:12px;color:#64748b;">Date</p>
+                            <p style="margin:3px 0 0;font-size:14px;font-weight:600;color:#0f172a;">${dateStr}</p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" style="padding-top:12px;">
+                            <p style="margin:0;font-size:12px;color:#64748b;">Méthode</p>
+                            <p style="margin:3px 0 0;font-size:14px;font-weight:600;color:#0f172a;">${methodeLabel}</p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top:12px;border-top:1px solid #dcfce7;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="width:50%;">
+                            <p style="margin:0;font-size:12px;color:#64748b;">Total payé à ce jour</p>
+                            <p style="margin:3px 0 0;font-size:14px;font-weight:700;color:#0f172a;">${fmt(opts.montantTotalPaye)}</p>
+                          </td>
+                          <td style="width:50%;">
+                            <p style="margin:0;font-size:12px;color:#64748b;">Reste à payer</p>
+                            <p style="margin:3px 0 0;font-size:14px;font-weight:700;color:${opts.isFullyPaid ? '#16a34a' : '#dc2626'};">
+                              ${opts.isFullyPaid ? '0,00 MAD ✓' : fmt(opts.montantRestant)}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              ${opts.isFullyPaid ? `
+              <!-- Fully paid badge -->
+              <div style="background:#dcfce7;border:1.5px solid #86efac;border-radius:12px;padding:16px 20px;margin-bottom:28px;text-align:center;">
+                <p style="margin:0;font-size:18px;font-weight:800;color:#15803d;">✅ PAYÉ INTÉGRALEMENT</p>
+                <p style="margin:6px 0 0;font-size:13px;color:#16a34a;">Merci pour votre confiance — ${opts.entrepriseNom}</p>
+              </div>` : `
+              <!-- Partial note -->
+              <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:14px 18px;margin-bottom:28px;">
+                <p style="margin:0;font-size:13px;color:#92400e;line-height:1.5;">
+                  Il reste <strong>${fmt(opts.montantRestant)}</strong> à régler. Vous pouvez effectuer un nouveau paiement directement depuis votre facture en ligne.
+                </p>
+              </div>`}
+
+              <!-- CTA -->
+              <div style="text-align:center;">
+                <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#16a34a,#0d9488);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:12px;letter-spacing:0.2px;">
+                  Voir ma facture
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;">
+                Sayerli · Ce reçu a été généré automatiquement par <strong>${opts.entrepriseNom}</strong>.<br/>
+                Conservez cet email comme preuve de paiement.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+
+    try {
+      const { error } = await this.resend.emails.send({
+        from: this.from,
+        to: opts.toEmail,
+        subject: opts.isFullyPaid
+          ? `✅ Paiement confirmé — ${opts.numeroFacture} (Facture réglée)`
+          : `✓ Reçu de paiement — ${opts.numeroFacture} (${fmt(opts.montantCePaiement)} reçus)`,
+        html,
+      })
+      if (error) this.logger.error(`Resend error: ${JSON.stringify(error)}`)
+    } catch (err) {
+      this.logger.error(`Failed to send payment receipt email: ${err}`)
+    }
+  }
+
   async sendInvitation(opts: {
     toEmail: string;
     toName: string;
