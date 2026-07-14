@@ -5,6 +5,7 @@ import {
   Download, FileSpreadsheet, FileText,
   Users, File, Receipt, CreditCard, Calendar,
   CheckSquare, Square, ChevronRight, BookOpen,
+  GripVertical, RotateCcw,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -24,6 +25,28 @@ interface ExportData {
   factures?:  any[]
   paiements?: any[]
 }
+
+interface JournalColState { key: string; enabled: boolean }
+
+/* ─── journal column definitions ─────────────────────────────── */
+
+const JOURNAL_COL_DEFS: { key: string; label: string; width: number; isNumber?: boolean }[] = [
+  { key: 'dateFacture',    label: 'Date Facture',         width: 14 },
+  { key: 'numeroFacture',  label: 'N° Facture',           width: 18 },
+  { key: 'client',         label: 'Client',               width: 24 },
+  { key: 'entreprise',     label: 'Entreprise Client',    width: 24 },
+  { key: 'ice',            label: 'ICE Client',           width: 16 },
+  { key: 'ifFiscal',       label: 'IF Fiscal',            width: 14 },
+  { key: 'montantHT',      label: 'Montant HT (MAD)',     width: 18, isNumber: true },
+  { key: 'tva',            label: 'TVA %',                width: 8  },
+  { key: 'montantTVA',     label: 'Montant TVA (MAD)',    width: 18, isNumber: true },
+  { key: 'montantTTC',     label: 'Montant TTC (MAD)',    width: 18, isNumber: true },
+  { key: 'montantPaye',    label: 'Montant Payé (MAD)',   width: 18, isNumber: true },
+  { key: 'resteAPayer',    label: 'Reste à Payer (MAD)',  width: 18, isNumber: true },
+  { key: 'statut',         label: 'Statut',               width: 16 },
+]
+
+const DEFAULT_JOURNAL_COLS: JournalColState[] = JOURNAL_COL_DEFS.map(c => ({ key: c.key, enabled: true }))
 
 /* ─── helpers ────────────────────────────────────────────────── */
 
@@ -75,16 +98,16 @@ function periodLabel(period: Period, t: (k: string) => string, customFrom?: stri
   return t(`export.periods.${period}`)
 }
 
+/* ─── excel generators ───────────────────────────────────────── */
+
 async function generateExcel(data: ExportData, entrepriseName: string, periode: string) {
   const xlsxMod = await import('xlsx')
-  // xlsx CE doesn't always have a proper ESM default — fall back to the module itself
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const XLSX = (xlsxMod as any).default ?? xlsxMod
 
   const wb = XLSX.utils.book_new()
   const today = fmtDate(new Date().toISOString())
 
-  // Each sheet starts with 3 metadata rows then the column headers on row 4
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function makeSheet(headers: string[], rows: any[][], colWidths: { wch: number }[]) {
     const ws = XLSX.utils.aoa_to_sheet([
@@ -154,58 +177,54 @@ async function generateExcel(data: ExportData, entrepriseName: string, periode: 
   XLSX.writeFile(wb, filename)
 }
 
-async function generateJournalDesVentes(factures: any[], entrepriseName: string, periode: string) {
-  const xlsxMod = await import('xlsx')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const XLSX = (xlsxMod as any).default ?? xlsxMod
-
-  const today = fmtDate(new Date().toISOString())
-
-  const headers = [
-    'Date Facture',
-    'N° Facture',
-    'Client',
-    'Entreprise Client',
-    'ICE Client',
-    'IF Fiscal',
-    'Montant HT (MAD)',
-    'TVA %',
-    'Montant TVA (MAD)',
-    'Montant TTC (MAD)',
-    'Montant Payé (MAD)',
-    'Reste à Payer (MAD)',
-    'Statut',
-  ]
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getJournalCellValue(f: any, key: string): string | number {
+  const ht         = Number(f.totalHT)    || 0
+  const ttc        = Number(f.totalTTC)   || 0
+  const paye       = Number(f.montantPaye)|| 0
+  const tva        = Number(f.taxe)       || 0
+  const montantTva = ttc - ht
+  const reste      = ttc - paye
 
   const STATUS_JV: Record<string, string> = {
     ENVOYEE: 'Envoyée', PAYEE: 'Payée', PARTIELLE: 'Paiement partiel',
     EN_RETARD: 'En retard', VUE: 'Vue', ANNULEE: 'Annulée',
   }
 
-  const rows = factures.map(f => {
-    const ht       = Number(f.totalHT)   || 0
-    const ttc      = Number(f.totalTTC)  || 0
-    const paye     = Number(f.montantPaye) || 0
-    const tva      = Number(f.taxe)      || 0
-    const montantTva = ttc - ht
-    const reste    = ttc - paye
+  switch (key) {
+    case 'dateFacture':   return fmtDate(f.createdAt)
+    case 'numeroFacture': return f.numeroFacture
+    case 'client':        return f.client?.nom || ''
+    case 'entreprise':    return f.client?.nomEntreprise || '—'
+    case 'ice':           return f.client?.ice || '—'
+    case 'ifFiscal':      return f.client?.ifFiscal || '—'
+    case 'montantHT':     return ht
+    case 'tva':           return `${tva}%`
+    case 'montantTVA':    return montantTva
+    case 'montantTTC':    return ttc
+    case 'montantPaye':   return paye
+    case 'resteAPayer':   return reste
+    case 'statut':        return STATUS_JV[f.statut] || f.statut
+    default:              return ''
+  }
+}
 
-    return [
-      fmtDate(f.createdAt),
-      f.numeroFacture,
-      f.client?.nom || '',
-      f.client?.nomEntreprise || '—',
-      f.client?.ice || '—',
-      f.client?.ifFiscal || '—',
-      ht,
-      `${tva}%`,
-      montantTva,
-      ttc,
-      paye,
-      reste,
-      STATUS_JV[f.statut] || f.statut,
-    ]
-  })
+async function generateJournalDesVentes(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  factures: any[],
+  entrepriseName: string,
+  periode: string,
+  columns: JournalColState[],
+) {
+  const xlsxMod = await import('xlsx')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const XLSX = (xlsxMod as any).default ?? xlsxMod
+
+  const today = fmtDate(new Date().toISOString())
+  const activeCols = columns.filter(c => c.enabled)
+
+  const headers = activeCols.map(c => JOURNAL_COL_DEFS.find(d => d.key === c.key)!.label)
+  const rows    = factures.map(f => activeCols.map(c => getJournalCellValue(f, c.key)))
 
   const ws = XLSX.utils.aoa_to_sheet([
     [`Journal des Ventes — ${entrepriseName}`],
@@ -216,21 +235,18 @@ async function generateJournalDesVentes(factures: any[], entrepriseName: string,
     ...rows,
   ])
 
-  ws['!cols'] = [
-    { wch: 14 }, { wch: 18 }, { wch: 24 }, { wch: 24 }, { wch: 16 },
-    { wch: 14 }, { wch: 18 }, { wch: 8  }, { wch: 18 }, { wch: 18 },
-    { wch: 18 }, { wch: 18 }, { wch: 16 },
-  ]
+  ws['!cols'] = activeCols.map(c => ({ wch: JOURNAL_COL_DEFS.find(d => d.key === c.key)!.width }))
 
-  // Format number columns (index 6,8,9,10,11)
-  const numCols = [6, 8, 9, 10, 11]
+  const numColIndices = activeCols.reduce<number[]>((acc, c, i) => {
+    if (JOURNAL_COL_DEFS.find(d => d.key === c.key)?.isNumber) acc.push(i)
+    return acc
+  }, [])
+
   const range = XLSX.utils.decode_range(ws['!ref'] || 'A1')
   for (let R = 5; R <= range.e.r; R++) {
-    for (const C of numCols) {
+    for (const C of numColIndices) {
       const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })]
-      if (cell && typeof cell.v === 'number') {
-        cell.z = '#,##0.00'
-      }
+      if (cell && typeof cell.v === 'number') cell.z = '#,##0.00'
     }
   }
 
@@ -275,19 +291,24 @@ const PERIOD_KEYS: Period[] = ['thisMonth', 'lastMonth', 'last3Months', 'thisYea
 /* ─── page component ─────────────────────────────────────────── */
 
 export default function ExportPage() {
-  const { t }         = useTranslation()
+  const { t }          = useTranslation()
   const { entreprise } = useAuth()
 
-  const [exportMode,  setExportMode] = useState<ExportMode>('general')
-  const [selected, setSelected] = useState<Set<EntityKey>>(
+  const [exportMode,      setExportMode]      = useState<ExportMode>('general')
+  const [selected,        setSelected]        = useState<Set<EntityKey>>(
     new Set(['clients', 'devis', 'factures', 'paiements'])
   )
-  const [period,      setPeriod]     = useState<Period>('thisMonth')
-  const [customFrom,  setCustomFrom] = useState('')
-  const [customTo,    setCustomTo]   = useState('')
-  const [format,      setFormat]     = useState<Format>('excel')
-  const [loading,     setLoading]    = useState(false)
-  const [error,       setError]      = useState('')
+  const [period,          setPeriod]          = useState<Period>('thisMonth')
+  const [customFrom,      setCustomFrom]      = useState('')
+  const [customTo,        setCustomTo]        = useState('')
+  const [format,          setFormat]          = useState<Format>('excel')
+  const [loading,         setLoading]         = useState(false)
+  const [error,           setError]           = useState('')
+
+  /* journal column configurator state */
+  const [journalCols,     setJournalCols]     = useState<JournalColState[]>(DEFAULT_JOURNAL_COLS)
+  const [dragIdx,         setDragIdx]         = useState<number | null>(null)
+  const [dragOverIdx,     setDragOverIdx]     = useState<number | null>(null)
 
   const toggleEntity = (key: EntityKey) =>
     setSelected(prev => {
@@ -296,8 +317,26 @@ export default function ExportPage() {
       return next
     })
 
+  const toggleJournalCol = (key: string) =>
+    setJournalCols(prev => prev.map(c => c.key === key ? { ...c, enabled: !c.enabled } : c))
+
+  const handleColDrop = (targetIdx: number) => {
+    if (dragIdx === null || dragIdx === targetIdx) return
+    setJournalCols(prev => {
+      const next = [...prev]
+      const [moved] = next.splice(dragIdx, 1)
+      next.splice(targetIdx, 0, moved)
+      return next
+    })
+  }
+
+  const resetJournalCols = () => setJournalCols(DEFAULT_JOURNAL_COLS)
+
+  const enabledJournalCols = journalCols.filter(c => c.enabled)
+
   const handleExport = async () => {
     if (exportMode === 'general' && selected.size === 0) { setError(t('export.selectAtLeastOne')); return }
+    if (exportMode === 'journal' && enabledJournalCols.length === 0) { setError('Sélectionnez au moins une colonne.'); return }
     setError('')
     setLoading(true)
 
@@ -315,7 +354,7 @@ export default function ExportPage() {
         const factures = allFactures.filter((f: { statut: string }) =>
           !['BROUILLON', 'ANNULEE'].includes(f.statut)
         )
-        await generateJournalDesVentes(factures, entName, periode)
+        await generateJournalDesVentes(factures, entName, periode, journalCols)
         return
       }
 
@@ -443,7 +482,6 @@ export default function ExportPage() {
                     : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                 )}
               >
-                {/* Check indicator */}
                 <span className={cn(
                   'absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center transition-all',
                   active ? 'bg-primary-500' : 'bg-slate-200 dark:bg-slate-700'
@@ -509,6 +547,114 @@ export default function ExportPage() {
         )}
       </div>
 
+      {/* Step 3 — Journal column configurator (journal mode only) */}
+      {exportMode === 'journal' && (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 text-xs font-bold flex items-center justify-center">3</span>
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white">Colonnes à exporter</h2>
+              <span className="text-xs text-slate-400 dark:text-slate-500 ml-1">
+                {enabledJournalCols.length}/{journalCols.length}
+              </span>
+            </div>
+            <button
+              onClick={resetJournalCols}
+              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors py-1 px-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Réinitialiser
+            </button>
+          </div>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mb-4 ml-8">
+            Glissez pour réordonner · cochez/décochez pour inclure ou exclure
+          </p>
+
+          <div className="space-y-1.5">
+            {journalCols.map((col, idx) => {
+              const def = JOURNAL_COL_DEFS.find(d => d.key === col.key)!
+              const isDragTarget = dragOverIdx === idx && dragIdx !== null && dragIdx !== idx
+
+              return (
+                <div
+                  key={col.key}
+                  draggable
+                  onDragStart={() => setDragIdx(idx)}
+                  onDragOver={e => { e.preventDefault(); setDragOverIdx(idx) }}
+                  onDrop={() => { handleColDrop(idx); setDragIdx(null); setDragOverIdx(null) }}
+                  onDragEnd={() => { setDragIdx(null); setDragOverIdx(null) }}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 transition-all select-none',
+                    isDragTarget
+                      ? 'border-teal-400 bg-teal-50 dark:bg-teal-950/30 shadow-sm'
+                      : dragIdx === idx
+                        ? 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 opacity-50'
+                        : col.enabled
+                          ? 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 cursor-grab active:cursor-grabbing'
+                          : 'border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 cursor-grab active:cursor-grabbing'
+                  )}
+                >
+                  {/* Drag handle */}
+                  <GripVertical className={cn(
+                    'w-4 h-4 flex-shrink-0',
+                    col.enabled ? 'text-slate-300 dark:text-slate-600' : 'text-slate-200 dark:text-slate-700'
+                  )} />
+
+                  {/* Toggle */}
+                  <button
+                    onClick={() => toggleJournalCol(col.key)}
+                    className="flex-shrink-0 transition-transform active:scale-90"
+                  >
+                    {col.enabled
+                      ? <CheckSquare className="w-4 h-4 text-teal-500" />
+                      : <Square className="w-4 h-4 text-slate-300 dark:text-slate-600" />
+                    }
+                  </button>
+
+                  {/* Label */}
+                  <span className={cn(
+                    'text-sm font-medium flex-1 transition-colors',
+                    col.enabled ? 'text-slate-800 dark:text-slate-200' : 'text-slate-300 dark:text-slate-600 line-through'
+                  )}>
+                    {def.label}
+                  </span>
+
+                  {/* Type badge */}
+                  {def.isNumber && col.enabled && (
+                    <span className="text-[10px] font-mono text-slate-300 dark:text-slate-600 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                      MAD
+                    </span>
+                  )}
+
+                  {/* Position badge */}
+                  <span className={cn(
+                    'text-xs w-5 text-right font-mono flex-shrink-0',
+                    col.enabled ? 'text-slate-300 dark:text-slate-600' : 'text-slate-200 dark:text-slate-700'
+                  )}>
+                    {idx + 1}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Preview of enabled column order */}
+          {enabledJournalCols.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <p className="text-xs text-slate-400 dark:text-slate-500 mb-2 font-medium">Aperçu de l&apos;ordre des colonnes</p>
+              <div className="flex flex-wrap gap-1.5">
+                {enabledJournalCols.map((col, i) => (
+                  <span key={col.key} className="flex items-center gap-1 text-[11px] bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800 px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-teal-400 dark:text-teal-600">{i + 1}.</span>
+                    {JOURNAL_COL_DEFS.find(d => d.key === col.key)!.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Step 3 — format (hidden in journal mode, always Excel) */}
       <div className={cn('bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm', exportMode === 'journal' && 'hidden')}>
         <div className="flex items-center gap-2 mb-4">
@@ -516,7 +662,6 @@ export default function ExportPage() {
           <h2 className="text-sm font-bold text-slate-900 dark:text-white">{t('export.step3Title')}</h2>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {/* Excel */}
           <button
             onClick={() => setFormat('excel')}
             className={cn(
@@ -542,7 +687,6 @@ export default function ExportPage() {
             </div>
           </button>
 
-          {/* PDF */}
           <button
             onClick={() => setFormat('pdf')}
             className={cn(
@@ -580,10 +724,17 @@ export default function ExportPage() {
       {/* Export button */}
       <button
         onClick={handleExport}
-        disabled={loading || selected.size === 0}
+        disabled={
+          loading ||
+          (exportMode === 'general' && selected.size === 0) ||
+          (exportMode === 'journal' && enabledJournalCols.length === 0)
+        }
         className={cn(
           'w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl text-sm font-bold text-white transition-all',
-          'bg-primary-500 hover:bg-primary-600 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed shadow-sm shadow-primary-200 dark:shadow-none'
+          exportMode === 'journal'
+            ? 'bg-teal-500 hover:bg-teal-600 shadow-sm shadow-teal-200 dark:shadow-none'
+            : 'bg-primary-500 hover:bg-primary-600 shadow-sm shadow-primary-200 dark:shadow-none',
+          'active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed'
         )}
       >
         {loading ? (
@@ -595,28 +746,37 @@ export default function ExportPage() {
           <>
             <Download className="w-4 h-4" />
             {t('export.button')}
-            {format === 'excel' ? ' (.xlsx)' : ' (.pdf)'}
+            {exportMode === 'journal' ? ' (.xlsx)' : format === 'excel' ? ' (.xlsx)' : ' (.pdf)'}
           </>
         )}
       </button>
 
       {/* Summary chips */}
-      {selected.size > 0 && (
+      {(exportMode === 'general' ? selected.size > 0 : enabledJournalCols.length > 0) && (
         <div className="flex flex-wrap gap-2 justify-center">
-          {[...selected].map(k => (
-            <span key={k} className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400 font-medium">
-              {t(`export.entities.${k}`)}
-            </span>
-          ))}
+          {exportMode === 'general'
+            ? [...selected].map(k => (
+                <span key={k} className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400 font-medium">
+                  {t(`export.entities.${k}`)}
+                </span>
+              ))
+            : (
+                <span className="px-2.5 py-1 rounded-full bg-teal-50 dark:bg-teal-950/30 text-xs text-teal-600 dark:text-teal-400 font-medium border border-teal-200 dark:border-teal-800">
+                  {enabledJournalCols.length} colonne{enabledJournalCols.length > 1 ? 's' : ''}
+                </span>
+              )
+          }
           <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-500">
             {periodLabel(period, t, customFrom, customTo)}
           </span>
-          <span className={cn(
-            'px-2.5 py-1 rounded-full text-xs font-medium',
-            format === 'excel' ? 'bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400'
-          )}>
-            {format === 'excel' ? 'Excel' : 'PDF'}
-          </span>
+          {exportMode === 'general' && (
+            <span className={cn(
+              'px-2.5 py-1 rounded-full text-xs font-medium',
+              format === 'excel' ? 'bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400'
+            )}>
+              {format === 'excel' ? 'Excel' : 'PDF'}
+            </span>
+          )}
         </div>
       )}
     </div>
