@@ -590,7 +590,7 @@ export default function FacturesPage() {
       toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
       return
     }
-    const url = `${window.location.origin}/public/factures/${f.publicToken}`
+    const url = `${window.location.origin}/public/factures/${f.publicToken}/recu`
     const fmt = (v: number) => v.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
     const montantPaye = n(f.montantPaye)
     const restant = Math.max(0, n(f.totalTTC) - montantPaye)
