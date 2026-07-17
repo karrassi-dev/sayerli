@@ -50,6 +50,18 @@
     "team": {
       "title": "Team Management",
       "desc": "Invite your team with precise roles: admin, sales, accountant."
+    },
+    "portal": {
+      "title": "Client Portal",
+      "desc": "Every client gets a personal space to view their quotes and invoices and accept them online."
+    },
+    "catalogue": {
+      "title": "Service Catalogue",
+      "desc": "Save your recurring products and rates. Insert them in one click when creating a quote."
+    },
+    "relances": {
+      "title": "Automatic Follow-ups",
+      "desc": "Sayerli sends email reminders every morning to clients with overdue invoices. Zero missed follow-ups."
     }
   },
   "howItWorks": {
@@ -458,18 +470,18 @@
     },
     "recommended": "Recommended",
     "features": [
-      "CRM & client management",
+      "Client CRM (tax ID fields)",
       "Professional quotes",
-      "Compliant invoices",
-      "Payment tracking",
-      "Analytics & reports",
-      "Automations",
+      "Invoices + payment receipt PDF",
+      "Payment tracking (partial, deposit)",
+      "Real-time analytics dashboard",
+      "Automatic follow-ups (email)",
       "Multi-user",
-      "Cloud / mobile access",
-      "Client signing link",
+      "Product / service catalogue",
+      "Client portal (online acceptance)",
       "Notifications & reminders",
-      "French language support",
-      "Built for Moroccan market"
+      "Sales journal export (Excel)",
+      "Built for Moroccan market (MAD)"
     ],
     "legend": {
       "available": "Available",
@@ -507,20 +519,20 @@
       "detail3": "Automatic receipt"
     },
     "item4": {
-      "title": "Proactive Client Follow-up",
-      "desc": "Identify inactive clients, expired quotes, and unpaid invoices at a glance. Follow up at the right moment, with the right message.",
-      "tag": "CRM",
-      "detail1": "360° client view",
-      "detail2": "Expired quotes flagged",
-      "detail3": "Full history"
+      "title": "Client Portal",
+      "desc": "Every client gets a unique, secure link to view their quotes and invoices and accept them online. No more back-and-forth emails.",
+      "tag": "Clients",
+      "detail1": "Unique link per client",
+      "detail2": "Online acceptance",
+      "detail3": "Quote & invoice preview"
     },
     "item5": {
-      "title": "Real-time Notifications",
-      "desc": "Get an instant notification when a client views or accepts a quote, or when a payment is recorded. Stay informed effortlessly.",
-      "tag": "Alerts",
-      "detail1": "Instant notification",
-      "detail2": "Action history",
-      "detail3": "Notification center"
+      "title": "Service Catalogue",
+      "desc": "Save your recurring products and rates once. Find them in one click when creating any quote.",
+      "tag": "Productivity",
+      "detail1": "Products & services",
+      "detail2": "1-click insertion",
+      "detail3": "Pre-filled prices & units"
     }
   },
   "faq": {

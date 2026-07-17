@@ -8,18 +8,18 @@ import { useTranslation } from '@/hooks/useTranslation'
 type CellValue = boolean | 'partial'
 
 const ROW_VALUES: { excel: CellValue; generic: CellValue; sayerli: CellValue }[] = [
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: false,     sayerli: true },
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: false,     sayerli: true },
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: false,     sayerli: true },
-  { excel: false, generic: false,     sayerli: true },
-  { excel: false, generic: 'partial', sayerli: true },
-  { excel: false, generic: false,     sayerli: true },
+  { excel: false,     generic: 'partial', sayerli: true },  // CRM clients (ICE, IF Fiscal)
+  { excel: false,     generic: 'partial', sayerli: true },  // Devis professionnels
+  { excel: false,     generic: 'partial', sayerli: true },  // Factures + reçu PDF
+  { excel: false,     generic: false,     sayerli: true },  // Suivi paiements (partiel, acompte)
+  { excel: false,     generic: 'partial', sayerli: true },  // Analytics temps réel
+  { excel: false,     generic: false,     sayerli: true },  // Relances automatiques
+  { excel: false,     generic: 'partial', sayerli: true },  // Multi-utilisateurs
+  { excel: false,     generic: false,     sayerli: true },  // Catalogue de services
+  { excel: false,     generic: false,     sayerli: true },  // Portail client
+  { excel: false,     generic: 'partial', sayerli: true },  // Notifications & rappels
+  { excel: 'partial', generic: false,     sayerli: true },  // Export Journal des Ventes
+  { excel: false,     generic: false,     sayerli: true },  // Adapté marché marocain
 ]
 
 function Cell({ value }: { value: CellValue }) {

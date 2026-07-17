@@ -1,9 +1,9 @@
 'use client'
 
-import { Users, FileText, Receipt, CreditCard, BarChart3, UserCog } from 'lucide-react'
+import { Users, FileText, Receipt, CreditCard, BarChart3, UserCog, Globe, BookOpen, Bell } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 
-const FEATURE_ICONS = [Users, FileText, Receipt, CreditCard, BarChart3, UserCog]
+const FEATURE_ICONS = [Users, FileText, Receipt, CreditCard, BarChart3, UserCog, Globe, BookOpen, Bell]
 const FEATURE_COLORS = [
   'from-blue-500 to-primary-600',
   'from-teal-500 to-emerald-600',
@@ -11,6 +11,9 @@ const FEATURE_COLORS = [
   'from-orange-500 to-amber-600',
   'from-pink-500 to-rose-600',
   'from-slate-500 to-slate-700',
+  'from-indigo-500 to-blue-600',
+  'from-green-500 to-emerald-600',
+  'from-red-500 to-orange-600',
 ]
 
 const FEATURE_BG = [
@@ -20,18 +23,24 @@ const FEATURE_BG = [
   'bg-orange-50 dark:bg-orange-950/30',
   'bg-pink-50 dark:bg-pink-950/30',
   'bg-slate-50 dark:bg-slate-800/50',
+  'bg-indigo-50 dark:bg-indigo-950/30',
+  'bg-green-50 dark:bg-green-950/30',
+  'bg-red-50 dark:bg-red-950/30',
 ]
 
 export function Features() {
   const { t } = useTranslation()
 
   const features = [
-    { key: 'crm', title: t('features.crm.title'), desc: t('features.crm.desc') },
-    { key: 'devis', title: t('features.devis.title'), desc: t('features.devis.desc') },
-    { key: 'factures', title: t('features.factures.title'), desc: t('features.factures.desc') },
+    { key: 'crm',       title: t('features.crm.title'),       desc: t('features.crm.desc') },
+    { key: 'devis',     title: t('features.devis.title'),     desc: t('features.devis.desc') },
+    { key: 'factures',  title: t('features.factures.title'),  desc: t('features.factures.desc') },
     { key: 'paiements', title: t('features.paiements.title'), desc: t('features.paiements.desc') },
     { key: 'analytics', title: t('features.analytics.title'), desc: t('features.analytics.desc') },
-    { key: 'team', title: t('features.team.title'), desc: t('features.team.desc') },
+    { key: 'team',      title: t('features.team.title'),      desc: t('features.team.desc') },
+    { key: 'portal',    title: t('features.portal.title'),    desc: t('features.portal.desc') },
+    { key: 'catalogue', title: t('features.catalogue.title'), desc: t('features.catalogue.desc') },
+    { key: 'relances',  title: t('features.relances.title'),  desc: t('features.relances.desc') },
   ]
 
   return (

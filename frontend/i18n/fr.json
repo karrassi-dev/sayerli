@@ -50,6 +50,18 @@
     "team": {
       "title": "Gestion d'équipe",
       "desc": "Invitez votre équipe avec des rôles précis : admin, commercial, comptable."
+    },
+    "portal": {
+      "title": "Portail client",
+      "desc": "Chaque client dispose d'un espace personnel pour consulter ses devis et factures et les accepter en ligne."
+    },
+    "catalogue": {
+      "title": "Catalogue de services",
+      "desc": "Enregistrez vos produits et tarifs récurrents. Insérez-les en un clic lors de la création d'un devis."
+    },
+    "relances": {
+      "title": "Relances automatiques",
+      "desc": "Sayerli envoie chaque matin des rappels email aux clients dont les factures sont en retard. Zéro oubli."
     }
   },
   "howItWorks": {
@@ -458,18 +470,18 @@
     },
     "recommended": "Recommandé",
     "features": [
-      "CRM & gestion clients",
+      "CRM clients (ICE, IF Fiscal)",
       "Devis professionnels",
-      "Factures conformes",
-      "Suivi des paiements",
-      "Analytiques & rapports",
-      "Automatisations",
+      "Factures + reçu de paiement PDF",
+      "Suivi paiements (partiel, acompte)",
+      "Tableau de bord analytics temps réel",
+      "Relances automatiques (email)",
       "Multi-utilisateurs",
-      "Accès cloud / mobile",
-      "Lien de signature client",
+      "Catalogue de produits / services",
+      "Portail client (acceptation en ligne)",
       "Notifications & rappels",
-      "Support en français",
-      "Adapté au marché marocain"
+      "Export Journal des Ventes (Excel)",
+      "Adapté au marché marocain (MAD)"
     ],
     "legend": {
       "available": "Disponible",
@@ -507,20 +519,20 @@
       "detail3": "Reçu automatique"
     },
     "item4": {
-      "title": "Suivi client proactif",
-      "desc": "Identifiez en un coup d'œil les clients inactifs, les devis expirés et les factures non réglées. Relancez au bon moment, avec le bon message.",
-      "tag": "CRM",
-      "detail1": "Vue 360° client",
-      "detail2": "Devis expirés signalés",
-      "detail3": "Historique complet"
+      "title": "Portail client",
+      "desc": "Chaque client reçoit un lien unique et sécurisé pour consulter ses devis et factures, et accepter en ligne. Fini les échanges par email.",
+      "tag": "Clients",
+      "detail1": "Lien unique par client",
+      "detail2": "Acceptation en ligne",
+      "detail3": "Aperçu devis & factures"
     },
     "item5": {
-      "title": "Notifications en temps réel",
-      "desc": "Recevez une notification immédiate dès qu'un client consulte ou accepte un devis, ou dès qu'un paiement est enregistré. Restez informé sans effort.",
-      "tag": "Alertes",
-      "detail1": "Notification instantanée",
-      "detail2": "Historique des actions",
-      "detail3": "Centre de notifications"
+      "title": "Catalogue de services",
+      "desc": "Enregistrez vos produits et tarifs récurrents une seule fois. Retrouvez-les en un clic lors de la création de n'importe quel devis.",
+      "tag": "Productivité",
+      "detail1": "Produits & services",
+      "detail2": "Insertion en 1 clic",
+      "detail3": "Prix & unités pré-remplis"
     }
   },
   "faq": {
