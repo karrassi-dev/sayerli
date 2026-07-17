@@ -253,27 +253,6 @@ export default function RecuPDF({
     <Document>
       <Page size="A4" style={styles.page}>
 
-        {/* ── HEADER: Logo + Company name ── */}
-        <View style={styles.pageHeader}>
-          {entreprise.logoUrl ? (
-            <Image src={entreprise.logoUrl} style={styles.logoBox} />
-          ) : (
-            <View style={styles.logoPlaceholder}>
-              <Text style={{ color: WHITE, fontSize: 18, fontFamily: 'Helvetica-Bold' }}>
-                {entreprise.nom.charAt(0).toUpperCase()}
-              </Text>
-            </View>
-          )}
-          <View>
-            <Text style={styles.companyName}>{entreprise.nom}</Text>
-            {entreprise.adresse && <Text style={styles.companyActivity}>{entreprise.adresse}</Text>}
-          </View>
-        </View>
-
-        {/* ── STRIPE ── */}
-        <View style={styles.stripe1} />
-        <View style={styles.stripe2} />
-
         {/* ── TITLE ── */}
         <View style={styles.titleBlock}>
           <Text style={styles.title}>Reçu de Paiement</Text>

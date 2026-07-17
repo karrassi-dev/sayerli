@@ -173,32 +173,6 @@ function RecuContent() {
         {/* ── DOCUMENT — matches PDF layout exactly ── */}
         <div className="bg-white shadow-md">
 
-          {/* ── HEADER: Logo + Company name (like CIH BANK header) ── */}
-          <div className="px-10 pt-7 pb-5 flex items-center gap-4">
-            {logoUrl ? (
-              <img src={logoUrl} alt={facture.entreprise.nom} className="h-12 w-auto object-contain flex-shrink-0" />
-            ) : (
-              <div
-                className="w-12 h-12 flex items-center justify-center text-white font-black text-xl flex-shrink-0 rounded"
-                style={{ backgroundColor: brand }}
-              >
-                {facture.entreprise.nom.charAt(0)}
-              </div>
-            )}
-            <div>
-              <p className="text-2xl font-black text-gray-900 leading-tight tracking-tight">
-                {facture.entreprise.nom}
-              </p>
-              {facture.entreprise.activite && (
-                <p className="text-xs text-gray-400 mt-0.5">{facture.entreprise.activite}</p>
-              )}
-            </div>
-          </div>
-
-          {/* ── TWO-BAR STRIPE (like CIH bank) ── */}
-          <div className="h-3" style={{ backgroundColor: brand }} />
-          <div className="h-1" style={{ backgroundColor: brand, opacity: 0.35 }} />
-
           {/* ── TITLE ── */}
           <div className="py-6 text-center">
             <h1 className="text-lg font-bold" style={{ color: brand }}>Reçu de Paiement</h1>
