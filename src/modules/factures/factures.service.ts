@@ -410,7 +410,7 @@ export class FacturesService {
       ? StatutFacture.PAYEE
       : StatutFacture.PARTIELLE;
 
-    await this.prisma.$transaction([
+    const [createdPaiement] = await this.prisma.$transaction([
       this.prisma.paiement.create({
         data: {
           entrepriseId,
@@ -452,6 +452,7 @@ export class FacturesService {
         methodePaiement: declaration.methode,
         datePaiement: declaration.datePaiement,
         publicToken: facture.publicToken,
+        paiementId: createdPaiement.id,
         isFullyPaid: nouveauStatut === StatutFacture.PAYEE,
       });
     }

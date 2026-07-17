@@ -385,9 +385,10 @@ export class EmailService {
     methodePaiement: string
     datePaiement: Date
     publicToken: string
+    paiementId: string
     isFullyPaid: boolean
   }) {
-    const url = `${this.frontendUrl}/public/factures/${opts.publicToken}`
+    const url = `${this.frontendUrl}/public/factures/${opts.publicToken}/recu?p=${opts.paiementId}`
     const fmt = (n: number) =>
       new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' MAD'
     const dateStr = opts.datePaiement.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
