@@ -8,7 +8,6 @@ import {
   Sun, Moon,
 } from 'lucide-react'
 import { portalApi } from '@/lib/api'
-import { cn } from '@/lib/utils'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -31,514 +30,509 @@ const METHODE_LABELS: Record<string, string> = {
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface PortalPaiement {
-  id: string
-  montant: number | string
-  methode: string
-  datePaiement: string
-  reference: string | null
+  id: string; montant: number | string; methode: string
+  datePaiement: string; reference: string | null
 }
-
 interface PortalDevis {
-  id: string
-  reference: string
-  statut: string
-  totalHT: number | string
-  remise: number | string
-  taxe: number | string
-  totalTTC: number | string
-  dateExpiration: string | null
-  dateAcceptation: string | null
-  dateRefus: string | null
-  createdAt: string
-  notes: string | null
+  id: string; reference: string; statut: string
+  totalHT: number | string; remise: number | string
+  taxe: number | string; totalTTC: number | string
+  dateExpiration: string | null; dateAcceptation: string | null
+  dateRefus: string | null; createdAt: string; notes: string | null
   lienPublic: { token: string; expiration: string } | null
 }
-
 interface PortalFacture {
-  id: string
-  numeroFacture: string
-  statut: string
-  totalHT: number | string
-  taxe: number | string
-  totalTTC: number | string
-  montantPaye: number | string
-  dateEcheance: string | null
-  createdAt: string
-  publicToken: string
-  paiements: PortalPaiement[]
+  id: string; numeroFacture: string; statut: string
+  totalHT: number | string; taxe: number | string
+  totalTTC: number | string; montantPaye: number | string
+  dateEcheance: string | null; createdAt: string
+  publicToken: string; paiements: PortalPaiement[]
 }
-
 interface PortalData {
-  id: string
-  nom: string
-  email: string | null
-  telephone: string | null
-  nomEntreprise: string | null
+  id: string; nom: string; email: string | null
+  telephone: string | null; nomEntreprise: string | null
   entreprise: {
-    nom: string
-    logo: string | null
-    couleurPrimaire: string | null
-    email: string | null
-    telephone: string | null
-    adresse: string | null
-    website: string | null
+    nom: string; logo: string | null; couleurPrimaire: string | null
+    email: string | null; telephone: string | null
+    adresse: string | null; website: string | null
   }
-  devis: PortalDevis[]
-  factures: PortalFacture[]
+  devis: PortalDevis[]; factures: PortalFacture[]
 }
 
 // ── Status config ─────────────────────────────────────────────────────────────
 
-const DEVIS_STATUS: Record<string, { label: string; bg: string; text: string; icon: React.ElementType }> = {
-  ENVOYE:  { label: 'En attente',  bg: 'bg-blue-100 dark:bg-blue-900/40',   text: 'text-blue-700 dark:text-blue-300',   icon: Clock },
-  VU:      { label: 'Consulté',    bg: 'bg-purple-100 dark:bg-purple-900/40', text: 'text-purple-700 dark:text-purple-300', icon: Clock },
-  ACCEPTE: { label: 'Accepté',     bg: 'bg-emerald-100 dark:bg-emerald-900/40', text: 'text-emerald-700 dark:text-emerald-300', icon: CheckCircle },
-  REFUSE:  { label: 'Refusé',      bg: 'bg-red-100 dark:bg-red-900/40',     text: 'text-red-600 dark:text-red-400',    icon: XCircle },
-  EXPIRE:  { label: 'Expiré',      bg: 'bg-slate-200 dark:bg-slate-700',    text: 'text-slate-500 dark:text-slate-400', icon: AlertCircle },
+type StatusInfo = { label: string; lightBg: string; lightText: string; darkBg: string; darkText: string; icon: React.ElementType }
+
+const DEVIS_STATUS: Record<string, StatusInfo> = {
+  ENVOYE:  { label: 'En attente', lightBg: '#eff6ff', lightText: '#1d4ed8', darkBg: '#1e3a5f', darkText: '#93c5fd', icon: Clock },
+  VU:      { label: 'Consulté',   lightBg: '#f5f3ff', lightText: '#7c3aed', darkBg: '#3b1f6e', darkText: '#c4b5fd', icon: Clock },
+  ACCEPTE: { label: 'Accepté',    lightBg: '#f0fdf4', lightText: '#15803d', darkBg: '#14432a', darkText: '#86efac', icon: CheckCircle },
+  REFUSE:  { label: 'Refusé',     lightBg: '#fef2f2', lightText: '#dc2626', darkBg: '#4c1d1d', darkText: '#fca5a5', icon: XCircle },
+  EXPIRE:  { label: 'Expiré',     lightBg: '#f1f5f9', lightText: '#64748b', darkBg: '#334155', darkText: '#94a3b8', icon: AlertCircle },
 }
 
-const FACTURE_STATUS: Record<string, { label: string; bg: string; text: string; icon: React.ElementType }> = {
-  ENVOYEE:   { label: 'À régler',  bg: 'bg-blue-100 dark:bg-blue-900/40',   text: 'text-blue-700 dark:text-blue-300',   icon: Clock },
-  VUE:       { label: 'Vue',       bg: 'bg-purple-100 dark:bg-purple-900/40', text: 'text-purple-700 dark:text-purple-300', icon: Clock },
-  PARTIELLE: { label: 'Partielle', bg: 'bg-amber-100 dark:bg-amber-900/40',  text: 'text-amber-700 dark:text-amber-300',  icon: AlertCircle },
-  EN_RETARD: { label: 'En retard', bg: 'bg-red-100 dark:bg-red-900/40',     text: 'text-red-600 dark:text-red-400',    icon: AlertCircle },
-  PAYEE:     { label: 'Payée',     bg: 'bg-emerald-100 dark:bg-emerald-900/40', text: 'text-emerald-700 dark:text-emerald-300', icon: CheckCircle },
+const FACTURE_STATUS: Record<string, StatusInfo> = {
+  ENVOYEE:   { label: 'À régler',  lightBg: '#eff6ff', lightText: '#1d4ed8', darkBg: '#1e3a5f', darkText: '#93c5fd', icon: Clock },
+  VUE:       { label: 'Vue',       lightBg: '#f5f3ff', lightText: '#7c3aed', darkBg: '#3b1f6e', darkText: '#c4b5fd', icon: Clock },
+  PARTIELLE: { label: 'Partielle', lightBg: '#fffbeb', lightText: '#b45309', darkBg: '#4a2c0a', darkText: '#fcd34d', icon: AlertCircle },
+  EN_RETARD: { label: 'En retard', lightBg: '#fef2f2', lightText: '#dc2626', darkBg: '#4c1d1d', darkText: '#fca5a5', icon: AlertCircle },
+  PAYEE:     { label: 'Payée',     lightBg: '#f0fdf4', lightText: '#15803d', darkBg: '#14432a', darkText: '#86efac', icon: CheckCircle },
 }
 
-function Badge({ label, bg, text, icon: Icon }: { label: string; bg: string; text: string; icon: React.ElementType }) {
+function Badge({ info, dark }: { info: StatusInfo; dark: boolean }) {
+  const Icon = info.icon
   return (
-    <span className={cn('inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0', bg, text)}>
+    <span
+      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0"
+      style={{ backgroundColor: dark ? info.darkBg : info.lightBg, color: dark ? info.darkText : info.lightText }}
+    >
       <Icon className="w-3 h-3" />
-      {label}
+      {info.label}
     </span>
   )
 }
 
-function SectionHeader({ icon: Icon, title, count, color }: {
-  icon: React.ElementType; title: string; count: number; color: string
-}) {
-  return (
-    <div className="flex items-center gap-3 mb-4">
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${color}22` }}>
-        <Icon className="w-5 h-5" style={{ color }} />
-      </div>
-      <div className="flex items-baseline gap-2">
-        <h2 className="text-base font-bold text-slate-900 dark:text-white">{title}</h2>
-        <span className="text-sm text-slate-400 dark:text-slate-500">({count})</span>
-      </div>
-    </div>
-  )
-}
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 py-12 text-center">
-      <p className="text-sm text-slate-400 dark:text-slate-500">{message}</p>
-    </div>
-  )
-}
-
-// ── Main page ──────────────────────────────────────────────────────────────────
+// ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function PortalPage() {
   const { token } = useParams<{ token: string }>()
-  const [data, setData]         = useState<PortalData | null>(null)
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(false)
+  const [data, setData]           = useState<PortalData | null>(null)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(false)
   const [accepting, setAccepting] = useState<string | null>(null)
   const [accepted, setAccepted]   = useState<Set<string>>(new Set())
-  const [activeTab, setActiveTab] = useState<'devis' | 'factures' | 'recus'>('factures')
-  const [isDark, setIsDark]     = useState(false)
+  const [tab, setTab]             = useState<'factures' | 'devis' | 'recus'>('factures')
+  const [dark, setDark]           = useState(false)
 
-  // Load saved theme preference
   useEffect(() => {
-    const saved = localStorage.getItem('portal-theme')
-    if (saved === 'dark') setIsDark(true)
+    if (localStorage.getItem('portal-theme') === 'dark') setDark(true)
   }, [])
 
-  const toggleTheme = () => {
-    setIsDark(prev => {
-      localStorage.setItem('portal-theme', !prev ? 'dark' : 'light')
-      return !prev
-    })
-  }
+  const toggleDark = () => setDark(prev => {
+    localStorage.setItem('portal-theme', !prev ? 'dark' : 'light')
+    return !prev
+  })
 
   const fetchPortal = useCallback(async () => {
     try {
       const res = await portalApi.get(token)
       setData(res.data?.data ?? res.data)
-    } catch {
-      setError(true)
-    } finally {
-      setLoading(false)
-    }
+    } catch { setError(true) }
+    finally { setLoading(false) }
   }, [token])
 
   useEffect(() => { fetchPortal() }, [fetchPortal])
 
-  const handleAcceptDevis = async (devisId: string) => {
+  const handleAccept = async (devisId: string) => {
     setAccepting(devisId)
     try {
       await portalApi.acceptDevis(token, devisId)
       setAccepted(prev => new Set([...prev, devisId]))
       setData(prev => prev ? {
         ...prev,
-        devis: prev.devis.map(d =>
-          d.id === devisId ? { ...d, statut: 'ACCEPTE', dateAcceptation: new Date().toISOString() } : d
-        ),
+        devis: prev.devis.map(d => d.id === devisId ? { ...d, statut: 'ACCEPTE' } : d),
       } : prev)
-    } catch { /* silently ignore */ }
+    } catch { /* ignore */ }
     finally { setAccepting(null) }
+  }
+
+  // ── Theme tokens ──
+  const t = {
+    bg:          dark ? '#0f172a' : '#f8fafc',
+    headerBg:    dark ? '#1e293b' : '#ffffff',
+    headerBorder:dark ? '#334155' : '#e2e8f0',
+    card:        dark ? '#1e293b' : '#ffffff',
+    cardBorder:  dark ? '#334155' : '#e2e8f0',
+    tabBar:      dark ? '#1e293b' : '#f1f5f9',
+    tabActive:   dark ? '#334155' : '#ffffff',
+    tabText:     dark ? '#94a3b8' : '#64748b',
+    tabActiveText:dark ? '#f1f5f9' : '#0f172a',
+    text:        dark ? '#f1f5f9' : '#0f172a',
+    textSub:     dark ? '#94a3b8' : '#64748b',
+    textMuted:   dark ? '#64748b' : '#94a3b8',
+    border:      dark ? '#334155' : '#e2e8f0',
+    inputBg:     dark ? '#334155' : '#f8fafc',
+    iconBg:      dark ? '#334155' : '#f1f5f9',
+    btnBorder:   dark ? '#475569' : '#e2e8f0',
+    btnText:     dark ? '#cbd5e1' : '#475569',
+    btnHover:    dark ? '#334155' : '#f8fafc',
+    progressBg:  dark ? '#334155' : '#f1f5f9',
+    greenBg:     dark ? '#14432a' : '#f0fdf4',
+    greenText:   dark ? '#86efac' : '#15803d',
+    amberBg:     dark ? '#4a2c0a' : '#fffbeb',
+    amberText:   dark ? '#fcd34d' : '#b45309',
+    summaryText: dark ? '#f1f5f9' : '#0f172a',
   }
 
   const brand = data?.entreprise.couleurPrimaire || '#6366f1'
 
-  if (loading) {
-    return (
-      <div className={cn('min-h-screen flex items-center justify-center', isDark ? 'dark bg-slate-900' : 'bg-slate-50')}>
-        <Loader2 className="w-8 h-8 animate-spin text-slate-300" />
-      </div>
-    )
-  }
+  if (loading) return (
+    <div style={{ minHeight: '100vh', background: dark ? '#0f172a' : '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Loader2 style={{ width: 32, height: 32, color: '#94a3b8', animation: 'spin 1s linear infinite' }} />
+    </div>
+  )
 
-  if (error || !data) {
-    return (
-      <div className={cn('min-h-screen flex items-center justify-center px-4', isDark ? 'dark bg-slate-900' : 'bg-slate-50')}>
-        <div className="text-center max-w-sm">
-          <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h1 className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Portail introuvable</h1>
-          <p className="text-sm text-slate-500">Ce lien portail est invalide ou a été désactivé.</p>
-        </div>
+  if (error || !data) return (
+    <div style={{ minHeight: '100vh', background: dark ? '#0f172a' : '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div style={{ textAlign: 'center', maxWidth: 320 }}>
+        <AlertCircle style={{ width: 48, height: 48, color: '#94a3b8', margin: '0 auto 16px' }} />
+        <p style={{ color: t.text, fontWeight: 600, marginBottom: 8 }}>Portail introuvable</p>
+        <p style={{ color: t.textSub, fontSize: 14 }}>Ce lien portail est invalide ou a été désactivé.</p>
       </div>
-    )
-  }
+    </div>
+  )
 
   const allRecus: { facture: PortalFacture; paiement: PortalPaiement }[] = []
-  data.factures.forEach(f => {
-    f.paiements?.forEach(p => allRecus.push({ facture: f, paiement: p }))
-  })
+  data.factures.forEach(f => f.paiements?.forEach(p => allRecus.push({ facture: f, paiement: p })))
   allRecus.sort((a, b) => new Date(b.paiement.datePaiement).getTime() - new Date(a.paiement.datePaiement).getTime())
 
   const tabs = [
-    { key: 'factures' as const, label: 'Factures',  count: data.factures.length, icon: Receipt },
-    { key: 'devis'    as const, label: 'Devis',     count: data.devis.length,    icon: FileText },
-    { key: 'recus'    as const, label: 'Reçus',     count: allRecus.length,      icon: CheckCircle },
+    { key: 'factures' as const, label: 'Factures', count: data.factures.length, icon: Receipt },
+    { key: 'devis'    as const, label: 'Devis',    count: data.devis.length,    icon: FileText },
+    { key: 'recus'    as const, label: 'Reçus',    count: allRecus.length,      icon: CheckCircle },
   ]
 
   return (
-    <div className={cn('min-h-screen transition-colors duration-200', isDark ? 'dark bg-slate-900' : 'bg-slate-50')}>
+    <div style={{ minHeight: '100vh', background: t.bg, transition: 'background .2s, color .2s' }}>
 
       {/* ── HEADER ── */}
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 transition-colors duration-200">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+      <header style={{
+        position: 'sticky', top: 0, zIndex: 20,
+        background: t.headerBg, borderBottom: `1px solid ${t.headerBorder}`,
+        transition: 'background .2s',
+      }}>
+        <div style={{ maxWidth: 720, margin: '0 auto', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           {data.entreprise.logo ? (
-            <img src={data.entreprise.logo} alt={data.entreprise.nom} className="h-8 w-auto object-contain rounded" />
+            <img src={data.entreprise.logo} alt={data.entreprise.nom} style={{ height: 32, width: 'auto', objectFit: 'contain', borderRadius: 6 }} />
           ) : (
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-              style={{ backgroundColor: brand }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: brand, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
               {data.entreprise.nom.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-slate-900 dark:text-white text-sm leading-tight truncate">{data.entreprise.nom}</p>
-            <p className="text-xs text-slate-400 dark:text-slate-500">Espace client</p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontWeight: 700, color: t.text, fontSize: 14, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{data.entreprise.nom}</p>
+            <p style={{ fontSize: 11, color: t.textMuted }}>Espace client</p>
           </div>
-
-          {/* Dark/Light toggle */}
+          {/* Toggle */}
           <button
-            onClick={toggleTheme}
-            className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 transition-all flex-shrink-0"
-            title={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
+            onClick={toggleDark}
+            title={dark ? 'Mode clair' : 'Mode sombre'}
+            style={{
+              width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+              border: `1px solid ${t.headerBorder}`,
+              background: t.inputBg, color: t.textSub,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', transition: 'background .2s',
+            }}
           >
-            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {dark ? <Sun style={{ width: 15, height: 15 }} /> : <Moon style={{ width: 15, height: 15 }} />}
           </button>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+      <main style={{ maxWidth: 720, margin: '0 auto', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
         {/* ── WELCOME ── */}
-        <div className="pt-2">
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white">
+        <div style={{ paddingTop: 8 }}>
+          <h1 style={{ fontSize: 20, fontWeight: 800, color: t.text, margin: 0 }}>
             Bonjour, {data.nomEntreprise || data.nom} 👋
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p style={{ fontSize: 14, color: t.textSub, marginTop: 4 }}>
             Retrouvez ici tous vos documents avec {data.entreprise.nom}.
           </p>
         </div>
 
         {/* ── SUMMARY ── */}
-        <div className="grid grid-cols-3 gap-3">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
           {[
-            { label: `Facture${data.factures.length !== 1 ? 's' : ''}`, value: data.factures.length, color: 'text-slate-900 dark:text-white' },
-            { label: 'Devis', value: data.devis.length, color: 'text-slate-900 dark:text-white' },
-            { label: `Reçu${allRecus.length !== 1 ? 's' : ''}`, value: allRecus.length, color: 'text-emerald-600 dark:text-emerald-400' },
+            { label: data.factures.length !== 1 ? 'Factures' : 'Facture', value: data.factures.length, color: t.summaryText },
+            { label: 'Devis', value: data.devis.length, color: t.summaryText },
+            { label: allRecus.length !== 1 ? 'Reçus' : 'Reçu', value: allRecus.length, color: dark ? '#86efac' : '#16a34a' },
           ].map(item => (
-            <div key={item.label} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center transition-colors">
-              <p className={cn('text-2xl font-black', item.color)}>{item.value}</p>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.label}</p>
+            <div key={item.label} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, padding: 12, textAlign: 'center', transition: 'background .2s' }}>
+              <p style={{ fontSize: 22, fontWeight: 900, color: item.color, margin: 0 }}>{item.value}</p>
+              <p style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>{item.label}</p>
             </div>
           ))}
         </div>
 
         {/* ── TABS ── */}
-        <div className="flex gap-1 bg-slate-100 dark:bg-slate-700/60 rounded-xl p-1 transition-colors">
-          {tabs.map(tab => (
+        <div style={{ display: 'flex', gap: 4, background: t.tabBar, borderRadius: 14, padding: 4, transition: 'background .2s' }}>
+          {tabs.map(tb => (
             <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-sm font-semibold transition-all',
-                activeTab === tab.key
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200',
-              )}
+              key={tb.key}
+              onClick={() => setTab(tb.key)}
+              style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                padding: '8px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                fontSize: 13, fontWeight: 600, transition: 'all .15s',
+                background: tab === tb.key ? t.tabActive : 'transparent',
+                color: tab === tb.key ? t.tabActiveText : t.tabText,
+                boxShadow: tab === tb.key ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              }}
             >
-              <tab.icon className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="truncate">{tab.label}</span>
-              {tab.count > 0 && (
-                <span className={cn(
-                  'text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0',
-                  activeTab === tab.key
-                    ? 'bg-slate-100 dark:bg-slate-600 text-slate-600 dark:text-slate-300'
-                    : 'bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-400',
-                )}>
-                  {tab.count}
+              <tb.icon style={{ width: 14, height: 14, flexShrink: 0 }} />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tb.label}</span>
+              {tb.count > 0 && (
+                <span style={{
+                  fontSize: 10, fontWeight: 700, borderRadius: 999,
+                  width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  background: tab === tb.key ? (dark ? '#334155' : '#e2e8f0') : (dark ? '#334155' : '#e2e8f0'),
+                  color: t.textSub,
+                }}>
+                  {tb.count}
                 </span>
               )}
             </button>
           ))}
         </div>
 
-        {/* ── FACTURES TAB ── */}
-        {activeTab === 'factures' && (
+        {/* ── FACTURES ── */}
+        {tab === 'factures' && (
           <section>
-            <SectionHeader icon={Receipt} title="Factures" count={data.factures.length} color={brand} />
-            {data.factures.length === 0 ? (
-              <EmptyState message="Aucune facture pour le moment." />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {data.factures.map(facture => {
-                  const status = FACTURE_STATUS[facture.statut] ?? { label: facture.statut, bg: 'bg-slate-100 dark:bg-slate-700', text: 'text-slate-500 dark:text-slate-400', icon: Clock }
-                  const montantPaye = n(facture.montantPaye)
-                  const totalTTC   = n(facture.totalTTC)
-                  const restant    = Math.max(0, totalTTC - montantPaye)
-                  const progress   = totalTTC > 0 ? Math.min(100, (montantPaye / totalTTC) * 100) : 0
-                  const isOverdue  = facture.statut === 'EN_RETARD'
-                  const isPayee    = facture.statut === 'PAYEE'
-                  const accentColor = isPayee ? '#10b981' : isOverdue ? '#ef4444' : brand
-                  return (
-                    <div key={facture.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
-                      <div className="h-1" style={{ backgroundColor: accentColor }} />
-                      <div className="p-4">
-                        <div className="flex items-start justify-between gap-2 mb-3">
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0',
-                              isPayee ? 'bg-emerald-100 dark:bg-emerald-900/40' : isOverdue ? 'bg-red-100 dark:bg-red-900/40' : 'bg-slate-100 dark:bg-slate-700')}>
-                              <Receipt className={cn('w-4 h-4', isPayee ? 'text-emerald-600 dark:text-emerald-400' : isOverdue ? 'text-red-500 dark:text-red-400' : 'text-slate-500 dark:text-slate-400')} />
+            <SectionTitle icon={Receipt} title="Factures" count={data.factures.length} brand={brand} t={t} />
+            {data.factures.length === 0
+              ? <Empty message="Aucune facture pour le moment." t={t} />
+              : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                  {data.factures.map(facture => {
+                    const status = FACTURE_STATUS[facture.statut] ?? FACTURE_STATUS['ENVOYEE']
+                    const montantPaye = n(facture.montantPaye)
+                    const totalTTC   = n(facture.totalTTC)
+                    const restant    = Math.max(0, totalTTC - montantPaye)
+                    const progress   = totalTTC > 0 ? Math.min(100, (montantPaye / totalTTC) * 100) : 0
+                    const isPayee    = facture.statut === 'PAYEE'
+                    const isOverdue  = facture.statut === 'EN_RETARD'
+                    const accent     = isPayee ? '#10b981' : isOverdue ? '#ef4444' : brand
+                    return (
+                      <div key={facture.id} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, overflow: 'hidden', transition: 'background .2s' }}>
+                        <div style={{ height: 3, background: accent }} />
+                        <div style={{ padding: 16 }}>
+                          {/* Header row */}
+                          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 12 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                              <div style={{ width: 32, height: 32, borderRadius: 8, background: isPayee ? (dark ? '#14432a' : '#f0fdf4') : t.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <Receipt style={{ width: 15, height: 15, color: isPayee ? (dark ? '#86efac' : '#16a34a') : t.textSub }} />
+                              </div>
+                              <div style={{ minWidth: 0 }}>
+                                <p style={{ fontSize: 13, fontWeight: 700, color: t.text, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{facture.numeroFacture}</p>
+                                <p style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>
+                                  {facture.dateEcheance ? `Échéance ${formatDate(facture.dateEcheance)}` : formatDate(facture.createdAt)}
+                                </p>
+                              </div>
                             </div>
-                            <div className="min-w-0">
-                              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{facture.numeroFacture}</p>
-                              <p className="text-xs text-slate-400 dark:text-slate-500">
-                                {facture.dateEcheance ? `Échéance ${formatDate(facture.dateEcheance)}` : formatDate(facture.createdAt)}
+                            <Badge info={status} dark={dark} />
+                          </div>
+                          {/* Amount */}
+                          <div style={{ marginBottom: 12 }}>
+                            <p style={{ fontSize: 20, fontWeight: 900, color: t.text, margin: 0 }}>{formatMAD(totalTTC)}</p>
+                            {facture.statut === 'PARTIELLE' && (
+                              <p style={{ fontSize: 11, color: dark ? t.amberText : '#b45309', marginTop: 3 }}>
+                                Payé {formatMAD(montantPaye)} · Reste {formatMAD(restant)}
                               </p>
-                            </div>
+                            )}
                           </div>
-                          <Badge {...status} />
-                        </div>
-                        <div className="mb-3">
-                          <p className="text-xl font-black text-slate-900 dark:text-white">{formatMAD(totalTTC)}</p>
+                          {/* Progress */}
                           {facture.statut === 'PARTIELLE' && (
-                            <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
-                              Payé {formatMAD(montantPaye)} · Reste {formatMAD(restant)}
-                            </p>
+                            <div style={{ height: 4, background: t.progressBg, borderRadius: 4, marginBottom: 12, overflow: 'hidden' }}>
+                              <div style={{ height: '100%', background: '#f59e0b', borderRadius: 4, width: `${progress}%` }} />
+                            </div>
                           )}
+                          {isPayee && (
+                            <div style={{ height: 4, background: dark ? '#14432a' : '#d1fae5', borderRadius: 4, marginBottom: 12 }}>
+                              <div style={{ height: '100%', background: '#10b981', borderRadius: 4, width: '100%' }} />
+                            </div>
+                          )}
+                          {/* Action */}
+                          <a
+                            href={`/public/factures/${facture.publicToken}`}
+                            target="_blank" rel="noopener noreferrer"
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '8px 12px', borderRadius: 8, border: `1px solid ${t.btnBorder}`, background: 'transparent', color: t.btnText, fontSize: 12, fontWeight: 600, textDecoration: 'none', transition: 'background .15s' }}
+                          >
+                            <ExternalLink style={{ width: 13, height: 13 }} />
+                            Voir la facture
+                          </a>
                         </div>
-                        {facture.statut === 'PARTIELLE' && (
-                          <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full mb-3 overflow-hidden">
-                            <div className="h-full bg-amber-400 rounded-full" style={{ width: `${progress}%` }} />
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            }
+          </section>
+        )}
+
+        {/* ── DEVIS ── */}
+        {tab === 'devis' && (
+          <section>
+            <SectionTitle icon={FileText} title="Devis" count={data.devis.length} brand={brand} t={t} />
+            {data.devis.length === 0
+              ? <Empty message="Aucun devis pour le moment." t={t} />
+              : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                  {data.devis.map(devis => {
+                    const isExpired  = !!(devis.dateExpiration && new Date(devis.dateExpiration) < new Date())
+                    const st         = isExpired && devis.statut !== 'ACCEPTE' ? 'EXPIRE' : devis.statut
+                    const status     = DEVIS_STATUS[st] ?? DEVIS_STATUS['ENVOYE']
+                    const canAccept  = !isExpired && !accepted.has(devis.id) && !['ACCEPTE', 'REFUSE', 'EXPIRE'].includes(devis.statut)
+                    const isAccepted = accepted.has(devis.id) || devis.statut === 'ACCEPTE'
+                    return (
+                      <div key={devis.id} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, overflow: 'hidden', transition: 'background .2s' }}>
+                        <div style={{ height: 3, background: isAccepted ? '#10b981' : brand }} />
+                        <div style={{ padding: 16 }}>
+                          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 12 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                              <div style={{ width: 32, height: 32, borderRadius: 8, background: `${brand}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <FileText style={{ width: 15, height: 15, color: brand }} />
+                              </div>
+                              <div style={{ minWidth: 0 }}>
+                                <p style={{ fontSize: 13, fontWeight: 700, color: t.text, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{devis.reference}</p>
+                                <p style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>
+                                  {devis.dateExpiration ? `Valable jusqu'au ${formatDate(devis.dateExpiration)}` : formatDate(devis.createdAt)}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge info={status} dark={dark} />
                           </div>
-                        )}
-                        {isPayee && (
-                          <div className="h-1.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-full mb-3">
-                            <div className="h-full bg-emerald-500 rounded-full w-full" />
+                          <div style={{ marginBottom: 12 }}>
+                            <p style={{ fontSize: 20, fontWeight: 900, color: t.text, margin: 0 }}>{formatMAD(devis.totalTTC)}</p>
+                            {n(devis.remise) > 0 && <p style={{ fontSize: 11, color: t.textMuted, marginTop: 3 }}>Remise : {formatMAD(devis.remise)}</p>}
                           </div>
-                        )}
+                          {devis.notes && (
+                            <p style={{ fontSize: 12, color: t.textSub, background: t.inputBg, borderRadius: 8, padding: '8px 12px', marginBottom: 12 }}>{devis.notes}</p>
+                          )}
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            {devis.lienPublic && (
+                              <a
+                                href={`/public/devis/${devis.lienPublic.token}`}
+                                target="_blank" rel="noopener noreferrer"
+                                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '8px 12px', borderRadius: 8, border: `1px solid ${t.btnBorder}`, color: t.btnText, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}
+                              >
+                                <ExternalLink style={{ width: 13, height: 13 }} />
+                                Voir le détail
+                              </a>
+                            )}
+                            {canAccept && (
+                              <button
+                                onClick={() => handleAccept(devis.id)}
+                                disabled={accepting === devis.id}
+                                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '8px 12px', borderRadius: 8, border: 'none', background: brand, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', opacity: accepting === devis.id ? 0.7 : 1 }}
+                              >
+                                {accepting === devis.id ? <Loader2 style={{ width: 13, height: 13, animation: 'spin 1s linear infinite' }} /> : <Check style={{ width: 13, height: 13 }} />}
+                                {accepting === devis.id ? 'En cours…' : 'Accepter'}
+                              </button>
+                            )}
+                            {isAccepted && (
+                              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '8px 12px', borderRadius: 8, background: dark ? '#14432a' : '#f0fdf4', color: dark ? '#86efac' : '#15803d', fontSize: 12, fontWeight: 600 }}>
+                                <CheckCircle style={{ width: 13, height: 13 }} /> Accepté
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            }
+          </section>
+        )}
+
+        {/* ── REÇUS ── */}
+        {tab === 'recus' && (
+          <section>
+            <SectionTitle icon={CheckCircle} title="Reçus de paiement" count={allRecus.length} brand="#10b981" t={t} />
+            {allRecus.length === 0
+              ? <Empty message="Aucun reçu disponible pour le moment." t={t} />
+              : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                  {allRecus.map(({ facture, paiement }) => (
+                    <div key={paiement.id} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, overflow: 'hidden', transition: 'background .2s' }}>
+                      <div style={{ height: 3, background: '#10b981' }} />
+                      <div style={{ padding: 16 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                          <div style={{ width: 32, height: 32, borderRadius: 8, background: dark ? '#14432a' : '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <CheckCircle style={{ width: 15, height: 15, color: dark ? '#86efac' : '#16a34a' }} />
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 13, fontWeight: 700, color: t.text, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{facture.numeroFacture}</p>
+                            <p style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>{formatDate(paiement.datePaiement)}</p>
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, background: dark ? '#14432a' : '#f0fdf4', color: dark ? '#86efac' : '#15803d', padding: '2px 8px', borderRadius: 999 }}>Reçu</span>
+                        </div>
+                        <div style={{ marginBottom: 12 }}>
+                          <p style={{ fontSize: 20, fontWeight: 900, color: dark ? '#86efac' : '#16a34a', margin: 0 }}>{formatMAD(paiement.montant)}</p>
+                          <p style={{ fontSize: 11, color: t.textMuted, marginTop: 3 }}>
+                            {METHODE_LABELS[paiement.methode] ?? paiement.methode}
+                            {paiement.reference ? ` · ${paiement.reference}` : ''}
+                          </p>
+                        </div>
                         <a
-                          href={`/public/factures/${facture.publicToken}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                          href={`/public/factures/${facture.publicToken}/recu?p=${paiement.id}`}
+                          target="_blank" rel="noopener noreferrer"
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '9px 12px', borderRadius: 8, background: '#16a34a', color: '#fff', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          Voir la facture
+                          <ArrowRight style={{ width: 13, height: 13 }} />
+                          Voir &amp; télécharger le reçu
                         </a>
                       </div>
                     </div>
-                  )
-                })}
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* ── DEVIS TAB ── */}
-        {activeTab === 'devis' && (
-          <section>
-            <SectionHeader icon={FileText} title="Devis" count={data.devis.length} color={brand} />
-            {data.devis.length === 0 ? (
-              <EmptyState message="Aucun devis pour le moment." />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {data.devis.map(devis => {
-                  const isExpired    = !!(devis.dateExpiration && new Date(devis.dateExpiration) < new Date())
-                  const effectifStatut = isExpired && devis.statut !== 'ACCEPTE' ? 'EXPIRE' : devis.statut
-                  const status = DEVIS_STATUS[effectifStatut] ?? { label: effectifStatut, bg: 'bg-slate-100 dark:bg-slate-700', text: 'text-slate-500 dark:text-slate-400', icon: Clock }
-                  const canAccept  = !isExpired && !accepted.has(devis.id) && !['ACCEPTE', 'REFUSE', 'EXPIRE'].includes(devis.statut)
-                  const isAccepted = accepted.has(devis.id) || devis.statut === 'ACCEPTE'
-                  return (
-                    <div key={devis.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
-                      <div className="h-1" style={{ backgroundColor: isAccepted ? '#10b981' : brand }} />
-                      <div className="p-4">
-                        <div className="flex items-start justify-between gap-2 mb-3">
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                              style={{ backgroundColor: `${brand}22` }}>
-                              <FileText className="w-4 h-4" style={{ color: brand }} />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{devis.reference}</p>
-                              <p className="text-xs text-slate-400 dark:text-slate-500">
-                                {devis.dateExpiration ? `Valable jusqu'au ${formatDate(devis.dateExpiration)}` : formatDate(devis.createdAt)}
-                              </p>
-                            </div>
-                          </div>
-                          <Badge {...status} />
-                        </div>
-                        <div className="mb-3">
-                          <p className="text-xl font-black text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</p>
-                          {n(devis.remise) > 0 && (
-                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Remise : {formatMAD(devis.remise)}</p>
-                          )}
-                        </div>
-                        {devis.notes && (
-                          <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/60 rounded-lg px-3 py-2 mb-3">
-                            {devis.notes}
-                          </p>
-                        )}
-                        <div className="flex gap-2">
-                          {devis.lienPublic && (
-                            <a
-                              href={`/public/devis/${devis.lienPublic.token}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                              Voir le détail
-                            </a>
-                          )}
-                          {canAccept && (
-                            <button
-                              onClick={() => handleAcceptDevis(devis.id)}
-                              disabled={accepting === devis.id}
-                              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-white text-xs font-semibold transition-all disabled:opacity-70"
-                              style={{ backgroundColor: brand }}
-                            >
-                              {accepting === devis.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
-                              {accepting === devis.id ? 'En cours…' : 'Accepter'}
-                            </button>
-                          )}
-                          {isAccepted && (
-                            <div className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
-                              <CheckCircle className="w-3.5 h-3.5" /> Accepté
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* ── REÇUS TAB ── */}
-        {activeTab === 'recus' && (
-          <section>
-            <SectionHeader icon={CheckCircle} title="Reçus de paiement" count={allRecus.length} color="#10b981" />
-            {allRecus.length === 0 ? (
-              <EmptyState message="Aucun reçu disponible pour le moment." />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {allRecus.map(({ facture, paiement }) => (
-                  <div key={paiement.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
-                    <div className="h-1 bg-emerald-500" />
-                    <div className="p-4">
-                      <div className="flex items-center gap-2.5 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
-                          <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{facture.numeroFacture}</p>
-                          <p className="text-xs text-slate-400 dark:text-slate-500">{formatDate(paiement.datePaiement)}</p>
-                        </div>
-                        <span className="text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full flex-shrink-0">
-                          Reçu
-                        </span>
-                      </div>
-                      <div className="mb-3">
-                        <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">{formatMAD(paiement.montant)}</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                          {METHODE_LABELS[paiement.methode] ?? paiement.methode}
-                          {paiement.reference ? ` · ${paiement.reference}` : ''}
-                        </p>
-                      </div>
-                      <a
-                        href={`/public/factures/${facture.publicToken}/recu?p=${paiement.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white text-xs font-semibold transition-colors"
-                      >
-                        <ArrowRight className="w-3.5 h-3.5" />
-                        Voir &amp; télécharger le reçu
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )
+            }
           </section>
         )}
 
         {/* ── FOOTER ── */}
-        <footer className="border-t border-slate-200 dark:border-slate-700 pt-5 pb-6 transition-colors">
-          <p className="text-xs text-slate-400 dark:text-slate-500 mb-3 font-medium">Nous contacter</p>
-          <div className="flex flex-wrap gap-3">
+        <footer style={{ borderTop: `1px solid ${t.border}`, paddingTop: 20, paddingBottom: 24 }}>
+          <p style={{ fontSize: 11, color: t.textMuted, marginBottom: 12, fontWeight: 600 }}>Nous contacter</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             {data.entreprise.email && (
-              <a href={`mailto:${data.entreprise.email}`}
-                className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-                <Mail className="w-3.5 h-3.5" /> {data.entreprise.email}
+              <a href={`mailto:${data.entreprise.email}`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: t.textSub, textDecoration: 'none' }}>
+                <Mail style={{ width: 13, height: 13 }} /> {data.entreprise.email}
               </a>
             )}
             {data.entreprise.telephone && (
-              <a href={`tel:${data.entreprise.telephone}`}
-                className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-                <Phone className="w-3.5 h-3.5" /> {data.entreprise.telephone}
+              <a href={`tel:${data.entreprise.telephone}`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: t.textSub, textDecoration: 'none' }}>
+                <Phone style={{ width: 13, height: 13 }} /> {data.entreprise.telephone}
               </a>
             )}
             {data.entreprise.website && (
-              <a href={data.entreprise.website} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-                <Globe className="w-3.5 h-3.5" /> Site web
+              <a href={data.entreprise.website} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: t.textSub, textDecoration: 'none' }}>
+                <Globe style={{ width: 13, height: 13 }} /> Site web
               </a>
             )}
           </div>
-          <p className="text-xs text-slate-300 dark:text-slate-600 mt-5">Propulsé par Sayerli</p>
+          <p style={{ fontSize: 11, color: t.textMuted, marginTop: 20 }}>Propulsé par Sayerli</p>
         </footer>
 
       </main>
+    </div>
+  )
+}
+
+// ── Small sub-components ──────────────────────────────────────────────────────
+
+function SectionTitle({ icon: Icon, title, count, brand, t }: {
+  icon: React.ElementType; title: string; count: number; brand: string
+  t: { text: string; textMuted: string }
+}) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+      <div style={{ width: 34, height: 34, borderRadius: 10, background: `${brand}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Icon style={{ width: 17, height: 17, color: brand }} />
+      </div>
+      <span style={{ fontSize: 15, fontWeight: 700, color: t.text }}>{title}</span>
+      <span style={{ fontSize: 13, color: t.textMuted }}>({count})</span>
+    </div>
+  )
+}
+
+function Empty({ message, t }: { message: string; t: { card: string; cardBorder: string; textMuted: string } }) {
+  return (
+    <div style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, padding: '48px 24px', textAlign: 'center' }}>
+      <p style={{ fontSize: 14, color: t.textMuted }}>{message}</p>
     </div>
   )
 }
