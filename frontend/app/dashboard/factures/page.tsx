@@ -584,33 +584,47 @@ export default function FacturesPage() {
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank')
   }
 
-  const handleRecuWhatsApp = (f: ApiFacture) => {
+  const handleRecuWhatsApp = async (f: ApiFacture) => {
     const phone = toWhatsAppNumber(f.client.telephone)
     if (!phone) {
       toastError('Erreur', 'Aucun numéro de téléphone valide pour ce client.')
       return
     }
-    const url = `${window.location.origin}/public/factures/${f.publicToken}/recu`
-    const fmt = (v: number) => v.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
-    const montantPaye = n(f.montantPaye)
-    const restant = Math.max(0, n(f.totalTTC) - montantPaye)
-    const isFullyPaid = restant < 0.01
 
-    const sorted = [...(f.paiements ?? [])].sort(
+    // Load paiements if not already present
+    let paiements = f.paiements ?? []
+    if (paiements.length === 0) {
+      try {
+        const res = await facturesApi.get(f.id)
+        paiements = (res.data?.data ?? res.data)?.paiements ?? []
+      } catch { /* proceed without */ }
+    }
+
+    // Latest payment (most recent by date)
+    const sorted = [...paiements].sort(
       (a, b) => new Date(b.datePaiement).getTime() - new Date(a.datePaiement).getTime()
     )
-    const lastDate = sorted[0] ? formatDate(sorted[0].datePaiement) : null
+    const last = sorted[0]
+
+    const url = last
+      ? `${window.location.origin}/public/factures/${f.publicToken}/recu?p=${last.id}`
+      : `${window.location.origin}/public/factures/${f.publicToken}/recu`
+
+    const fmtAmount = (v: number) => v.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
+    const lastAmount = last ? n(last.montant) : n(f.montantPaye)
+    const restant = Math.max(0, n(f.totalTTC) - n(f.montantPaye))
+    const isFullyPaid = restant < 0.01
+    const lastDate = last ? formatDate(last.datePaiement) : null
 
     const lines = isFullyPaid
       ? [
           `Bonjour ${f.client.nom},`,
           '',
-          `✅ Nous confirmons la réception de votre paiement — la facture *${f.numeroFacture}* est entièrement réglée. Merci !`,
+          `✅ Votre paiement de *${fmtAmount(lastAmount)}* a bien été reçu — la facture *${f.numeroFacture}* est entièrement réglée. Merci !`,
           '',
-          `💰 Total payé : *${fmt(montantPaye)}*`,
-          ...(lastDate ? [`📅 Dernier paiement : ${lastDate}`] : []),
+          ...(lastDate ? [`📅 Date : ${lastDate}`] : []),
           '',
-          `📄 Vous pouvez télécharger votre reçu officiel depuis ce lien :`,
+          `🧾 Votre reçu officiel :`,
           url,
           '',
           'Merci pour votre confiance.',
@@ -618,13 +632,12 @@ export default function FacturesPage() {
       : [
           `Bonjour ${f.client.nom},`,
           '',
-          `✅ Nous confirmons la réception de votre paiement pour la facture *${f.numeroFacture}*.`,
+          `✅ Votre paiement de *${fmtAmount(lastAmount)}* a bien été reçu pour la facture *${f.numeroFacture}*.`,
           '',
-          `💰 Montant payé à ce jour : *${fmt(montantPaye)}*`,
-          `🔸 Reste à payer : *${fmt(restant)}*`,
-          ...(lastDate ? [`📅 Dernier paiement : ${lastDate}`] : []),
+          `🔸 Reste à payer : *${fmtAmount(restant)}*`,
+          ...(lastDate ? [`📅 Date : ${lastDate}`] : []),
           '',
-          `📄 Vous pouvez télécharger votre reçu depuis ce lien :`,
+          `🧾 Votre reçu :`,
           url,
           '',
           'Merci pour votre confiance.',

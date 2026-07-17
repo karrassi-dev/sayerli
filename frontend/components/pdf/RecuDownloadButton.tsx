@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Download } from 'lucide-react'
 import RecuPDF, { type RecuPDFProps } from './RecuPDF'
@@ -9,11 +10,13 @@ export default function RecuDownloadButton({
   label = 'Télécharger le reçu (PDF)',
   loadingLabel = 'Génération…',
   className,
+  style,
 }: {
   data: RecuPDFProps
   label?: string
   loadingLabel?: string
   className?: string
+  style?: React.CSSProperties
 }) {
   return (
     <PDFDownloadLink
@@ -23,6 +26,7 @@ export default function RecuDownloadButton({
       {({ loading }) => (
         <button
           disabled={loading}
+          style={style}
           className={
             className ??
             'inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 transition-all'

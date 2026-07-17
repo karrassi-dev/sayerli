@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import dynamic from 'next/dynamic'
-import { useParams } from 'next/navigation'
-import { CheckCircle, AlertCircle, Building2, Mail, Phone, MapPin, Download } from 'lucide-react'
+import { useParams, useSearchParams } from 'next/navigation'
+import { CheckCircle, AlertCircle, Clock } from 'lucide-react'
 import { publicFacturesApi } from '@/lib/api'
 
 const RecuDownloadButton = dynamic(
@@ -25,27 +25,14 @@ interface PublicFacture {
   id: string
   numeroFacture: string
   statut: string
-  totalHT: number | string
-  taxe: number | string
   totalTTC: number | string
-  remise: number | string
   montantPaye: number | string
-  dateEcheance: string | null
-  dateEnvoi: string | null
-  notes: string | null
-  createdAt: string
-  devis: { reference: string } | null
   client: { nom: string; email: string | null; telephone: string | null; nomEntreprise: string | null }
-  lignes: { id: string; description: string; quantite: number | string; prixUnitaire: number | string; total: number | string; ordre: number }[]
   paiements: PublicPaiement[]
   entreprise: {
     nom: string; email: string | null; telephone: string | null
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
-    templateDocument: string | null
-    ice: string | null; rc: string | null; website: string | null
-    activite: string | null
-    titulaireCompte: string | null; banque: string | null
-    rib: string | null; iban: string | null; swift: string | null
+    ice: string | null; activite: string | null
   }
 }
 
@@ -53,16 +40,11 @@ interface PublicFacture {
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : (v ?? 0) }
 
-function formatMAD(v: number | string) {
+function fmt(v: number | string) {
   return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
 }
 
-function formatDate(d: string | null | undefined) {
-  if (!d) return '—'
-  return new Date(d).toLocaleDateString('fr-MA', { day: '2-digit', month: '2-digit', year: 'numeric' })
-}
-
-function formatDateLong(d: string | null | undefined) {
+function fmtDate(d: string | null | undefined) {
   if (!d) return '—'
   return new Date(d).toLocaleDateString('fr-MA', { day: '2-digit', month: 'long', year: 'numeric' })
 }
@@ -84,10 +66,12 @@ function resolveLogoUrl(path: string) {
   return `${API_ORIGIN}${path}`
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Inner component (needs useSearchParams) ───────────────────────────────────
 
-export default function PublicRecuPage() {
+function RecuContent() {
   const { token } = useParams<{ token: string }>()
+  const searchParams = useSearchParams()
+  const paiementId = searchParams.get('p')
 
   const [facture, setFacture] = useState<PublicFacture | null>(null)
   const [loading, setLoading] = useState(true)
@@ -104,7 +88,7 @@ export default function PublicRecuPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-gray-200 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin" />
       </div>
     )
   }
@@ -112,12 +96,12 @@ export default function PublicRecuPage() {
   if (error || !facture) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-sm w-full bg-white rounded-lg shadow-sm p-8 text-center">
-          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-8 h-8 text-red-500" />
+        <div className="max-w-xs w-full bg-white rounded-2xl shadow-sm p-8 text-center">
+          <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-7 h-7 text-red-400" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Lien invalide</h2>
-          <p className="text-sm text-gray-500">{error ?? 'Ce reçu est introuvable.'}</p>
+          <p className="text-sm font-semibold text-gray-700 mb-1">Lien invalide</p>
+          <p className="text-xs text-gray-400">{error ?? 'Ce reçu est introuvable.'}</p>
         </div>
       </div>
     )
@@ -126,27 +110,40 @@ export default function PublicRecuPage() {
   if (!facture.paiements || facture.paiements.length === 0) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-sm w-full bg-white rounded-lg shadow-sm p-8 text-center">
-          <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-8 h-8 text-amber-500" />
+        <div className="max-w-xs w-full bg-white rounded-2xl shadow-sm p-8 text-center">
+          <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-7 h-7 text-amber-400" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Aucun paiement enregistré</h2>
-          <p className="text-sm text-gray-500">Il n&apos;y a pas encore de reçu disponible pour cette facture.</p>
+          <p className="text-sm font-semibold text-gray-700 mb-1">Aucun paiement</p>
+          <p className="text-xs text-gray-400">Il n&apos;y a pas encore de reçu disponible pour cette facture.</p>
         </div>
       </div>
     )
   }
 
-  const brand = facture.entreprise.couleurPrimaire || '#16a34a'
-  const montantPaye = n(facture.montantPaye)
+  // Find the target payment — by ID if given, otherwise the latest
+  const sorted = [...facture.paiements].sort(
+    (a, b) => new Date(a.datePaiement).getTime() - new Date(b.datePaiement).getTime()
+  )
+  const paiement = paiementId
+    ? (sorted.find(p => p.id === paiementId) ?? sorted[sorted.length - 1])
+    : sorted[sorted.length - 1]
+
+  // Cumulative paid up to and including this payment
+  const targetIdx = sorted.findIndex(p => p.id === paiement.id)
+  const cumulPaye = sorted.slice(0, targetIdx + 1).reduce((s, p) => s + n(p.montant), 0)
+
   const totalTTC = n(facture.totalTTC)
-  const restant = Math.max(0, totalTTC - montantPaye)
+  const restant = Math.max(0, totalTTC - cumulPaye)
   const isFullyPaid = restant < 0.01
+  const brand = facture.entreprise.couleurPrimaire || '#16a34a'
+
   const pdfLogoUrl = facture.entreprise.logo
     ? facture.entreprise.logo.startsWith('http')
       ? facture.entreprise.logo
       : `${API_ORIGIN}${facture.entreprise.logo}`
     : null
+
   const generatedAt = new Date().toLocaleDateString('fr-MA', { day: '2-digit', month: 'long', year: 'numeric' })
 
   const recuData = {
@@ -161,192 +158,150 @@ export default function PublicRecuPage() {
       couleurPrimaire: brand,
       ice: facture.entreprise.ice,
     },
-    paiements: facture.paiements.map(p => ({ ...p, montant: n(p.montant) })),
+    paiements: [{ ...paiement, montant: n(paiement.montant) }],
     totalTTC,
-    montantPaye,
+    montantPaye: cumulPaye,
     generatedAt,
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-2xl mx-auto space-y-4">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-start py-8 px-4">
+      <div className="w-full max-w-sm space-y-3">
 
-        {/* ── DOCUMENT ── */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        {/* ── RECEIPT CARD ── */}
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
 
-          {/* Header */}
-          <div className="px-8 sm:px-12 py-6 flex items-start justify-between gap-6" style={{ backgroundColor: brand }}>
-            <div className="flex items-center gap-4">
-              {facture.entreprise.logo ? (
-                <div className="bg-white/20 rounded p-1 flex-shrink-0">
-                  <img
-                    src={resolveLogoUrl(facture.entreprise.logo)}
-                    alt={facture.entreprise.nom}
-                    className="h-10 w-auto object-contain"
-                  />
-                </div>
-              ) : (
-                <div
-                  className="w-12 h-12 rounded flex items-center justify-center font-black text-xl flex-shrink-0 bg-white/20 text-white"
-                >
-                  {facture.entreprise.nom.charAt(0)}
-                </div>
-              )}
-              <div>
-                <h1 className="text-lg font-bold text-white">{facture.entreprise.nom}</h1>
-                {facture.entreprise.email && <p className="text-sm text-white/70">{facture.entreprise.email}</p>}
-                {facture.entreprise.telephone && <p className="text-sm text-white/70">{facture.entreprise.telephone}</p>}
+          {/* Brand strip */}
+          <div className="h-1.5" style={{ backgroundColor: brand }} />
+
+          {/* Company header */}
+          <div className="px-6 pt-5 pb-4 flex items-center gap-3 border-b border-gray-100">
+            {facture.entreprise.logo ? (
+              <img
+                src={resolveLogoUrl(facture.entreprise.logo)}
+                alt={facture.entreprise.nom}
+                className="h-9 w-auto object-contain flex-shrink-0"
+              />
+            ) : (
+              <div
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-base flex-shrink-0"
+                style={{ backgroundColor: brand }}
+              >
+                {facture.entreprise.nom.charAt(0)}
               </div>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-[10px] font-bold text-white/60 tracking-[0.2em]">REÇU DE PAIEMENT</p>
-              <p className="text-2xl font-black text-white">{facture.numeroFacture}</p>
-              <p className="text-xs text-white/50 mt-1">Émis le {generatedAt}</p>
-            </div>
-          </div>
-
-          {/* Client + Entreprise info */}
-          <div className="px-8 sm:px-12 py-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3">ÉMETTEUR</p>
-              <p className="text-sm font-semibold text-gray-900">{facture.entreprise.nom}</p>
-              {facture.entreprise.activite && <p className="text-xs text-gray-500 mt-0.5">{facture.entreprise.activite}</p>}
-              {facture.entreprise.adresse && (
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3 flex-shrink-0" />{facture.entreprise.adresse}
-                </p>
-              )}
+            )}
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-gray-900 truncate">{facture.entreprise.nom}</p>
               {facture.entreprise.email && (
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
-                  <Mail className="w-3 h-3 flex-shrink-0" />{facture.entreprise.email}
-                </p>
-              )}
-              {facture.entreprise.telephone && (
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
-                  <Phone className="w-3 h-3 flex-shrink-0" />{facture.entreprise.telephone}
-                </p>
-              )}
-              {facture.entreprise.ice && <p className="text-xs text-gray-500 mt-1">ICE : {facture.entreprise.ice}</p>}
-            </div>
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3">CLIENT</p>
-              <p className="text-sm font-semibold text-gray-900">{facture.client.nom}</p>
-              {facture.client.nomEntreprise && (
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
-                  <Building2 className="w-3 h-3 flex-shrink-0" />{facture.client.nomEntreprise}
-                </p>
-              )}
-              {facture.client.email && (
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
-                  <Mail className="w-3 h-3 flex-shrink-0" />{facture.client.email}
-                </p>
-              )}
-              {facture.client.telephone && (
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
-                  <Phone className="w-3 h-3 flex-shrink-0" />{facture.client.telephone}
-                </p>
+                <p className="text-[11px] text-gray-400 truncate">{facture.entreprise.email}</p>
               )}
             </div>
           </div>
 
-          <div className="border-t border-gray-100" />
+          {/* Title */}
+          <div className="px-6 pt-5 pb-3 text-center">
+            <p className="text-[10px] font-bold tracking-[0.25em] text-gray-400 uppercase mb-1">Reçu de paiement</p>
+            <p className="text-xs font-semibold text-gray-500">{facture.numeroFacture}</p>
+          </div>
 
-          {/* Payment history */}
-          <div className="px-8 sm:px-12 py-6">
-            <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-4">HISTORIQUE DES PAIEMENTS</p>
+          {/* Client */}
+          <div className="px-6 pb-4 text-center">
+            <p className="text-sm font-bold text-gray-900">{facture.client.nom}</p>
+            {facture.client.nomEntreprise && (
+              <p className="text-xs text-gray-400 mt-0.5">{facture.client.nomEntreprise}</p>
+            )}
+          </div>
 
-            <div className="rounded overflow-hidden border border-gray-200">
-              {/* Table head */}
-              <div className="grid grid-cols-12 px-4 py-2.5 bg-gray-50 border-b border-gray-200">
-                <span className="col-span-3 text-[10px] font-bold text-gray-500 tracking-[0.1em]">DATE</span>
-                <span className="col-span-3 text-[10px] font-bold text-gray-500 tracking-[0.1em]">MÉTHODE</span>
-                <span className="col-span-4 text-[10px] font-bold text-gray-500 tracking-[0.1em]">RÉFÉRENCE</span>
-                <span className="col-span-2 text-[10px] font-bold text-gray-500 tracking-[0.1em] text-right">MONTANT</span>
+          {/* Amount block */}
+          <div className="mx-5 mb-5 rounded-xl overflow-hidden" style={{ backgroundColor: isFullyPaid ? '#f0fdf4' : '#f8fafc', border: `1.5px solid ${isFullyPaid ? '#86efac' : '#e2e8f0'}` }}>
+            <div className="px-5 py-5 text-center">
+              <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color: brand }}>
+                Montant reçu
+              </p>
+              <p className="text-3xl font-black" style={{ color: brand }}>
+                {fmt(paiement.montant)}
+              </p>
+              <div className="mt-3 space-y-1">
+                <p className="text-xs font-semibold text-gray-600">
+                  {METHODE_LABELS[paiement.methode] ?? paiement.methode}
+                </p>
+                {paiement.reference && (
+                  <p className="text-[11px] text-gray-400 font-mono">{paiement.reference}</p>
+                )}
+                <p className="text-[11px] text-gray-400">{fmtDate(paiement.datePaiement)}</p>
               </div>
-              {/* Rows */}
-              {facture.paiements.map((p, i) => (
-                <div
-                  key={p.id ?? i}
-                  className={`grid grid-cols-12 px-4 py-3 border-b border-gray-100 last:border-0 ${i % 2 === 1 ? 'bg-gray-50/50' : ''}`}
-                >
-                  <span className="col-span-3 text-xs text-gray-700">{formatDate(p.datePaiement)}</span>
-                  <span className="col-span-3 text-xs text-gray-600">{METHODE_LABELS[p.methode] ?? p.methode}</span>
-                  <span className="col-span-4 text-xs text-gray-400 italic">{p.reference || '—'}</span>
-                  <span className="col-span-2 text-xs font-bold text-emerald-600 text-right">{formatMAD(p.montant)}</span>
-                </div>
-              ))}
             </div>
           </div>
 
           {/* Summary */}
-          <div className="px-8 sm:px-12 pb-6">
-            <div className="border border-gray-200 rounded overflow-hidden">
-              <div className="flex justify-between px-5 py-3 border-b border-gray-100 text-sm text-gray-600">
-                <span>Total facture TTC</span>
-                <span className="font-semibold text-gray-900">{formatMAD(totalTTC)}</span>
-              </div>
-              <div className="flex justify-between px-5 py-3 border-b border-gray-100 text-sm">
-                <span className="font-semibold text-gray-700">Total payé</span>
-                <span className="font-bold text-emerald-600">{formatMAD(montantPaye)}</span>
-              </div>
-              {!isFullyPaid && (
-                <div className="flex justify-between px-5 py-3 text-sm">
-                  <span className="text-gray-600">Reste à payer</span>
-                  <span className="font-bold text-red-600">{formatMAD(restant)}</span>
-                </div>
-              )}
+          <div className="mx-5 mb-5 border border-gray-100 rounded-xl overflow-hidden divide-y divide-gray-100">
+            <div className="flex justify-between items-center px-4 py-2.5">
+              <span className="text-xs text-gray-400">Total facture</span>
+              <span className="text-xs font-semibold text-gray-700">{fmt(totalTTC)}</span>
+            </div>
+            <div className="flex justify-between items-center px-4 py-2.5">
+              <span className="text-xs text-gray-400">Cumul payé</span>
+              <span className="text-xs font-semibold text-emerald-600">{fmt(cumulPaye)}</span>
+            </div>
+            <div className="flex justify-between items-center px-4 py-2.5">
+              <span className="text-xs text-gray-400">Reste à payer</span>
+              <span className={`text-xs font-bold ${isFullyPaid ? 'text-emerald-600' : 'text-red-500'}`}>
+                {isFullyPaid ? '—' : fmt(restant)}
+              </span>
             </div>
           </div>
 
-          {/* Badge */}
+          {/* Paid badge */}
           {isFullyPaid ? (
-            <div className="mx-8 sm:mx-12 mb-8 rounded-lg border-2 border-emerald-200 bg-emerald-50 py-5 flex flex-col items-center gap-1">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-600" />
-                <span className="text-base font-black text-emerald-700">PAYÉ INTÉGRALEMENT</span>
-              </div>
-              <p className="text-xs text-emerald-600">Merci pour votre confiance — {facture.entreprise.nom}</p>
+            <div className="mx-5 mb-5 rounded-xl bg-emerald-50 border border-emerald-200 py-3 flex items-center justify-center gap-2">
+              <CheckCircle className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs font-black text-emerald-700 tracking-wide">PAYÉ INTÉGRALEMENT</span>
             </div>
           ) : (
-            <div className="mx-8 sm:mx-12 mb-8 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4">
-              <p className="text-sm text-amber-700">
-                Paiement partiel reçu. Il reste <strong>{formatMAD(restant)}</strong> à régler.
+            <div className="mx-5 mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
+              <p className="text-xs text-amber-700 text-center">
+                Reste <strong>{fmt(restant)}</strong> à régler sur cette facture.
               </p>
             </div>
           )}
 
-          {/* Document footer */}
-          <div className="px-8 sm:px-12 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
-            <p className="text-[10px] text-gray-400 tracking-wide">
-              Reçu généré automatiquement par <span className="font-semibold text-gray-500">{facture.entreprise.nom}</span> via{' '}
-              <span className="font-semibold text-gray-500">Sayerli</span>
+          {/* Download */}
+          <div className="px-5 pb-5">
+            <RecuDownloadButton
+              data={recuData}
+              label="Télécharger ce reçu (PDF)"
+              loadingLabel="Génération…"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
+              style={{ backgroundColor: brand }}
+            />
+          </div>
+
+          {/* Footer */}
+          <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
+            <p className="text-[10px] text-gray-400 text-center">
+              Reçu émis par <span className="font-semibold text-gray-500">{facture.entreprise.nom}</span> via Sayerli
             </p>
-            <p className="text-[10px] text-gray-400">Généré le {generatedAt}</p>
           </div>
         </div>
 
-        {/* ── DOWNLOAD BAR ── */}
-        <div className="bg-white rounded-lg shadow-sm p-5 flex flex-col sm:flex-row items-center gap-4">
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-gray-900">Télécharger ce reçu en PDF</p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Dernière mise à jour : {facture.paiements.length > 0
-                ? formatDateLong(facture.paiements[facture.paiements.length - 1].datePaiement)
-                : generatedAt}
-            </p>
-          </div>
-          <RecuDownloadButton
-            data={recuData}
-            label="Télécharger le reçu (PDF)"
-            loadingLabel="Génération…"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all"
-          />
-        </div>
-
-        <p className="text-xs text-gray-400 text-center">
-          Généré par Sayerli · Logiciel de gestion pour PME marocaines
+        <p className="text-[11px] text-gray-400 text-center">
+          sayerli.com · Logiciel de facturation pour PME marocaines
         </p>
       </div>
     </div>
+  )
+}
+
+// ── Page wrapper (Suspense required for useSearchParams) ──────────────────────
+
+export default function PublicRecuPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin" />
+      </div>
+    }>
+      <RecuContent />
+    </Suspense>
   )
 }
