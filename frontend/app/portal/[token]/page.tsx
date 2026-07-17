@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import {
   FileText, Receipt, CheckCircle, XCircle, Clock, AlertCircle,
   Mail, Phone, Globe, Loader2, Check, ArrowRight, ExternalLink,
-  ChevronRight,
+  Sun, Moon,
 } from 'lucide-react'
 import { portalApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
@@ -90,44 +90,50 @@ interface PortalData {
 // ── Status config ─────────────────────────────────────────────────────────────
 
 const DEVIS_STATUS: Record<string, { label: string; bg: string; text: string; icon: React.ElementType }> = {
-  ENVOYE:  { label: 'En attente',  bg: 'bg-blue-50',   text: 'text-blue-700',   icon: Clock },
-  VU:      { label: 'Consulté',    bg: 'bg-purple-50',  text: 'text-purple-700', icon: Clock },
-  ACCEPTE: { label: 'Accepté',     bg: 'bg-emerald-50', text: 'text-emerald-700',icon: CheckCircle },
-  REFUSE:  { label: 'Refusé',      bg: 'bg-red-50',     text: 'text-red-600',    icon: XCircle },
-  EXPIRE:  { label: 'Expiré',      bg: 'bg-slate-100',  text: 'text-slate-500',  icon: AlertCircle },
+  ENVOYE:  { label: 'En attente',  bg: 'bg-blue-100 dark:bg-blue-900/40',   text: 'text-blue-700 dark:text-blue-300',   icon: Clock },
+  VU:      { label: 'Consulté',    bg: 'bg-purple-100 dark:bg-purple-900/40', text: 'text-purple-700 dark:text-purple-300', icon: Clock },
+  ACCEPTE: { label: 'Accepté',     bg: 'bg-emerald-100 dark:bg-emerald-900/40', text: 'text-emerald-700 dark:text-emerald-300', icon: CheckCircle },
+  REFUSE:  { label: 'Refusé',      bg: 'bg-red-100 dark:bg-red-900/40',     text: 'text-red-600 dark:text-red-400',    icon: XCircle },
+  EXPIRE:  { label: 'Expiré',      bg: 'bg-slate-200 dark:bg-slate-700',    text: 'text-slate-500 dark:text-slate-400', icon: AlertCircle },
 }
 
 const FACTURE_STATUS: Record<string, { label: string; bg: string; text: string; icon: React.ElementType }> = {
-  ENVOYEE:   { label: 'À régler',   bg: 'bg-blue-50',   text: 'text-blue-700',   icon: Clock },
-  VUE:       { label: 'Vue',        bg: 'bg-purple-50',  text: 'text-purple-700', icon: Clock },
-  PARTIELLE: { label: 'Partielle',  bg: 'bg-amber-50',   text: 'text-amber-700',  icon: AlertCircle },
-  EN_RETARD: { label: 'En retard',  bg: 'bg-red-50',     text: 'text-red-600',    icon: AlertCircle },
-  PAYEE:     { label: 'Payée',      bg: 'bg-emerald-50', text: 'text-emerald-700',icon: CheckCircle },
+  ENVOYEE:   { label: 'À régler',  bg: 'bg-blue-100 dark:bg-blue-900/40',   text: 'text-blue-700 dark:text-blue-300',   icon: Clock },
+  VUE:       { label: 'Vue',       bg: 'bg-purple-100 dark:bg-purple-900/40', text: 'text-purple-700 dark:text-purple-300', icon: Clock },
+  PARTIELLE: { label: 'Partielle', bg: 'bg-amber-100 dark:bg-amber-900/40',  text: 'text-amber-700 dark:text-amber-300',  icon: AlertCircle },
+  EN_RETARD: { label: 'En retard', bg: 'bg-red-100 dark:bg-red-900/40',     text: 'text-red-600 dark:text-red-400',    icon: AlertCircle },
+  PAYEE:     { label: 'Payée',     bg: 'bg-emerald-100 dark:bg-emerald-900/40', text: 'text-emerald-700 dark:text-emerald-300', icon: CheckCircle },
 }
 
 function Badge({ label, bg, text, icon: Icon }: { label: string; bg: string; text: string; icon: React.ElementType }) {
   return (
-    <span className={cn('inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold', bg, text)}>
+    <span className={cn('inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0', bg, text)}>
       <Icon className="w-3 h-3" />
       {label}
     </span>
   )
 }
 
-// ── Section header ─────────────────────────────────────────────────────────────
-
 function SectionHeader({ icon: Icon, title, count, color }: {
   icon: React.ElementType; title: string; count: number; color: string
 }) {
   return (
     <div className="flex items-center gap-3 mb-4">
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${color}18` }}>
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${color}22` }}>
         <Icon className="w-5 h-5" style={{ color }} />
       </div>
       <div className="flex items-baseline gap-2">
-        <h2 className="text-base font-bold text-slate-900">{title}</h2>
-        <span className="text-sm text-slate-400">({count})</span>
+        <h2 className="text-base font-bold text-slate-900 dark:text-white">{title}</h2>
+        <span className="text-sm text-slate-400 dark:text-slate-500">({count})</span>
       </div>
+    </div>
+  )
+}
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 py-12 text-center">
+      <p className="text-sm text-slate-400 dark:text-slate-500">{message}</p>
     </div>
   )
 }
@@ -136,12 +142,26 @@ function SectionHeader({ icon: Icon, title, count, color }: {
 
 export default function PortalPage() {
   const { token } = useParams<{ token: string }>()
-  const [data, setData]       = useState<PortalData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState(false)
+  const [data, setData]         = useState<PortalData | null>(null)
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState(false)
   const [accepting, setAccepting] = useState<string | null>(null)
   const [accepted, setAccepted]   = useState<Set<string>>(new Set())
   const [activeTab, setActiveTab] = useState<'devis' | 'factures' | 'recus'>('factures')
+  const [isDark, setIsDark]     = useState(false)
+
+  // Load saved theme preference
+  useEffect(() => {
+    const saved = localStorage.getItem('portal-theme')
+    if (saved === 'dark') setIsDark(true)
+  }, [])
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      localStorage.setItem('portal-theme', !prev ? 'dark' : 'light')
+      return !prev
+    })
+  }
 
   const fetchPortal = useCallback(async () => {
     try {
@@ -175,7 +195,7 @@ export default function PortalPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className={cn('min-h-screen flex items-center justify-center', isDark ? 'dark bg-slate-900' : 'bg-slate-50')}>
         <Loader2 className="w-8 h-8 animate-spin text-slate-300" />
       </div>
     )
@@ -183,17 +203,16 @@ export default function PortalPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+      <div className={cn('min-h-screen flex items-center justify-center px-4', isDark ? 'dark bg-slate-900' : 'bg-slate-50')}>
         <div className="text-center max-w-sm">
           <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h1 className="text-lg font-semibold text-slate-700 mb-2">Portail introuvable</h1>
+          <h1 className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Portail introuvable</h1>
           <p className="text-sm text-slate-500">Ce lien portail est invalide ou a été désactivé.</p>
         </div>
       </div>
     )
   }
 
-  // Build flat list of receipts (one per payment)
   const allRecus: { facture: PortalFacture; paiement: PortalPaiement }[] = []
   data.factures.forEach(f => {
     f.paiements?.forEach(p => allRecus.push({ facture: f, paiement: p }))
@@ -207,10 +226,10 @@ export default function PortalPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className={cn('min-h-screen transition-colors duration-200', isDark ? 'dark bg-slate-900' : 'bg-slate-50')}>
 
       {/* ── HEADER ── */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 transition-colors duration-200">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
           {data.entreprise.logo ? (
             <img src={data.entreprise.logo} alt={data.entreprise.nom} className="h-8 w-auto object-contain rounded" />
@@ -220,10 +239,19 @@ export default function PortalPage() {
               {data.entreprise.nom.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="min-w-0">
-            <p className="font-semibold text-slate-900 text-sm leading-tight truncate">{data.entreprise.nom}</p>
-            <p className="text-xs text-slate-400">Espace client</p>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-slate-900 dark:text-white text-sm leading-tight truncate">{data.entreprise.nom}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">Espace client</p>
           </div>
+
+          {/* Dark/Light toggle */}
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 transition-all flex-shrink-0"
+            title={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
         </div>
       </header>
 
@@ -231,32 +259,30 @@ export default function PortalPage() {
 
         {/* ── WELCOME ── */}
         <div className="pt-2">
-          <h1 className="text-xl font-bold text-slate-900">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white">
             Bonjour, {data.nomEntreprise || data.nom} 👋
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Retrouvez ici tous vos documents avec {data.entreprise.nom}.
           </p>
         </div>
 
-        {/* ── SUMMARY CARDS ── */}
+        {/* ── SUMMARY ── */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-white rounded-xl border border-slate-200 p-3 text-center">
-            <p className="text-2xl font-black text-slate-900">{data.factures.length}</p>
-            <p className="text-xs text-slate-400 mt-0.5">Facture{data.factures.length !== 1 ? 's' : ''}</p>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-3 text-center">
-            <p className="text-2xl font-black text-slate-900">{data.devis.length}</p>
-            <p className="text-xs text-slate-400 mt-0.5">Devis</p>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-3 text-center">
-            <p className="text-2xl font-black text-emerald-600">{allRecus.length}</p>
-            <p className="text-xs text-slate-400 mt-0.5">Reçu{allRecus.length !== 1 ? 's' : ''}</p>
-          </div>
+          {[
+            { label: `Facture${data.factures.length !== 1 ? 's' : ''}`, value: data.factures.length, color: 'text-slate-900 dark:text-white' },
+            { label: 'Devis', value: data.devis.length, color: 'text-slate-900 dark:text-white' },
+            { label: `Reçu${allRecus.length !== 1 ? 's' : ''}`, value: allRecus.length, color: 'text-emerald-600 dark:text-emerald-400' },
+          ].map(item => (
+            <div key={item.label} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center transition-colors">
+              <p className={cn('text-2xl font-black', item.color)}>{item.value}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.label}</p>
+            </div>
+          ))}
         </div>
 
         {/* ── TABS ── */}
-        <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
+        <div className="flex gap-1 bg-slate-100 dark:bg-slate-700/60 rounded-xl p-1 transition-colors">
           {tabs.map(tab => (
             <button
               key={tab.key}
@@ -264,8 +290,8 @@ export default function PortalPage() {
               className={cn(
                 'flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-sm font-semibold transition-all',
                 activeTab === tab.key
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700',
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200',
               )}
             >
               <tab.icon className="w-3.5 h-3.5 flex-shrink-0" />
@@ -273,7 +299,9 @@ export default function PortalPage() {
               {tab.count > 0 && (
                 <span className={cn(
                   'text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0',
-                  activeTab === tab.key ? 'bg-slate-100 text-slate-600' : 'bg-slate-200 text-slate-500',
+                  activeTab === tab.key
+                    ? 'bg-slate-100 dark:bg-slate-600 text-slate-600 dark:text-slate-300'
+                    : 'bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-400',
                 )}>
                   {tab.count}
                 </span>
@@ -291,65 +319,56 @@ export default function PortalPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {data.factures.map(facture => {
-                  const status = FACTURE_STATUS[facture.statut] ?? { label: facture.statut, bg: 'bg-slate-100', text: 'text-slate-500', icon: Clock }
+                  const status = FACTURE_STATUS[facture.statut] ?? { label: facture.statut, bg: 'bg-slate-100 dark:bg-slate-700', text: 'text-slate-500 dark:text-slate-400', icon: Clock }
                   const montantPaye = n(facture.montantPaye)
                   const totalTTC   = n(facture.totalTTC)
                   const restant    = Math.max(0, totalTTC - montantPaye)
                   const progress   = totalTTC > 0 ? Math.min(100, (montantPaye / totalTTC) * 100) : 0
                   const isOverdue  = facture.statut === 'EN_RETARD'
                   const isPayee    = facture.statut === 'PAYEE'
+                  const accentColor = isPayee ? '#10b981' : isOverdue ? '#ef4444' : brand
                   return (
-                    <div key={facture.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                      {/* Top accent */}
-                      <div className="h-1" style={{ backgroundColor: isPayee ? '#10b981' : isOverdue ? '#ef4444' : brand }} />
+                    <div key={facture.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
+                      <div className="h-1" style={{ backgroundColor: accentColor }} />
                       <div className="p-4">
-                        {/* Header */}
                         <div className="flex items-start justify-between gap-2 mb-3">
                           <div className="flex items-center gap-2.5 min-w-0">
                             <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0',
-                              isPayee ? 'bg-emerald-100' : isOverdue ? 'bg-red-100' : 'bg-slate-100')}>
-                              <Receipt className={cn('w-4 h-4', isPayee ? 'text-emerald-600' : isOverdue ? 'text-red-500' : 'text-slate-500')} />
+                              isPayee ? 'bg-emerald-100 dark:bg-emerald-900/40' : isOverdue ? 'bg-red-100 dark:bg-red-900/40' : 'bg-slate-100 dark:bg-slate-700')}>
+                              <Receipt className={cn('w-4 h-4', isPayee ? 'text-emerald-600 dark:text-emerald-400' : isOverdue ? 'text-red-500 dark:text-red-400' : 'text-slate-500 dark:text-slate-400')} />
                             </div>
                             <div className="min-w-0">
-                              <p className="text-sm font-bold text-slate-900 truncate">{facture.numeroFacture}</p>
-                              <p className="text-xs text-slate-400">
-                                {facture.dateEcheance
-                                  ? `Échéance ${formatDate(facture.dateEcheance)}`
-                                  : formatDate(facture.createdAt)}
+                              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{facture.numeroFacture}</p>
+                              <p className="text-xs text-slate-400 dark:text-slate-500">
+                                {facture.dateEcheance ? `Échéance ${formatDate(facture.dateEcheance)}` : formatDate(facture.createdAt)}
                               </p>
                             </div>
                           </div>
                           <Badge {...status} />
                         </div>
-
-                        {/* Amount */}
                         <div className="mb-3">
-                          <p className="text-xl font-black text-slate-900">{formatMAD(totalTTC)}</p>
+                          <p className="text-xl font-black text-slate-900 dark:text-white">{formatMAD(totalTTC)}</p>
                           {facture.statut === 'PARTIELLE' && (
-                            <p className="text-xs text-amber-600 mt-0.5">
+                            <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
                               Payé {formatMAD(montantPaye)} · Reste {formatMAD(restant)}
                             </p>
                           )}
                         </div>
-
-                        {/* Progress bar for partial */}
                         {facture.statut === 'PARTIELLE' && (
-                          <div className="h-1.5 bg-slate-100 rounded-full mb-3 overflow-hidden">
+                          <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full mb-3 overflow-hidden">
                             <div className="h-full bg-amber-400 rounded-full" style={{ width: `${progress}%` }} />
                           </div>
                         )}
                         {isPayee && (
-                          <div className="h-1.5 bg-emerald-100 rounded-full mb-3 overflow-hidden">
+                          <div className="h-1.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-full mb-3">
                             <div className="h-full bg-emerald-500 rounded-full w-full" />
                           </div>
                         )}
-
-                        {/* Action */}
                         <a
                           href={`/public/factures/${facture.publicToken}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                          className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           Voir la facture
@@ -374,55 +393,46 @@ export default function PortalPage() {
                 {data.devis.map(devis => {
                   const isExpired    = !!(devis.dateExpiration && new Date(devis.dateExpiration) < new Date())
                   const effectifStatut = isExpired && devis.statut !== 'ACCEPTE' ? 'EXPIRE' : devis.statut
-                  const status = DEVIS_STATUS[effectifStatut] ?? { label: effectifStatut, bg: 'bg-slate-100', text: 'text-slate-500', icon: Clock }
-                  const canAccept = !isExpired && !accepted.has(devis.id) && !['ACCEPTE', 'REFUSE', 'EXPIRE'].includes(devis.statut)
+                  const status = DEVIS_STATUS[effectifStatut] ?? { label: effectifStatut, bg: 'bg-slate-100 dark:bg-slate-700', text: 'text-slate-500 dark:text-slate-400', icon: Clock }
+                  const canAccept  = !isExpired && !accepted.has(devis.id) && !['ACCEPTE', 'REFUSE', 'EXPIRE'].includes(devis.statut)
                   const isAccepted = accepted.has(devis.id) || devis.statut === 'ACCEPTE'
                   return (
-                    <div key={devis.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div key={devis.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
                       <div className="h-1" style={{ backgroundColor: isAccepted ? '#10b981' : brand }} />
                       <div className="p-4">
-                        {/* Header */}
                         <div className="flex items-start justify-between gap-2 mb-3">
                           <div className="flex items-center gap-2.5 min-w-0">
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                              style={{ backgroundColor: `${brand}18` }}>
+                              style={{ backgroundColor: `${brand}22` }}>
                               <FileText className="w-4 h-4" style={{ color: brand }} />
                             </div>
                             <div className="min-w-0">
-                              <p className="text-sm font-bold text-slate-900 truncate">{devis.reference}</p>
-                              <p className="text-xs text-slate-400">
-                                {devis.dateExpiration
-                                  ? `Valable jusqu'au ${formatDate(devis.dateExpiration)}`
-                                  : formatDate(devis.createdAt)}
+                              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{devis.reference}</p>
+                              <p className="text-xs text-slate-400 dark:text-slate-500">
+                                {devis.dateExpiration ? `Valable jusqu'au ${formatDate(devis.dateExpiration)}` : formatDate(devis.createdAt)}
                               </p>
                             </div>
                           </div>
                           <Badge {...status} />
                         </div>
-
-                        {/* Amount */}
                         <div className="mb-3">
-                          <p className="text-xl font-black text-slate-900">{formatMAD(devis.totalTTC)}</p>
+                          <p className="text-xl font-black text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</p>
                           {n(devis.remise) > 0 && (
-                            <p className="text-xs text-slate-400 mt-0.5">Remise : {formatMAD(devis.remise)}</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Remise : {formatMAD(devis.remise)}</p>
                           )}
                         </div>
-
-                        {/* Notes */}
                         {devis.notes && (
-                          <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2 mb-3">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/60 rounded-lg px-3 py-2 mb-3">
                             {devis.notes}
                           </p>
                         )}
-
-                        {/* Actions */}
                         <div className="flex gap-2">
                           {devis.lienPublic && (
                             <a
                               href={`/public/devis/${devis.lienPublic.token}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                               Voir le détail
@@ -435,14 +445,12 @@ export default function PortalPage() {
                               className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-white text-xs font-semibold transition-all disabled:opacity-70"
                               style={{ backgroundColor: brand }}
                             >
-                              {accepting === devis.id
-                                ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                : <Check className="w-3.5 h-3.5" />}
+                              {accepting === devis.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                               {accepting === devis.id ? 'En cours…' : 'Accepter'}
                             </button>
                           )}
                           {isAccepted && (
-                            <div className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                            <div className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
                               <CheckCircle className="w-3.5 h-3.5" /> Accepté
                             </div>
                           )}
@@ -464,91 +472,73 @@ export default function PortalPage() {
               <EmptyState message="Aucun reçu disponible pour le moment." />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {allRecus.map(({ facture, paiement }) => {
-                  const recuUrl = `/public/factures/${facture.publicToken}/recu?p=${paiement.id}`
-                  return (
-                    <div key={paiement.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                      <div className="h-1 bg-emerald-500" />
-                      <div className="p-4">
-                        {/* Header */}
-                        <div className="flex items-center gap-2.5 mb-3">
-                          <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                            <CheckCircle className="w-4 h-4 text-emerald-600" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-sm font-bold text-slate-900 truncate">{facture.numeroFacture}</p>
-                            <p className="text-xs text-slate-400">{formatDate(paiement.datePaiement)}</p>
-                          </div>
-                          <span className="ml-auto text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full flex-shrink-0">
-                            Reçu
-                          </span>
+                {allRecus.map(({ facture, paiement }) => (
+                  <div key={paiement.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
+                    <div className="h-1 bg-emerald-500" />
+                    <div className="p-4">
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
+                          <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         </div>
-
-                        {/* Amount */}
-                        <div className="mb-3">
-                          <p className="text-xl font-black text-emerald-600">{formatMAD(paiement.montant)}</p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            {METHODE_LABELS[paiement.methode] ?? paiement.methode}
-                            {paiement.reference ? ` · ${paiement.reference}` : ''}
-                          </p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{facture.numeroFacture}</p>
+                          <p className="text-xs text-slate-400 dark:text-slate-500">{formatDate(paiement.datePaiement)}</p>
                         </div>
-
-                        {/* CTA */}
-                        <a
-                          href={recuUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors"
-                        >
-                          <ArrowRight className="w-3.5 h-3.5" />
-                          Voir &amp; télécharger le reçu
-                        </a>
+                        <span className="text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full flex-shrink-0">
+                          Reçu
+                        </span>
                       </div>
+                      <div className="mb-3">
+                        <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">{formatMAD(paiement.montant)}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                          {METHODE_LABELS[paiement.methode] ?? paiement.methode}
+                          {paiement.reference ? ` · ${paiement.reference}` : ''}
+                        </p>
+                      </div>
+                      <a
+                        href={`/public/factures/${facture.publicToken}/recu?p=${paiement.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white text-xs font-semibold transition-colors"
+                      >
+                        <ArrowRight className="w-3.5 h-3.5" />
+                        Voir &amp; télécharger le reçu
+                      </a>
                     </div>
-                  )
-                })}
+                  </div>
+                ))}
               </div>
             )}
           </section>
         )}
 
         {/* ── FOOTER ── */}
-        <footer className="border-t border-slate-200 pt-5 pb-6">
-          <p className="text-xs text-slate-400 mb-3 font-medium">Nous contacter</p>
+        <footer className="border-t border-slate-200 dark:border-slate-700 pt-5 pb-6 transition-colors">
+          <p className="text-xs text-slate-400 dark:text-slate-500 mb-3 font-medium">Nous contacter</p>
           <div className="flex flex-wrap gap-3">
             {data.entreprise.email && (
               <a href={`mailto:${data.entreprise.email}`}
-                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors">
+                className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
                 <Mail className="w-3.5 h-3.5" /> {data.entreprise.email}
               </a>
             )}
             {data.entreprise.telephone && (
               <a href={`tel:${data.entreprise.telephone}`}
-                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors">
+                className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
                 <Phone className="w-3.5 h-3.5" /> {data.entreprise.telephone}
               </a>
             )}
             {data.entreprise.website && (
               <a href={data.entreprise.website} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors">
+                className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
                 <Globe className="w-3.5 h-3.5" /> Site web
               </a>
             )}
           </div>
-          <p className="text-xs text-slate-300 mt-5">Propulsé par Sayerli</p>
+          <p className="text-xs text-slate-300 dark:text-slate-600 mt-5">Propulsé par Sayerli</p>
         </footer>
 
       </main>
-    </div>
-  )
-}
-
-// ── Empty state ───────────────────────────────────────────────────────────────
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="bg-white rounded-xl border border-slate-200 py-12 text-center">
-      <p className="text-sm text-slate-400">{message}</p>
     </div>
   )
 }
