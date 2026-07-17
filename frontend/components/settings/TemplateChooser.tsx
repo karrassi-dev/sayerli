@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Lock, Zap } from 'lucide-react'
+import { Check, Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { FeaturePlanModal } from '@/components/billing/FeaturePlanModal'
 
 export type TemplateId = 'classic' | 'minimal' | 'stripe' | 'corporate' | 'bold' | 'elegant'
 type PlanId = 'STARTER' | 'PRO' | 'BUSINESS'
@@ -908,44 +909,13 @@ export default function TemplateChooser({
         </div>
       </div>
 
-      {/* ── Upgrade modal ── */}
-      {upgradeTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setUpgradeTarget(null)}>
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
-            <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center mx-auto mb-4">
-              <Zap className="w-6 h-6 text-amber-600" />
-            </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white text-center mb-2">
-              Modèle non inclus dans votre plan
-            </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 text-center mb-1">
-              Le modèle <strong className="text-slate-700 dark:text-slate-200">{upgradeTarget.name}</strong> est réservé au plan{' '}
-              <span className={cn('font-bold px-1.5 py-0.5 rounded', PLAN_LABEL[upgradeTarget.plan].color)}>
-                {upgradeTarget.plan}
-              </span>.
-            </p>
-            <p className="text-xs text-slate-400 text-center mb-6">
-              Passez au plan {upgradeTarget.plan} pour accéder à ce modèle et débloquer toutes ses fonctionnalités.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setUpgradeTarget(null)}
-                className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-              >
-                Annuler
-              </button>
-              <a
-                href="/dashboard/settings?tab=billing"
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 transition-all"
-              >
-                <Zap className="w-4 h-4" />
-                Upgrader
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      <FeaturePlanModal
+        open={!!upgradeTarget}
+        onClose={() => setUpgradeTarget(null)}
+        featureName={upgradeTarget ? `Le modèle ${upgradeTarget.name}` : ''}
+        requiredPlan={upgradeTarget?.plan as 'PRO' | 'BUSINESS' ?? 'PRO'}
+        title="Modèle non inclus dans votre plan"
+      />
     </div>
   )
 }

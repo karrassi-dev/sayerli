@@ -88,8 +88,17 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     fetchAndCheck()
-    const interval = setInterval(fetchAndCheck, 30_000)
-    return () => clearInterval(interval)
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') fetchAndCheck()
+    }, 30_000)
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') fetchAndCheck()
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+    }
   }, [fetchAndCheck])
 
   const dismissBanner = useCallback((id: string) => {

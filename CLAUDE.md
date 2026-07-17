@@ -70,52 +70,57 @@ Previously it was silently dropped when converting a devis to facture.
 - `factures/page.tsx` — detail modal shows amber "Remise appliquée" badge
 - `public/factures/[token]/page.tsx` — passes `remise` to both PDF builders
 
+### Session N — Dashboard analytics (full)
+All KPI cards and lists are wired to real backend data:
+- **Top 5 clients** — ranked by total billed (CA), backend GROUP BY query in `dashboard.service.ts`, displayed as a bar chart in the dashboard.
+- **Factures en retard list** — full list with client name, amounts, due date, and inline "Relancer" button (calls `facturesApi.relancer`).
+- **CA en attente** — sum of totalTTC − montantPaye for ENVOYEE + EN_RETARD factures.
+- **Taux de recouvrement** — paiements reçus ÷ total facturé, shown as a sub-label on the CA card.
+
+### Session N — Reçu de paiement PDF
+- `frontend/components/pdf/RecuPDF.tsx` — clean receipt PDF component.
+- `frontend/components/pdf/RecuDownloadButton.tsx` — download button wrapper.
+
+### Session N — Catalogue de produits/services
+- Backend: `src/modules/catalogue/` — full CRUD module.
+- Frontend: `frontend/app/dashboard/catalogue/page.tsx` — manage products/services (nom, description, prix, unité, type SERVICE/PRODUIT).
+- `frontend/components/dashboard/ui/CataloguePicker.tsx` — picker integrated into the devis form so users can insert catalogue items into lines.
+
+### Session N — Relance automatique des factures en retard
+- Backend: `src/modules/relances/relances.service.ts` — cron job runs daily at 07:00 UTC (08:00 Casablanca). Auto-sends email reminders for EN_RETARD factures respecting a per-plan `relancesParMois` limit.
+- Manual relance also available via `factures.service.ts` `relancerFacture()`.
+
+### Session N — Portal dark/light mode + new pricing plans
+- Portal page: dark/light mode toggle in header, implemented with inline styles (not Tailwind `dark:`) to avoid conflicts with main app theme.
+- Backend: updated pricing plans — Starter / Pro / Business.
+- Landing: updated pricing section.
+- Settings/Billing: corrected plan display + WhatsApp upgrade button.
+
+### Session N — Notification polling pause
+- `NotificationProvider` now pauses polling when tab is hidden (`document.visibilityState`). Resumes immediately on tab focus via `visibilitychange` listener.
+
+### Session N — 402 modal on duplicate/convert (devis)
+- `handleDuplicate` and `handleConvert` in `devis/page.tsx` both correctly catch 402 and open `PlanLimitModal` (resource `'devis'` and `'factures'` respectively).
+
 ---
 
 ## What is NOT done yet / known gaps
 
-### Quick fixes (30 min each)
-1. **402 modal missing on `handleDuplicate` and `handleConvert` in devis page** — both handlers show a toast instead of `PlanLimitModal` on 402. Only `handleCreate` shows the modal correctly.
-2. **Notification polling pause** — `NotificationProvider` polls every 30s even when tab is hidden. Add `document.visibilitychange` listener to pause it.
-
-### Dashboard analytics — 3 missing pieces (the rest already works)
-The dashboard already has charts (Recharts), KPI cards with real data, area chart, donut chart, bar chart, recent invoices, activity timeline — all wired to real backend data.
-
-**Missing:**
-3. **Top 5 clients** — ranked by total billed (CA). Backend needs one extra GROUP BY query, frontend needs one new block.
-4. **Factures en retard list** — dashboard shows a count but not the actual list with inline "Relancer" button.
-5. **CA en attente + Taux de recouvrement** — two KPI numbers not yet in the cards. CA en attente = sum of totalTTC of ENVOYEE + EN_RETARD. Taux = paiements reçus ÷ total facturé.
-
-### Medium features
-6. **Recurring Invoices (Feature 3)** — not started. New `RecurringInvoiceTemplate` Prisma model, cron job to auto-create factures on schedule, frontend form to set up templates.
-7. **Reçu de paiement PDF** — when a facture is marked PAYEE, generate a clean receipt PDF. Expected in Morocco, especially by comptables.
-
-### Bigger features (future roadmap)
-8. **Relance automatique des factures en retard** — when a facture hits `EN_RETARD`, auto-send WhatsApp/email reminder after X days. Biggest pain point for freelancers.
-9. **Déclaration TVA automatique** — from Journal des Ventes, auto-calculate TVA collectée for a period and generate a summary for the comptable. No competitor does this well.
-10. **Bon de livraison** — many Moroccan transactions require a BL before the facture. Same lines as devis, different header. Opens a new segment.
-11. **Catalogue de produits/services** — pre-save recurring services and pick from dropdown when creating a devis. Saves 80% of time for freelancers with standard rates.
-12. **Multi-devises** — some agencies bill in EUR/USD. Per-devis currency with exchange rate display.
-13. **Digital Signature on Devis** — skipped because requires Cloudinary storage (user is on free tier). Skip until storage situation changes.
-
----
-
-## Recommended next order
-1. Fix 402 modal on duplicate/convert in devis page (20 min)
-2. Dashboard — Top 5 clients + Factures en retard list + CA en attente (2-3h total)
-3. Reçu de paiement PDF
-4. Relance automatique
-5. Recurring Invoices
+### Features not started
+1. **Recurring Invoices** — New `RecurringInvoiceTemplate` Prisma model, cron job to auto-create factures on schedule, frontend form to set up templates.
+2. **Déclaration TVA automatique** — from Journal des Ventes, auto-calculate TVA collectée for a period and generate a summary for the comptable. No competitor does this well.
+3. **Bon de livraison** — many Moroccan transactions require a BL before the facture. Same lines as devis, different header. Opens a new segment.
+4. **Multi-devises** — some agencies bill in EUR/USD. Per-devis currency with exchange rate display.
+5. **Digital Signature on Devis** — skipped because requires Cloudinary storage (user is on free tier). Skip until storage situation changes.
 
 ---
 
 ## Plan limits (current state)
-- STARTER: 5 clients, 10 devis/month, 10 factures/month, 1 utilisateur
+- STARTER: 5 clients, 10 devis/month, 10 factures/month, 1 utilisateur, relances limited
 - PRO: unlimited clients/devis/factures, 5 utilisateurs
 - BUSINESS: unlimited everything
 - Email notifications locked on STARTER
-- Catalogue: no limit defined
-- `verifierLimite` accepts: 'clients' | 'devis' | 'factures' | 'utilisateurs'
+- `verifierLimite` accepts: 'clients' | 'devis' | 'factures' | 'utilisateurs' | 'relances'
 
 ---
 
@@ -129,6 +134,8 @@ The dashboard already has charts (Recharts), KPI cards with real data, area char
 - Factures: `src/modules/factures/factures.service.ts` + `dto/creer-facture.dto.ts`
 - Devis: `src/modules/devis/devis.service.ts`
 - Dashboard: `src/modules/dashboard/dashboard.service.ts` + `dashboard.controller.ts`
+- Catalogue: `src/modules/catalogue/`
+- Relances auto: `src/modules/relances/relances.service.ts`
 - Schema: `prisma/schema.prisma`
 - App module: `src/app.module.ts`
 
@@ -140,8 +147,11 @@ The dashboard already has charts (Recharts), KPI cards with real data, area char
 - Clients page: `frontend/app/dashboard/clients/page.tsx`
 - Devis page: `frontend/app/dashboard/devis/page.tsx`
 - Factures page: `frontend/app/dashboard/factures/page.tsx`
+- Catalogue page: `frontend/app/dashboard/catalogue/page.tsx`
 - Public facture page: `frontend/app/public/factures/[token]/page.tsx`
-- PDF components: `frontend/components/pdf/FacturePDF.tsx` + `FactureSimplePDF.tsx` + `DevisPDF.tsx`
+- PDF components: `frontend/components/pdf/FacturePDF.tsx` + `FactureSimplePDF.tsx` + `DevisPDF.tsx` + `RecuPDF.tsx` + `RecuDownloadButton.tsx`
+- Catalogue picker: `frontend/components/dashboard/ui/CataloguePicker.tsx`
+- Notification provider: `frontend/components/providers/NotificationProvider.tsx`
 - API client: `frontend/lib/api.ts`
 - Translations: `frontend/i18n/fr.json` + `en.json` + `ar.json`
 - Middleware/permissions: `frontend/middleware.ts` + `frontend/lib/permissions.ts`
