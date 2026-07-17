@@ -1,14 +1,24 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { PlanType } from '@prisma/client';
 
-export const PLAN_LIMITS: Record<PlanType, { clients: number; devisParMois: number; facturesParMois: number; utilisateurs: number }> = {
-  STARTER:  { clients: 5,  devisParMois: 10, facturesParMois: 10, utilisateurs: 1  },
-  PRO:      { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: 5  },
-  BUSINESS: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: -1 },
+export interface PlanLimits {
+  clients: number;
+  devisParMois: number;
+  facturesParMois: number;
+  utilisateurs: number;
+  relancesParMois: number;
+  receiptsEmailsParMois: number;
+  journalDesVentes: boolean;
+}
+
+export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
+  STARTER:  { clients: 3,  devisParMois: 5,  facturesParMois: 5,  utilisateurs: 1, relancesParMois: 3,  receiptsEmailsParMois: 5,   journalDesVentes: false },
+  PRO:      { clients: 20, devisParMois: 20, facturesParMois: 20, utilisateurs: 1, relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true  },
+  BUSINESS: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: 3, relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true  },
 };
 
 export function verifierLimite(
-  resource: 'clients' | 'devis' | 'factures' | 'utilisateurs',
+  resource: 'clients' | 'devis' | 'factures' | 'utilisateurs' | 'relances' | 'receipts',
   actuel: number,
   limite: number,
 ) {

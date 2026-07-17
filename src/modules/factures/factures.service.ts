@@ -387,6 +387,20 @@ export class FacturesService {
   }
 
   async approuverDeclaration(id: string, entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
+    });
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limiteReceipts = PLAN_LIMITS[entreprise.plan].receiptsEmailsParMois;
+    if (limiteReceipts !== -1) {
+      const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const receiptsCeMois = await this.prisma.declarationPaiement.count({
+        where: { entrepriseId, statut: 'APPROVED', reviewedAt: { gte: debutMois } },
+      });
+      verifierLimite('receipts', receiptsCeMois, limiteReceipts);
+    }
+
     const declaration = await this.prisma.declarationPaiement.findFirst({
       where: { id, entrepriseId },
       include: {
@@ -482,6 +496,20 @@ export class FacturesService {
   // ── Relance manuelle ─────────────────────────────────────────────────────────
 
   async relancerFacture(id: string, entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { plan: true },
+    });
+    if (!entreprise) throw new NotFoundException('Entreprise introuvable.');
+    const limiteRelances = PLAN_LIMITS[entreprise.plan].relancesParMois;
+    if (limiteRelances !== -1) {
+      const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const relancesCeMois = await this.prisma.facture.count({
+        where: { entrepriseId, lastReminderSentAt: { gte: debutMois } },
+      });
+      verifierLimite('relances', relancesCeMois, limiteRelances);
+    }
+
     const facture = await this.prisma.facture.findFirst({
       where: { id, entrepriseId },
       select: {

@@ -332,7 +332,7 @@ export class SettingsService {
     const now = new Date();
     const debutMois = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [company, clientsActifs, utilisateursCount, devisCeMois] = await Promise.all([
+    const [company, clientsActifs, utilisateursCount, devisCeMois, facturesCeMois, relancesCeMois, receiptsCeMois] = await Promise.all([
       this.prisma.entreprise.findUnique({
         where: { id: entrepriseId },
         select: { plan: true, planDebut: true, planExpiration: true, createdAt: true },
@@ -340,6 +340,9 @@ export class SettingsService {
       this.prisma.client.count({ where: { entrepriseId, actif: true } }),
       this.prisma.utilisateur.count({ where: { entrepriseId } }),
       this.prisma.devis.count({ where: { entrepriseId, createdAt: { gte: debutMois } } }),
+      this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } }),
+      this.prisma.facture.count({ where: { entrepriseId, lastReminderSentAt: { gte: debutMois } } }),
+      this.prisma.declarationPaiement.count({ where: { entrepriseId, statut: 'APPROVED', reviewedAt: { gte: debutMois } } }),
     ]);
 
     if (!company) throw new NotFoundException('Entreprise introuvable.');
@@ -359,9 +362,12 @@ export class SettingsService {
       planExpiration: company.planExpiration,
       joursRestants,
       usage: {
-        clients:     { actuel: clientsActifs,    limite: limits.clients },
-        utilisateurs:{ actuel: utilisateursCount, limite: limits.utilisateurs },
-        devisCeMois: { actuel: devisCeMois,       limite: limits.devisParMois },
+        clients:       { actuel: clientsActifs,    limite: limits.clients },
+        utilisateurs:  { actuel: utilisateursCount, limite: limits.utilisateurs },
+        devisCeMois:   { actuel: devisCeMois,       limite: limits.devisParMois },
+        facturesCeMois:{ actuel: facturesCeMois,    limite: limits.facturesParMois },
+        relancesCeMois:{ actuel: relancesCeMois,    limite: limits.relancesParMois },
+        receiptsCeMois:{ actuel: receiptsCeMois,    limite: limits.receiptsEmailsParMois },
       },
     };
   }
