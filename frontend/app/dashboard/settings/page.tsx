@@ -53,15 +53,18 @@ const PRESET_COLORS = [
 ]
 
 const PLAN_LABELS: Record<string, { label: string; prix: string; features: string[] }> = {
-  STARTER: { label: 'Starter', prix: '0', features: ['5 clients', '10 devis/mois', '1 utilisateur'] },
-  PRO:     { label: 'Pro',     prix: '299', features: ['Clients illimités', 'Devis illimités', '5 utilisateurs'] },
-  BUSINESS:{ label: 'Business',prix: '599', features: ['Tout Pro', 'Utilisateurs illimités', 'API accès'] },
+  STARTER: { label: 'Starter', prix: '0',   features: ['3 clients', '5 devis/mois', '5 factures/mois', '1 utilisateur', '3 relances/mois', '10 emails/mois'] },
+  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '20 devis/mois', '20 factures/mois', '1 utilisateur', 'Relances illimitées', '100 emails/mois', 'Journal des ventes', 'Support email 48h'] },
+  BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', '3 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
 }
 
-const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; utilisateurs: number }> = {
-  STARTER:  { clients: 5,  devisParMois: 10, utilisateurs: 1  },
-  PRO:      { clients: -1, devisParMois: -1, utilisateurs: 5  },
-  BUSINESS: { clients: -1, devisParMois: -1, utilisateurs: -1 },
+const PLAN_ORDER: Record<string, number> = { STARTER: 0, PRO: 1, BUSINESS: 2 }
+const WA_OWNER = '447476607473'
+
+const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number }> = {
+  STARTER:  { clients: 3,  devisParMois: 5,  facturesParMois: 5,  utilisateurs: 1, relancesParMois: 3,  receiptsParMois: 5  },
+  PRO:      { clients: 20, devisParMois: 20, facturesParMois: 20, utilisateurs: 1, relancesParMois: -1, receiptsParMois: -1 },
+  BUSINESS: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: 3, relancesParMois: -1, receiptsParMois: -1 },
 }
 
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
@@ -179,7 +182,14 @@ export default function SettingsPage() {
     planDebut: string | null
     planExpiration: string | null
     joursRestants: number | null
-    usage: { clients: UsageField; utilisateurs: UsageField; devisCeMois: UsageField }
+    usage: {
+      clients: UsageField
+      utilisateurs: UsageField
+      devisCeMois: UsageField
+      facturesCeMois: UsageField
+      relancesCeMois: UsageField
+      receiptsCeMois: UsageField
+    }
   } | null>(null)
   const [billingLoading, setBillingLoading] = useState(true)
 
@@ -244,9 +254,12 @@ export default function SettingsPage() {
       setBilling({
         ...d,
         usage: {
-          clients:      normalise(d.usage?.clients,      planLimits.clients),
-          utilisateurs: normalise(d.usage?.utilisateurs, planLimits.utilisateurs),
-          devisCeMois:  normalise(d.usage?.devisCeMois,  planLimits.devisParMois),
+          clients:       normalise(d.usage?.clients,       planLimits.clients),
+          utilisateurs:  normalise(d.usage?.utilisateurs,  planLimits.utilisateurs),
+          devisCeMois:   normalise(d.usage?.devisCeMois,   planLimits.devisParMois),
+          facturesCeMois:normalise(d.usage?.facturesCeMois,planLimits.facturesParMois),
+          relancesCeMois:normalise(d.usage?.relancesCeMois,planLimits.relancesParMois),
+          receiptsCeMois:normalise(d.usage?.receiptsCeMois,planLimits.receiptsParMois),
         },
       })
     }).catch(() => {}).finally(() => setBillingLoading(false))
@@ -956,7 +969,32 @@ export default function SettingsPage() {
         )
 
       // ── BILLING ──────────────────────────────────────────────────────────
-      case 'billing':
+      case 'billing': {
+        const ouvrirWhatsApp = (targetPlan: string) => {
+          const info = PLAN_LABELS[targetPlan]
+          const prix = info.prix === '0' ? 'Gratuit' : `${info.prix} MAD/mois`
+          const msg = [
+            `Bonjour, je souhaite passer au plan *${info.label}* (${prix}) sur Sayerli.`,
+            ``,
+            `📧 Email : ${profile.email || user?.email || 'N/A'}`,
+            `🏢 Entreprise : ${company.nom || 'N/A'}`,
+            `📦 Plan actuel : ${PLAN_LABELS[billing?.plan ?? 'STARTER']?.label}`,
+            `🎯 Plan souhaité : ${info.label}`,
+            ``,
+            `Merci !`,
+          ].join('\n')
+          window.open(`https://wa.me/${WA_OWNER}?text=${encodeURIComponent(msg)}`, '_blank')
+        }
+
+        const usageRows = billing ? [
+          { key: 'clients',        label: 'Clients',              field: billing.usage.clients },
+          { key: 'devisCeMois',    label: 'Devis ce mois',        field: billing.usage.devisCeMois },
+          { key: 'facturesCeMois', label: 'Factures ce mois',     field: billing.usage.facturesCeMois },
+          { key: 'utilisateurs',   label: "Membres d'équipe",     field: billing.usage.utilisateurs },
+          { key: 'relancesCeMois', label: 'Relances ce mois',     field: billing.usage.relancesCeMois },
+          { key: 'receiptsCeMois', label: 'Emails reçu ce mois',  field: billing.usage.receiptsCeMois },
+        ] : []
+
         return (
           <div className="space-y-6">
             <div>
@@ -994,7 +1032,7 @@ export default function SettingsPage() {
                           <p className="font-bold">{new Date(billing.planExpiration).toLocaleDateString('fr-MA')}</p>
                           {billing.joursRestants !== null && (
                             <p className="text-xs opacity-80 mt-0.5">
-                              {billing.joursRestants === 0 ? 'Expire aujourd\'hui' : `${billing.joursRestants} j restants`}
+                              {billing.joursRestants === 0 ? "Expire aujourd'hui" : `${billing.joursRestants} j restants`}
                             </p>
                           )}
                         </div>
@@ -1007,7 +1045,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* Days remaining bar (paid plans only) */}
                   {billing.planExpiration && billing.joursRestants !== null && (
                     <div className="mt-4">
                       <div className="h-1.5 rounded-full bg-white/20 overflow-hidden">
@@ -1030,11 +1067,7 @@ export default function SettingsPage() {
                 <div className="card rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4">Utilisation du plan</h4>
                   <div className="space-y-4">
-                    {([
-                      { key: 'clients',     label: 'Clients',          field: billing.usage.clients },
-                      { key: 'devisCeMois', label: 'Devis ce mois',    field: billing.usage.devisCeMois },
-                      { key: 'utilisateurs',label: 'Membres d\'équipe', field: billing.usage.utilisateurs },
-                    ] as const).map(({ key, label, field }) => {
+                    {usageRows.map(({ key, label, field }) => {
                       const unlimited = field.limite === -1
                       const pct = unlimited ? 0 : Math.min(100, Math.round((field.actuel / field.limite) * 100))
                       const atLimit = !unlimited && field.actuel >= field.limite
@@ -1060,7 +1093,7 @@ export default function SettingsPage() {
                           {atLimit && (
                             <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
                               <AlertTriangle className="w-3 h-3 flex-shrink-0" />
-                              Limite atteinte — passez au plan Pro pour continuer
+                              Limite atteinte — contactez-nous pour passer au plan supérieur
                             </p>
                           )}
                         </div>
@@ -1074,14 +1107,22 @@ export default function SettingsPage() {
                   {(['STARTER', 'PRO', 'BUSINESS'] as const).map(plan => {
                     const info = PLAN_LABELS[plan]
                     const isCurrent = billing.plan === plan
+                    const isUpgrade = PLAN_ORDER[plan] > PLAN_ORDER[billing.plan]
+                    const isDowngrade = PLAN_ORDER[plan] < PLAN_ORDER[billing.plan]
                     return (
-                      <div key={plan} className={cn('rounded-xl border p-4 transition-all', isCurrent ? 'border-primary-400 bg-primary-50/50 dark:bg-primary-950/30' : 'border-slate-200 dark:border-slate-700')}>
+                      <div key={plan} className={cn(
+                        'rounded-xl border p-4 transition-all flex flex-col',
+                        isCurrent ? 'border-primary-400 bg-primary-50/50 dark:bg-primary-950/30' : 'border-slate-200 dark:border-slate-700'
+                      )}>
                         <div className="flex items-center justify-between mb-3">
                           <p className="font-bold text-slate-900 dark:text-white">{info.label}</p>
                           {isCurrent && <span className="text-xs px-2 py-0.5 rounded-full bg-primary-600 text-white font-semibold">Actuel</span>}
                         </div>
-                        <p className="text-xl font-black text-slate-900 dark:text-white mb-3">{info.prix === '0' ? 'Gratuit' : `${info.prix} MAD`}</p>
-                        <ul className="space-y-1.5 mb-4">
+                        <p className="text-xl font-black text-slate-900 dark:text-white mb-3">
+                          {info.prix === '0' ? 'Gratuit' : `${info.prix} MAD`}
+                          {info.prix !== '0' && <span className="text-xs font-normal text-slate-400 ml-1">/mois</span>}
+                        </p>
+                        <ul className="space-y-1.5 mb-4 flex-1">
                           {info.features.map(f => (
                             <li key={f} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
                               <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
@@ -1090,8 +1131,23 @@ export default function SettingsPage() {
                           ))}
                         </ul>
                         {!isCurrent && (
-                          <button className="w-full py-2 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                            {info.prix > PLAN_LABELS[billing.plan]?.prix ? t('pages.settings.billing.upgrade') : 'Downgrade'}
+                          <button
+                            onClick={() => ouvrirWhatsApp(plan)}
+                            className={cn(
+                              'w-full py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5',
+                              isUpgrade
+                                ? 'bg-primary-600 hover:bg-primary-700 text-white'
+                                : 'border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                            )}
+                          >
+                            {isUpgrade ? (
+                              <>
+                                <Zap className="w-3 h-3" />
+                                Passer au plan {info.label}
+                              </>
+                            ) : isDowngrade ? (
+                              'Rétrograder vers ' + info.label
+                            ) : null}
                           </button>
                         )}
                       </div>
@@ -1100,14 +1156,24 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <button className="text-sm text-red-500 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors">
+                  <button
+                    onClick={() => {
+                      const msg = `Bonjour, je souhaite annuler mon abonnement Sayerli.\n\n📧 Email : ${profile.email || user?.email}\n🏢 Entreprise : ${company.nom}\n📦 Plan actuel : ${PLAN_LABELS[billing.plan]?.label}`
+                      window.open(`https://wa.me/${WA_OWNER}?text=${encodeURIComponent(msg)}`, '_blank')
+                    }}
+                    className="text-sm text-red-500 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors"
+                  >
                     {t('pages.settings.billing.cancelPlan')}
                   </button>
+                  <p className="text-xs text-slate-400 dark:text-slate-500">
+                    Mise à niveau via WhatsApp · Activation manuelle sous 24h
+                  </p>
                 </div>
               </>
             ) : null}
           </div>
         )
+      }
 
       default:
         return null
