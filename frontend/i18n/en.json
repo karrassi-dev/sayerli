@@ -79,45 +79,70 @@
     "popular": "Most Popular",
     "cta": "Get Started",
     "ctaFree": "Start Free",
+    "yearlyBilledNote": "billed annually · save 20%",
     "starter": {
       "name": "Starter",
       "price": "0",
       "desc": "Perfect to get started",
       "features": [
-        "Up to 5 clients",
-        "10 quotes / month",
-        "10 invoices / month",
+        "3 clients",
+        "5 quotes / month",
+        "5 invoices / month",
         "1 user",
-        "Email support"
+        "2 PDF templates",
+        "Client portal",
+        "WhatsApp (manual sharing)",
+        "Online payment receipt",
+        "5 receipt emails / month",
+        "3 auto reminders / month",
+        "10 emails / month",
+        "Community support"
+      ],
+      "excluded": [
+        "Sales journal"
       ]
     },
     "pro": {
       "name": "Pro",
+      "price": "199",
+      "desc": "For active freelancers",
+      "features": [
+        "20 clients",
+        "20 quotes / month",
+        "20 invoices / month",
+        "1 user",
+        "5 PDF templates",
+        "Client portal",
+        "WhatsApp",
+        "Online payment receipt",
+        "Automatic receipt emails",
+        "Auto reminders email + WhatsApp",
+        "100 emails / month",
+        "Basic sales journal",
+        "Email support 48h"
+      ],
+      "excluded": []
+    },
+    "business": {
+      "name": "Business",
       "price": "299",
-      "desc": "For growing SMEs",
+      "desc": "For SMEs and agencies",
       "features": [
         "Unlimited clients",
         "Unlimited quotes",
         "Unlimited invoices",
-        "5 users",
-        "Public quote link",
-        "Priority support",
-        "PDF export"
-      ]
-    },
-    "business": {
-      "name": "Business",
-      "price": "599",
-      "desc": "For teams and agencies",
-      "features": [
-        "Everything in Pro",
-        "Unlimited users",
-        "PDF & Excel export",
-        "Advanced email notifications",
-        "Analytics dashboard",
-        "Priority support",
-        "Early access to new features"
-      ]
+        "3 users",
+        "All PDF templates",
+        "Client portal",
+        "WhatsApp",
+        "Advanced receipt",
+        "Advanced receipt emails",
+        "Advanced reminders",
+        "Unlimited emails",
+        "Full sales journal + VAT",
+        "Priority support 24h"
+      ],
+      "excluded": []
     }
   },
   "earlyAccess": {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, Zap } from 'lucide-react'
+import { Check, X, Zap } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { cn } from '@/lib/utils'
 
@@ -17,6 +17,7 @@ export function Pricing() {
       price: t('pricing.starter.price'),
       desc: t('pricing.starter.desc'),
       features: tArray('pricing.starter.features'),
+      excluded: tArray('pricing.starter.excluded'),
       popular: false,
       cta: t('pricing.ctaFree'),
       href: '/register',
@@ -27,6 +28,7 @@ export function Pricing() {
       price: t('pricing.pro.price'),
       desc: t('pricing.pro.desc'),
       features: tArray('pricing.pro.features'),
+      excluded: tArray('pricing.pro.excluded'),
       popular: true,
       cta: t('pricing.cta'),
       href: '/register',
@@ -37,6 +39,7 @@ export function Pricing() {
       price: t('pricing.business.price'),
       desc: t('pricing.business.desc'),
       features: tArray('pricing.business.features'),
+      excluded: tArray('pricing.business.excluded'),
       popular: false,
       cta: t('pricing.cta'),
       href: '/register',
@@ -83,19 +86,16 @@ export function Pricing() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-          {plans.map(({ key, name, price, desc, features, popular, cta, href }) => {
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          {plans.map(({ key, name, price, desc, features, excluded, popular, cta, href }) => {
             const numPrice = parseInt(price)
-            // yearly shows the per-month equivalent at -20%, not the annual total
-            const displayPrice = yearly && numPrice > 0
-              ? Math.round(numPrice * 0.8)
-              : numPrice
+            const displayPrice = yearly && numPrice > 0 ? Math.round(numPrice * 0.8) : numPrice
 
             return (
               <div
                 key={key}
                 className={cn(
-                  'relative rounded-2xl transition-all duration-300',
+                  'relative rounded-2xl transition-all duration-300 flex flex-col',
                   popular
                     ? 'bg-gradient-to-b from-primary-600 to-primary-700 text-white shadow-2xl shadow-primary-500/30 scale-105 z-10'
                     : 'card hover:shadow-xl hover:-translate-y-1'
@@ -103,14 +103,15 @@ export function Pricing() {
               >
                 {popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 px-4 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold shadow-lg">
+                    <span className="inline-flex items-center gap-1 px-4 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold shadow-lg whitespace-nowrap">
                       <Zap className="w-3 h-3" />
                       {t('pricing.popular')}
                     </span>
                   </div>
                 )}
 
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-1">
+                  {/* Header */}
                   <div className="mb-4">
                     <h3 className={cn('text-xl font-bold mb-1', popular ? 'text-white' : 'text-slate-900 dark:text-white')}>
                       {name}
@@ -120,6 +121,7 @@ export function Pricing() {
                     </p>
                   </div>
 
+                  {/* Price */}
                   <div className="mb-6">
                     <div className="flex items-baseline gap-1">
                       {yearly && numPrice > 0 && (
@@ -128,7 +130,7 @@ export function Pricing() {
                         </span>
                       )}
                       <span className={cn('text-4xl font-black', popular ? 'text-white' : 'text-slate-900 dark:text-white')}>
-                        {displayPrice}
+                        {displayPrice === 0 ? '0' : displayPrice}
                       </span>
                       <span className={cn('text-sm font-medium', popular ? 'text-primary-200' : 'text-slate-500')}>
                         MAD
@@ -139,12 +141,13 @@ export function Pricing() {
                     </div>
                     {yearly && numPrice > 0 && (
                       <p className={cn('text-xs mt-1', popular ? 'text-primary-200' : 'text-slate-400')}>
-                        facturé annuellement · économisez 20%
+                        {t('pricing.yearlyBilledNote')}
                       </p>
                     )}
                   </div>
 
-                  <ul className="space-y-3 mb-6">
+                  {/* Features */}
+                  <ul className="space-y-2.5 mb-4 flex-1">
                     {features.map((feature: string) => (
                       <li key={feature} className="flex items-start gap-2.5">
                         <div className={cn(
@@ -158,12 +161,26 @@ export function Pricing() {
                         </span>
                       </li>
                     ))}
+                    {excluded.map((feature: string) => (
+                      <li key={feature} className="flex items-start gap-2.5">
+                        <div className={cn(
+                          'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
+                          popular ? 'bg-primary-800/60' : 'bg-slate-100 dark:bg-slate-800'
+                        )}>
+                          <X className={cn('w-3 h-3', popular ? 'text-primary-300' : 'text-slate-400 dark:text-slate-500')} />
+                        </div>
+                        <span className={cn('text-sm line-through', popular ? 'text-primary-300' : 'text-slate-400 dark:text-slate-500')}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
                   </ul>
 
+                  {/* CTA */}
                   <Link
                     href={href}
                     className={cn(
-                      'block w-full text-center py-3 rounded-xl font-semibold text-sm transition-all',
+                      'block w-full text-center py-3 rounded-xl font-semibold text-sm transition-all mt-auto',
                       popular
                         ? 'bg-white text-primary-600 hover:bg-primary-50 shadow-lg'
                         : 'btn-primary'

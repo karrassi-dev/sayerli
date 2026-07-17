@@ -79,45 +79,70 @@
     "popular": "Le plus populaire",
     "cta": "Commencer maintenant",
     "ctaFree": "Essai gratuit",
+    "yearlyBilledNote": "facturé annuellement · économisez 20%",
     "starter": {
       "name": "Starter",
       "price": "0",
       "desc": "Parfait pour débuter",
       "features": [
-        "Jusqu'à 5 clients",
-        "10 devis / mois",
-        "10 factures / mois",
+        "3 clients",
+        "5 devis / mois",
+        "5 factures / mois",
         "1 utilisateur",
-        "Support email"
+        "2 templates PDF",
+        "Portail client",
+        "WhatsApp (partage manuel)",
+        "Reçu de paiement en ligne",
+        "5 emails reçu / mois",
+        "3 relances auto / mois",
+        "10 emails / mois",
+        "Support communauté"
+      ],
+      "excluded": [
+        "Journal des ventes"
       ]
     },
     "pro": {
       "name": "Pro",
+      "price": "199",
+      "desc": "Pour les freelancers actifs",
+      "features": [
+        "20 clients",
+        "20 devis / mois",
+        "20 factures / mois",
+        "1 utilisateur",
+        "5 templates PDF",
+        "Portail client",
+        "WhatsApp",
+        "Reçu de paiement en ligne",
+        "Emails reçu automatiques",
+        "Relances auto email + WhatsApp",
+        "100 emails / mois",
+        "Journal des ventes basique",
+        "Support email 48h"
+      ],
+      "excluded": []
+    },
+    "business": {
+      "name": "Business",
       "price": "299",
-      "desc": "Pour les PME en croissance",
+      "desc": "Pour les PME et agences",
       "features": [
         "Clients illimités",
         "Devis illimités",
         "Factures illimitées",
-        "5 utilisateurs",
-        "Lien public de devis",
-        "Support prioritaire",
-        "Export PDF"
-      ]
-    },
-    "business": {
-      "name": "Business",
-      "price": "599",
-      "desc": "Pour les équipes et agences",
-      "features": [
-        "Tout dans Pro",
-        "Utilisateurs illimités",
-        "Export PDF & Excel",
-        "Notifications email avancées",
-        "Tableau de bord analytique",
-        "Support prioritaire",
-        "Accès anticipé aux nouveautés"
-      ]
+        "3 utilisateurs",
+        "Tous les templates PDF",
+        "Portail client",
+        "WhatsApp",
+        "Reçu avancé",
+        "Emails reçu avancés",
+        "Relances avancées",
+        "Emails illimités",
+        "Journal des ventes complet + TVA",
+        "Support prioritaire 24h"
+      ],
+      "excluded": []
     }
   },
   "earlyAccess": {
