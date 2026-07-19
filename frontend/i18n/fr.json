@@ -1072,6 +1072,8 @@
       "title": "Équipe",
       "sub": "Gérez les membres et leurs rôles.",
       "inviteMember": "Inviter un membre",
+      "me": "Vous",
+      "loading": "Chargement…",
       "stats": {
         "total": "Membres",
         "active": "Actifs",
@@ -1082,8 +1084,32 @@
         "role": "Rôle",
         "email": "Email",
         "joined": "Rejoint le",
-        "status": "Statut"
+        "status": "Statut",
+        "phone": "Téléphone",
+        "lastAccess": "Dernier accès"
       },
+      "actions": {
+        "disable": "Désactiver",
+        "enable": "Réactiver",
+        "remove": "Retirer",
+        "resendInvite": "Renvoyer l'invitation"
+      },
+      "confirm": {
+        "disable": "Désactiver",
+        "enable": "Réactiver",
+        "remove": "Retirer"
+      },
+      "errors": {
+        "load": "Impossible de charger l'équipe.",
+        "invite": "Impossible d'envoyer l'invitation.",
+        "edit": "Impossible de modifier le membre.",
+        "disable": "Impossible de désactiver ce compte.",
+        "enable": "Impossible de réactiver ce compte.",
+        "remove": "Impossible de retirer ce membre.",
+        "resendInvite": "Impossible de renvoyer l'invitation."
+      },
+      "resendSuccess": "Invitation renvoyée",
+      "resendSuccessEmail": "Un email a été envoyé à {email}",
       "inviteSuccess": "Invitation envoyée avec succès.",
       "editSuccess": "Membre mis à jour.",
       "deleteSuccess": "Membre retiré avec succès.",
@@ -1096,6 +1122,13 @@
       "enableTitle": "Réactiver le compte",
       "enableMessage": "Voulez-vous réactiver le compte de {nom} ?",
       "searchPlaceholder": "Rechercher par nom ou email...",
+      "permissions": {
+        "included": "Permissions incluses",
+        "defaultAccess": "Accès inclus par défaut",
+        "defaultAccessHint": "Désactivez les accès que vous souhaitez retirer à ce membre.",
+        "lockedAccess": "Accès non disponibles pour ce rôle",
+        "lockedMessage": "Pour la sécurité de votre compte, ce rôle ne peut pas recevoir cet accès."
+      },
       "invite": {
         "title": "Inviter un membre",
         "prenom": "Prénom",
@@ -1116,22 +1149,48 @@
         "title": "Modifier le membre"
       },
       "roles": {
-        "admin": {
-          "label": "Admin",
-          "desc": "Accès total"
-        },
-        "manager": {
-          "label": "Manager",
-          "desc": "Gestion complète"
-        },
-        "commercial": {
-          "label": "Commercial",
-          "desc": "Clients & devis"
-        },
-        "comptable": {
-          "label": "Comptable",
-          "desc": "Factures & paiements"
-        }
+        "PROPRIETAIRE": { "label": "Propriétaire", "desc": "" },
+        "ADMIN": { "label": "Administrateur", "desc": "Accès total sauf facturation. Gère toute l'équipe." },
+        "MANAGER": { "label": "Manager", "desc": "Gestion opérationnelle complète. Pas de paramètres." },
+        "DAF": { "label": "Directeur Financier (DAF)", "desc": "Lecture financière + export. Ne crée rien." },
+        "COMPTABLE": { "label": "Comptable", "desc": "Paiements et exports. Comptable interne salarié." },
+        "COMPTABLE_EXTERNE": { "label": "Comptable Externe", "desc": "Fiduciaire externe. Lecture seule + export." },
+        "RESPONSABLE_RECOUVREMENT": { "label": "Resp. Recouvrement", "desc": "Relances et encaissements d'impayés uniquement." },
+        "CAISSIER": { "label": "Caissier", "desc": "Enregistre les paiements reçus. Accès caisse uniquement." },
+        "COMMERCIAL": { "label": "Commercial", "desc": "Gestion clients et devis. Voit tout le portefeuille." },
+        "COMMERCIAL_PROPRE": { "label": "Agent Commercial", "desc": "Comme Commercial, mais uniquement ses propres clients." },
+        "ASSISTANT": { "label": "Assistant Administratif", "desc": "Prépare les documents. Ne peut pas envoyer ni valider." },
+        "ASSOCIE": { "label": "Associé / Investisseur", "desc": "Associé silencieux. Lecture des KPIs uniquement." }
+      },
+      "permissionLabels": {
+        "clients_read": "Voir les clients",
+        "clients_create": "Créer des clients",
+        "clients_edit": "Modifier des clients",
+        "clients_delete": "Supprimer des clients",
+        "devis_read": "Voir les devis",
+        "devis_create": "Créer des devis",
+        "devis_edit": "Modifier des devis",
+        "devis_delete": "Supprimer des devis",
+        "devis_send": "Envoyer des devis",
+        "factures_read": "Voir les factures",
+        "factures_create": "Créer des factures",
+        "factures_edit": "Modifier des factures",
+        "factures_delete": "Supprimer des factures",
+        "factures_send": "Envoyer des factures",
+        "factures_relance": "Relancer les factures",
+        "factures_annuler": "Annuler des factures",
+        "paiements_read": "Voir les paiements",
+        "paiements_create": "Enregistrer des paiements",
+        "paiements_delete": "Supprimer des paiements",
+        "paiements_declarations": "Approuver les déclarations de paiement",
+        "export": "Exporter le journal des ventes",
+        "dashboard": "Accès au tableau de bord",
+        "catalogue_read": "Voir le catalogue",
+        "catalogue_manage": "Gérer le catalogue",
+        "equipe_read": "Voir l'équipe",
+        "equipe_manage": "Gérer l'équipe",
+        "settings": "Paramètres entreprise",
+        "billing": "Facturation & Plan"
       },
       "empty": {
         "title": "Votre équipe est vide",

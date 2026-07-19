@@ -126,6 +126,11 @@ export default function EquipePage() {
   const { toasts, success, error: toastError, removeToast } = useToast()
   const { entreprise } = useAuth()
 
+  // i18n helpers — fall back to role-permissions.ts constants if key not yet translated
+  const rl = (role: string) => { const k = `pages.equipe.roles.${role}.label`; const v = t(k); return v === k ? (ROLE_LABELS[role] ?? role) : v }
+  const rd = (role: string) => { const k = `pages.equipe.roles.${role}.desc`; const v = t(k); return v === k ? (ROLE_DESCRIPTIONS[role] ?? '') : v }
+  const pt = (perm: PermissionKey) => { const k = `pages.equipe.permissionLabels.${perm.replace(/\./g, '_')}`; const v = t(k); return v === k ? (PERMISSION_LABELS[perm] ?? perm) : v }
+
   const [membres, setMembres] = useState<ApiMembre[]>([])
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(null)
@@ -158,7 +163,7 @@ export default function EquipePage() {
       setMembres(Array.isArray(data) ? data : [])
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status
-      if (status !== 403) toastError('Erreur', "Impossible de charger l'équipe.")
+      if (status !== 403) toastError('Erreur', t('pages.equipe.errors.load'))
       if (status === 403) setMembres([])
     } finally {
       setLoading(false)
@@ -232,7 +237,7 @@ export default function EquipePage() {
         setLimitModal({ resource: 'utilisateurs', limite: errs?.limite ?? 1, actuel: errs?.actuel ?? 1 })
       } else {
         const msg = e?.response?.data?.message
-        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? "Impossible d'envoyer l'invitation."))
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? t('pages.equipe.errors.invite')))
       }
     } finally {
       setSaving(false)
@@ -258,12 +263,7 @@ export default function EquipePage() {
   // ── Edit ───────────────────────────────────────────────────────────────────
 
   function openEdit(m: ApiMembre) {
-    setEditForm({
-      prenom: m.prenom ?? '',
-      nom: m.nom,
-      telephone: m.telephone ?? '',
-      role: m.role,
-    })
+    setEditForm({ prenom: m.prenom ?? '', nom: m.nom, telephone: m.telephone ?? '', role: m.role })
     setEditErrors({})
     setEditTarget(m)
   }
@@ -290,7 +290,7 @@ export default function EquipePage() {
       fetchMembres()
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : 'Impossible de modifier le membre.')
+      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : t('pages.equipe.errors.edit'))
     } finally {
       setSaving(false)
     }
@@ -308,7 +308,7 @@ export default function EquipePage() {
       fetchMembres()
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : 'Impossible de désactiver ce compte.')
+      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : t('pages.equipe.errors.disable'))
     }
   }
 
@@ -321,7 +321,7 @@ export default function EquipePage() {
       fetchMembres()
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : 'Impossible de réactiver ce compte.')
+      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : t('pages.equipe.errors.enable'))
     }
   }
 
@@ -337,16 +337,16 @@ export default function EquipePage() {
       fetchMembres()
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : 'Impossible de retirer ce membre.')
+      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : t('pages.equipe.errors.remove'))
     }
   }
 
   async function handleResendInvite(membre: ApiMembre) {
     try {
       await equipeApi.resendInvite(membre.id)
-      success('Invitation renvoyée', `Un email a été envoyé à ${membre.email}`)
+      success(t('pages.equipe.resendSuccess'), t('pages.equipe.resendSuccessEmail').replace('{email}', membre.email))
     } catch {
-      toastError('Erreur', "Impossible de renvoyer l'invitation.")
+      toastError('Erreur', t('pages.equipe.errors.resendInvite'))
     }
   }
 
@@ -429,7 +429,7 @@ export default function EquipePage() {
       )}
 
       {loading ? (
-        <div className="card rounded-2xl p-12 text-center text-slate-400 text-sm">Chargement…</div>
+        <div className="card rounded-2xl p-12 text-center text-slate-400 dark:text-slate-500 text-sm">{t('pages.equipe.loading')}</div>
       ) : membres.length === 0 ? (
         <div className="card rounded-2xl">
           <EmptyState
@@ -455,7 +455,7 @@ export default function EquipePage() {
                 >
                   {isMe && (
                     <span className="absolute top-3 right-3 text-xs px-2 py-0.5 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 font-semibold">
-                      Vous
+                      {t('pages.equipe.me')}
                     </span>
                   )}
                   <div className="flex items-start gap-3 mb-4">
@@ -471,7 +471,7 @@ export default function EquipePage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-white/60 dark:bg-slate-900/40 text-slate-700 dark:text-slate-300 border border-white/40 dark:border-slate-700/40">
-                        {ROLE_LABELS[membre.role] ?? membre.role}
+                        {rl(membre.role)}
                       </span>
                       {membre.statut !== 'ACTIF' && (
                         <StatusBadge variant={statutVariant(membre.statut)} size="sm" />
@@ -528,10 +528,10 @@ export default function EquipePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-slate-900 dark:text-white">{selectedMember.nomComplet}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{selectedMember.email}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{selectedMember.email}</p>
                   <div className="flex items-center gap-2 mt-2 flex-wrap">
                     <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                      {ROLE_LABELS[selectedMember.role] ?? selectedMember.role}
+                      {rl(selectedMember.role)}
                     </span>
                     <StatusBadge variant={statutVariant(selectedMember.statut)} />
                   </div>
@@ -540,37 +540,37 @@ export default function EquipePage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                  <p className="text-xs text-slate-400 mb-1">{t('pages.equipe.col.email')}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('pages.equipe.col.email')}</p>
                   <div className="flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
                     <p className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">{selectedMember.email}</p>
                   </div>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                  <p className="text-xs text-slate-400 mb-1">{t('pages.equipe.col.joined')}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('pages.equipe.col.joined')}</p>
                   <p className="text-xs font-medium text-slate-700 dark:text-slate-300">{formatDate(selectedMember.createdAt)}</p>
                 </div>
                 {selectedMember.telephone && (
                   <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                    <p className="text-xs text-slate-400 mb-1">Téléphone</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('pages.equipe.col.phone')}</p>
                     <p className="text-xs font-medium text-slate-700 dark:text-slate-300">{selectedMember.telephone}</p>
                   </div>
                 )}
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                  <p className="text-xs text-slate-400 mb-1">Dernier accès</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('pages.equipe.col.lastAccess')}</p>
                   <p className="text-xs font-medium text-slate-700 dark:text-slate-300">{formatDate(selectedMember.dernierAcces)}</p>
                 </div>
               </div>
 
               <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
                 <div className="flex items-center gap-2 mb-3">
-                  <RoleIcon className="w-4 h-4 text-slate-500" />
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Permissions incluses</p>
+                  <RoleIcon className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{t('pages.equipe.permissions.included')}</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {rolePerms.map(perm => (
                     <span key={perm} className="text-xs px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                      {PERMISSION_LABELS[perm]}
+                      {pt(perm)}
                     </span>
                   ))}
                 </div>
@@ -583,39 +583,39 @@ export default function EquipePage() {
                     className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
                   >
                     <Pencil className="w-4 h-4" />
-                    Modifier
+                    {t('common.edit')}
                   </button>
                   {selectedMember.statut === 'ACTIF' ? (
                     <button
                       onClick={() => { setSelectedMember(null); setDisableTarget(selectedMember) }}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-all"
                     >
                       <UserX className="w-4 h-4" />
-                      Désactiver
+                      {t('pages.equipe.actions.disable')}
                     </button>
                   ) : selectedMember.statut === 'EN_ATTENTE' ? (
                     <button
                       onClick={() => { handleResendInvite(selectedMember); setSelectedMember(null) }}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all"
                     >
                       <Mail className="w-4 h-4" />
-                      Renvoyer l'invitation
+                      {t('pages.equipe.actions.resendInvite')}
                     </button>
                   ) : selectedMember.statut === 'DESACTIVE' ? (
                     <button
                       onClick={() => { setSelectedMember(null); setEnableTarget(selectedMember) }}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/30 transition-all"
                     >
                       <UserCheck className="w-4 h-4" />
-                      Réactiver
+                      {t('pages.equipe.actions.enable')}
                     </button>
                   ) : null}
                   <button
                     onClick={() => { setSelectedMember(null); setDeleteTarget(selectedMember) }}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Retirer
+                    {t('pages.equipe.actions.remove')}
                   </button>
                 </div>
               )}
@@ -687,7 +687,7 @@ export default function EquipePage() {
         onConfirm={handleDisable}
         title={t('pages.equipe.disableTitle')}
         message={t('pages.equipe.disableMessage').replace('{nom}', disableTarget?.nomComplet ?? '')}
-        confirmLabel="Désactiver"
+        confirmLabel={t('pages.equipe.confirm.disable')}
         danger
       />
 
@@ -698,7 +698,7 @@ export default function EquipePage() {
         onConfirm={handleEnable}
         title={t('pages.equipe.enableTitle')}
         message={t('pages.equipe.enableMessage').replace('{nom}', enableTarget?.nomComplet ?? '')}
-        confirmLabel="Réactiver"
+        confirmLabel={t('pages.equipe.confirm.enable')}
       />
 
       {/* ── Delete Modal ────────────────────────────────────────────────────── */}
@@ -708,7 +708,7 @@ export default function EquipePage() {
         onConfirm={handleDelete}
         title={t('pages.equipe.deleteTitle')}
         message={t('pages.equipe.deleteMessage').replace('{nom}', deleteTarget?.nomComplet ?? '')}
-        confirmLabel="Retirer"
+        confirmLabel={t('pages.equipe.confirm.remove')}
         danger
       />
 
@@ -739,6 +739,10 @@ interface InviteFormFieldsProps {
 }
 
 function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRoleChange, onTogglePermission, onBlockedClick, t }: InviteFormFieldsProps) {
+  const rl = (role: string) => { const k = `pages.equipe.roles.${role}.label`; const v = t(k); return v === k ? (ROLE_LABELS[role] ?? role) : v }
+  const rd = (role: string) => { const k = `pages.equipe.roles.${role}.desc`; const v = t(k); return v === k ? (ROLE_DESCRIPTIONS[role] ?? '') : v }
+  const pt = (perm: PermissionKey) => { const k = `pages.equipe.permissionLabels.${perm.replace(/\./g, '_')}`; const v = t(k); return v === k ? (PERMISSION_LABELS[perm] ?? perm) : v }
+
   const inputClass = (err?: string) => cn(
     'w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-all',
     err
@@ -751,6 +755,7 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
 
   return (
     <div className="space-y-5">
+      {/* Name row */}
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
@@ -768,6 +773,7 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
         </div>
       </div>
 
+      {/* Email */}
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
           {t('pages.equipe.invite.email')} <span className="text-red-500">*</span>
@@ -776,6 +782,7 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
         {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
       </div>
 
+      {/* Phone */}
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
           {t('pages.equipe.invite.phone')}
@@ -783,11 +790,12 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
         <input type="tel" value={form.telephone} onChange={e => onFieldChange('telephone', e.target.value)} className={inputClass()} placeholder="+212 6XX XXX XXX" />
       </div>
 
+      {/* Role selector */}
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
           {t('pages.equipe.invite.role')} <span className="text-red-500">*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+        <div className="grid grid-cols-2 gap-2">
           {INVITABLE_ROLES.map(role => {
             const isSelected = form.role === role
             const RoleIcon = getRoleIconComponent(role)
@@ -797,79 +805,87 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
                 type="button"
                 onClick={() => onRoleChange(role)}
                 className={cn(
-                  'flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all relative',
+                  'flex items-start gap-2.5 p-3 rounded-xl border text-left transition-all',
                   isSelected
                     ? cn('border-2', ROLE_BG[role] ?? 'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-800')
-                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/40'
                 )}
               >
-                <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600')}>
-                  <RoleIcon className="w-3.5 h-3.5 text-white" />
+                <div className={cn('w-8 h-8 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm', ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600')}>
+                  <RoleIcon className="w-4 h-4 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{ROLE_LABELS[role] ?? role}</p>
-                  <p className="text-xs text-slate-400 truncate">{ROLE_DESCRIPTIONS[role] ?? ''}</p>
+                  <div className="flex items-center gap-1 min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate flex-1">{rl(role)}</p>
+                    {isSelected && <Check className="w-3 h-3 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
+                  </div>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{rd(role)}</p>
                 </div>
-                {isSelected && <Check className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
               </button>
             )
           })}
         </div>
       </div>
 
-      {/* Permission Editor */}
+      {/* Permission editor */}
       <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
-        <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
-          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Accès inclus par défaut</p>
-          <p className="text-xs text-slate-400 mt-0.5">Désactivez les accès que vous souhaitez retirer à ce membre.</p>
+        {/* Header — default access */}
+        <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 flex items-start gap-2.5">
+          <Shield className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{t('pages.equipe.permissions.defaultAccess')}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{t('pages.equipe.permissions.defaultAccessHint')}</p>
+          </div>
         </div>
-        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+
+        {/* Toggleable permissions */}
+        <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
           {roleDefaults.map(perm => {
             const isOn = !form.permissionsRetirees.includes(perm)
             return (
               <div key={perm} className="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                 <div className="flex items-center gap-2.5">
-                  <span className={cn('w-2 h-2 rounded-full flex-shrink-0', isOn ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600')} />
-                  <span className="text-xs text-slate-700 dark:text-slate-300">{PERMISSION_LABELS[perm]}</span>
+                  <span className={cn('w-1.5 h-1.5 rounded-full flex-shrink-0', isOn ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600')} />
+                  <span className={cn('text-xs', isOn ? 'text-slate-700 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500 line-through')}>{pt(perm)}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => onTogglePermission(perm)}
                   className={cn(
-                    'relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-                    isOn ? 'bg-green-500' : 'bg-slate-200 dark:bg-slate-700'
+                    'relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-400',
+                    isOn ? 'bg-green-500 dark:bg-green-600' : 'bg-slate-200 dark:bg-slate-700'
                   )}
                   role="switch"
                   aria-checked={isOn}
                 >
-                  <span
-                    className={cn(
-                      'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                      isOn ? 'translate-x-4' : 'translate-x-0'
-                    )}
-                  />
+                  <span className={cn(
+                    'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                    isOn ? 'translate-x-4' : 'translate-x-0'
+                  )} />
                 </button>
               </div>
             )
           })}
         </div>
 
+        {/* Locked permissions section */}
         {lockedPerms.length > 0 && (
           <>
-            <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700">
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Accès non disponibles pour ce rôle</p>
+            <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2">
+              <Lock className="w-3 h-3 text-slate-400 dark:text-slate-500 flex-shrink-0" />
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.equipe.permissions.lockedAccess')}</p>
             </div>
-            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
               {lockedPerms.map(perm => (
                 <button
                   key={perm}
                   type="button"
                   onClick={() => onBlockedClick(perm)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors text-left"
+                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors text-left"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full flex-shrink-0 bg-slate-200 dark:bg-slate-700" />
-                    <span className="text-xs text-slate-400 dark:text-slate-500">{PERMISSION_LABELS[perm]}</span>
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-slate-200 dark:bg-slate-700" />
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{pt(perm)}</span>
                   </div>
                   <Lock className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 flex-shrink-0" />
                 </button>
@@ -879,18 +895,20 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
         )}
       </div>
 
+      {/* Blocked permission alert */}
       {blockedPermission && (
         <div className="flex items-start gap-2.5 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
-          <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
-            Pour la sécurité de votre compte, ce rôle ne peut pas recevoir cet accès.
+          <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
+            {t('pages.equipe.permissions.lockedMessage')}
           </p>
         </div>
       )}
 
+      {/* Email hint */}
       <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl flex items-start gap-2.5">
-        <Mail className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+        <Mail className="w-4 h-4 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
           {t('pages.equipe.invite.emailHint')}
         </p>
       </div>
@@ -908,6 +926,9 @@ interface EditFormFieldsProps {
 }
 
 function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
+  const rl = (role: string) => { const k = `pages.equipe.roles.${role}.label`; const v = t(k); return v === k ? (ROLE_LABELS[role] ?? role) : v }
+  const rd = (role: string) => { const k = `pages.equipe.roles.${role}.desc`; const v = t(k); return v === k ? (ROLE_DESCRIPTIONS[role] ?? '') : v }
+
   const inputClass = (err?: string) => cn(
     'w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-all',
     err
@@ -944,7 +965,7 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
           {t('pages.equipe.invite.role')} <span className="text-red-500">*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+        <div className="grid grid-cols-2 gap-2">
           {INVITABLE_ROLES.map(role => {
             const isSelected = form.role === role
             const RoleIcon = getRoleIconComponent(role)
@@ -954,20 +975,22 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
                 type="button"
                 onClick={() => onChange('role', role)}
                 className={cn(
-                  'flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all relative',
+                  'flex items-start gap-2.5 p-3 rounded-xl border text-left transition-all',
                   isSelected
                     ? cn('border-2', ROLE_BG[role] ?? 'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-800')
-                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/40'
                 )}
               >
-                <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600')}>
-                  <RoleIcon className="w-3.5 h-3.5 text-white" />
+                <div className={cn('w-8 h-8 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm', ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600')}>
+                  <RoleIcon className="w-4 h-4 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{ROLE_LABELS[role] ?? role}</p>
-                  <p className="text-xs text-slate-400 truncate">{ROLE_DESCRIPTIONS[role] ?? ''}</p>
+                  <div className="flex items-center gap-1 min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate flex-1">{rl(role)}</p>
+                    {isSelected && <Check className="w-3 h-3 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
+                  </div>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{rd(role)}</p>
                 </div>
-                {isSelected && <Check className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
               </button>
             )
           })}

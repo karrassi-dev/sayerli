@@ -1071,6 +1071,8 @@
       "title": "Team",
       "sub": "Manage team members and their roles.",
       "inviteMember": "Invite Member",
+      "me": "You",
+      "loading": "Loading…",
       "stats": {
         "total": "Members",
         "active": "Active",
@@ -1081,8 +1083,32 @@
         "role": "Role",
         "email": "Email",
         "joined": "Joined",
-        "status": "Status"
+        "status": "Status",
+        "phone": "Phone",
+        "lastAccess": "Last access"
       },
+      "actions": {
+        "disable": "Disable",
+        "enable": "Reactivate",
+        "remove": "Remove",
+        "resendInvite": "Resend invitation"
+      },
+      "confirm": {
+        "disable": "Disable",
+        "enable": "Reactivate",
+        "remove": "Remove"
+      },
+      "errors": {
+        "load": "Failed to load team.",
+        "invite": "Could not send invitation.",
+        "edit": "Could not update member.",
+        "disable": "Could not disable account.",
+        "enable": "Could not reactivate account.",
+        "remove": "Could not remove member.",
+        "resendInvite": "Could not resend invitation."
+      },
+      "resendSuccess": "Invitation resent",
+      "resendSuccessEmail": "An email was sent to {email}",
       "inviteSuccess": "Invitation sent successfully.",
       "editSuccess": "Member updated.",
       "deleteSuccess": "Member removed successfully.",
@@ -1095,6 +1121,13 @@
       "enableTitle": "Reactivate Account",
       "enableMessage": "Reactivate {nom}'s account?",
       "searchPlaceholder": "Search by name or email...",
+      "permissions": {
+        "included": "Included permissions",
+        "defaultAccess": "Default access",
+        "defaultAccessHint": "Disable any access you want to remove from this member.",
+        "lockedAccess": "Access unavailable for this role",
+        "lockedMessage": "For the security of your account, this role cannot receive this access."
+      },
       "invite": {
         "title": "Invite a Member",
         "prenom": "First name",
@@ -1115,22 +1148,48 @@
         "title": "Edit Member"
       },
       "roles": {
-        "admin": {
-          "label": "Admin",
-          "desc": "Full access"
-        },
-        "manager": {
-          "label": "Manager",
-          "desc": "Full management"
-        },
-        "commercial": {
-          "label": "Sales",
-          "desc": "Clients & quotes"
-        },
-        "comptable": {
-          "label": "Accountant",
-          "desc": "Invoices & payments"
-        }
+        "PROPRIETAIRE": { "label": "Owner", "desc": "" },
+        "ADMIN": { "label": "Administrator", "desc": "Full access except billing. Manages the entire team." },
+        "MANAGER": { "label": "Manager", "desc": "Full operational management. No settings access." },
+        "DAF": { "label": "CFO / Finance Director", "desc": "Financial read access + export. Cannot create anything." },
+        "COMPTABLE": { "label": "Accountant", "desc": "Payments and exports. Internal salaried accountant." },
+        "COMPTABLE_EXTERNE": { "label": "External Accountant", "desc": "External auditor. Read-only + export." },
+        "RESPONSABLE_RECOUVREMENT": { "label": "Collections Manager", "desc": "Reminders and collections for unpaid invoices only." },
+        "CAISSIER": { "label": "Cashier", "desc": "Records received payments. Cash access only." },
+        "COMMERCIAL": { "label": "Sales Rep", "desc": "Client and quote management. Sees all accounts." },
+        "COMMERCIAL_PROPRE": { "label": "Sales Agent", "desc": "Like Sales Rep, but limited to own clients only." },
+        "ASSISTANT": { "label": "Admin Assistant", "desc": "Prepares documents. Cannot send or validate." },
+        "ASSOCIE": { "label": "Partner / Investor", "desc": "Silent partner. Read-only KPI access." }
+      },
+      "permissionLabels": {
+        "clients_read": "View clients",
+        "clients_create": "Create clients",
+        "clients_edit": "Edit clients",
+        "clients_delete": "Delete clients",
+        "devis_read": "View quotes",
+        "devis_create": "Create quotes",
+        "devis_edit": "Edit quotes",
+        "devis_delete": "Delete quotes",
+        "devis_send": "Send quotes",
+        "factures_read": "View invoices",
+        "factures_create": "Create invoices",
+        "factures_edit": "Edit invoices",
+        "factures_delete": "Delete invoices",
+        "factures_send": "Send invoices",
+        "factures_relance": "Chase invoices",
+        "factures_annuler": "Cancel invoices",
+        "paiements_read": "View payments",
+        "paiements_create": "Record payments",
+        "paiements_delete": "Delete payments",
+        "paiements_declarations": "Approve payment declarations",
+        "export": "Export sales journal",
+        "dashboard": "Dashboard access",
+        "catalogue_read": "View catalogue",
+        "catalogue_manage": "Manage catalogue",
+        "equipe_read": "View team",
+        "equipe_manage": "Manage team",
+        "settings": "Company settings",
+        "billing": "Billing & Plan"
       },
       "empty": {
         "title": "Your team is empty",
