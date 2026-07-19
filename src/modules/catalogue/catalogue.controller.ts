@@ -11,7 +11,7 @@ export class CatalogueController {
   constructor(private service: CatalogueService) {}
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('recherche') recherche?: string,
@@ -21,7 +21,7 @@ export class CatalogueController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE)
   creer(
     @Body() dto: CreerProduitDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -30,7 +30,7 @@ export class CatalogueController {
   }
 
   @Patch(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE)
   modifier(
     @Param('id') id: string,
     @Body() dto: ModifierProduitDto,
@@ -40,7 +40,7 @@ export class CatalogueController {
   }
 
   @Delete(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE)
   supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

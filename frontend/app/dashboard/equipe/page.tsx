@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   UserCog, UserPlus, Users, Shield, Trash2, Mail,
   Crown, BarChart2, Pencil, UserX, UserCheck, Search, Check,
+  Lock, AlertTriangle,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatusBadge } from '@/components/dashboard/ui/StatusBadge'
@@ -16,6 +17,17 @@ import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { equipeApi, authApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import {
+  ROLE_COLORS,
+  ROLE_BG,
+  ROLE_LABELS,
+  ROLE_DESCRIPTIONS,
+  ROLE_DEFAULTS,
+  INVITABLE_ROLES,
+  ALL_PERMISSIONS,
+  PERMISSION_LABELS,
+  type PermissionKey,
+} from '@/lib/role-permissions'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -38,6 +50,7 @@ interface InviteForm {
   email: string
   telephone: string
   role: string
+  permissionsRetirees: string[]
 }
 
 interface EditForm {
@@ -58,41 +71,55 @@ function initials(name: string) {
   return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 }
 
-type RoleKey = 'ADMIN' | 'MANAGER' | 'COMMERCIAL' | 'COMPTABLE'
-
-const ROLE_COLORS: Record<RoleKey, string> = {
-  ADMIN:      'from-primary-500 to-primary-600',
-  MANAGER:    'from-teal-500 to-teal-600',
-  COMMERCIAL: 'from-orange-500 to-amber-600',
-  COMPTABLE:  'from-purple-500 to-violet-600',
+function roleColorClass(role: string): string {
+  return ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600'
 }
 
-const ROLE_BG: Record<RoleKey, string> = {
-  ADMIN:      'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-800',
-  MANAGER:    'bg-teal-50 dark:bg-teal-950/40 border-teal-200 dark:border-teal-800',
-  COMMERCIAL: 'bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-800',
-  COMPTABLE:  'bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800',
+function roleBgClass(role: string): string {
+  return ROLE_BG[role] ?? 'bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-700'
 }
 
-const ROLE_ICONS: Record<RoleKey, React.ElementType> = {
-  ADMIN: Crown, MANAGER: BarChart2, COMMERCIAL: Users, COMPTABLE: Shield,
+function roleIcon(role: string): React.ElementType {
+  const map: Record<string, React.ElementType> = {
+    PROPRIETAIRE: Crown,
+    ADMIN: Crown,
+    MANAGER: BarChart2,
+    DAF: BarChart2,
+    COMPTABLE: Shield,
+    COMPTABLE_EXTERNE: Shield,
+    RESPONSABLE_RECOUVREMENT: Shield,
+    CAISSIER: Shield,
+    COMMERCIAL: Users,
+    COMMERCIAL_PROPRE: Users,
+    ASSISTANT: UserCog,
+    ASSOCIE: UserCog,
+  }
+  return map[role] ?? Users
 }
 
-const ROLE_PERMISSIONS: Record<RoleKey, string[]> = {
-  ADMIN:      ['Accès total', 'Gestion équipe', 'Paramètres', 'Facturation'],
-  MANAGER:    ['Gestion clients', 'Devis & factures', 'Paiements', 'Rapports'],
-  COMMERCIAL: ['Gestion clients', 'Créer des devis', 'Voir les factures'],
-  COMPTABLE:  ['Voir les factures', 'Enregistrer paiements', 'Rapports financiers'],
+function statutVariant(statut: string): 'actif' | 'en_attente' | 'inactif' {
+  if (statut === 'ACTIF') return 'actif'
+  if (statut === 'EN_ATTENTE') return 'en_attente'
+  return 'inactif'
 }
 
-const ROLES: RoleKey[] = ['ADMIN', 'MANAGER', 'COMMERCIAL', 'COMPTABLE']
+function getRoleIconComponent(role: string): React.ElementType {
+  const map: Record<string, React.ElementType> = {
+    ADMIN: Crown, MANAGER: BarChart2, DAF: BarChart2,
+    COMPTABLE: Shield, COMPTABLE_EXTERNE: Shield, RESPONSABLE_RECOUVREMENT: Shield,
+    CAISSIER: Shield, COMMERCIAL: Users, COMMERCIAL_PROPRE: Users,
+    ASSISTANT: UserCog, ASSOCIE: UserCog,
+  }
+  return map[role] ?? Users
+}
 
-const EMPTY_INVITE: InviteForm = { prenom: '', nom: '', email: '', telephone: '', role: 'COMMERCIAL' }
+// ── Constants ─────────────────────────────────────────────────────────────────
+
+const EMPTY_INVITE: InviteForm = { prenom: '', nom: '', email: '', telephone: '', role: 'COMMERCIAL', permissionsRetirees: [] }
 const EMPTY_EDIT: EditForm = { prenom: '', nom: '', telephone: '', role: 'COMMERCIAL' }
+const EQUIPE_LIMIT: Record<string, number> = { STARTER: 1, PRO: 2, BUSINESS: 5 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-
-const EQUIPE_LIMIT: Record<string, number> = { STARTER: 1, PRO: 5, BUSINESS: -1 }
 
 export default function EquipePage() {
   const { t } = useTranslation()
@@ -109,6 +136,7 @@ export default function EquipePage() {
   const [inviteOpen, setInviteOpen] = useState(false)
   const [inviteForm, setInviteForm] = useState<InviteForm>(EMPTY_INVITE)
   const [inviteErrors, setInviteErrors] = useState<Record<string, string>>({})
+  const [blockedPermission, setBlockedPermission] = useState<string | null>(null)
   const [limitModal, setLimitModal] = useState<{ resource: 'utilisateurs'; limite: number; actuel: number } | null>(null)
 
   const [editTarget, setEditTarget] = useState<ApiMembre | null>(null)
@@ -130,7 +158,7 @@ export default function EquipePage() {
       setMembres(Array.isArray(data) ? data : [])
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status
-      if (status !== 403) toastError('Erreur', 'Impossible de charger l\'équipe.')
+      if (status !== 403) toastError('Erreur', "Impossible de charger l'équipe.")
       if (status === 403) setMembres([])
     } finally {
       setLoading(false)
@@ -153,7 +181,7 @@ export default function EquipePage() {
 
   // ── Computed ───────────────────────────────────────────────────────────────
 
-  const isAdmin = currentUserRole === 'ADMIN'
+  const isAdmin = currentUserRole === 'ADMIN' || currentUserRole === 'PROPRIETAIRE'
   const activeCount = membres.filter(m => m.statut === 'ACTIF').length
   const planLimite = EQUIPE_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 1
 
@@ -164,19 +192,8 @@ export default function EquipePage() {
     }
     setInviteForm(EMPTY_INVITE)
     setInviteErrors({})
+    setBlockedPermission(null)
     setInviteOpen(true)
-  }
-
-  // ── Role key helper ────────────────────────────────────────────────────────
-
-  function roleKey(role: string): RoleKey {
-    return (ROLES.includes(role as RoleKey) ? role : 'COMMERCIAL') as RoleKey
-  }
-
-  function statutVariant(statut: string): 'actif' | 'en_attente' | 'inactif' {
-    if (statut === 'ACTIF') return 'actif'
-    if (statut === 'EN_ATTENTE') return 'en_attente'
-    return 'inactif'
   }
 
   // ── Invite ─────────────────────────────────────────────────────────────────
@@ -201,6 +218,7 @@ export default function EquipePage() {
         email: inviteForm.email.trim(),
         telephone: inviteForm.telephone.trim() || undefined,
         role: inviteForm.role,
+        permissionsRetirees: inviteForm.permissionsRetirees,
       })
       success(t('pages.equipe.inviteSuccess'))
       setInviteOpen(false)
@@ -219,6 +237,22 @@ export default function EquipePage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  function handleRoleChange(role: string) {
+    setInviteForm(f => ({ ...f, role, permissionsRetirees: [] }))
+    setBlockedPermission(null)
+  }
+
+  function togglePermission(perm: PermissionKey) {
+    setInviteForm(f => {
+      const removed = f.permissionsRetirees
+      if (removed.includes(perm)) {
+        return { ...f, permissionsRetirees: removed.filter(p => p !== perm) }
+      } else {
+        return { ...f, permissionsRetirees: [...removed, perm] }
+      }
+    })
   }
 
   // ── Edit ───────────────────────────────────────────────────────────────────
@@ -312,7 +346,7 @@ export default function EquipePage() {
       await equipeApi.resendInvite(membre.id)
       success('Invitation renvoyée', `Un email a été envoyé à ${membre.email}`)
     } catch {
-      toastError('Erreur', 'Impossible de renvoyer l\'invitation.')
+      toastError('Erreur', "Impossible de renvoyer l'invitation.")
     }
   }
 
@@ -376,7 +410,7 @@ export default function EquipePage() {
             </div>
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.equipe.stats.roles')}</span>
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white">4</p>
+          <p className="text-2xl font-black text-slate-900 dark:text-white">{INVITABLE_ROLES.length + 1}</p>
         </div>
       </div>
 
@@ -411,13 +445,12 @@ export default function EquipePage() {
           {/* Members grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {membres.map(membre => {
-              const rk = roleKey(membre.role)
-              const RoleIcon = ROLE_ICONS[rk]
+              const RoleIcon = roleIcon(membre.role)
               const isMe = membre.id === currentUserId
               return (
                 <div
                   key={membre.id}
-                  className={cn('card rounded-2xl p-5 border cursor-pointer hover:shadow-lg transition-all group relative', ROLE_BG[rk])}
+                  className={cn('card rounded-2xl p-5 border cursor-pointer hover:shadow-lg transition-all group relative', roleBgClass(membre.role))}
                   onClick={() => setSelectedMember(membre)}
                 >
                   {isMe && (
@@ -426,7 +459,7 @@ export default function EquipePage() {
                     </span>
                   )}
                   <div className="flex items-start gap-3 mb-4">
-                    <div className={cn('w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-105 transition-transform', ROLE_COLORS[rk])}>
+                    <div className={cn('w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-105 transition-transform', roleColorClass(membre.role))}>
                       <span className="text-white font-black text-sm">{initials(membre.nomComplet)}</span>
                     </div>
                     <div className="min-w-0 flex-1">
@@ -437,7 +470,9 @@ export default function EquipePage() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <StatusBadge variant={membre.role.toLowerCase() as 'admin' | 'manager' | 'commercial' | 'comptable'} size="sm" />
+                      <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-white/60 dark:bg-slate-900/40 text-slate-700 dark:text-slate-300 border border-white/40 dark:border-slate-700/40">
+                        {ROLE_LABELS[membre.role] ?? membre.role}
+                      </span>
                       {membre.statut !== 'ACTIF' && (
                         <StatusBadge variant={statutVariant(membre.statut)} size="sm" />
                       )}
@@ -471,34 +506,6 @@ export default function EquipePage() {
               </button>
             )}
           </div>
-
-          {/* Role permissions reference */}
-          <div className="card rounded-2xl p-6">
-            <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-4">Permissions par rôle</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {ROLES.map(role => {
-                const RoleIcon = ROLE_ICONS[role]
-                return (
-                  <div key={role} className={cn('rounded-xl p-4 border', ROLE_BG[role])}>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS[role])}>
-                        <RoleIcon className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <StatusBadge variant={role.toLowerCase() as 'admin' | 'manager' | 'commercial' | 'comptable'} size="sm" />
-                    </div>
-                    <ul className="space-y-1.5">
-                      {ROLE_PERMISSIONS[role].map(perm => (
-                        <li key={perm} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
-                          <span className="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0 opacity-50" />
-                          {perm}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
         </>
       )}
 
@@ -510,20 +517,22 @@ export default function EquipePage() {
         size="md"
       >
         {selectedMember && (() => {
-          const rk = roleKey(selectedMember.role)
-          const RoleIcon = ROLE_ICONS[rk]
+          const RoleIcon = roleIcon(selectedMember.role)
           const isMe = selectedMember.id === currentUserId
+          const rolePerms = ROLE_DEFAULTS[selectedMember.role] ?? []
           return (
             <div className="space-y-4">
-              <div className={cn('flex items-center gap-4 p-4 rounded-2xl border', ROLE_BG[rk])}>
-                <div className={cn('w-14 h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center flex-shrink-0 shadow-md', ROLE_COLORS[rk])}>
+              <div className={cn('flex items-center gap-4 p-4 rounded-2xl border', roleBgClass(selectedMember.role))}>
+                <div className={cn('w-14 h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center flex-shrink-0 shadow-md', roleColorClass(selectedMember.role))}>
                   <span className="text-white font-black text-lg">{initials(selectedMember.nomComplet)}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-slate-900 dark:text-white">{selectedMember.nomComplet}</p>
                   <p className="text-xs text-slate-500 mt-0.5">{selectedMember.email}</p>
                   <div className="flex items-center gap-2 mt-2 flex-wrap">
-                    <StatusBadge variant={selectedMember.role.toLowerCase() as 'admin' | 'manager' | 'commercial' | 'comptable'} />
+                    <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                      {ROLE_LABELS[selectedMember.role] ?? selectedMember.role}
+                    </span>
                     <StatusBadge variant={statutVariant(selectedMember.statut)} />
                   </div>
                 </div>
@@ -556,11 +565,13 @@ export default function EquipePage() {
               <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
                 <div className="flex items-center gap-2 mb-3">
                   <RoleIcon className="w-4 h-4 text-slate-500" />
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Permissions</p>
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Permissions incluses</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {ROLE_PERMISSIONS[rk].map(perm => (
-                    <span key={perm} className="text-xs px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">{perm}</span>
+                  {rolePerms.map(perm => (
+                    <span key={perm} className="text-xs px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                      {PERMISSION_LABELS[perm]}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -618,7 +629,7 @@ export default function EquipePage() {
         open={inviteOpen}
         onClose={() => setInviteOpen(false)}
         title={t('pages.equipe.invite.title')}
-        size="md"
+        size="lg"
         footer={
           <>
             <button onClick={() => setInviteOpen(false)} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
@@ -633,7 +644,11 @@ export default function EquipePage() {
         <InviteFormFields
           form={inviteForm}
           errors={inviteErrors}
-          onChange={(k, v) => { setInviteForm(f => ({ ...f, [k]: v })); setInviteErrors(e => { const n = { ...e }; delete n[k]; return n }) }}
+          blockedPermission={blockedPermission}
+          onFieldChange={(k, v) => { setInviteForm(f => ({ ...f, [k]: v })); setInviteErrors(e => { const n = { ...e }; delete n[k]; return n }) }}
+          onRoleChange={handleRoleChange}
+          onTogglePermission={togglePermission}
+          onBlockedClick={(perm) => setBlockedPermission(perm)}
           t={t}
         />
       </Modal>
@@ -712,32 +727,18 @@ export default function EquipePage() {
 
 // ── InviteFormFields ──────────────────────────────────────────────────────────
 
-type RoleKey2 = 'ADMIN' | 'MANAGER' | 'COMMERCIAL' | 'COMPTABLE'
-
-const ROLE_COLORS2: Record<RoleKey2, string> = {
-  ADMIN: 'from-primary-500 to-primary-600',
-  MANAGER: 'from-teal-500 to-teal-600',
-  COMMERCIAL: 'from-orange-500 to-amber-600',
-  COMPTABLE: 'from-purple-500 to-violet-600',
-}
-const ROLE_BG2: Record<RoleKey2, string> = {
-  ADMIN: 'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-800',
-  MANAGER: 'bg-teal-50 dark:bg-teal-950/40 border-teal-200 dark:border-teal-800',
-  COMMERCIAL: 'bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-800',
-  COMPTABLE: 'bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800',
-}
-const ROLE_ICONS2: Record<RoleKey2, React.ElementType> = {
-  ADMIN: Crown, MANAGER: BarChart2, COMMERCIAL: Users, COMPTABLE: Shield,
-}
-
 interface InviteFormFieldsProps {
   form: InviteForm
   errors: Record<string, string>
-  onChange: (key: keyof InviteForm, val: string) => void
+  blockedPermission: string | null
+  onFieldChange: (key: keyof InviteForm, val: string) => void
+  onRoleChange: (role: string) => void
+  onTogglePermission: (perm: PermissionKey) => void
+  onBlockedClick: (perm: string) => void
   t: (k: string) => string
 }
 
-function InviteFormFields({ form, errors, onChange, t }: InviteFormFieldsProps) {
+function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRoleChange, onTogglePermission, onBlockedClick, t }: InviteFormFieldsProps) {
   const inputClass = (err?: string) => cn(
     'w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-all',
     err
@@ -745,21 +746,24 @@ function InviteFormFields({ form, errors, onChange, t }: InviteFormFieldsProps) 
       : 'border-slate-200 dark:border-slate-700 focus:ring-primary-500/20 focus:border-primary-400',
   )
 
+  const roleDefaults = ROLE_DEFAULTS[form.role] ?? []
+  const lockedPerms = ALL_PERMISSIONS.filter(p => !roleDefaults.includes(p))
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
             {t('pages.equipe.invite.prenom')} <span className="text-red-500">*</span>
           </label>
-          <input type="text" value={form.prenom} onChange={e => onChange('prenom', e.target.value)} className={inputClass(errors.prenom)} placeholder="Mohammed" />
+          <input type="text" value={form.prenom} onChange={e => onFieldChange('prenom', e.target.value)} className={inputClass(errors.prenom)} placeholder="Mohammed" />
           {errors.prenom && <p className="text-xs text-red-500 mt-1">{errors.prenom}</p>}
         </div>
         <div>
           <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
             {t('pages.equipe.invite.nom')} <span className="text-red-500">*</span>
           </label>
-          <input type="text" value={form.nom} onChange={e => onChange('nom', e.target.value)} className={inputClass(errors.nom)} placeholder="Benali" />
+          <input type="text" value={form.nom} onChange={e => onFieldChange('nom', e.target.value)} className={inputClass(errors.nom)} placeholder="Benali" />
           {errors.nom && <p className="text-xs text-red-500 mt-1">{errors.nom}</p>}
         </div>
       </div>
@@ -768,7 +772,7 @@ function InviteFormFields({ form, errors, onChange, t }: InviteFormFieldsProps) 
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
           {t('pages.equipe.invite.email')} <span className="text-red-500">*</span>
         </label>
-        <input type="email" value={form.email} onChange={e => onChange('email', e.target.value)} className={inputClass(errors.email)} placeholder="collaborateur@entreprise.ma" />
+        <input type="email" value={form.email} onChange={e => onFieldChange('email', e.target.value)} className={inputClass(errors.email)} placeholder="collaborateur@entreprise.ma" />
         {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
       </div>
 
@@ -776,35 +780,35 @@ function InviteFormFields({ form, errors, onChange, t }: InviteFormFieldsProps) 
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
           {t('pages.equipe.invite.phone')}
         </label>
-        <input type="tel" value={form.telephone} onChange={e => onChange('telephone', e.target.value)} className={inputClass()} placeholder="+212 6XX XXX XXX" />
+        <input type="tel" value={form.telephone} onChange={e => onFieldChange('telephone', e.target.value)} className={inputClass()} placeholder="+212 6XX XXX XXX" />
       </div>
 
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
           {t('pages.equipe.invite.role')} <span className="text-red-500">*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2">
-          {(['ADMIN', 'MANAGER', 'COMMERCIAL', 'COMPTABLE'] as RoleKey2[]).map(role => {
-            const RoleIcon = ROLE_ICONS2[role]
+        <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+          {INVITABLE_ROLES.map(role => {
             const isSelected = form.role === role
+            const RoleIcon = getRoleIconComponent(role)
             return (
               <button
                 key={role}
                 type="button"
-                onClick={() => onChange('role', role)}
+                onClick={() => onRoleChange(role)}
                 className={cn(
                   'flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all relative',
                   isSelected
-                    ? cn('border-2', ROLE_BG2[role])
+                    ? cn('border-2', ROLE_BG[role] ?? 'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-800')
                     : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                 )}
               >
-                <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS2[role])}>
+                <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600')}>
                   <RoleIcon className="w-3.5 h-3.5 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{t(`pages.equipe.roles.${role.toLowerCase()}.label`)}</p>
-                  <p className="text-xs text-slate-400 truncate">{t(`pages.equipe.roles.${role.toLowerCase()}.desc`)}</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">{ROLE_LABELS[role] ?? role}</p>
+                  <p className="text-xs text-slate-400 truncate">{ROLE_DESCRIPTIONS[role] ?? ''}</p>
                 </div>
                 {isSelected && <Check className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
               </button>
@@ -812,6 +816,77 @@ function InviteFormFields({ form, errors, onChange, t }: InviteFormFieldsProps) 
           })}
         </div>
       </div>
+
+      {/* Permission Editor */}
+      <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+        <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Accès inclus par défaut</p>
+          <p className="text-xs text-slate-400 mt-0.5">Désactivez les accès que vous souhaitez retirer à ce membre.</p>
+        </div>
+        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          {roleDefaults.map(perm => {
+            const isOn = !form.permissionsRetirees.includes(perm)
+            return (
+              <div key={perm} className="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <div className="flex items-center gap-2.5">
+                  <span className={cn('w-2 h-2 rounded-full flex-shrink-0', isOn ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600')} />
+                  <span className="text-xs text-slate-700 dark:text-slate-300">{PERMISSION_LABELS[perm]}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onTogglePermission(perm)}
+                  className={cn(
+                    'relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
+                    isOn ? 'bg-green-500' : 'bg-slate-200 dark:bg-slate-700'
+                  )}
+                  role="switch"
+                  aria-checked={isOn}
+                >
+                  <span
+                    className={cn(
+                      'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      isOn ? 'translate-x-4' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+            )
+          })}
+        </div>
+
+        {lockedPerms.length > 0 && (
+          <>
+            <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700">
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Accès non disponibles pour ce rôle</p>
+            </div>
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              {lockedPerms.map(perm => (
+                <button
+                  key={perm}
+                  type="button"
+                  onClick={() => onBlockedClick(perm)}
+                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0 bg-slate-200 dark:bg-slate-700" />
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{PERMISSION_LABELS[perm]}</span>
+                  </div>
+                  <Lock className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {blockedPermission && (
+        <div className="flex items-start gap-2.5 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
+          <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+            Pour la sécurité de votre compte, ce rôle ne peut pas recevoir cet accès.
+          </p>
+        </div>
+      )}
 
       <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl flex items-start gap-2.5">
         <Mail className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -869,10 +944,10 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
           {t('pages.equipe.invite.role')} <span className="text-red-500">*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2">
-          {(['ADMIN', 'MANAGER', 'COMMERCIAL', 'COMPTABLE'] as RoleKey2[]).map(role => {
-            const RoleIcon = ROLE_ICONS2[role]
+        <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+          {INVITABLE_ROLES.map(role => {
             const isSelected = form.role === role
+            const RoleIcon = getRoleIconComponent(role)
             return (
               <button
                 key={role}
@@ -881,16 +956,16 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
                 className={cn(
                   'flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all relative',
                   isSelected
-                    ? cn('border-2', ROLE_BG2[role])
+                    ? cn('border-2', ROLE_BG[role] ?? 'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-800')
                     : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                 )}
               >
-                <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS2[role])}>
+                <div className={cn('w-7 h-7 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0', ROLE_COLORS[role] ?? 'from-slate-400 to-slate-600')}>
                   <RoleIcon className="w-3.5 h-3.5 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{t(`pages.equipe.roles.${role.toLowerCase()}.label`)}</p>
-                  <p className="text-xs text-slate-400 truncate">{t(`pages.equipe.roles.${role.toLowerCase()}.desc`)}</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">{ROLE_LABELS[role] ?? role}</p>
+                  <p className="text-xs text-slate-400 truncate">{ROLE_DESCRIPTIONS[role] ?? ''}</p>
                 </div>
                 {isSelected && <Check className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
               </button>

@@ -42,6 +42,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       entrepriseId: utilisateur.entrepriseId,
       entreprise: utilisateur.entreprise,
       superAdmin: utilisateur.superAdmin,
+      permissionsRetirees: (utilisateur as any).permissionsRetirees ?? [],
     };
   }
 }

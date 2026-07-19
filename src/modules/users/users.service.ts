@@ -133,6 +133,7 @@ export class UsersService {
         invitationToken: token,
         invitationTokenExpiration: expiration,
         entrepriseId,
+        permissionsRetirees: dto.permissionsRetirees ?? [],
       },
       select: {
         id: true,

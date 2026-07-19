@@ -45,7 +45,7 @@ export class AuthService {
             nom: dto.nomAdmin,
             email: dto.emailAdmin,
             motDePasseHash,
-            role: 'ADMIN',
+            role: 'PROPRIETAIRE',
             actif: false,
             emailConfirme: false,
             emailConfirmationToken: confirmationToken,

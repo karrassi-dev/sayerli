@@ -25,7 +25,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('recherche') recherche?: string,
@@ -34,7 +34,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -43,7 +43,7 @@ export class UsersController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async inviter(
     @Body() dto: CreerUtilisateurDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -52,7 +52,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async modifier(
     @Param('id') id: string,
     @Body() dto: ModifierUtilisateurDto,
@@ -62,7 +62,7 @@ export class UsersController {
   }
 
   @Post(':id/reinviter')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async reinviter(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -71,7 +71,7 @@ export class UsersController {
   }
 
   @Patch(':id/desactiver')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async desactiver(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -81,7 +81,7 @@ export class UsersController {
   }
 
   @Patch(':id/activer')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async activer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -90,7 +90,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

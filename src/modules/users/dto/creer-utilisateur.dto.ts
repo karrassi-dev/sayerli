@@ -1,9 +1,9 @@
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString, IsArray } from 'class-validator';
 import { RoleType } from '@prisma/client';
 
 export class CreerUtilisateurDto {
   @IsOptional()
-  @IsString({ message: 'Le prénom doit être une chaîne de caractères.' })
+  @IsString()
   prenom?: string;
 
   @IsString({ message: 'Le nom est requis.' })
@@ -16,6 +16,11 @@ export class CreerUtilisateurDto {
   @IsString()
   telephone?: string;
 
-  @IsEnum(RoleType, { message: 'Rôle invalide. Choisissez: ADMIN, MANAGER, COMMERCIAL, COMPTABLE.' })
+  @IsEnum(RoleType, { message: 'Rôle invalide.' })
   role: RoleType;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  permissionsRetirees?: string[];
 }

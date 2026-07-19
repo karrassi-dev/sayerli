@@ -70,6 +70,7 @@ model Utilisateur {
   resetPasswordToken            String?                  @unique
   resetPasswordExpiration       DateTime?
   superAdmin                    Boolean                  @default(false)
+  permissionsRetirees           String[]                 @default([])
   preferencesNotification   PreferencesNotification?
   entreprise                Entreprise               @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
 
@@ -288,6 +289,14 @@ enum RoleType {
   MANAGER
   COMMERCIAL
   COMPTABLE
+  PROPRIETAIRE
+  DAF
+  COMPTABLE_EXTERNE
+  RESPONSABLE_RECOUVREMENT
+  CAISSIER
+  COMMERCIAL_PROPRE
+  ASSISTANT
+  ASSOCIE
 }
 
 enum StatutDevis {

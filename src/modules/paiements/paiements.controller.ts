@@ -10,13 +10,13 @@ export class PaiementsController {
   constructor(private paiementsService: PaiementsService) {}
 
   @Get('statistiques')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER)
   async statistiques(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.paiementsService.statistiques(entrepriseId);
   }
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('factureId') factureId?: string,
@@ -27,7 +27,7 @@ export class PaiementsController {
   }
 
   @Get(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -36,7 +36,7 @@ export class PaiementsController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER)
   async enregistrer(
     @Body() dto: CreerPaiementDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -45,7 +45,7 @@ export class PaiementsController {
   }
 
   @Delete(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

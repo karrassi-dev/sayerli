@@ -20,7 +20,7 @@ export class ClientsController {
   constructor(private clientsService: ClientsService) {}
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('recherche') recherche?: string,
@@ -29,7 +29,7 @@ export class ClientsController {
   }
 
   @Get(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -38,7 +38,7 @@ export class ClientsController {
   }
 
   @Get(':id/lien-portal')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async lienPortal(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -47,7 +47,7 @@ export class ClientsController {
   }
 
   @Get(':id/statistiques')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async statistiques(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -56,7 +56,7 @@ export class ClientsController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async creer(
     @Body() dto: CreerClientDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -65,7 +65,7 @@ export class ClientsController {
   }
 
   @Patch(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async modifier(
     @Param('id') id: string,
     @Body() dto: ModifierClientDto,
@@ -75,7 +75,7 @@ export class ClientsController {
   }
 
   @Delete(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

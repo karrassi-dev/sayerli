@@ -22,7 +22,7 @@ export class DevisController {
   constructor(private devisService: DevisService) {}
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('statut') statut?: StatutDevis,
@@ -33,7 +33,7 @@ export class DevisController {
   }
 
   @Get(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -42,7 +42,7 @@ export class DevisController {
   }
 
   @Get(':id/pdf')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async obtenirPourPdf(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -51,7 +51,7 @@ export class DevisController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async creer(
     @Body() dto: CreerDevisDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -60,7 +60,7 @@ export class DevisController {
   }
 
   @Put(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async modifier(
     @Param('id') id: string,
     @Body() dto: CreerDevisDto,
@@ -70,7 +70,7 @@ export class DevisController {
   }
 
   @Patch(':id/statut')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async modifierStatut(
     @Param('id') id: string,
     @Body() dto: ModifierStatutDevisDto,
@@ -80,7 +80,7 @@ export class DevisController {
   }
 
   @Post(':id/lien-public')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async genererLien(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -89,7 +89,7 @@ export class DevisController {
   }
 
   @Post(':id/dupliquer')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
   async dupliquer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -98,7 +98,7 @@ export class DevisController {
   }
 
   @Post(':id/convertir-facture')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async convertirEnFacture(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -107,7 +107,7 @@ export class DevisController {
   }
 
   @Delete(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

@@ -24,13 +24,13 @@ export class FacturesController {
   constructor(private facturesService: FacturesService) {}
 
   @Get('tableau-de-bord')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.ASSOCIE)
   async tableauDeBord(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.facturesService.tableauDeBord(entrepriseId);
   }
 
   @Get('declarations')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async listerDeclarations(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('statut') statut?: StatutDeclaration,
@@ -39,7 +39,7 @@ export class FacturesController {
   }
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.ASSOCIE)
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('statut') statut?: StatutFacture,
@@ -50,7 +50,7 @@ export class FacturesController {
   }
 
   @Get(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT, RoleType.CAISSIER, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT, RoleType.ASSOCIE)
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -59,7 +59,7 @@ export class FacturesController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE, RoleType.ASSISTANT)
   async creer(
     @Body() dto: CreerFactureDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -68,7 +68,7 @@ export class FacturesController {
   }
 
   @Put(':id')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE, RoleType.ASSISTANT)
   async modifier(
     @Param('id') id: string,
     @Body() dto: CreerFactureDto,
@@ -78,7 +78,7 @@ export class FacturesController {
   }
 
   @Patch(':id/statut')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async modifierStatut(
     @Param('id') id: string,
     @Body() dto: ModifierStatutFactureDto,
@@ -88,7 +88,7 @@ export class FacturesController {
   }
 
   @Post(':id/envoyer')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async envoyer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -97,7 +97,7 @@ export class FacturesController {
   }
 
   @Post(':id/relancer')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE, RoleType.RESPONSABLE_RECOUVREMENT)
   async relancer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -106,7 +106,7 @@ export class FacturesController {
   }
 
   @Patch('declarations/:id/approuver')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async approuverDeclaration(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -115,7 +115,7 @@ export class FacturesController {
   }
 
   @Patch('declarations/:id/rejeter')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE, RoleType.RESPONSABLE_RECOUVREMENT)
   async rejeterDeclaration(
     @Param('id') id: string,
     @Body() dto: RejeterDeclarationDto,
@@ -125,7 +125,7 @@ export class FacturesController {
   }
 
   @Patch(':id/annuler')
-  @Roles(RoleType.ADMIN, RoleType.MANAGER)
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
   async annuler(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -134,7 +134,7 @@ export class FacturesController {
   }
 
   @Delete(':id')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
