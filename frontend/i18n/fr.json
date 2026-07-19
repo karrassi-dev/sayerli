@@ -97,7 +97,7 @@
       "price": "0",
       "desc": "Parfait pour débuter",
       "features": [
-        "3 clients",
+        "5 clients",
         "5 devis / mois",
         "5 factures / mois",
         "1 utilisateur",
@@ -120,8 +120,8 @@
       "desc": "Pour les freelancers actifs",
       "features": [
         "20 clients",
-        "20 devis / mois",
-        "20 factures / mois",
+        "100 devis / mois",
+        "100 factures / mois",
         "1 utilisateur",
         "5 templates PDF",
         "Portail client",

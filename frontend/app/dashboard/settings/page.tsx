@@ -53,8 +53,8 @@ const PRESET_COLORS = [
 ]
 
 const PLAN_LABELS: Record<string, { label: string; prix: string; features: string[] }> = {
-  STARTER: { label: 'Starter', prix: '0',   features: ['3 clients', '5 devis/mois', '5 factures/mois', '1 utilisateur', '3 relances/mois', '10 emails/mois'] },
-  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '20 devis/mois', '20 factures/mois', '1 utilisateur', 'Relances illimitées', '100 emails/mois', 'Journal des ventes', 'Support email 48h'] },
+  STARTER: { label: 'Starter', prix: '0',   features: ['5 clients', '5 devis/mois', '5 factures/mois', '1 utilisateur', '3 relances/mois', '10 emails/mois'] },
+  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '100 devis/mois', '100 factures/mois', '1 utilisateur', 'Relances illimitées', '100 emails/mois', 'Journal des ventes', 'Support email 48h'] },
   BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', '3 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
 }
 

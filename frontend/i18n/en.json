@@ -97,7 +97,7 @@
       "price": "0",
       "desc": "Perfect to get started",
       "features": [
-        "3 clients",
+        "5 clients",
         "5 quotes / month",
         "5 invoices / month",
         "1 user",
@@ -120,8 +120,8 @@
       "desc": "For active freelancers",
       "features": [
         "20 clients",
-        "20 quotes / month",
-        "20 invoices / month",
+        "100 quotes / month",
+        "100 invoices / month",
         "1 user",
         "5 PDF templates",
         "Client portal",

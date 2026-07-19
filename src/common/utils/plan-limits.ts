@@ -12,8 +12,8 @@ export interface PlanLimits {
 }
 
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
-  STARTER:  { clients: 3,  devisParMois: 5,  facturesParMois: 5,  utilisateurs: 1, relancesParMois: 3,  receiptsEmailsParMois: 5,   journalDesVentes: false },
-  PRO:      { clients: 20, devisParMois: 20, facturesParMois: 20, utilisateurs: 1, relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true  },
+  STARTER:  { clients: 5,  devisParMois: 5,  facturesParMois: 5,  utilisateurs: 1, relancesParMois: 3,  receiptsEmailsParMois: 5,   journalDesVentes: false },
+  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, utilisateurs: 1, relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true  },
   BUSINESS: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: 3, relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true  },
 };
 
