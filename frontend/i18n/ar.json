@@ -243,7 +243,39 @@
     "statRevenue": "درهم",
     "feat1": "دقيقتان لإرسال عرض سعر",
     "feat2": "بيانات آمنة 100%",
-    "feat3": "مصمم للمغرب"
+    "feat3": "مصمم للمغرب",
+    "selectCompany": {
+      "title": "اختر مساحة عملك",
+      "sub": "أنت عضو في أكثر من شركة. اختر الشركة التي تريد العمل عليها.",
+      "connecting": "جارٍ الاتصال…",
+      "switchTitle": "تغيير الشركة",
+      "switchSub": "اختر المساحة التي تريد الانتقال إليها.",
+      "currentBadge": "نشط"
+    },
+    "invitation": {
+      "createPassword": "أنشئ كلمة مرورك",
+      "createPasswordSub": "اختر كلمة مرور آمنة لتفعيل حسابك على سيّرلي.",
+      "joinTitle": "الانضمام إلى شركة جديدة",
+      "joinSub": "لديك بالفعل حساب على سيّرلي. لا حاجة لكلمة مرور جديدة.",
+      "joinBtn": "الانضمام إلى {entreprise}",
+      "joining": "جارٍ الاتصال…",
+      "joinedTitle": "انضممت إلى {entreprise}!",
+      "joinedSub": "جارٍ التحويل إلى صفحة تسجيل الدخول…",
+      "activatedTitle": "تم تفعيل الحساب!",
+      "activatedSub": "جارٍ التحويل إلى صفحة تسجيل الدخول…",
+      "invalidTitle": "رابط غير صالح",
+      "invalidSub": "رابط الدعوة هذا غير صالح أو تم استخدامه من قبل.",
+      "expiredTitle": "انتهت صلاحية الرابط",
+      "expiredSub": "انتهت صلاحية هذا الرابط. اطلب دعوة جديدة من مسؤولك.",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "8 أحرف على الأقل",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "كرر كلمة مرورك",
+      "activateBtn": "تفعيل حسابي",
+      "activating": "جارٍ التفعيل…",
+      "minLength": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل.",
+      "passwordMismatch": "كلمتا المرور غير متطابقتين."
+    }
   },
   "dashboard": {
     "welcome": "مرحباً",

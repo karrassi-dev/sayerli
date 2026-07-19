@@ -243,7 +243,39 @@
     "statRevenue": "MAD",
     "feat1": "2 min to send a quote",
     "feat2": "100% secure data",
-    "feat3": "Built for Morocco"
+    "feat3": "Built for Morocco",
+    "selectCompany": {
+      "title": "Choose your workspace",
+      "sub": "You are a member of multiple companies. Select the one you want to work on.",
+      "connecting": "Connecting…",
+      "switchTitle": "Switch company",
+      "switchSub": "Select the workspace you want to switch to.",
+      "currentBadge": "Active"
+    },
+    "invitation": {
+      "createPassword": "Create your password",
+      "createPasswordSub": "Choose a secure password to activate your Sayerli account.",
+      "joinTitle": "Join a new company",
+      "joinSub": "You already have a Sayerli account. No new password is needed.",
+      "joinBtn": "Join {entreprise}",
+      "joining": "Connecting…",
+      "joinedTitle": "You joined {entreprise}!",
+      "joinedSub": "Redirecting to login page…",
+      "activatedTitle": "Account activated!",
+      "activatedSub": "Redirecting to login page…",
+      "invalidTitle": "Invalid link",
+      "invalidSub": "This invitation link is invalid or has already been used.",
+      "expiredTitle": "Link expired",
+      "expiredSub": "This link has expired. Ask your administrator for a new invitation.",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "activateBtn": "Activate my account",
+      "activating": "Activating…",
+      "minLength": "Password must be at least 8 characters.",
+      "passwordMismatch": "Passwords do not match."
+    }
   },
   "dashboard": {
     "welcome": "Hello",

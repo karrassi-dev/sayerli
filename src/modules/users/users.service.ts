@@ -118,6 +118,9 @@ export class UsersService {
       throw new ConflictException('Un utilisateur avec cet email existe déjà dans votre entreprise.');
     }
 
+    // Check if invitee already has a CompteGlobal (existing Sayerli user from another company)
+    const compteExistant = await this.prisma.compteGlobal.findUnique({ where: { email: dto.email } });
+
     const token = randomUUID();
     const expiration = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
@@ -134,6 +137,7 @@ export class UsersService {
         invitationTokenExpiration: expiration,
         entrepriseId,
         permissionsRetirees: dto.permissionsRetirees ?? [],
+        ...(compteExistant && { compteGlobalId: compteExistant.id }),
       },
       select: {
         id: true,
@@ -152,14 +156,23 @@ export class UsersService {
       ? `${utilisateur.prenom} ${utilisateur.nom}`
       : utilisateur.nom;
 
-    // Send invitation email (non-blocking — errors are logged, not thrown)
-    this.email.sendInvitation({
-      toEmail: utilisateur.email,
-      toName: nomComplet,
-      entrepriseName: entreprise?.nom ?? 'Sayerli',
-      role: utilisateur.role,
-      token,
-    });
+    if (compteExistant) {
+      this.email.sendJoinCompanyInvitation({
+        toEmail: utilisateur.email,
+        toName: nomComplet,
+        entrepriseName: entreprise?.nom ?? 'Sayerli',
+        role: utilisateur.role,
+        token,
+      });
+    } else {
+      this.email.sendInvitation({
+        toEmail: utilisateur.email,
+        toName: nomComplet,
+        entrepriseName: entreprise?.nom ?? 'Sayerli',
+        role: utilisateur.role,
+        token,
+      });
+    }
 
     return {
       ...utilisateur,
@@ -314,6 +327,7 @@ export class UsersService {
   async accepterInvitation(token: string, dto: AccepterInvitationDto) {
     const utilisateur = await this.prisma.utilisateur.findFirst({
       where: { invitationToken: token },
+      include: { entreprise: true },
     });
     if (!utilisateur) {
       throw new NotFoundException('Lien d\'invitation invalide ou déjà utilisé.');
@@ -322,7 +336,34 @@ export class UsersService {
       throw new BadRequestException('Ce lien d\'invitation a expiré. Demandez une nouvelle invitation à votre administrateur.');
     }
 
+    // Case A: invitee already has a CompteGlobal (existing Sayerli user joining a new company)
+    if (utilisateur.compteGlobalId) {
+      await this.prisma.utilisateur.update({
+        where: { id: utilisateur.id },
+        data: { actif: true, invitationToken: null, invitationTokenExpiration: null },
+      });
+      return {
+        existingAccount: true,
+        message: `Vous avez rejoint ${utilisateur.entreprise.nom}. Connectez-vous avec votre mot de passe habituel.`,
+        entrepriseNom: utilisateur.entreprise.nom,
+      };
+    }
+
+    // Case B: new user — requires password
+    if (!dto.motDePasse) {
+      throw new BadRequestException('Le mot de passe est requis pour activer votre compte.');
+    }
+
     const hash = await bcrypt.hash(dto.motDePasse, 12);
+
+    // Create CompteGlobal and link all utilisateurs with same email
+    let compteGlobal = await this.prisma.compteGlobal.findUnique({ where: { email: utilisateur.email } });
+    if (!compteGlobal) {
+      compteGlobal = await this.prisma.compteGlobal.create({
+        data: { email: utilisateur.email, motDePasseHash: hash },
+      });
+    }
+
     await this.prisma.utilisateur.update({
       where: { id: utilisateur.id },
       data: {
@@ -330,9 +371,37 @@ export class UsersService {
         actif: true,
         invitationToken: null,
         invitationTokenExpiration: null,
+        compteGlobalId: compteGlobal.id,
       },
     });
 
+    // Link any OTHER existing utilisateurs with the same email (lazy migration)
+    await this.prisma.utilisateur.updateMany({
+      where: { email: utilisateur.email, compteGlobalId: null, id: { not: utilisateur.id } },
+      data: { compteGlobalId: compteGlobal.id },
+    });
+
     return { message: 'Votre compte a été activé. Vous pouvez maintenant vous connecter.' };
+  }
+
+  async infoInvitation(token: string) {
+    const utilisateur = await this.prisma.utilisateur.findFirst({
+      where: { invitationToken: token },
+      include: { entreprise: true },
+    });
+
+    if (!utilisateur) return { invalid: true };
+
+    const expired = !!(utilisateur.invitationTokenExpiration && utilisateur.invitationTokenExpiration < new Date());
+
+    return {
+      invalid: false,
+      expired,
+      nomComplet: utilisateur.prenom ? `${utilisateur.prenom} ${utilisateur.nom}` : utilisateur.nom,
+      email: utilisateur.email,
+      entrepriseNom: utilisateur.entreprise.nom,
+      role: utilisateur.role,
+      needsPassword: !utilisateur.compteGlobalId,
+    };
   }
 }

@@ -39,7 +39,13 @@ export const authApi = {
     typeCompte?: string
   }) => api.post('/auth/inscription', data),
   profile: () => api.get('/auth/profil'),
+  selectCompany: (selectToken: string, utilisateurId: string) =>
+    api.post('/auth/selectionner-entreprise', { selectToken, utilisateurId }),
+  mesEntreprises: () => api.get('/auth/mes-entreprises'),
+  changerEntreprise: (utilisateurId: string) =>
+    api.post('/auth/changer-entreprise', { utilisateurId }),
 }
+
 
 // Clients
 export const clientsApi = {
@@ -84,6 +90,13 @@ export const portalApi = {
   get: (token: string) => publicApi.get(`/public/portal/${token}`),
   acceptDevis: (token: string, devisId: string) =>
     publicApi.post(`/public/portal/${token}/devis/${devisId}/accepter`),
+}
+
+// Invitation public info (no auth required)
+export const invitationInfoApi = {
+  info: (token: string) => publicApi.get(`/invitation/${token}/info`),
+  accept: (token: string, motDePasse?: string) =>
+    publicApi.post(`/invitation/${token}`, motDePasse ? { motDePasse } : {}),
 }
 
 // Factures

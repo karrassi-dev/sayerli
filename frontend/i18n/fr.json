@@ -243,7 +243,39 @@
     "statRevenue": "MAD",
     "feat1": "2 min pour envoyer un devis",
     "feat2": "Données 100% sécurisées",
-    "feat3": "Conçu pour le Maroc"
+    "feat3": "Conçu pour le Maroc",
+    "selectCompany": {
+      "title": "Choisissez votre espace",
+      "sub": "Vous êtes membre de plusieurs entreprises. Sélectionnez celle sur laquelle vous souhaitez travailler.",
+      "connecting": "Connexion…",
+      "switchTitle": "Changer d'entreprise",
+      "switchSub": "Sélectionnez l'espace sur lequel vous souhaitez basculer.",
+      "currentBadge": "Actif"
+    },
+    "invitation": {
+      "createPassword": "Créez votre mot de passe",
+      "createPasswordSub": "Choisissez un mot de passe sécurisé pour activer votre compte Sayerli.",
+      "joinTitle": "Rejoindre une nouvelle entreprise",
+      "joinSub": "Vous avez déjà un compte Sayerli. Aucun nouveau mot de passe n'est nécessaire.",
+      "joinBtn": "Rejoindre {entreprise}",
+      "joining": "Connexion…",
+      "joinedTitle": "Vous avez rejoint {entreprise} !",
+      "joinedSub": "Redirection vers la page de connexion…",
+      "activatedTitle": "Compte activé !",
+      "activatedSub": "Redirection vers la page de connexion…",
+      "invalidTitle": "Lien invalide",
+      "invalidSub": "Ce lien d'invitation est invalide ou a déjà été utilisé.",
+      "expiredTitle": "Lien expiré",
+      "expiredSub": "Ce lien a expiré. Demandez une nouvelle invitation à votre administrateur.",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Répétez votre mot de passe",
+      "activateBtn": "Activer mon compte",
+      "activating": "Activation…",
+      "minLength": "Le mot de passe doit contenir au moins 8 caractères.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas."
+    }
   },
   "dashboard": {
     "welcome": "Bonjour",

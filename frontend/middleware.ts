@@ -63,9 +63,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
+  // Company picker: requires a session select token in sessionStorage (client-side only)
+  // We just let it through — the page itself validates the token
+  if (pathname === '/selectionner-entreprise' && token) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/superadmin/:path*', '/dashboard/:path*', '/login', '/register'],
+  matcher: ['/superadmin/:path*', '/dashboard/:path*', '/login', '/register', '/selectionner-entreprise'],
 }

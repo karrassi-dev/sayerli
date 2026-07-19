@@ -105,6 +105,12 @@ export class InvitationController {
   constructor(private usersService: UsersService) {}
 
   @Public()
+  @Get(':token/info')
+  async info(@Param('token') token: string) {
+    return this.usersService.infoInvitation(token);
+  }
+
+  @Public()
   @Post(':token')
   async accepter(
     @Param('token') token: string,

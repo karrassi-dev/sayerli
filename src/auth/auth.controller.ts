@@ -26,6 +26,31 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
+  @Post('selectionner-entreprise')
+  @HttpCode(HttpStatus.OK)
+  async selectionnerEntreprise(
+    @Body('selectToken') selectToken: string,
+    @Body('utilisateurId') utilisateurId: string,
+  ) {
+    return this.authService.selectionnerEntreprise(selectToken, utilisateurId);
+  }
+
+  @Get('mes-entreprises')
+  async mesEntreprises(@UtilisateurCourant('id') userId: string) {
+    return this.authService.mesEntreprises(userId);
+  }
+
+  @Post('changer-entreprise')
+  @HttpCode(HttpStatus.OK)
+  async changerEntreprise(
+    @UtilisateurCourant('id') currentId: string,
+    @Body('utilisateurId') targetId: string,
+  ) {
+    return this.authService.changerEntreprise(currentId, targetId);
+  }
+
+  @Public()
   @Get('confirmer-email/:token')
   async confirmerEmail(@Param('token') token: string) {
     return this.authService.confirmerEmail(token);
@@ -41,10 +66,7 @@ export class AuthController {
   @Public()
   @Post('reinitialiser-mot-de-passe/:token')
   @HttpCode(HttpStatus.OK)
-  async reinitialiserMotDePasse(
-    @Param('token') token: string,
-    @Body('motDePasse') motDePasse: string,
-  ) {
+  async reinitialiserMotDePasse(@Param('token') token: string, @Body('motDePasse') motDePasse: string) {
     return this.authService.reinitialiserMotDePasse(token, motDePasse);
   }
 

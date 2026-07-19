@@ -47,6 +47,17 @@ model Entreprise {
   @@map("entreprises")
 }
 
+model CompteGlobal {
+  id             String        @id @default(uuid())
+  email          String        @unique
+  motDePasseHash String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  utilisateurs   Utilisateur[]
+
+  @@map("comptes_globaux")
+}
+
 model Utilisateur {
   id                        String                   @id @default(uuid())
   entrepriseId              String
@@ -71,6 +82,8 @@ model Utilisateur {
   resetPasswordExpiration       DateTime?
   superAdmin                    Boolean                  @default(false)
   permissionsRetirees           String[]                 @default([])
+  compteGlobalId            String?
+  compteGlobal              CompteGlobal?            @relation(fields: [compteGlobalId], references: [id], onDelete: SetNull)
   preferencesNotification   PreferencesNotification?
   entreprise                Entreprise               @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
 

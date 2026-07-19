@@ -664,4 +664,68 @@ export class EmailService {
       this.logger.error(`Failed to send invitation email: ${err}`);
     }
   }
+
+  async sendJoinCompanyInvitation(opts: {
+    toEmail: string;
+    toName: string;
+    entrepriseName: string;
+    role: string;
+    token: string;
+  }) {
+    const link = `${this.frontendUrl}/invitation/${opts.token}`;
+    const roleLabel: Record<string, string> = {
+      ADMIN: 'Administrateur', MANAGER: 'Manager', COMMERCIAL: 'Commercial', COMPTABLE: 'Comptable',
+      DAF: 'Directeur Financier', COMPTABLE_EXTERNE: 'Comptable Externe',
+      RESPONSABLE_RECOUVREMENT: 'Resp. Recouvrement', CAISSIER: 'Caissier',
+      COMMERCIAL_PROPRE: 'Agent Commercial', ASSISTANT: 'Assistant', ASSOCIE: 'Associé',
+    };
+    const roleFr = roleLabel[opts.role] ?? opts.role;
+
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rejoindre une entreprise — Sayerli</title></head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:40px 0;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td style="background:linear-gradient(135deg,#2563eb,#0d9488);padding:32px 40px;text-align:center;">
+          <span style="color:#ffffff;font-size:24px;font-weight:900;">Sayerl</span><span style="color:#06D6B0;font-size:24px;font-weight:900;">i</span>
+        </td></tr>
+        <tr><td style="padding:40px;">
+          <h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#0f172a;">Nouvelle entreprise vous attend ! 🏢</h1>
+          <p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">
+            Bonjour <strong style="color:#0f172a;">${opts.toName}</strong>,<br/>
+            <strong style="color:#0f172a;">${opts.entrepriseName}</strong> vous invite à rejoindre leur espace Sayerli en tant que <strong style="color:#2563eb;">${roleFr}</strong>.<br/><br/>
+            <strong style="color:#059669;">Bonne nouvelle :</strong> Votre compte Sayerli existe déjà. Aucun nouveau mot de passe n'est nécessaire !
+          </p>
+          <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:16px 20px;margin-bottom:28px;">
+            <p style="margin:0;font-size:13px;color:#16a34a;font-weight:600;">✓ Connexion avec votre mot de passe habituel</p>
+          </div>
+          <div style="text-align:center;margin-bottom:28px;">
+            <a href="${link}" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#0d9488);color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:14px 40px;border-radius:12px;">
+              Rejoindre ${opts.entrepriseName}
+            </a>
+          </div>
+          <p style="margin:0 0 8px;font-size:13px;color:#94a3b8;text-align:center;">Ce lien est valide pendant <strong>7 jours</strong>.</p>
+        </td></tr>
+        <tr><td style="padding:20px 40px;border-top:1px solid #f1f5f9;background:#f8fafc;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;">© ${new Date().getFullYear()} Sayerli. Tous droits réservés.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+    try {
+      await this.resend.emails.send({
+        from: this.from,
+        to: opts.toEmail,
+        subject: `Rejoignez ${opts.entrepriseName} sur Sayerli`,
+        html,
+      });
+    } catch (err) {
+      this.logger.error(`Failed to send join company invitation email: ${err}`);
+    }
+  }
 }
