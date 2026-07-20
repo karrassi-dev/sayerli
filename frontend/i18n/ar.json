@@ -307,6 +307,7 @@
       "settings": "الإعدادات",
       "logout": "تسجيل الخروج",
       "catalogue": "الكتالوج",
+      "bonsLivraison": "وصولات التسليم",
       "activite": "النشاط"
     },
     "payments": "المدفوعات",
@@ -834,6 +835,86 @@
       "deleteSuccess": "تم حذف العنصر.",
       "deleteTitle": "حذف العنصر",
       "deleteMessage": "هل أنت متأكد من حذف \"{nom}\" من الكتالوج؟"
+    },
+    "bonsLivraison": {
+      "title": "وصولات التسليم",
+      "sub": "إدارة وصولات التسليم وتأكيد تسليمات العملاء.",
+      "add": "وصل تسليم جديد",
+      "searchPlaceholder": "بحث بالمرجع أو العميل...",
+      "empty": {
+        "title": "لا توجد وصولات تسليم",
+        "desc": "أنشئ أول وصل تسليم أو أنشئه من عرض سعر مقبول."
+      },
+      "stats": {
+        "total": "إجمالي الوصولات",
+        "brouillon": "مسودات",
+        "envoye": "مُرسَلة",
+        "livre": "مُسلَّمة"
+      },
+      "statuts": {
+        "BROUILLON": "مسودة",
+        "ENVOYE": "مُرسَل",
+        "LIVRE": "مُسلَّم"
+      },
+      "col": {
+        "reference": "المرجع",
+        "client": "العميل",
+        "date": "التاريخ",
+        "livraison": "تاريخ التسليم",
+        "statut": "الحالة",
+        "devis": "العرض المرتبط",
+        "actions": "إجراءات"
+      },
+      "actions": {
+        "envoyer": "إرسال للعميل",
+        "marquerLivre": "تحديد كمُسلَّم",
+        "convertir": "تحويل إلى فاتورة",
+        "dupliquer": "نسخ",
+        "supprimer": "حذف",
+        "telecharger": "تحميل PDF",
+        "voirPublic": "رابط العميل",
+        "creerDepuisDevis": "إنشاء وصل تسليم"
+      },
+      "form": {
+        "title": "وصل التسليم",
+        "client": "العميل",
+        "clientPlaceholder": "اختر عميلاً",
+        "devis": "العرض المرتبط (اختياري)",
+        "devisPlaceholder": "اختر عرض سعر",
+        "notes": "ملاحظات",
+        "notesPlaceholder": "معلومات إضافية...",
+        "dateLivraison": "تاريخ التسليم المتوقع",
+        "lignes": "البنود",
+        "description": "الوصف",
+        "descPlaceholder": "وصف العنصر المُسلَّم",
+        "quantite": "الكمية",
+        "unite": "الوحدة",
+        "addLigne": "إضافة بند",
+        "clientRequired": "العميل مطلوب.",
+        "lignesRequired": "أضف بنداً واحداً على الأقل."
+      },
+      "createSuccess": "تم إنشاء وصل التسليم.",
+      "editSuccess": "تم تحديث وصل التسليم.",
+      "deleteSuccess": "تم حذف وصل التسليم.",
+      "envoyerSuccess": "تم إرسال وصل التسليم.",
+      "livreSuccess": "تم تحديد وصل التسليم كمُسلَّم.",
+      "convertirSuccess": "تم إنشاء الفاتورة من وصل التسليم.",
+      "dupliquerSuccess": "تم نسخ وصل التسليم.",
+      "deleteTitle": "حذف وصل التسليم",
+      "deleteMessage": "هل أنت متأكد من حذف وصل التسليم {reference}؟",
+      "convertirConfirm": "تحويل {reference} إلى فاتورة؟ سيتم نسخ البنود بدون أسعار — يمكنك إكمالها لاحقاً.",
+      "blFromDevisSuccess": "تم إنشاء وصل التسليم من عرض السعر.",
+      "publicPage": {
+        "title": "وصل التسليم",
+        "confirmerBtn": "استلمت البضائع",
+        "confirmerDesc": "بالنقر، تؤكد استلام جميع العناصر المدرجة أدناه.",
+        "confirme": "تم تأكيد التسليم",
+        "confirmeDesc": "لقد أكدت استلام هذه الشحنة.",
+        "lignes": "العناصر المُسلَّمة",
+        "notes": "ملاحظات",
+        "signature": "توقيع العميل",
+        "signatureHint": "يُوقَّع ويُعاد إلى المورد"
+      }
     },
     "clients": {
       "title": "العملاء",

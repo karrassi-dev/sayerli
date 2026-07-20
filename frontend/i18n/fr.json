@@ -307,6 +307,7 @@
       "settings": "Paramètres",
       "logout": "Déconnexion",
       "catalogue": "Catalogue",
+      "bonsLivraison": "Bons de livraison",
       "activite": "Activité"
     },
     "payments": "Paiements",
@@ -835,6 +836,86 @@
       "deleteSuccess": "Article supprimé.",
       "deleteTitle": "Supprimer l'article",
       "deleteMessage": "Êtes-vous sûr de vouloir supprimer \"{nom}\" du catalogue ?"
+    },
+    "bonsLivraison": {
+      "title": "Bons de livraison",
+      "sub": "Gérez vos bons de livraison et confirmez les livraisons client.",
+      "add": "Nouveau BL",
+      "searchPlaceholder": "Rechercher par référence ou client...",
+      "empty": {
+        "title": "Aucun bon de livraison",
+        "desc": "Créez votre premier bon de livraison ou générez-en un depuis un devis accepté."
+      },
+      "stats": {
+        "total": "Total BL",
+        "brouillon": "Brouillons",
+        "envoye": "Envoyés",
+        "livre": "Livrés"
+      },
+      "statuts": {
+        "BROUILLON": "Brouillon",
+        "ENVOYE": "Envoyé",
+        "LIVRE": "Livré"
+      },
+      "col": {
+        "reference": "Référence",
+        "client": "Client",
+        "date": "Date",
+        "livraison": "Date livraison",
+        "statut": "Statut",
+        "devis": "Devis lié",
+        "actions": "Actions"
+      },
+      "actions": {
+        "envoyer": "Envoyer au client",
+        "marquerLivre": "Marquer comme livré",
+        "convertir": "Convertir en facture",
+        "dupliquer": "Dupliquer",
+        "supprimer": "Supprimer",
+        "telecharger": "Télécharger PDF",
+        "voirPublic": "Lien client",
+        "creerDepuisDevis": "Créer un BL"
+      },
+      "form": {
+        "title": "Bon de livraison",
+        "client": "Client",
+        "clientPlaceholder": "Sélectionner un client",
+        "devis": "Devis lié (optionnel)",
+        "devisPlaceholder": "Sélectionner un devis",
+        "notes": "Notes",
+        "notesPlaceholder": "Informations complémentaires...",
+        "dateLivraison": "Date de livraison prévue",
+        "lignes": "Lignes",
+        "description": "Désignation",
+        "descPlaceholder": "Description de l'article livré",
+        "quantite": "Qté",
+        "unite": "Unité",
+        "addLigne": "Ajouter une ligne",
+        "clientRequired": "Le client est requis.",
+        "lignesRequired": "Ajoutez au moins une ligne."
+      },
+      "createSuccess": "Bon de livraison créé.",
+      "editSuccess": "Bon de livraison mis à jour.",
+      "deleteSuccess": "Bon de livraison supprimé.",
+      "envoyerSuccess": "Bon de livraison envoyé.",
+      "livreSuccess": "Bon de livraison marqué comme livré.",
+      "convertirSuccess": "Facture créée depuis le bon de livraison.",
+      "dupliquerSuccess": "Bon de livraison dupliqué.",
+      "deleteTitle": "Supprimer le bon de livraison",
+      "deleteMessage": "Êtes-vous sûr de vouloir supprimer le bon de livraison {reference} ?",
+      "convertirConfirm": "Convertir {reference} en facture ? Les lignes seront copiées sans prix — vous pourrez les compléter ensuite.",
+      "blFromDevisSuccess": "Bon de livraison créé depuis le devis.",
+      "publicPage": {
+        "title": "Bon de livraison",
+        "confirmerBtn": "J'ai reçu les articles",
+        "confirmerDesc": "En cliquant, vous confirmez avoir reçu tous les articles listés ci-dessous.",
+        "confirme": "Livraison confirmée",
+        "confirmeDesc": "Vous avez confirmé la réception de cette livraison.",
+        "lignes": "Articles livrés",
+        "notes": "Notes",
+        "signature": "Signature client",
+        "signatureHint": "À signer et retourner au fournisseur"
+      }
     },
     "clients": {
       "title": "Clients",

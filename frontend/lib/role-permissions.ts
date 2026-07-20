@@ -6,6 +6,7 @@ export type PermissionKey =
   | 'paiements.read' | 'paiements.create' | 'paiements.delete' | 'paiements.declarations'
   | 'export' | 'dashboard' | 'catalogue.read' | 'catalogue.manage'
   | 'equipe.read' | 'equipe.manage' | 'settings' | 'billing'
+  | 'bons-livraison.read' | 'bons-livraison.manage'
 
 export const ALL_PERMISSIONS: PermissionKey[] = [
   'clients.read','clients.create','clients.edit','clients.delete',
@@ -14,6 +15,7 @@ export const ALL_PERMISSIONS: PermissionKey[] = [
   'paiements.read','paiements.create','paiements.delete','paiements.declarations',
   'export','dashboard','catalogue.read','catalogue.manage',
   'equipe.read','equipe.manage','settings','billing',
+  'bons-livraison.read','bons-livraison.manage',
 ]
 
 export const PERMISSION_LABELS: Record<PermissionKey, string> = {
@@ -45,6 +47,8 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   'equipe.manage': "Gérer l'équipe",
   'settings': 'Paramètres entreprise',
   'billing': 'Facturation & Plan',
+  'bons-livraison.read': 'Voir les bons de livraison',
+  'bons-livraison.manage': 'Créer/modifier des bons de livraison',
 }
 
 export const ROLE_LABELS: Record<string, string> = {
@@ -84,6 +88,7 @@ export const ROLE_DEFAULTS: Record<string, PermissionKey[]> = {
     'paiements.read','paiements.create','paiements.delete','paiements.declarations',
     'export','dashboard','catalogue.read','catalogue.manage',
     'equipe.read','equipe.manage','settings','billing',
+    'bons-livraison.read','bons-livraison.manage',
   ],
   ADMIN: [
     'clients.read','clients.create','clients.edit','clients.delete',
@@ -92,6 +97,7 @@ export const ROLE_DEFAULTS: Record<string, PermissionKey[]> = {
     'paiements.read','paiements.create','paiements.delete','paiements.declarations',
     'export','dashboard','catalogue.read','catalogue.manage',
     'equipe.read','equipe.manage','settings',
+    'bons-livraison.read','bons-livraison.manage',
   ],
   MANAGER: [
     'clients.read','clients.create','clients.edit','clients.delete',
@@ -99,16 +105,17 @@ export const ROLE_DEFAULTS: Record<string, PermissionKey[]> = {
     'factures.read','factures.create','factures.edit','factures.send','factures.relance','factures.annuler',
     'paiements.read','paiements.create','paiements.delete','paiements.declarations',
     'export','dashboard','catalogue.read','catalogue.manage','equipe.read',
+    'bons-livraison.read','bons-livraison.manage',
   ],
-  DAF: ['factures.read','paiements.read','paiements.declarations','export','dashboard','equipe.read'],
-  COMPTABLE: ['factures.read','paiements.read','paiements.create','paiements.declarations','export','dashboard'],
-  COMPTABLE_EXTERNE: ['clients.read','factures.read','paiements.read','paiements.declarations','export','dashboard'],
+  DAF: ['factures.read','paiements.read','paiements.declarations','export','dashboard','equipe.read','bons-livraison.read'],
+  COMPTABLE: ['factures.read','paiements.read','paiements.create','paiements.declarations','export','dashboard','bons-livraison.read'],
+  COMPTABLE_EXTERNE: ['clients.read','factures.read','paiements.read','paiements.declarations','export','dashboard','bons-livraison.read'],
   RESPONSABLE_RECOUVREMENT: ['clients.read','factures.read','factures.relance','paiements.create','paiements.declarations'],
   CAISSIER: ['factures.read','paiements.create'],
-  COMMERCIAL: ['clients.read','clients.create','clients.edit','clients.delete','devis.read','devis.create','devis.edit','devis.delete','devis.send','factures.read','dashboard','catalogue.read','catalogue.manage'],
-  COMMERCIAL_PROPRE: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','devis.send','factures.read','dashboard','catalogue.read'],
-  ASSISTANT: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','factures.read','factures.create','factures.edit','catalogue.read'],
-  ASSOCIE: ['factures.read','dashboard'],
+  COMMERCIAL: ['clients.read','clients.create','clients.edit','clients.delete','devis.read','devis.create','devis.edit','devis.delete','devis.send','factures.read','dashboard','catalogue.read','catalogue.manage','bons-livraison.read','bons-livraison.manage'],
+  COMMERCIAL_PROPRE: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','devis.send','factures.read','dashboard','catalogue.read','bons-livraison.read','bons-livraison.manage'],
+  ASSISTANT: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','factures.read','factures.create','factures.edit','catalogue.read','bons-livraison.read','bons-livraison.manage'],
+  ASSOCIE: ['factures.read','dashboard','bons-livraison.read'],
 }
 
 export const INVITABLE_ROLES = Object.keys(ROLE_DEFAULTS).filter(r => r !== 'PROPRIETAIRE')

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   FileText, Plus, Eye, Pencil, Trash2, Copy, Send, CheckCircle,
-  Link, AlertCircle, X, MessageCircle, ChevronRight, Mail, BookOpen,
+  Link, AlertCircle, X, MessageCircle, ChevronRight, Mail, BookOpen, Truck,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -18,7 +18,7 @@ import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
-import { devisApi, clientsApi } from '@/lib/api'
+import { devisApi, clientsApi, bonsLivraisonApi } from '@/lib/api'
 import { CataloguePicker } from '@/components/dashboard/ui/CataloguePicker'
 import { cn, toWhatsAppNumber, formatCurrency } from '@/lib/utils'
 import { useCurrency } from '@/hooks/useCurrency'
@@ -621,6 +621,19 @@ export default function DevisPage() {
     } finally { setActionLoading(null) }
   }
 
+  const handleCreerBL = async (d: ApiDevis) => {
+    setActionLoading(`bl_${d.id}`)
+    try {
+      await bonsLivraisonApi.creerDepuisDevis(d.id)
+      setSelected(null)
+      success(t('pages.bonsLivraison.blFromDevisSuccess'))
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string | string[] } } }
+      const msg = e?.response?.data?.message
+      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de créer le BL.'))
+    } finally { setActionLoading(null) }
+  }
+
   const handleConvert = async (d: ApiDevis) => {
     setActionLoading(`convert_${d.id}`)
     try {
@@ -793,6 +806,7 @@ export default function DevisPage() {
                           ...(canDo('devis.create', role, removed) ? [{ label: t('pages.devis.actions.duplicate'), icon: Copy, onClick: () => handleDuplicate(devis) }] : []),
                           ...(canDo('devis.send', role, removed) ? [{ label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(devis) }] : []),
                           ...(canDo('devis.send', role, removed) ? [{ label: 'Email', icon: Mail, onClick: () => handleEmail(devis) }] : []),
+                          ...(canDo('bons-livraison.manage', role, removed) && devis.statut === 'ACCEPTE' ? [{ label: t('pages.bonsLivraison.actions.creerDepuisDevis'), icon: Truck, onClick: () => handleCreerBL(devis) }] : []),
                           ...(canDo('factures.create', role, removed) && devis.statut === 'ACCEPTE' && (devis._count?.factures ?? 0) === 0 ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
                           ...(canDo('devis.delete', role, removed) && devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
                         ]} />
@@ -1000,6 +1014,16 @@ export default function DevisPage() {
                 >
                   <Copy className="w-3.5 h-3.5" />
                   {t('pages.devis.actions.duplicate')}
+                </button>
+              )}
+              {canDo('bons-livraison.manage', role, removed) && selected.statut === 'ACCEPTE' && (
+                <button
+                  onClick={() => handleCreerBL(selected)}
+                  disabled={actionLoading === `bl_${selected.id}`}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
+                >
+                  {actionLoading === `bl_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Truck className="w-3.5 h-3.5" />}
+                  {t('pages.bonsLivraison.actions.creerDepuisDevis')}
                 </button>
               )}
               {canDo('factures.create', role, removed) && selected.statut === 'ACCEPTE' && (selected._count?.factures ?? 0) === 0 && (

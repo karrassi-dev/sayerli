@@ -170,6 +170,26 @@ export const notificationsApi = {
   deleteAll: () => api.delete('/notifications'),
 }
 
+// Bons de livraison
+export const bonsLivraisonApi = {
+  list: (params?: { statut?: string; clientId?: string; recherche?: string }) =>
+    api.get('/bons-livraison', { params }),
+  get: (id: string) => api.get(`/bons-livraison/${id}`),
+  create: (data: unknown) => api.post('/bons-livraison', data),
+  update: (id: string, data: unknown) => api.put(`/bons-livraison/${id}`, data),
+  delete: (id: string) => api.delete(`/bons-livraison/${id}`),
+  creerDepuisDevis: (devisId: string) => api.post(`/bons-livraison/depuis-devis/${devisId}`),
+  envoyer: (id: string) => api.post(`/bons-livraison/${id}/envoyer`),
+  marquerLivre: (id: string) => api.post(`/bons-livraison/${id}/marquer-livre`),
+  dupliquer: (id: string) => api.post(`/bons-livraison/${id}/dupliquer`),
+  convertirEnFacture: (id: string) => api.post(`/bons-livraison/${id}/convertir-en-facture`),
+}
+
+export const publicBLApi = {
+  get: (token: string) => publicApi.get(`/public/bl/${token}`),
+  confirmerReception: (token: string) => publicApi.post(`/public/bl/${token}/confirmer-reception`),
+}
+
 // Entreprise
 export const entrepriseApi = {
   get: () => api.get('/entreprise'),

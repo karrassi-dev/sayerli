@@ -307,6 +307,7 @@
       "settings": "Settings",
       "logout": "Logout",
       "catalogue": "Catalog",
+      "bonsLivraison": "Delivery Notes",
       "activite": "Activity"
     },
     "payments": "Payments",
@@ -834,6 +835,86 @@
       "deleteSuccess": "Item deleted.",
       "deleteTitle": "Delete item",
       "deleteMessage": "Are you sure you want to delete \"{nom}\" from the catalog?"
+    },
+    "bonsLivraison": {
+      "title": "Delivery Notes",
+      "sub": "Manage your delivery notes and confirm client deliveries.",
+      "add": "New DN",
+      "searchPlaceholder": "Search by reference or client...",
+      "empty": {
+        "title": "No delivery notes",
+        "desc": "Create your first delivery note or generate one from an accepted quote."
+      },
+      "stats": {
+        "total": "Total DNs",
+        "brouillon": "Drafts",
+        "envoye": "Sent",
+        "livre": "Delivered"
+      },
+      "statuts": {
+        "BROUILLON": "Draft",
+        "ENVOYE": "Sent",
+        "LIVRE": "Delivered"
+      },
+      "col": {
+        "reference": "Reference",
+        "client": "Client",
+        "date": "Date",
+        "livraison": "Delivery date",
+        "statut": "Status",
+        "devis": "Linked quote",
+        "actions": "Actions"
+      },
+      "actions": {
+        "envoyer": "Send to client",
+        "marquerLivre": "Mark as delivered",
+        "convertir": "Convert to invoice",
+        "dupliquer": "Duplicate",
+        "supprimer": "Delete",
+        "telecharger": "Download PDF",
+        "voirPublic": "Client link",
+        "creerDepuisDevis": "Create DN"
+      },
+      "form": {
+        "title": "Delivery Note",
+        "client": "Client",
+        "clientPlaceholder": "Select a client",
+        "devis": "Linked quote (optional)",
+        "devisPlaceholder": "Select a quote",
+        "notes": "Notes",
+        "notesPlaceholder": "Additional information...",
+        "dateLivraison": "Expected delivery date",
+        "lignes": "Lines",
+        "description": "Description",
+        "descPlaceholder": "Description of the delivered item",
+        "quantite": "Qty",
+        "unite": "Unit",
+        "addLigne": "Add a line",
+        "clientRequired": "Client is required.",
+        "lignesRequired": "Add at least one line."
+      },
+      "createSuccess": "Delivery note created.",
+      "editSuccess": "Delivery note updated.",
+      "deleteSuccess": "Delivery note deleted.",
+      "envoyerSuccess": "Delivery note sent.",
+      "livreSuccess": "Delivery note marked as delivered.",
+      "convertirSuccess": "Invoice created from delivery note.",
+      "dupliquerSuccess": "Delivery note duplicated.",
+      "deleteTitle": "Delete delivery note",
+      "deleteMessage": "Are you sure you want to delete delivery note {reference}?",
+      "convertirConfirm": "Convert {reference} to an invoice? Lines will be copied without prices — you can complete them afterwards.",
+      "blFromDevisSuccess": "Delivery note created from quote.",
+      "publicPage": {
+        "title": "Delivery Note",
+        "confirmerBtn": "I received the items",
+        "confirmerDesc": "By clicking, you confirm having received all items listed below.",
+        "confirme": "Delivery confirmed",
+        "confirmeDesc": "You have confirmed receipt of this delivery.",
+        "lignes": "Delivered items",
+        "notes": "Notes",
+        "signature": "Client signature",
+        "signatureHint": "To be signed and returned to the supplier"
+      }
     },
     "clients": {
       "title": "Clients",

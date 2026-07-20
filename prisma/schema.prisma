@@ -46,6 +46,7 @@ model Entreprise {
   notifications        Notification[]
   paiements            Paiement[]
   utilisateurs         Utilisateur[]
+  bonsLivraison        BonLivraison[]
 
   @@map("entreprises")
 }
@@ -128,9 +129,10 @@ model Client {
   updatedAt     DateTime    @updatedAt
   typeClient    TypeClient  @default(PARTICULIER)
   portalToken   String      @unique @default(uuid())
-  entreprise    Entreprise  @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
-  devis         Devis[]
-  factures      Facture[]
+  entreprise      Entreprise       @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  devis           Devis[]
+  factures        Facture[]
+  bonsLivraison   BonLivraison[]
 
   @@index([entrepriseId])
   @@map("clients")
@@ -162,6 +164,7 @@ model Devis {
   lignes                   DevisLigne[]
   factures                 Facture[]
   lienPublic               LienPublicDevis?
+  bonsLivraison            BonLivraison[]
 
   @@index([entrepriseId])
   @@index([clientId])
@@ -376,6 +379,12 @@ enum TypeItem {
   SERVICE
 }
 
+enum StatutBonLivraison {
+  BROUILLON
+  ENVOYE
+  LIVRE
+}
+
 model ProduitService {
   id           String     @id @default(uuid())
   entrepriseId String
@@ -409,6 +418,41 @@ model ActivityLog {
   @@index([userId])
   @@index([createdAt])
   @@map("activity_logs")
+}
+
+model BonLivraison {
+  id             String              @id @default(uuid())
+  reference      String
+  statut         StatutBonLivraison  @default(BROUILLON)
+  entrepriseId   String
+  clientId       String
+  devisId        String?
+  notes          String?
+  dateLivraison  DateTime?
+  publicToken    String              @unique @default(uuid())
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  client         Client              @relation(fields: [clientId], references: [id])
+  devis          Devis?              @relation(fields: [devisId], references: [id])
+  entreprise     Entreprise          @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  lignes         BonLivraisonLigne[]
+
+  @@unique([entrepriseId, reference])
+  @@index([entrepriseId])
+  @@index([clientId])
+  @@map("bons_livraison")
+}
+
+model BonLivraisonLigne {
+  id             String       @id @default(uuid())
+  bonLivraisonId String
+  description    String
+  quantite       Decimal      @default(1) @db.Decimal(10, 3)
+  unite          String?
+  ordre          Int          @default(0)
+  bonLivraison   BonLivraison @relation(fields: [bonLivraisonId], references: [id], onDelete: Cascade)
+
+  @@map("bon_livraison_lignes")
 }
 
 model ContactSubmission {
