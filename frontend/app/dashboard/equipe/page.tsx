@@ -42,6 +42,7 @@ interface ApiMembre {
   statut: 'ACTIF' | 'EN_ATTENTE' | 'DESACTIVE'
   dernierAcces: string | null
   createdAt: string
+  permissionsRetirees: string[]
 }
 
 interface InviteForm {
@@ -58,6 +59,7 @@ interface EditForm {
   nom: string
   telephone: string
   role: string
+  permissionsRetirees: string[]
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -116,8 +118,8 @@ function getRoleIconComponent(role: string): React.ElementType {
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const EMPTY_INVITE: InviteForm = { prenom: '', nom: '', email: '', telephone: '', role: 'COMMERCIAL', permissionsRetirees: [] }
-const EMPTY_EDIT: EditForm = { prenom: '', nom: '', telephone: '', role: 'COMMERCIAL' }
-const EQUIPE_LIMIT: Record<string, number> = { STARTER: 1, PRO: 2, BUSINESS: 5 }
+const EMPTY_EDIT: EditForm = { prenom: '', nom: '', telephone: '', role: 'COMMERCIAL', permissionsRetirees: [] }
+const EQUIPE_LIMIT: Record<string, number> = { STARTER: 2, PRO: 5, BUSINESS: 12 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -147,6 +149,7 @@ export default function EquipePage() {
   const [editTarget, setEditTarget] = useState<ApiMembre | null>(null)
   const [editForm, setEditForm] = useState<EditForm>(EMPTY_EDIT)
   const [editErrors, setEditErrors] = useState<Record<string, string>>({})
+  const [editBlockedPermission, setEditBlockedPermission] = useState<string | null>(null)
 
   const [selectedMember, setSelectedMember] = useState<ApiMembre | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ApiMembre | null>(null)
@@ -263,9 +266,26 @@ export default function EquipePage() {
   // ── Edit ───────────────────────────────────────────────────────────────────
 
   function openEdit(m: ApiMembre) {
-    setEditForm({ prenom: m.prenom ?? '', nom: m.nom, telephone: m.telephone ?? '', role: m.role })
+    setEditForm({ prenom: m.prenom ?? '', nom: m.nom, telephone: m.telephone ?? '', role: m.role, permissionsRetirees: m.permissionsRetirees ?? [] })
     setEditErrors({})
+    setEditBlockedPermission(null)
     setEditTarget(m)
+  }
+
+  function handleRoleChangeEdit(role: string) {
+    setEditForm(f => ({ ...f, role, permissionsRetirees: [] }))
+    setEditBlockedPermission(null)
+  }
+
+  function togglePermissionEdit(perm: PermissionKey) {
+    setEditForm(f => {
+      const removed = f.permissionsRetirees
+      if (removed.includes(perm)) {
+        return { ...f, permissionsRetirees: removed.filter(p => p !== perm) }
+      } else {
+        return { ...f, permissionsRetirees: [...removed, perm] }
+      }
+    })
   }
 
   function validateEdit(): boolean {
@@ -284,6 +304,7 @@ export default function EquipePage() {
         nom: editForm.nom.trim(),
         telephone: editForm.telephone.trim() || undefined,
         role: editForm.role,
+        permissionsRetirees: editForm.permissionsRetirees,
       })
       success(t('pages.equipe.editSuccess'))
       setEditTarget(null)
@@ -658,7 +679,7 @@ export default function EquipePage() {
         open={!!editTarget}
         onClose={() => setEditTarget(null)}
         title={t('pages.equipe.edit.title')}
-        size="md"
+        size="lg"
         footer={
           <>
             <button onClick={() => setEditTarget(null)} className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
@@ -674,7 +695,11 @@ export default function EquipePage() {
           <EditFormFields
             form={editForm}
             errors={editErrors}
+            blockedPermission={editBlockedPermission}
             onChange={(k, v) => { setEditForm(f => ({ ...f, [k]: v })); setEditErrors(e => { const n = { ...e }; delete n[k]; return n }) }}
+            onRoleChange={handleRoleChangeEdit}
+            onTogglePermission={togglePermissionEdit}
+            onBlockedClick={(perm) => setEditBlockedPermission(perm)}
             t={t}
           />
         )}
@@ -921,13 +946,18 @@ function InviteFormFields({ form, errors, blockedPermission, onFieldChange, onRo
 interface EditFormFieldsProps {
   form: EditForm
   errors: Record<string, string>
+  blockedPermission: string | null
   onChange: (key: keyof EditForm, val: string) => void
+  onRoleChange: (role: string) => void
+  onTogglePermission: (perm: PermissionKey) => void
+  onBlockedClick: (perm: string) => void
   t: (k: string) => string
 }
 
-function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
+function EditFormFields({ form, errors, blockedPermission, onChange, onRoleChange, onTogglePermission, onBlockedClick, t }: EditFormFieldsProps) {
   const rl = (role: string) => { const k = `pages.equipe.roles.${role}.label`; const v = t(k); return v === k ? (ROLE_LABELS[role] ?? role) : v }
   const rd = (role: string) => { const k = `pages.equipe.roles.${role}.desc`; const v = t(k); return v === k ? (ROLE_DESCRIPTIONS[role] ?? '') : v }
+  const pt = (perm: PermissionKey) => { const k = `pages.equipe.permissionLabels.${perm.replace(/\./g, '_')}`; const v = t(k); return v === k ? (PERMISSION_LABELS[perm] ?? perm) : v }
 
   const inputClass = (err?: string) => cn(
     'w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-all',
@@ -936,8 +966,11 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
       : 'border-slate-200 dark:border-slate-700 focus:ring-primary-500/20 focus:border-primary-400',
   )
 
+  const roleDefaults = ROLE_DEFAULTS[form.role] ?? []
+  const lockedPerms = ALL_PERMISSIONS.filter(p => !roleDefaults.includes(p))
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
@@ -973,7 +1006,7 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
               <button
                 key={role}
                 type="button"
-                onClick={() => onChange('role', role)}
+                onClick={() => onRoleChange(role)}
                 className={cn(
                   'flex items-start gap-2.5 p-3 rounded-xl border text-left transition-all',
                   isSelected
@@ -996,6 +1029,78 @@ function EditFormFields({ form, errors, onChange, t }: EditFormFieldsProps) {
           })}
         </div>
       </div>
+
+      {/* Permission editor */}
+      <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+        <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 flex items-start gap-2.5">
+          <Shield className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{t('pages.equipe.permissions.defaultAccess')}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{t('pages.equipe.permissions.defaultAccessHint')}</p>
+          </div>
+        </div>
+        <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
+          {roleDefaults.map(perm => {
+            const isOn = !form.permissionsRetirees.includes(perm)
+            return (
+              <div key={perm} className="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <div className="flex items-center gap-2.5">
+                  <span className={cn('w-1.5 h-1.5 rounded-full flex-shrink-0', isOn ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600')} />
+                  <span className={cn('text-xs', isOn ? 'text-slate-700 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500 line-through')}>{pt(perm)}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onTogglePermission(perm)}
+                  className={cn(
+                    'relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary-400',
+                    isOn ? 'bg-green-500 dark:bg-green-600' : 'bg-slate-200 dark:bg-slate-700'
+                  )}
+                  role="switch"
+                  aria-checked={isOn}
+                >
+                  <span className={cn(
+                    'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                    isOn ? 'translate-x-4' : 'translate-x-0'
+                  )} />
+                </button>
+              </div>
+            )
+          })}
+        </div>
+        {lockedPerms.length > 0 && (
+          <>
+            <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2">
+              <Lock className="w-3 h-3 text-slate-400 dark:text-slate-500 flex-shrink-0" />
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.equipe.permissions.lockedAccess')}</p>
+            </div>
+            <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
+              {lockedPerms.map(perm => (
+                <button
+                  key={perm}
+                  type="button"
+                  onClick={() => onBlockedClick(perm)}
+                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-slate-200 dark:bg-slate-700" />
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{pt(perm)}</span>
+                  </div>
+                  <Lock className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {blockedPermission && (
+        <div className="flex items-start gap-2.5 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
+          <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
+            {t('pages.equipe.permissions.lockedMessage')}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

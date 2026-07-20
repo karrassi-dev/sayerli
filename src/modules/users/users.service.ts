@@ -51,6 +51,7 @@ export class UsersService {
         invitationToken: true,
         dernierAcces: true,
         createdAt: true,
+        permissionsRetirees: true,
       },
       orderBy: { createdAt: 'asc' },
     });
@@ -66,6 +67,7 @@ export class UsersService {
       statut: computeStatut(u.actif, u.invitationToken),
       dernierAcces: u.dernierAcces,
       createdAt: u.createdAt,
+      permissionsRetirees: u.permissionsRetirees,
     }));
   }
 
@@ -231,6 +233,7 @@ export class UsersService {
         ...(dto.nom !== undefined && { nom: dto.nom }),
         ...(dto.telephone !== undefined && { telephone: dto.telephone }),
         ...(dto.role !== undefined && { role: dto.role }),
+        ...(dto.permissionsRetirees !== undefined && { permissionsRetirees: dto.permissionsRetirees }),
       },
       select: {
         id: true,
@@ -243,6 +246,7 @@ export class UsersService {
         invitationToken: true,
         dernierAcces: true,
         updatedAt: true,
+        permissionsRetirees: true,
       },
     });
 

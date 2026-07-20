@@ -112,7 +112,7 @@ export class AuthService {
 
     const tokens = await this.genererTokens(
       utilisateur.id, utilisateur.email, utilisateur.entrepriseId,
-      utilisateur.role, utilisateur.superAdmin,
+      utilisateur.role, utilisateur.superAdmin, utilisateur.permissionsRetirees ?? [],
     );
 
     return {
@@ -158,7 +158,7 @@ export class AuthService {
 
       if (memberships.length === 1) {
         const u = memberships[0];
-        const tokens = await this.genererTokens(u.id, u.email, u.entrepriseId, u.role, u.superAdmin);
+        const tokens = await this.genererTokens(u.id, u.email, u.entrepriseId, u.role, u.superAdmin, u.permissionsRetirees ?? []);
         return {
           utilisateur: { id: u.id, nom: u.nom, prenom: u.prenom, email: u.email, role: u.role },
           entreprise: {
@@ -209,7 +209,7 @@ export class AuthService {
     this.migerVerCompteGlobal(utilisateur.email, utilisateur.motDePasseHash).catch(() => {});
 
     const tokens = await this.genererTokens(
-      utilisateur.id, utilisateur.email, utilisateur.entrepriseId, utilisateur.role, utilisateur.superAdmin,
+      utilisateur.id, utilisateur.email, utilisateur.entrepriseId, utilisateur.role, utilisateur.superAdmin, utilisateur.permissionsRetirees ?? [],
     );
 
     return {
@@ -247,7 +247,7 @@ export class AuthService {
       include: { entreprise: true },
     });
 
-    const tokens = await this.genererTokens(utilisateur.id, utilisateur.email, utilisateur.entrepriseId, utilisateur.role, utilisateur.superAdmin);
+    const tokens = await this.genererTokens(utilisateur.id, utilisateur.email, utilisateur.entrepriseId, utilisateur.role, utilisateur.superAdmin, utilisateur.permissionsRetirees ?? []);
     return {
       utilisateur: { id: utilisateur.id, nom: utilisateur.nom, prenom: utilisateur.prenom, email: utilisateur.email, role: utilisateur.role },
       entreprise: {
@@ -283,7 +283,7 @@ export class AuthService {
 
     await this.prisma.utilisateur.update({ where: { id: target.id }, data: { dernierAcces: new Date() } });
 
-    const tokens = await this.genererTokens(target.id, target.email, target.entrepriseId, target.role, target.superAdmin);
+    const tokens = await this.genererTokens(target.id, target.email, target.entrepriseId, target.role, target.superAdmin, target.permissionsRetirees ?? []);
     return {
       utilisateur: { id: target.id, nom: target.nom, prenom: target.prenom, email: target.email, role: target.role },
       entreprise: {
@@ -378,8 +378,8 @@ export class AuthService {
     }
   }
 
-  private async genererTokens(userId: string, email: string, entrepriseId: string, role: string, superAdmin = false) {
-    const payload = { sub: userId, email, entrepriseId, role, superAdmin };
+  private async genererTokens(userId: string, email: string, entrepriseId: string, role: string, superAdmin = false, permissionsRetirees: string[] = []) {
+    const payload = { sub: userId, email, entrepriseId, role, superAdmin, permissionsRetirees };
     const accessToken = await this.jwtService.signAsync(payload);
     return { accessToken };
   }

@@ -17,17 +17,17 @@ import { NAV_ALLOWED_ROLES } from '@/lib/permissions'
 import { Logo, LogoMark } from '@/components/ui/LogoMark'
 
 const NAV_ITEMS = [
-  { href: '/dashboard',              iconC: LayoutDashboard, key: 'dashboard' },
-  { href: '/dashboard/clients',      iconC: Users,           key: 'clients' },
-  { href: '/dashboard/devis',        iconC: FileText,        key: 'devis' },
-  { href: '/dashboard/factures',     iconC: Receipt,         key: 'factures' },
-  { href: '/dashboard/catalogue',    iconC: Package,         key: 'catalogue' },
-  { href: '/dashboard/declarations', iconC: ClipboardCheck,  key: 'declarations' },
-  { href: '/dashboard/paiements',    iconC: CreditCard,      key: 'paiements' },
-  { href: '/dashboard/equipe',       iconC: UserCog,         key: 'equipe' },
-  { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications' },
-  { href: '/dashboard/export',       iconC: Download,        key: 'export' },
-  { href: '/dashboard/settings',     iconC: Settings,        key: 'settings' },
+  { href: '/dashboard',              iconC: LayoutDashboard, key: 'dashboard',     permission: 'dashboard' },
+  { href: '/dashboard/clients',      iconC: Users,           key: 'clients',       permission: 'clients.read' },
+  { href: '/dashboard/devis',        iconC: FileText,        key: 'devis',         permission: 'devis.read' },
+  { href: '/dashboard/factures',     iconC: Receipt,         key: 'factures',      permission: 'factures.read' },
+  { href: '/dashboard/catalogue',    iconC: Package,         key: 'catalogue',     permission: 'catalogue.read' },
+  { href: '/dashboard/declarations', iconC: ClipboardCheck,  key: 'declarations',  permission: 'paiements.declarations' },
+  { href: '/dashboard/paiements',    iconC: CreditCard,      key: 'paiements',     permission: 'paiements.read' },
+  { href: '/dashboard/equipe',       iconC: UserCog,         key: 'equipe',        permission: 'equipe.read' },
+  { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications', permission: null },
+  { href: '/dashboard/export',       iconC: Download,        key: 'export',        permission: 'export' },
+  { href: '/dashboard/settings',     iconC: Settings,        key: 'settings',      permission: 'settings' },
 ]
 
 const ROLE_COLORS: Record<string, string> = {
@@ -73,9 +73,12 @@ export function Sidebar() {
     : 'U'
 
   const userRole = user?.role?.toLowerCase() || ''
-  const visibleNavItems = NAV_ITEMS.filter(({ key }) => {
+  const removedPerms: string[] = user?.permissionsRetirees ?? []
+  const visibleNavItems = NAV_ITEMS.filter(({ key, permission }) => {
     const allowed = NAV_ALLOWED_ROLES[key]
-    return !allowed || allowed.includes(userRole)
+    if (allowed && !allowed.includes(userRole)) return false
+    if (permission && removedPerms.includes(permission) && userRole !== 'proprietaire') return false
+    return true
   })
 
   const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (

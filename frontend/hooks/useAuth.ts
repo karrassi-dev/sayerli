@@ -19,6 +19,7 @@ interface User {
   prenom?: string | null
   email: string
   role: string
+  permissionsRetirees: string[]
 }
 
 interface Entreprise {

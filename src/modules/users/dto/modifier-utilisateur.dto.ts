@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { RoleType } from '@prisma/client';
 
 export class ModifierUtilisateurDto {
@@ -17,4 +17,9 @@ export class ModifierUtilisateurDto {
   @IsOptional()
   @IsEnum(RoleType)
   role?: RoleType;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  permissionsRetirees?: string[];
 }
