@@ -305,7 +305,8 @@
       "export": "Exporter",
       "settings": "Paramètres",
       "logout": "Déconnexion",
-      "catalogue": "Catalogue"
+      "catalogue": "Catalogue",
+      "activite": "Activité"
     },
     "payments": "Paiements",
     "thisMonth": "ce mois",
@@ -1328,6 +1329,53 @@
         "cancelPlan": "Annuler l'abonnement"
       },
       "saveSuccess": "Paramètres enregistrés avec succès"
+    },
+    "activite": {
+      "title": "Journal d'activité",
+      "sub": "Historique de toutes les actions effectuées par votre équipe.",
+      "filterMembre": "Membre",
+      "filterType": "Type",
+      "filterFrom": "Du",
+      "filterTo": "Au",
+      "filterReset": "Réinitialiser",
+      "allMembers": "Tous les membres",
+      "allTypes": "Tous les types",
+      "empty": {
+        "title": "Aucune activité",
+        "desc": "Les actions de votre équipe apparaîtront ici."
+      },
+      "types": {
+        "CLIENT": "Client",
+        "DEVIS": "Devis",
+        "FACTURE": "Facture",
+        "PAIEMENT": "Paiement",
+        "MEMBRE": "Membre",
+        "CATALOGUE": "Catalogue"
+      },
+      "actions": {
+        "FACTURE_CREEE": "Facture créée",
+        "FACTURE_ENVOYEE": "Facture envoyée",
+        "FACTURE_RELANCEE": "Relance envoyée",
+        "FACTURE_ANNULEE": "Facture annulée",
+        "FACTURE_SUPPRIMEE": "Facture supprimée",
+        "FACTURE_CONVERTIE": "Devis converti en facture",
+        "DEVIS_CREE": "Devis créé",
+        "DEVIS_LIEN_GENERE": "Lien devis généré",
+        "DEVIS_DUPLIQUE": "Devis dupliqué",
+        "DEVIS_SUPPRIME": "Devis supprimé",
+        "CLIENT_CREE": "Client créé",
+        "CLIENT_MODIFIE": "Client modifié",
+        "CLIENT_SUPPRIME": "Client archivé",
+        "PAIEMENT_ENREGISTRE": "Paiement enregistré",
+        "MEMBRE_INVITE": "Membre invité",
+        "MEMBRE_MODIFIE": "Membre modifié",
+        "MEMBRE_DESACTIVE": "Membre désactivé",
+        "MEMBRE_ACTIVE": "Membre réactivé",
+        "MEMBRE_SUPPRIME": "Membre supprimé",
+        "CATALOGUE_CREE": "Article créé",
+        "CATALOGUE_MODIFIE": "Article modifié",
+        "CATALOGUE_SUPPRIME": "Article archivé"
+      }
     }
   },
   "notifications": {

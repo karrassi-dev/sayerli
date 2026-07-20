@@ -305,7 +305,8 @@
       "export": "تصدير",
       "settings": "الإعدادات",
       "logout": "تسجيل الخروج",
-      "catalogue": "الكتالوج"
+      "catalogue": "الكتالوج",
+      "activite": "النشاط"
     },
     "payments": "المدفوعات",
     "thisMonth": "هذا الشهر",
@@ -1327,6 +1328,53 @@
         "cancelPlan": "إلغاء الاشتراك"
       },
       "saveSuccess": "تم حفظ الإعدادات بنجاح"
+    },
+    "activite": {
+      "title": "سجل النشاط",
+      "sub": "تاريخ جميع الإجراءات التي يقوم بها فريقك.",
+      "filterMembre": "العضو",
+      "filterType": "النوع",
+      "filterFrom": "من",
+      "filterTo": "إلى",
+      "filterReset": "إعادة تعيين",
+      "allMembers": "جميع الأعضاء",
+      "allTypes": "جميع الأنواع",
+      "empty": {
+        "title": "لا يوجد نشاط",
+        "desc": "ستظهر إجراءات فريقك هنا."
+      },
+      "types": {
+        "CLIENT": "عميل",
+        "DEVIS": "عرض",
+        "FACTURE": "فاتورة",
+        "PAIEMENT": "دفع",
+        "MEMBRE": "عضو",
+        "CATALOGUE": "كتالوج"
+      },
+      "actions": {
+        "FACTURE_CREEE": "فاتورة منشأة",
+        "FACTURE_ENVOYEE": "فاتورة مرسلة",
+        "FACTURE_RELANCEE": "تم إرسال تذكير",
+        "FACTURE_ANNULEE": "فاتورة ملغاة",
+        "FACTURE_SUPPRIMEE": "فاتورة محذوفة",
+        "FACTURE_CONVERTIE": "تم تحويل العرض إلى فاتورة",
+        "DEVIS_CREE": "عرض منشأ",
+        "DEVIS_LIEN_GENERE": "رابط عرض منشأ",
+        "DEVIS_DUPLIQUE": "عرض مكرر",
+        "DEVIS_SUPPRIME": "عرض محذوف",
+        "CLIENT_CREE": "عميل منشأ",
+        "CLIENT_MODIFIE": "عميل معدل",
+        "CLIENT_SUPPRIME": "عميل مؤرشف",
+        "PAIEMENT_ENREGISTRE": "دفعة مسجلة",
+        "MEMBRE_INVITE": "عضو مدعو",
+        "MEMBRE_MODIFIE": "عضو معدل",
+        "MEMBRE_DESACTIVE": "عضو معطل",
+        "MEMBRE_ACTIVE": "عضو مفعل",
+        "MEMBRE_SUPPRIME": "عضو محذوف",
+        "CATALOGUE_CREE": "مادة منشأة",
+        "CATALOGUE_MODIFIE": "مادة معدلة",
+        "CATALOGUE_SUPPRIME": "مادة مؤرشفة"
+      }
     }
   },
   "notifications": {

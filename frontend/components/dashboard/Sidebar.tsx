@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, FileText, Receipt, CreditCard,
   UserCog, Bell, Settings, LogOut, Menu, X,
   ChevronLeft, ChevronRight, ClipboardCheck, Download, Package,
-  Building2, ChevronsUpDown, Check,
+  Building2, ChevronsUpDown, Check, Activity,
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -27,6 +27,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/equipe',       iconC: UserCog,         key: 'equipe',        permission: 'equipe.read' },
   { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications', permission: null },
   { href: '/dashboard/export',       iconC: Download,        key: 'export',        permission: 'export' },
+  { href: '/dashboard/activite',     iconC: Activity,        key: 'activite',      permission: 'settings' },
   { href: '/dashboard/settings',     iconC: Settings,        key: 'settings',      permission: 'settings' },
 ]
 

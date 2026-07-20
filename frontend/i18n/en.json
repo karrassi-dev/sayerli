@@ -305,7 +305,8 @@
       "export": "Export",
       "settings": "Settings",
       "logout": "Logout",
-      "catalogue": "Catalog"
+      "catalogue": "Catalog",
+      "activite": "Activity"
     },
     "payments": "Payments",
     "thisMonth": "this month",
@@ -1327,6 +1328,53 @@
         "cancelPlan": "Cancel Subscription"
       },
       "saveSuccess": "Settings saved successfully"
+    },
+    "activite": {
+      "title": "Activity Log",
+      "sub": "History of all actions performed by your team.",
+      "filterMembre": "Member",
+      "filterType": "Type",
+      "filterFrom": "From",
+      "filterTo": "To",
+      "filterReset": "Reset",
+      "allMembers": "All members",
+      "allTypes": "All types",
+      "empty": {
+        "title": "No activity yet",
+        "desc": "Your team's actions will appear here."
+      },
+      "types": {
+        "CLIENT": "Client",
+        "DEVIS": "Quote",
+        "FACTURE": "Invoice",
+        "PAIEMENT": "Payment",
+        "MEMBRE": "Member",
+        "CATALOGUE": "Catalog"
+      },
+      "actions": {
+        "FACTURE_CREEE": "Invoice created",
+        "FACTURE_ENVOYEE": "Invoice sent",
+        "FACTURE_RELANCEE": "Reminder sent",
+        "FACTURE_ANNULEE": "Invoice cancelled",
+        "FACTURE_SUPPRIMEE": "Invoice deleted",
+        "FACTURE_CONVERTIE": "Quote converted to invoice",
+        "DEVIS_CREE": "Quote created",
+        "DEVIS_LIEN_GENERE": "Quote link generated",
+        "DEVIS_DUPLIQUE": "Quote duplicated",
+        "DEVIS_SUPPRIME": "Quote deleted",
+        "CLIENT_CREE": "Client created",
+        "CLIENT_MODIFIE": "Client updated",
+        "CLIENT_SUPPRIME": "Client archived",
+        "PAIEMENT_ENREGISTRE": "Payment recorded",
+        "MEMBRE_INVITE": "Member invited",
+        "MEMBRE_MODIFIE": "Member updated",
+        "MEMBRE_DESACTIVE": "Member deactivated",
+        "MEMBRE_ACTIVE": "Member reactivated",
+        "MEMBRE_SUPPRIME": "Member removed",
+        "CATALOGUE_CREE": "Item created",
+        "CATALOGUE_MODIFIE": "Item updated",
+        "CATALOGUE_SUPPRIME": "Item archived"
+      }
     }
   },
   "notifications": {
