@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { StatutDevis } from '@prisma/client';
 
 const BL_INCLUDE = {
-  client: { select: { id: true, nom: true, nomEntreprise: true, email: true, telephone: true, ice: true, adresse: true } },
+  client: { select: { id: true, nom: true, nomEntreprise: true, email: true, telephone: true, ice: true } },
   devis: { select: { id: true, reference: true } },
   lignes: { orderBy: { ordre: 'asc' as const } },
 };

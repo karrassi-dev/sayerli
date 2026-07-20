@@ -18,7 +18,6 @@ export interface BonLivraisonPDFProps {
     nomEntreprise?: string | null
     email?: string | null
     telephone?: string | null
-    adresse?: string | null
     ice?: string | null
   }
   entreprise: {

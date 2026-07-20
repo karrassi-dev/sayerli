@@ -26,7 +26,6 @@ interface PublicBL {
     nomEntreprise: string | null
     email: string | null
     telephone: string | null
-    adresse: string | null
     ice: string | null
   }
   devis: { id: string; reference: string } | null

@@ -61,7 +61,7 @@ interface ApiBL {
   dateLivraison: string | null
   createdAt: string
   updatedAt: string
-  client: { id: string; nom: string; nomEntreprise: string | null; email: string | null; telephone: string | null; ice: string | null; adresse?: string | null }
+  client: { id: string; nom: string; nomEntreprise: string | null; email: string | null; telephone: string | null; ice: string | null }
   devis: { id: string; reference: string } | null
   lignes: BLLigne[]
   _count?: { lignes: number }
@@ -326,7 +326,6 @@ export default function BonsLivraisonPage() {
       email: bl.client.email,
       telephone: bl.client.telephone,
       ice: bl.client.ice,
-      adresse: bl.client.adresse,
     },
     entreprise: {
       nom: ent?.nom ?? '',
