@@ -1,3 +1,12 @@
+import { ROLE_DEFAULTS, PermissionKey } from './role-permissions'
+
+export function canDo(perm: PermissionKey, role: string | undefined, removed: string[]): boolean {
+  if (!role) return false
+  if (role.toUpperCase() === 'PROPRIETAIRE') return true
+  const defaults = ROLE_DEFAULTS[role.toUpperCase()] ?? []
+  return defaults.includes(perm) && !removed.includes(perm)
+}
+
 export const ROUTE_ROLE_MAP: Record<string, string[]> = {
   '/dashboard/equipe':       ['admin', 'proprietaire'],
   '/dashboard/settings':     ['admin', 'proprietaire'],

@@ -18,16 +18,8 @@ import {
 import { dashboardApi, facturesApi } from '@/lib/api'
 import { formatMAD } from '@/lib/mock-data'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
-import { ROLE_DEFAULTS, PermissionKey } from '@/lib/role-permissions'
-
-// ── Permission helper ────────────────────────────────────────────────────────
-
-function canDo(perm: PermissionKey, role: string | undefined, removed: string[]): boolean {
-  if (!role) return false
-  if (role.toUpperCase() === 'PROPRIETAIRE') return true
-  const defaults = ROLE_DEFAULTS[role.toUpperCase()] ?? []
-  return defaults.includes(perm) && !removed.includes(perm)
-}
+import { PermissionKey } from '@/lib/role-permissions'
+import { canDo } from '@/lib/permissions'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 

@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { clientsApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { canDo } from '@/lib/permissions'
 
 type TypeClient = 'PARTICULIER' | 'ENTREPRISE' | 'FREELANCE'
 
@@ -232,7 +233,9 @@ const CLIENTS_LIMIT: Record<string, number> = { STARTER: 5, PRO: -1, BUSINESS: -
 export default function ClientsPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
-  const { entreprise } = useAuth()
+  const { entreprise, user } = useAuth()
+  const removed = user?.permissionsRetirees ?? []
+  const role    = user?.role ?? ''
 
   const [clients, setClients] = useState<ApiClient[]>([])
   const [loading, setLoading] = useState(true)
@@ -330,6 +333,7 @@ export default function ClientsPage() {
   const activeClientsCount = clients.filter(c => c.actif !== false).length
 
   const openCreate = () => {
+    if (!canDo('clients.create', role, removed)) return
     if (planLimite !== -1 && activeClientsCount >= planLimite) {
       setLimitModal({ resource: 'clients', limite: planLimite, actuel: activeClientsCount })
       return
@@ -478,10 +482,12 @@ export default function ClientsPage() {
                 {activeClientsCount} / {planLimite} clients
               </span>
             )}
-            <button className="btn-primary text-sm" onClick={openCreate}>
-              <UserPlus className="w-4 h-4" />
-              {t('pages.clients.addClient')}
-            </button>
+            {canDo('clients.create', role, removed) && (
+              <button className="btn-primary text-sm" onClick={openCreate}>
+                <UserPlus className="w-4 h-4" />
+                {t('pages.clients.addClient')}
+              </button>
+            )}
           </div>
         }
       />
@@ -610,9 +616,9 @@ export default function ClientsPage() {
                       <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
                         <ActionMenu items={[
                           { label: t('common.view'), icon: Eye, onClick: () => setSelectedClient(client) },
-                          { label: t('common.edit'), icon: Pencil, onClick: () => openEdit(client) },
+                          ...(canDo('clients.edit', role, removed) ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(client) }] : []),
                           { label: 'Lien portail', icon: Link2, onClick: () => copyPortalLink(client), separator: true },
-                          { label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(client), variant: 'danger', separator: true },
+                          ...(canDo('clients.delete', role, removed) ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(client), variant: 'danger' as const, separator: true }] : []),
                         ]} />
                       </td>
                     </tr>
@@ -730,15 +736,19 @@ export default function ClientsPage() {
             )}
 
             <div className="flex gap-2 pt-2">
-              <button className="flex-1 btn-primary text-sm py-2.5" onClick={() => openEdit(selectedClient)}>
-                {t('common.edit')}
-              </button>
-              <button
-                onClick={() => { setDeleteTarget(selectedClient); setSelectedClient(null) }}
-                className="px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
-              >
-                {t('common.delete')}
-              </button>
+              {canDo('clients.edit', role, removed) && (
+                <button className="flex-1 btn-primary text-sm py-2.5" onClick={() => openEdit(selectedClient)}>
+                  {t('common.edit')}
+                </button>
+              )}
+              {canDo('clients.delete', role, removed) && (
+                <button
+                  onClick={() => { setDeleteTarget(selectedClient); setSelectedClient(null) }}
+                  className="px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
+                >
+                  {t('common.delete')}
+                </button>
+              )}
             </div>
           </div>
         )}

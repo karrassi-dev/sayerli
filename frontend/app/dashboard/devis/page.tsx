@@ -21,6 +21,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { devisApi, clientsApi } from '@/lib/api'
 import { CataloguePicker } from '@/components/dashboard/ui/CataloguePicker'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { canDo } from '@/lib/permissions'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -309,7 +310,9 @@ const DEVIS_LIMIT: Record<string, number> = { STARTER: 10, PRO: -1, BUSINESS: -1
 export default function DevisPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
-  const { entreprise } = useAuth()
+  const { entreprise, user } = useAuth()
+  const removed = user?.permissionsRetirees ?? []
+  const role    = user?.role ?? ''
 
   const [devisList, setDevisList] = useState<ApiDevis[]>([])
   const [clients, setClients] = useState<ApiClient[]>([])
@@ -430,6 +433,7 @@ export default function DevisPage() {
   }).length
 
   const openCreate = () => {
+    if (!canDo('devis.create', role, removed)) return
     if (planLimite !== -1 && devisCeMois >= planLimite) {
       setLimitModal({ resource: 'devis', limite: planLimite, actuel: devisCeMois })
       return
@@ -694,10 +698,12 @@ export default function DevisPage() {
                 {devisCeMois} / {planLimite} devis ce mois
               </span>
             )}
-            <button className="btn-primary text-sm" onClick={openCreate}>
-              <Plus className="w-4 h-4" />
-              {t('pages.devis.createDevis')}
-            </button>
+            {canDo('devis.create', role, removed) && (
+              <button className="btn-primary text-sm" onClick={openCreate}>
+                <Plus className="w-4 h-4" />
+                {t('pages.devis.createDevis')}
+              </button>
+            )}
           </div>
         }
       />
@@ -768,14 +774,14 @@ export default function DevisPage() {
                       <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
                         <ActionMenu items={[
                           { label: t('common.view'), icon: Eye, onClick: () => handleOpenDetail(devis) },
-                          ...(devis.statut === 'BROUILLON' || devis.statut === 'ENVOYE' ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(devis) }] : []),
-                          { label: t('pages.devis.actions.send'), icon: Send, onClick: () => handleSend(devis) },
-                          { label: t('pages.devis.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(devis) },
-                          { label: t('pages.devis.actions.duplicate'), icon: Copy, onClick: () => handleDuplicate(devis) },
-                          { label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(devis) },
-                          { label: 'Email', icon: Mail, onClick: () => handleEmail(devis) },
-                          ...(devis.statut === 'ACCEPTE' && (devis._count?.factures ?? 0) === 0 ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
-                          ...(devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
+                          ...(canDo('devis.edit', role, removed) && (devis.statut === 'BROUILLON' || devis.statut === 'ENVOYE') ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(devis) }] : []),
+                          ...(canDo('devis.send', role, removed) ? [{ label: t('pages.devis.actions.send'), icon: Send, onClick: () => handleSend(devis) }] : []),
+                          ...(canDo('devis.send', role, removed) ? [{ label: t('pages.devis.actions.copyLink'), icon: Link, onClick: () => handleCopyLink(devis) }] : []),
+                          ...(canDo('devis.create', role, removed) ? [{ label: t('pages.devis.actions.duplicate'), icon: Copy, onClick: () => handleDuplicate(devis) }] : []),
+                          ...(canDo('devis.send', role, removed) ? [{ label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(devis) }] : []),
+                          ...(canDo('devis.send', role, removed) ? [{ label: 'Email', icon: Mail, onClick: () => handleEmail(devis) }] : []),
+                          ...(canDo('factures.create', role, removed) && devis.statut === 'ACCEPTE' && (devis._count?.factures ?? 0) === 0 ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
+                          ...(canDo('devis.delete', role, removed) && devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
                         ]} />
                       </td>
                     </tr>
@@ -801,26 +807,30 @@ export default function DevisPage() {
                       <span className="text-xs text-slate-400 truncate">{devis.client.nomEntreprise || '—'}</span>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <button
-                        onClick={e => { e.stopPropagation(); handleWhatsApp(devis) }}
-                        disabled={actionLoading === `wa_${devis.id}`}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
-                      >
-                        {actionLoading === `wa_${devis.id}`
-                          ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
-                          : <MessageCircle className="w-3 h-3" />}
-                        {t('pages.devis.actions.whatsapp')}
-                      </button>
-                      <button
-                        onClick={e => { e.stopPropagation(); handleEmail(devis) }}
-                        disabled={actionLoading === `email_${devis.id}`}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
-                      >
-                        {actionLoading === `email_${devis.id}`
-                          ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
-                          : <Mail className="w-3 h-3" />}
-                        Email
-                      </button>
+                      {canDo('devis.send', role, removed) && (
+                        <button
+                          onClick={e => { e.stopPropagation(); handleWhatsApp(devis) }}
+                          disabled={actionLoading === `wa_${devis.id}`}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+                        >
+                          {actionLoading === `wa_${devis.id}`
+                            ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                            : <MessageCircle className="w-3 h-3" />}
+                          {t('pages.devis.actions.whatsapp')}
+                        </button>
+                      )}
+                      {canDo('devis.send', role, removed) && (
+                        <button
+                          onClick={e => { e.stopPropagation(); handleEmail(devis) }}
+                          disabled={actionLoading === `email_${devis.id}`}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
+                        >
+                          {actionLoading === `email_${devis.id}`
+                            ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                            : <Mail className="w-3 h-3" />}
+                          Email
+                        </button>
+                      )}
                       <span className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</span>
                       <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
                     </div>
@@ -921,7 +931,7 @@ export default function DevisPage() {
             )}
 
             <div className="flex flex-wrap gap-2 pt-2">
-              {(selected.statut === 'BROUILLON' || selected.statut === 'ENVOYE') && (
+              {canDo('devis.edit', role, removed) && (selected.statut === 'BROUILLON' || selected.statut === 'ENVOYE') && (
                 <button
                   onClick={() => openEdit(selected)}
                   className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
@@ -929,7 +939,7 @@ export default function DevisPage() {
                   {t('common.edit')}
                 </button>
               )}
-              {selected.statut === 'BROUILLON' && (
+              {canDo('devis.send', role, removed) && selected.statut === 'BROUILLON' && (
                 <button
                   onClick={() => handleSend(selected)}
                   disabled={actionLoading === `send_${selected.id}`}
@@ -939,39 +949,47 @@ export default function DevisPage() {
                   {t('pages.devis.actions.send')}
                 </button>
               )}
-              <button
-                onClick={() => handleCopyLink(selected)}
-                disabled={!!actionLoading}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
-              >
-                <Link className="w-3.5 h-3.5" />
-                {t('pages.devis.actions.copyLink')}
-              </button>
-              <button
-                onClick={() => handleWhatsApp(selected)}
-                disabled={actionLoading === `wa_${selected.id}`}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
-              >
-                {actionLoading === `wa_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <MessageCircle className="w-3.5 h-3.5" />}
-                WhatsApp
-              </button>
-              <button
-                onClick={() => handleEmail(selected)}
-                disabled={actionLoading === `email_${selected.id}`}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
-              >
-                {actionLoading === `email_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Mail className="w-3.5 h-3.5" />}
-                Email
-              </button>
-              <button
-                onClick={() => { handleDuplicate(selected); setSelected(null) }}
-                disabled={!!actionLoading}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
-              >
-                <Copy className="w-3.5 h-3.5" />
-                {t('pages.devis.actions.duplicate')}
-              </button>
-              {selected.statut === 'ACCEPTE' && (selected._count?.factures ?? 0) === 0 && (
+              {canDo('devis.send', role, removed) && (
+                <button
+                  onClick={() => handleCopyLink(selected)}
+                  disabled={!!actionLoading}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
+                >
+                  <Link className="w-3.5 h-3.5" />
+                  {t('pages.devis.actions.copyLink')}
+                </button>
+              )}
+              {canDo('devis.send', role, removed) && (
+                <button
+                  onClick={() => handleWhatsApp(selected)}
+                  disabled={actionLoading === `wa_${selected.id}`}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+                >
+                  {actionLoading === `wa_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <MessageCircle className="w-3.5 h-3.5" />}
+                  WhatsApp
+                </button>
+              )}
+              {canDo('devis.send', role, removed) && (
+                <button
+                  onClick={() => handleEmail(selected)}
+                  disabled={actionLoading === `email_${selected.id}`}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
+                >
+                  {actionLoading === `email_${selected.id}` ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Mail className="w-3.5 h-3.5" />}
+                  Email
+                </button>
+              )}
+              {canDo('devis.create', role, removed) && (
+                <button
+                  onClick={() => { handleDuplicate(selected); setSelected(null) }}
+                  disabled={!!actionLoading}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                  {t('pages.devis.actions.duplicate')}
+                </button>
+              )}
+              {canDo('factures.create', role, removed) && selected.statut === 'ACCEPTE' && (selected._count?.factures ?? 0) === 0 && (
                 <button
                   onClick={() => handleConvert(selected)}
                   disabled={actionLoading === `convert_${selected.id}`}
@@ -981,7 +999,7 @@ export default function DevisPage() {
                   {t('pages.devis.actions.convert')}
                 </button>
               )}
-              {selected.statut === 'BROUILLON' && (
+              {canDo('devis.delete', role, removed) && selected.statut === 'BROUILLON' && (
                 <button
                   onClick={() => { setDeleteTarget(selected); setSelected(null) }}
                   className="px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
