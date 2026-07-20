@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { StatutDevis, StatutFacture } from '@prisma/client';
+import { StatutDevis, StatutFacture, StatutBonLivraison } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
@@ -73,6 +73,21 @@ export class PortalService {
               },
               orderBy: { datePaiement: 'asc' },
             },
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+        bonsLivraison: {
+          where: { statut: { not: StatutBonLivraison.BROUILLON } },
+          select: {
+            id: true,
+            reference: true,
+            statut: true,
+            dateLivraison: true,
+            publicToken: true,
+            notes: true,
+            createdAt: true,
+            _count: { select: { lignes: true } },
+            devis: { select: { reference: true } },
           },
           orderBy: { createdAt: 'desc' },
         },

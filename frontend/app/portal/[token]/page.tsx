@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import {
   FileText, Receipt, CheckCircle, XCircle, Clock, AlertCircle,
   Mail, Phone, Globe, Loader2, Check, ArrowRight, ExternalLink,
-  Sun, Moon,
+  Sun, Moon, Truck,
 } from 'lucide-react'
 import { portalApi } from '@/lib/api'
 
@@ -48,6 +48,13 @@ interface PortalFacture {
   dateEcheance: string | null; createdAt: string
   publicToken: string; paiements: PortalPaiement[]
 }
+interface PortalBL {
+  id: string; reference: string; statut: string
+  dateLivraison: string | null; publicToken: string
+  notes: string | null; createdAt: string
+  _count: { lignes: number }
+  devis: { reference: string } | null
+}
 interface PortalData {
   id: string; nom: string; email: string | null
   telephone: string | null; nomEntreprise: string | null
@@ -56,7 +63,7 @@ interface PortalData {
     email: string | null; telephone: string | null
     adresse: string | null; website: string | null
   }
-  devis: PortalDevis[]; factures: PortalFacture[]
+  devis: PortalDevis[]; factures: PortalFacture[]; bonsLivraison: PortalBL[]
 }
 
 // ── Status config ─────────────────────────────────────────────────────────────
@@ -77,6 +84,11 @@ const FACTURE_STATUS: Record<string, StatusInfo> = {
   PARTIELLE: { label: 'Partielle', lightBg: '#fffbeb', lightText: '#b45309', darkBg: '#4a2c0a', darkText: '#fcd34d', icon: AlertCircle },
   EN_RETARD: { label: 'En retard', lightBg: '#fef2f2', lightText: '#dc2626', darkBg: '#4c1d1d', darkText: '#fca5a5', icon: AlertCircle },
   PAYEE:     { label: 'Payée',     lightBg: '#f0fdf4', lightText: '#15803d', darkBg: '#14432a', darkText: '#86efac', icon: CheckCircle },
+}
+
+const BL_STATUS: Record<string, StatusInfo> = {
+  ENVOYE: { label: 'En transit',  lightBg: '#eff6ff', lightText: '#1d4ed8', darkBg: '#1e3a5f', darkText: '#93c5fd', icon: Truck },
+  LIVRE:  { label: 'Livré',       lightBg: '#f0fdf4', lightText: '#15803d', darkBg: '#14432a', darkText: '#86efac', icon: CheckCircle },
 }
 
 function Badge({ info, dark }: { info: StatusInfo; dark: boolean }) {
@@ -101,7 +113,7 @@ export default function PortalPage() {
   const [error, setError]         = useState(false)
   const [accepting, setAccepting] = useState<string | null>(null)
   const [accepted, setAccepted]   = useState<Set<string>>(new Set())
-  const [tab, setTab]             = useState<'factures' | 'devis' | 'recus'>('factures')
+  const [tab, setTab]             = useState<'factures' | 'devis' | 'livraisons' | 'recus'>('factures')
   const [dark, setDark]           = useState(false)
 
   useEffect(() => {
@@ -186,10 +198,13 @@ export default function PortalPage() {
   data.factures.forEach(f => f.paiements?.forEach(p => allRecus.push({ facture: f, paiement: p })))
   allRecus.sort((a, b) => new Date(b.paiement.datePaiement).getTime() - new Date(a.paiement.datePaiement).getTime())
 
+  const bls = data.bonsLivraison ?? []
+
   const tabs = [
-    { key: 'factures' as const, label: 'Factures', count: data.factures.length, icon: Receipt },
-    { key: 'devis'    as const, label: 'Devis',    count: data.devis.length,    icon: FileText },
-    { key: 'recus'    as const, label: 'Reçus',    count: allRecus.length,      icon: CheckCircle },
+    { key: 'factures'   as const, label: 'Factures',    count: data.factures.length, icon: Receipt },
+    { key: 'livraisons' as const, label: 'Livraisons',  count: bls.length,           icon: Truck },
+    { key: 'devis'      as const, label: 'Devis',       count: data.devis.length,    icon: FileText },
+    { key: 'recus'      as const, label: 'Reçus',       count: allRecus.length,      icon: CheckCircle },
   ]
 
   return (
@@ -243,41 +258,42 @@ export default function PortalPage() {
         </div>
 
         {/* ── SUMMARY ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
           {[
             { label: data.factures.length !== 1 ? 'Factures' : 'Facture', value: data.factures.length, color: t.summaryText },
-            { label: 'Devis', value: data.devis.length, color: t.summaryText },
-            { label: allRecus.length !== 1 ? 'Reçus' : 'Reçu', value: allRecus.length, color: dark ? '#86efac' : '#16a34a' },
+            { label: bls.length !== 1 ? 'Livraisons' : 'Livraison',       value: bls.length,           color: dark ? '#93c5fd' : '#1d4ed8' },
+            { label: 'Devis',                                               value: data.devis.length,    color: t.summaryText },
+            { label: allRecus.length !== 1 ? 'Reçus' : 'Reçu',            value: allRecus.length,      color: dark ? '#86efac' : '#16a34a' },
           ].map(item => (
-            <div key={item.label} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, padding: 12, textAlign: 'center', transition: 'background .2s' }}>
-              <p style={{ fontSize: 22, fontWeight: 900, color: item.color, margin: 0 }}>{item.value}</p>
-              <p style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>{item.label}</p>
+            <div key={item.label} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, padding: '10px 8px', textAlign: 'center', transition: 'background .2s' }}>
+              <p style={{ fontSize: 20, fontWeight: 900, color: item.color, margin: 0 }}>{item.value}</p>
+              <p style={{ fontSize: 10, color: t.textMuted, marginTop: 2 }}>{item.label}</p>
             </div>
           ))}
         </div>
 
         {/* ── TABS ── */}
-        <div style={{ display: 'flex', gap: 4, background: t.tabBar, borderRadius: 14, padding: 4, transition: 'background .2s' }}>
+        <div style={{ display: 'flex', gap: 3, background: t.tabBar, borderRadius: 14, padding: 4, transition: 'background .2s' }}>
           {tabs.map(tb => (
             <button
               key={tb.key}
               onClick={() => setTab(tb.key)}
               style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '8px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                fontSize: 13, fontWeight: 600, transition: 'all .15s',
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                padding: '8px 4px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                fontSize: 12, fontWeight: 600, transition: 'all .15s',
                 background: tab === tb.key ? t.tabActive : 'transparent',
                 color: tab === tb.key ? t.tabActiveText : t.tabText,
                 boxShadow: tab === tb.key ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              <tb.icon style={{ width: 14, height: 14, flexShrink: 0 }} />
+              <tb.icon style={{ width: 13, height: 13, flexShrink: 0 }} />
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tb.label}</span>
               {tb.count > 0 && (
                 <span style={{
                   fontSize: 10, fontWeight: 700, borderRadius: 999,
-                  width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  background: tab === tb.key ? (dark ? '#334155' : '#e2e8f0') : (dark ? '#334155' : '#e2e8f0'),
+                  width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  background: dark ? '#334155' : '#e2e8f0',
                   color: t.textSub,
                 }}>
                   {tb.count}
@@ -351,6 +367,79 @@ export default function PortalPage() {
                           >
                             <ExternalLink style={{ width: 13, height: 13 }} />
                             Voir la facture
+                          </a>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            }
+          </section>
+        )}
+
+        {/* ── LIVRAISONS ── */}
+        {tab === 'livraisons' && (
+          <section>
+            <SectionTitle icon={Truck} title="Bons de livraison" count={bls.length} brand={brand} t={t} />
+            {bls.length === 0
+              ? <Empty message="Aucun bon de livraison pour le moment." t={t} />
+              : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                  {bls.map(bl => {
+                    const status  = BL_STATUS[bl.statut] ?? BL_STATUS['ENVOYE']
+                    const isLivre = bl.statut === 'LIVRE'
+                    const accent  = isLivre ? '#10b981' : brand
+                    return (
+                      <div key={bl.id} style={{ background: t.card, border: `1px solid ${t.cardBorder}`, borderRadius: 12, overflow: 'hidden', transition: 'background .2s' }}>
+                        <div style={{ height: 3, background: accent }} />
+                        <div style={{ padding: 16 }}>
+                          {/* Header row */}
+                          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 12 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                              <div style={{ width: 32, height: 32, borderRadius: 8, background: isLivre ? (dark ? '#14432a' : '#f0fdf4') : `${brand}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <Truck style={{ width: 15, height: 15, color: isLivre ? (dark ? '#86efac' : '#16a34a') : brand }} />
+                              </div>
+                              <div style={{ minWidth: 0 }}>
+                                <p style={{ fontSize: 13, fontWeight: 700, color: t.text, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bl.reference}</p>
+                                <p style={{ fontSize: 11, color: t.textMuted, marginTop: 2 }}>
+                                  {bl.dateLivraison ? `Livraison prévue ${formatDate(bl.dateLivraison)}` : formatDate(bl.createdAt)}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge info={status} dark={dark} />
+                          </div>
+
+                          {/* Meta */}
+                          <div style={{ marginBottom: 12 }}>
+                            <p style={{ fontSize: 13, color: t.textSub, margin: 0 }}>
+                              {bl._count.lignes} article{bl._count.lignes !== 1 ? 's' : ''}
+                              {bl.devis ? ` · Devis ${bl.devis.reference}` : ''}
+                            </p>
+                          </div>
+
+                          {/* Notes */}
+                          {bl.notes && (
+                            <p style={{ fontSize: 12, color: t.textSub, background: t.inputBg, borderRadius: 8, padding: '8px 12px', marginBottom: 12 }}>{bl.notes}</p>
+                          )}
+
+                          {/* Action */}
+                          <a
+                            href={`/public/bl/${bl.publicToken}`}
+                            target="_blank" rel="noopener noreferrer"
+                            style={{
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                              padding: '8px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none', transition: 'background .15s',
+                              ...(isLivre
+                                ? { border: `1px solid ${t.btnBorder}`, background: 'transparent', color: t.btnText }
+                                : { border: 'none', background: brand, color: '#fff' }
+                              ),
+                            }}
+                          >
+                            {isLivre
+                              ? <><ExternalLink style={{ width: 13, height: 13 }} /> Voir le bon</>
+                              : <><Check style={{ width: 13, height: 13 }} /> Confirmer la réception</>
+                            }
                           </a>
                         </div>
                       </div>
