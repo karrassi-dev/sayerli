@@ -150,7 +150,7 @@ export default function SettingsPage() {
   const [logoUploading, setLogoUploading] = useState(false)
 
   // ─── Preferences state ───────────────────────────────────────────────────
-  const [prefs, setPrefs] = useState({ langue: 'fr', theme: 'system', devise: 'MAD', formatDate: 'DD/MM/YYYY', tauxEUR: '' as string, tauxUSD: '' as string })
+  const [prefs, setPrefs] = useState({ langue: 'fr', theme: 'system', devise: 'MAD', formatDate: 'DD/MM/YYYY', tauxEUR: '' as string, tauxUSD: '' as string, regimeTVA: 'ENCAISSEMENTS' })
   const [prefsLoading, setPrefsLoading] = useState(true)
 
   // ─── Theme state ─────────────────────────────────────────────────────────
@@ -223,7 +223,7 @@ export default function SettingsPage() {
       const d = r.data?.data ?? r.data
       const savedTheme = d.theme ?? 'system'
       const savedLocale = d.langue ?? 'fr'
-      setPrefs({ langue: savedLocale, theme: savedTheme, devise: d.devise ?? 'MAD', formatDate: d.formatDate ?? 'DD/MM/YYYY', tauxEUR: d.tauxEUR != null ? String(d.tauxEUR) : '', tauxUSD: d.tauxUSD != null ? String(d.tauxUSD) : '' })
+      setPrefs({ langue: savedLocale, theme: savedTheme, devise: d.devise ?? 'MAD', formatDate: d.formatDate ?? 'DD/MM/YYYY', tauxEUR: d.tauxEUR != null ? String(d.tauxEUR) : '', tauxUSD: d.tauxUSD != null ? String(d.tauxUSD) : '', regimeTVA: d.regimeTVA ?? 'ENCAISSEMENTS' })
       setSelectedTheme(savedTheme)
       setTheme(savedTheme)
       if (['fr', 'en', 'ar'].includes(savedLocale)) setLocale(savedLocale as 'fr' | 'en' | 'ar')
@@ -322,6 +322,7 @@ export default function SettingsPage() {
         formatDate: prefs.formatDate,
         tauxEUR: prefs.tauxEUR !== '' ? parseFloat(prefs.tauxEUR) : null,
         tauxUSD: prefs.tauxUSD !== '' ? parseFloat(prefs.tauxUSD) : null,
+        regimeTVA: prefs.regimeTVA,
       })
       if (['fr', 'en', 'ar'].includes(prefs.langue)) setLocale(prefs.langue as 'fr' | 'en' | 'ar')
       success('Préférences enregistrées', 'Langue et région mises à jour.')
@@ -728,6 +729,20 @@ export default function SettingsPage() {
                   <option>YYYY-MM-DD</option>
                 </select>
               </div>
+            </div>
+
+            {/* ── TVA regime ── */}
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">{t('pages.settings.language.regimeTVA')}</label>
+              <select
+                value={prefs.regimeTVA}
+                onChange={e => setPrefs(p => ({ ...p, regimeTVA: e.target.value }))}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+              >
+                <option value="ENCAISSEMENTS">{t('pages.settings.language.regimeEncaissements')}</option>
+                <option value="DEBITS">{t('pages.settings.language.regimeDebits')}</option>
+              </select>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{t('pages.settings.language.regimeTVADesc')}</p>
             </div>
 
             {/* ── Exchange rates ── */}

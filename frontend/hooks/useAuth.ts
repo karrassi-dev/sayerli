@@ -32,6 +32,7 @@ interface Entreprise {
   activite: string | null
   tauxEUR?: number | null
   tauxUSD?: number | null
+  regimeTVA?: string
 }
 
 interface AuthState {

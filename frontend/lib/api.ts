@@ -219,7 +219,7 @@ export const settingsApi = {
 
   // Preferences
   getPreferences: () => api.get('/settings/preferences'),
-  updatePreferences: (data: { langue?: string; theme?: string; devise?: string; formatDate?: string; tauxEUR?: number | null; tauxUSD?: number | null }) =>
+  updatePreferences: (data: { langue?: string; theme?: string; devise?: string; formatDate?: string; tauxEUR?: number | null; tauxUSD?: number | null; regimeTVA?: string }) =>
     api.patch('/settings/preferences', data),
 
   // Notifications
@@ -242,6 +242,11 @@ export const settingsApi = {
 export const exportApi = {
   data: (params: { types: string; dateDebut?: string; dateFin?: string }) =>
     api.get('/export/data', { params }),
+}
+
+export const declarationsTvaApi = {
+  calculer: (params: { debut: string; fin: string; tauxEUR?: number; tauxUSD?: number }) =>
+    api.get('/declarations-tva/calculer', { params }),
 }
 
 // Contact

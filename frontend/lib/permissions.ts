@@ -17,8 +17,9 @@ export const ROUTE_ROLE_MAP: Record<string, string[]> = {
   '/dashboard/declarations': ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf', 'responsable_recouvrement'],
   '/dashboard/paiements':    ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf', 'responsable_recouvrement', 'caissier'],
   '/dashboard/notifications':['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'comptable', 'comptable_externe', 'daf', 'responsable_recouvrement', 'caissier', 'assistant', 'associe'],
-  '/dashboard/export':       ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
-  '/dashboard/activite':     ['admin', 'proprietaire'],
+  '/dashboard/export':           ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
+  '/dashboard/declarations-tva': ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
+  '/dashboard/activite':         ['admin', 'proprietaire'],
 }
 
 export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
@@ -30,8 +31,9 @@ export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
   paiements:     ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf', 'responsable_recouvrement', 'caissier'],
   equipe:        ['admin', 'proprietaire'],
   notifications: ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'comptable', 'comptable_externe', 'daf', 'responsable_recouvrement', 'caissier', 'assistant', 'associe'],
-  export:        ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
-  settings:      ['admin', 'proprietaire'],
+  export:           ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
+  declarationsTva:  ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
+  settings:         ['admin', 'proprietaire'],
   catalogue:     ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant'],
   activite:      ['admin', 'proprietaire'],
 }

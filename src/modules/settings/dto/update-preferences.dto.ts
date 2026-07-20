@@ -30,4 +30,9 @@ export class UpdatePreferencesDto {
   @Min(0.01)
   @Max(99999)
   tauxUSD?: number;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['ENCAISSEMENTS', 'DEBITS'])
+  regimeTVA?: string;
 }

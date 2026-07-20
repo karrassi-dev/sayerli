@@ -37,6 +37,7 @@ model Entreprise {
   activite             String?
   tauxEUR              Float?
   tauxUSD              Float?
+  regimeTVA            String                @default("ENCAISSEMENTS")
   clients              Client[]
   produitsServices     ProduitService[]
   declarationsPaiement DeclarationPaiement[]
