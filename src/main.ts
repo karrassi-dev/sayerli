@@ -2,9 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
+import { execSync } from 'child_process';
 
 async function bootstrap() {
   const logger = new Logger('Sayerli');
+
+  try {
+    logger.log('Running database migrations...');
+    execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+    logger.log('Migrations complete.');
+  } catch (e) {
+    logger.error(`Migration warning (non-fatal): ${(e as Error).message}`);
+  }
   const app = await NestFactory.create(AppModule);
 
   app.use(helmet({
