@@ -144,7 +144,7 @@ export class FacturesService {
     return facture;
   }
 
-  async modifierFacture(id: string, dto: CreerFactureDto, entrepriseId: string) {
+  async modifierFacture(id: string, dto: CreerFactureDto, entrepriseId: string, userId?: string, userNom?: string) {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
     if (facture.statut === StatutFacture.PAYEE) {
@@ -160,7 +160,7 @@ export class FacturesService {
 
     await this.prisma.factureLigne.deleteMany({ where: { factureId: id } });
 
-    return this.prisma.facture.update({
+    const updated = await this.prisma.facture.update({
       where: { id },
       data: {
         clientId: dto.clientId,
@@ -185,6 +185,9 @@ export class FacturesService {
         lignes: true,
       },
     });
+
+    if (userId) this.logs.log({ entrepriseId, userId, userNom: userNom ?? '', action: 'FACTURE_MODIFIEE', entityType: 'FACTURE', entityId: id, entityRef: updated.numeroFacture });
+    return updated;
   }
 
   async modifierStatut(id: string, dto: ModifierStatutFactureDto, entrepriseId: string) {

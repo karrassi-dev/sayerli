@@ -134,7 +134,7 @@ export class DevisService {
     return devis;
   }
 
-  async modifierDevis(id: string, dto: CreerDevisDto, entrepriseId: string) {
+  async modifierDevis(id: string, dto: CreerDevisDto, entrepriseId: string, userId?: string, userNom?: string) {
     const devis = await this.prisma.devis.findFirst({ where: { id, entrepriseId } });
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
@@ -154,7 +154,7 @@ export class DevisService {
 
     await this.prisma.devisLigne.deleteMany({ where: { devisId: id } });
 
-    return this.prisma.devis.update({
+    const updated = await this.prisma.devis.update({
       where: { id },
       data: {
         clientId: dto.clientId,
@@ -179,6 +179,9 @@ export class DevisService {
         lignes: true,
       },
     });
+
+    if (userId) this.logs.log({ entrepriseId, userId, userNom: userNom ?? '', action: 'DEVIS_MODIFIE', entityType: 'DEVIS', entityId: id, entityRef: updated.reference });
+    return updated;
   }
 
   async modifierStatut(id: string, dto: ModifierStatutDevisDto, entrepriseId: string) {

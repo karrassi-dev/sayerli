@@ -73,8 +73,10 @@ export class DevisController {
     @Param('id') id: string,
     @Body() dto: CreerDevisDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.devisService.modifierDevis(id, dto, entrepriseId);
+    return this.devisService.modifierDevis(id, dto, entrepriseId, userId, userNom);
   }
 
   @Patch(':id/statut')

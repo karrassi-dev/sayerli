@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -15,12 +15,14 @@ export interface LogDto {
 
 @Injectable()
 export class LogsService {
+  private readonly logger = new Logger(LogsService.name);
+
   constructor(private prisma: PrismaService) {}
 
   log(dto: LogDto): void {
     this.prisma.activityLog
       .create({ data: dto as Prisma.ActivityLogCreateInput })
-      .catch(() => {});
+      .catch(err => this.logger.error(`Failed to write activity log [${dto.action}]: ${err?.message ?? err}`));
   }
 
   async lister(

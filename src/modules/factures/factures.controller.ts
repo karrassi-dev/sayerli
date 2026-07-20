@@ -82,8 +82,10 @@ export class FacturesController {
     @Param('id') id: string,
     @Body() dto: CreerFactureDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.facturesService.modifierFacture(id, dto, entrepriseId);
+    return this.facturesService.modifierFacture(id, dto, entrepriseId, userId, userNom);
   }
 
   @Patch(':id/statut')
