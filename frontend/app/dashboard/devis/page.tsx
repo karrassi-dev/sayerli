@@ -340,7 +340,7 @@ export default function DevisPage() {
   const [editTarget, setEditTarget] = useState<ApiDevis | null>(null)
   const [form, setForm] = useState<DevisForm>(EMPTY_FORM)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
-  const [limitModal, setLimitModal] = useState<{ resource: 'devis' | 'factures'; limite: number; actuel: number } | null>(null)
+  const [limitModal, setLimitModal] = useState<{ resource: 'devis' | 'factures' | 'bons-livraison'; limite: number; actuel: number } | null>(null)
   const [saving, setSaving] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
@@ -628,9 +628,15 @@ export default function DevisPage() {
       setSelected(null)
       success(t('pages.bonsLivraison.blFromDevisSuccess'))
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de créer le BL.'))
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
+        setSelected(null)
+        const errs = e.response!.data?.errors
+        setLimitModal({ resource: 'bons-livraison', limite: errs?.limite ?? 5, actuel: errs?.actuel ?? 5 })
+      } else {
+        const msg = e?.response?.data?.message
+        toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible de créer le BL.'))
+      }
     } finally { setActionLoading(null) }
   }
 

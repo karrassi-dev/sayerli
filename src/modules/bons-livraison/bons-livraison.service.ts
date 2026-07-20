@@ -7,6 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { LogsService } from '../logs/logs.service';
 import { CreerBonLivraisonDto } from './dto/creer-bon-livraison.dto';
 import { ModifierBonLivraisonDto } from './dto/modifier-bon-livraison.dto';
+import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 import { v4 as uuidv4 } from 'uuid';
 import { StatutDevis } from '@prisma/client';
 
@@ -70,7 +71,16 @@ export class BonsLivraisonService {
     return bl;
   }
 
+  private async verifierLimiteBL(entrepriseId: string) {
+    const entreprise = await this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true } });
+    const limite = PLAN_LIMITS[entreprise!.plan].bonsLivraisonParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.bonLivraison.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('bons-livraison', actuel, limite);
+  }
+
   async creer(dto: CreerBonLivraisonDto, entrepriseId: string, userId: string, userNom: string) {
+    await this.verifierLimiteBL(entrepriseId);
     const reference = await this.genererReference(entrepriseId);
     const bl = await this.prisma.bonLivraison.create({
       data: {
@@ -170,6 +180,7 @@ export class BonsLivraisonService {
   }
 
   async dupliquer(id: string, entrepriseId: string, userId: string, userNom: string) {
+    await this.verifierLimiteBL(entrepriseId);
     const original = await this.prisma.bonLivraison.findFirst({
       where: { id, entrepriseId }, include: { lignes: true },
     });
@@ -200,6 +211,7 @@ export class BonsLivraisonService {
   }
 
   async creerDepuisDevis(devisId: string, entrepriseId: string, userId: string, userNom: string) {
+    await this.verifierLimiteBL(entrepriseId);
     const devis = await this.prisma.devis.findFirst({
       where: { id: devisId, entrepriseId },
       include: { lignes: true },

@@ -14,6 +14,7 @@ import { ActionMenu } from '@/components/dashboard/ui/ActionMenu'
 import { Pagination } from '@/components/dashboard/ui/Pagination'
 import { EmptyState } from '@/components/dashboard/ui/EmptyState'
 import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
+import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
@@ -122,6 +123,7 @@ export default function BonsLivraisonPage() {
   const [selected, setSelected] = useState<ApiBL | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ApiBL | null>(null)
   const [convertTarget, setConvertTarget] = useState<ApiBL | null>(null)
+  const [limitModal, setLimitModal] = useState<{ limite: number; actuel: number } | null>(null)
 
   const baseUrl = typeof window !== 'undefined'
     ? `${window.location.protocol}//${window.location.host}`
@@ -228,9 +230,14 @@ export default function BonsLivraisonPage() {
       setModalOpen(false)
       loadItems()
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      error('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Erreur lors de la sauvegarde.'))
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
+        const errs = e.response!.data?.errors
+        setLimitModal({ limite: errs?.limite ?? 5, actuel: errs?.actuel ?? 5 })
+      } else {
+        const msg = e?.response?.data?.message
+        error('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Erreur lors de la sauvegarde.'))
+      }
     } finally { setSaving(false) }
   }
 
@@ -271,9 +278,14 @@ export default function BonsLivraisonPage() {
       success(t('pages.bonsLivraison.dupliquerSuccess'))
       loadItems()
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string | string[] } } }
-      const msg = e?.response?.data?.message
-      error('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Erreur.'))
+      const e = err as { response?: { status?: number; data?: { message?: string | string[]; errors?: { limite?: number; actuel?: number } } } }
+      if (e?.response?.status === 402) {
+        const errs = e.response!.data?.errors
+        setLimitModal({ limite: errs?.limite ?? 5, actuel: errs?.actuel ?? 5 })
+      } else {
+        const msg = e?.response?.data?.message
+        error('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Erreur.'))
+      }
     } finally { setActionLoading(null) }
   }
 
@@ -779,6 +791,17 @@ export default function BonsLivraisonPage() {
         message={t('pages.bonsLivraison.convertirConfirm').replace('{reference}', convertTarget?.reference ?? '')}
         confirmLabel="Convertir"
       />
+
+      {/* ── Plan limit modal ── */}
+      {limitModal && (
+        <PlanLimitModal
+          open={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          resource="bons-livraison"
+          limite={limitModal.limite}
+          actuel={limitModal.actuel}
+        />
+      )}
     </div>
   )
 }

@@ -7,16 +7,17 @@ import { Modal } from '@/components/dashboard/ui/Modal'
 interface PlanLimitModalProps {
   open: boolean
   onClose: () => void
-  resource: 'clients' | 'devis' | 'factures' | 'utilisateurs'
+  resource: 'clients' | 'devis' | 'factures' | 'bons-livraison' | 'utilisateurs'
   limite: number
   actuel: number
 }
 
 const RESOURCE_LABELS: Record<string, { label: string; upgrade: string }> = {
-  clients:      { label: 'clients',               upgrade: 'clients illimités' },
-  devis:        { label: 'devis ce mois',          upgrade: 'devis illimités' },
-  factures:     { label: 'factures ce mois',       upgrade: 'factures illimitées' },
-  utilisateurs: { label: 'membres d\'équipe',      upgrade: "plus d'utilisateurs" },
+  clients:          { label: 'clients',                  upgrade: 'clients illimités' },
+  devis:            { label: 'devis ce mois',             upgrade: 'devis illimités' },
+  factures:         { label: 'factures ce mois',          upgrade: 'factures illimitées' },
+  'bons-livraison': { label: 'bons de livraison ce mois', upgrade: 'BL illimités' },
+  utilisateurs:     { label: 'membres d\'équipe',         upgrade: "plus d'utilisateurs" },
 }
 
 export function PlanLimitModal({ open, onClose, resource, limite, actuel }: PlanLimitModalProps) {

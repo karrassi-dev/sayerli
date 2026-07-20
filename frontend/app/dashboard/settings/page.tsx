@@ -53,18 +53,18 @@ const PRESET_COLORS = [
 ]
 
 const PLAN_LABELS: Record<string, { label: string; prix: string; features: string[] }> = {
-  STARTER: { label: 'Starter', prix: '0',   features: ['5 clients', '5 devis/mois', '5 factures/mois', '2 utilisateurs', '3 relances/mois', '5 emails/mois'] },
-  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '100 devis/mois', '100 factures/mois', '5 utilisateurs', 'Relances illimitées', 'Emails illimités', 'Journal des ventes', 'Support email 48h'] },
-  BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', '12 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
+  STARTER: { label: 'Starter', prix: '0',   features: ['5 clients', '5 devis/mois', '5 factures/mois', '5 BL/mois', '2 utilisateurs', '3 relances/mois', '5 emails/mois'] },
+  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '100 devis/mois', '100 factures/mois', '100 BL/mois', '5 utilisateurs', 'Relances illimitées', 'Emails illimités', 'Journal des ventes', 'Support email 48h'] },
+  BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', 'BL illimités', '12 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
 }
 
 const PLAN_ORDER: Record<string, number> = { STARTER: 0, PRO: 1, BUSINESS: 2 }
 const WA_OWNER = '447476607473'
 
-const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number }> = {
-  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5  },
-  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1 },
-  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1 },
+const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; bonsLivraisonParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number }> = {
+  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5  },
+  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1 },
+  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1 },
 }
 
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
@@ -187,6 +187,7 @@ export default function SettingsPage() {
       utilisateurs: UsageField
       devisCeMois: UsageField
       facturesCeMois: UsageField
+      bonsLivraisonCeMois: UsageField
       relancesCeMois: UsageField
       receiptsCeMois: UsageField
     }
@@ -254,12 +255,13 @@ export default function SettingsPage() {
       setBilling({
         ...d,
         usage: {
-          clients:       normalise(d.usage?.clients,       planLimits.clients),
-          utilisateurs:  normalise(d.usage?.utilisateurs,  planLimits.utilisateurs),
-          devisCeMois:   normalise(d.usage?.devisCeMois,   planLimits.devisParMois),
-          facturesCeMois:normalise(d.usage?.facturesCeMois,planLimits.facturesParMois),
-          relancesCeMois:normalise(d.usage?.relancesCeMois,planLimits.relancesParMois),
-          receiptsCeMois:normalise(d.usage?.receiptsCeMois,planLimits.receiptsParMois),
+          clients:             normalise(d.usage?.clients,             planLimits.clients),
+          utilisateurs:        normalise(d.usage?.utilisateurs,        planLimits.utilisateurs),
+          devisCeMois:         normalise(d.usage?.devisCeMois,         planLimits.devisParMois),
+          facturesCeMois:      normalise(d.usage?.facturesCeMois,      planLimits.facturesParMois),
+          bonsLivraisonCeMois: normalise(d.usage?.bonsLivraisonCeMois, planLimits.bonsLivraisonParMois),
+          relancesCeMois:      normalise(d.usage?.relancesCeMois,      planLimits.relancesParMois),
+          receiptsCeMois:      normalise(d.usage?.receiptsCeMois,      planLimits.receiptsParMois),
         },
       })
     }).catch(() => {}).finally(() => setBillingLoading(false))
@@ -1050,12 +1052,13 @@ export default function SettingsPage() {
         }
 
         const usageRows = billing ? [
-          { key: 'clients',        label: 'Clients',              field: billing.usage.clients },
-          { key: 'devisCeMois',    label: 'Devis ce mois',        field: billing.usage.devisCeMois },
-          { key: 'facturesCeMois', label: 'Factures ce mois',     field: billing.usage.facturesCeMois },
-          { key: 'utilisateurs',   label: "Membres d'équipe",     field: billing.usage.utilisateurs },
-          { key: 'relancesCeMois', label: 'Relances ce mois',     field: billing.usage.relancesCeMois },
-          { key: 'receiptsCeMois', label: 'Emails reçu ce mois',  field: billing.usage.receiptsCeMois },
+          { key: 'clients',             label: 'Clients',                    field: billing.usage.clients },
+          { key: 'devisCeMois',         label: 'Devis ce mois',              field: billing.usage.devisCeMois },
+          { key: 'facturesCeMois',      label: 'Factures ce mois',           field: billing.usage.facturesCeMois },
+          { key: 'bonsLivraisonCeMois', label: 'Bons de livraison ce mois',  field: billing.usage.bonsLivraisonCeMois },
+          { key: 'utilisateurs',        label: "Membres d'équipe",           field: billing.usage.utilisateurs },
+          { key: 'relancesCeMois',      label: 'Relances ce mois',           field: billing.usage.relancesCeMois },
+          { key: 'receiptsCeMois',      label: 'Emails reçu ce mois',        field: billing.usage.receiptsCeMois },
         ] : []
 
         return (
