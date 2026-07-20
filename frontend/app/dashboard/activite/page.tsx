@@ -21,8 +21,10 @@ interface LogEntry {
 }
 
 interface Membre {
-  userId: string
-  userNom: string
+  id: string
+  nom: string
+  prenom: string | null
+  role: string
 }
 
 interface PaginationMeta {
@@ -112,9 +114,13 @@ export default function ActivitePage() {
       if (filterTo) params.dateFin = filterTo
       const res = await api.get('/logs', { params })
       const d = res.data
-      const logsArr = Array.isArray(d?.data) ? d.data : Array.isArray(d) ? d : []
-      setLogs(logsArr)
-      setMeta(d?.meta ?? { total: 0, page: 1, limit: 50, totalPages: 1 })
+      setLogs(Array.isArray(d?.logs) ? d.logs : [])
+      setMeta({
+        total: d?.total ?? 0,
+        page: d?.page ?? 1,
+        limit: d?.perPage ?? 50,
+        totalPages: d?.perPage ? Math.ceil((d?.total ?? 0) / d.perPage) : 1,
+      })
     } catch {
       setLogs([])
     } finally {
@@ -181,7 +187,9 @@ export default function ActivitePage() {
             >
               <option value="">{t('pages.activite.allMembers')}</option>
               {membres.map(m => (
-                <option key={m.userId} value={m.userId}>{m.userNom}</option>
+                <option key={m.id} value={m.id}>
+                  {m.prenom ? `${m.prenom} ${m.nom}` : m.nom}
+                </option>
               ))}
             </select>
           </div>
