@@ -732,10 +732,18 @@
     "annulee": "Annulée"
   },
   "roles": {
-    "admin": "Admin",
-    "manager": "Manager",
-    "commercial": "Commercial",
-    "comptable": "Comptable"
+    "PROPRIETAIRE": "Propriétaire",
+    "ADMIN": "Admin",
+    "MANAGER": "Manager",
+    "COMPTABLE": "Comptable",
+    "COMPTABLE_EXTERNE": "Comptable ext.",
+    "DAF": "DAF",
+    "COMMERCIAL": "Commercial",
+    "COMMERCIAL_PROPRE": "Commercial",
+    "RESPONSABLE_RECOUVREMENT": "Resp. recouvrement",
+    "CAISSIER": "Caissier",
+    "ASSISTANT": "Assistant",
+    "ASSOCIE": "Associé"
   },
   "methodes": {
     "cash": "Espèces",
@@ -1182,18 +1190,54 @@
         "title": "Modifier le membre"
       },
       "roles": {
-        "PROPRIETAIRE": { "label": "Propriétaire", "desc": "" },
-        "ADMIN": { "label": "Administrateur", "desc": "Accès total sauf facturation. Gère toute l'équipe." },
-        "MANAGER": { "label": "Manager", "desc": "Gestion opérationnelle complète. Pas de paramètres." },
-        "DAF": { "label": "Directeur Financier (DAF)", "desc": "Lecture financière + export. Ne crée rien." },
-        "COMPTABLE": { "label": "Comptable", "desc": "Paiements et exports. Comptable interne salarié." },
-        "COMPTABLE_EXTERNE": { "label": "Comptable Externe", "desc": "Fiduciaire externe. Lecture seule + export." },
-        "RESPONSABLE_RECOUVREMENT": { "label": "Resp. Recouvrement", "desc": "Relances et encaissements d'impayés uniquement." },
-        "CAISSIER": { "label": "Caissier", "desc": "Enregistre les paiements reçus. Accès caisse uniquement." },
-        "COMMERCIAL": { "label": "Commercial", "desc": "Gestion clients et devis. Voit tout le portefeuille." },
-        "COMMERCIAL_PROPRE": { "label": "Agent Commercial", "desc": "Comme Commercial, mais uniquement ses propres clients." },
-        "ASSISTANT": { "label": "Assistant Administratif", "desc": "Prépare les documents. Ne peut pas envoyer ni valider." },
-        "ASSOCIE": { "label": "Associé / Investisseur", "desc": "Associé silencieux. Lecture des KPIs uniquement." }
+        "PROPRIETAIRE": {
+          "label": "Propriétaire",
+          "desc": ""
+        },
+        "ADMIN": {
+          "label": "Administrateur",
+          "desc": "Accès total sauf facturation. Gère toute l'équipe."
+        },
+        "MANAGER": {
+          "label": "Manager",
+          "desc": "Gestion opérationnelle complète. Pas de paramètres."
+        },
+        "DAF": {
+          "label": "Directeur Financier (DAF)",
+          "desc": "Lecture financière + export. Ne crée rien."
+        },
+        "COMPTABLE": {
+          "label": "Comptable",
+          "desc": "Paiements et exports. Comptable interne salarié."
+        },
+        "COMPTABLE_EXTERNE": {
+          "label": "Comptable Externe",
+          "desc": "Fiduciaire externe. Lecture seule + export."
+        },
+        "RESPONSABLE_RECOUVREMENT": {
+          "label": "Resp. Recouvrement",
+          "desc": "Relances et encaissements d'impayés uniquement."
+        },
+        "CAISSIER": {
+          "label": "Caissier",
+          "desc": "Enregistre les paiements reçus. Accès caisse uniquement."
+        },
+        "COMMERCIAL": {
+          "label": "Commercial",
+          "desc": "Gestion clients et devis. Voit tout le portefeuille."
+        },
+        "COMMERCIAL_PROPRE": {
+          "label": "Agent Commercial",
+          "desc": "Comme Commercial, mais uniquement ses propres clients."
+        },
+        "ASSISTANT": {
+          "label": "Assistant Administratif",
+          "desc": "Prépare les documents. Ne peut pas envoyer ni valider."
+        },
+        "ASSOCIE": {
+          "label": "Associé / Investisseur",
+          "desc": "Associé silencieux. Lecture des KPIs uniquement."
+        }
       },
       "permissionLabels": {
         "clients_read": "Voir les clients",
@@ -1377,7 +1421,8 @@
         "CATALOGUE_CREE": "Article créé",
         "CATALOGUE_MODIFIE": "Article modifié",
         "CATALOGUE_SUPPRIME": "Article archivé"
-      }
+      },
+      "refresh": "Actualiser"
     }
   },
   "notifications": {

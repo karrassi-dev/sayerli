@@ -732,10 +732,18 @@
     "annulee": "Cancelled"
   },
   "roles": {
-    "admin": "Admin",
-    "manager": "Manager",
-    "commercial": "Sales",
-    "comptable": "Accountant"
+    "PROPRIETAIRE": "Owner",
+    "ADMIN": "Admin",
+    "MANAGER": "Manager",
+    "COMPTABLE": "Accountant",
+    "COMPTABLE_EXTERNE": "Ext. Accountant",
+    "DAF": "CFO",
+    "COMMERCIAL": "Sales",
+    "COMMERCIAL_PROPRE": "Sales",
+    "RESPONSABLE_RECOUVREMENT": "Collection Mgr.",
+    "CAISSIER": "Cashier",
+    "ASSISTANT": "Assistant",
+    "ASSOCIE": "Partner"
   },
   "methodes": {
     "cash": "Cash",
@@ -1181,18 +1189,54 @@
         "title": "Edit Member"
       },
       "roles": {
-        "PROPRIETAIRE": { "label": "Owner", "desc": "" },
-        "ADMIN": { "label": "Administrator", "desc": "Full access except billing. Manages the entire team." },
-        "MANAGER": { "label": "Manager", "desc": "Full operational management. No settings access." },
-        "DAF": { "label": "CFO / Finance Director", "desc": "Financial read access + export. Cannot create anything." },
-        "COMPTABLE": { "label": "Accountant", "desc": "Payments and exports. Internal salaried accountant." },
-        "COMPTABLE_EXTERNE": { "label": "External Accountant", "desc": "External auditor. Read-only + export." },
-        "RESPONSABLE_RECOUVREMENT": { "label": "Collections Manager", "desc": "Reminders and collections for unpaid invoices only." },
-        "CAISSIER": { "label": "Cashier", "desc": "Records received payments. Cash access only." },
-        "COMMERCIAL": { "label": "Sales Rep", "desc": "Client and quote management. Sees all accounts." },
-        "COMMERCIAL_PROPRE": { "label": "Sales Agent", "desc": "Like Sales Rep, but limited to own clients only." },
-        "ASSISTANT": { "label": "Admin Assistant", "desc": "Prepares documents. Cannot send or validate." },
-        "ASSOCIE": { "label": "Partner / Investor", "desc": "Silent partner. Read-only KPI access." }
+        "PROPRIETAIRE": {
+          "label": "Owner",
+          "desc": ""
+        },
+        "ADMIN": {
+          "label": "Administrator",
+          "desc": "Full access except billing. Manages the entire team."
+        },
+        "MANAGER": {
+          "label": "Manager",
+          "desc": "Full operational management. No settings access."
+        },
+        "DAF": {
+          "label": "CFO / Finance Director",
+          "desc": "Financial read access + export. Cannot create anything."
+        },
+        "COMPTABLE": {
+          "label": "Accountant",
+          "desc": "Payments and exports. Internal salaried accountant."
+        },
+        "COMPTABLE_EXTERNE": {
+          "label": "External Accountant",
+          "desc": "External auditor. Read-only + export."
+        },
+        "RESPONSABLE_RECOUVREMENT": {
+          "label": "Collections Manager",
+          "desc": "Reminders and collections for unpaid invoices only."
+        },
+        "CAISSIER": {
+          "label": "Cashier",
+          "desc": "Records received payments. Cash access only."
+        },
+        "COMMERCIAL": {
+          "label": "Sales Rep",
+          "desc": "Client and quote management. Sees all accounts."
+        },
+        "COMMERCIAL_PROPRE": {
+          "label": "Sales Agent",
+          "desc": "Like Sales Rep, but limited to own clients only."
+        },
+        "ASSISTANT": {
+          "label": "Admin Assistant",
+          "desc": "Prepares documents. Cannot send or validate."
+        },
+        "ASSOCIE": {
+          "label": "Partner / Investor",
+          "desc": "Silent partner. Read-only KPI access."
+        }
       },
       "permissionLabels": {
         "clients_read": "View clients",
@@ -1376,7 +1420,8 @@
         "CATALOGUE_CREE": "Item created",
         "CATALOGUE_MODIFIE": "Item updated",
         "CATALOGUE_SUPPRIME": "Item archived"
-      }
+      },
+      "refresh": "Refresh"
     }
   },
   "notifications": {
