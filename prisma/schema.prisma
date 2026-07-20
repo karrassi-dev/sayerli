@@ -35,6 +35,8 @@ model Entreprise {
   swift                String?
   typeCompte           String?               @default("pme")
   activite             String?
+  tauxEUR              Float?
+  tauxUSD              Float?
   clients              Client[]
   produitsServices     ProduitService[]
   declarationsPaiement DeclarationPaiement[]

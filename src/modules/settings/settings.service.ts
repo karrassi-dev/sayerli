@@ -210,7 +210,7 @@ export class SettingsService {
       }),
       this.prisma.entreprise.findUnique({
         where: { id: entrepriseId },
-        select: { devise: true, formatDate: true },
+        select: { devise: true, formatDate: true, tauxEUR: true, tauxUSD: true },
       }),
     ]);
     if (!user || !company) throw new NotFoundException('Données introuvables.');
@@ -219,6 +219,8 @@ export class SettingsService {
       theme: user.theme ?? 'system',
       devise: company.devise ?? 'MAD',
       formatDate: company.formatDate ?? 'DD/MM/YYYY',
+      tauxEUR: company.tauxEUR ?? null,
+      tauxUSD: company.tauxUSD ?? null,
     };
   }
 
@@ -234,6 +236,8 @@ export class SettingsService {
     if (dto.theme) userUpdate.theme = dto.theme;
     if (dto.devise) companyUpdate.devise = dto.devise;
     if (dto.formatDate) companyUpdate.formatDate = dto.formatDate;
+    if (dto.tauxEUR !== undefined) companyUpdate.tauxEUR = dto.tauxEUR;
+    if (dto.tauxUSD !== undefined) companyUpdate.tauxUSD = dto.tauxUSD;
 
     await Promise.all([
       Object.keys(userUpdate).length > 0

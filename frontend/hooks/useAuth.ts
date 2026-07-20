@@ -30,6 +30,8 @@ interface Entreprise {
   plan: string
   typeCompte: string
   activite: string | null
+  tauxEUR?: number | null
+  tauxUSD?: number | null
 }
 
 interface AuthState {

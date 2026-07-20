@@ -318,6 +318,8 @@
     "caEnAttente": "CA en attente",
     "caEnAttenteDesc": "montant dû non encaissé",
     "tauxRecouvrement": "Taux de recouvrement",
+    "tauxIndicatif": "taux indicatif",
+    "tauxNonConfig": "Configurez les taux de change dans Paramètres",
     "top5Clients": "Top 5 clients",
     "top5Desc": "par CA facturé",
     "facturesEnRetard": "Factures en retard",
@@ -1336,7 +1338,11 @@
         "title": "Langue et région",
         "lang": "Langue d'interface",
         "currency": "Devise",
-        "dateFormat": "Format de date"
+        "dateFormat": "Format de date",
+        "tauxConversion": "Taux de change (pour le tableau de bord)",
+        "tauxDesc": "Utilisés uniquement pour convertir les totaux du tableau de bord dans votre devise principale. Vos devis et factures ne sont pas modifiés.",
+        "tauxEUR": "Taux EUR → MAD",
+        "tauxUSD": "Taux USD → MAD"
       },
       "theme": {
         "title": "Apparence",

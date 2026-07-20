@@ -318,6 +318,8 @@
     "caEnAttente": "رقم الأعمال المنتظر",
     "caEnAttenteDesc": "مبلغ غير محصّل",
     "tauxRecouvrement": "نسبة التحصيل",
+    "tauxIndicatif": "سعر استرشادي",
+    "tauxNonConfig": "حدّد أسعار الصرف في الإعدادات",
     "top5Clients": "أفضل 5 عملاء",
     "top5Desc": "حسب إجمالي الفوترة",
     "facturesEnRetard": "الفواتير المتأخرة",
@@ -1335,7 +1337,11 @@
         "title": "اللغة والمنطقة",
         "lang": "لغة الواجهة",
         "currency": "العملة",
-        "dateFormat": "تنسيق التاريخ"
+        "dateFormat": "تنسيق التاريخ",
+        "tauxConversion": "أسعار الصرف (للوحة التحكم)",
+        "tauxDesc": "تُستخدم فقط لتحويل إجماليات لوحة التحكم إلى عملتك الرئيسية. لا يتأثر أي عرض سعر أو فاتورة.",
+        "tauxEUR": "سعر EUR → MAD",
+        "tauxUSD": "سعر USD → MAD"
       },
       "theme": {
         "title": "المظهر",

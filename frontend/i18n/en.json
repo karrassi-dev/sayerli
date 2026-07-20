@@ -318,6 +318,8 @@
     "caEnAttente": "Pending Revenue",
     "caEnAttenteDesc": "outstanding amount",
     "tauxRecouvrement": "Collection Rate",
+    "tauxIndicatif": "indicative rate",
+    "tauxNonConfig": "Set exchange rates in Settings",
     "top5Clients": "Top 5 Clients",
     "top5Desc": "by total billed",
     "facturesEnRetard": "Overdue Invoices",
@@ -1335,7 +1337,11 @@
         "title": "Language & Region",
         "lang": "Interface Language",
         "currency": "Currency",
-        "dateFormat": "Date Format"
+        "dateFormat": "Date Format",
+        "tauxConversion": "Exchange rates (for dashboard)",
+        "tauxDesc": "Used only to convert dashboard totals to your main currency. Your quotes and invoices are not affected.",
+        "tauxEUR": "EUR → MAD rate",
+        "tauxUSD": "USD → MAD rate"
       },
       "theme": {
         "title": "Appearance",

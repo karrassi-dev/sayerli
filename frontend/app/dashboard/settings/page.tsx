@@ -150,7 +150,7 @@ export default function SettingsPage() {
   const [logoUploading, setLogoUploading] = useState(false)
 
   // ─── Preferences state ───────────────────────────────────────────────────
-  const [prefs, setPrefs] = useState({ langue: 'fr', theme: 'system', devise: 'MAD', formatDate: 'DD/MM/YYYY' })
+  const [prefs, setPrefs] = useState({ langue: 'fr', theme: 'system', devise: 'MAD', formatDate: 'DD/MM/YYYY', tauxEUR: '' as string, tauxUSD: '' as string })
   const [prefsLoading, setPrefsLoading] = useState(true)
 
   // ─── Theme state ─────────────────────────────────────────────────────────
@@ -223,7 +223,7 @@ export default function SettingsPage() {
       const d = r.data?.data ?? r.data
       const savedTheme = d.theme ?? 'system'
       const savedLocale = d.langue ?? 'fr'
-      setPrefs({ langue: savedLocale, theme: savedTheme, devise: d.devise ?? 'MAD', formatDate: d.formatDate ?? 'DD/MM/YYYY' })
+      setPrefs({ langue: savedLocale, theme: savedTheme, devise: d.devise ?? 'MAD', formatDate: d.formatDate ?? 'DD/MM/YYYY', tauxEUR: d.tauxEUR != null ? String(d.tauxEUR) : '', tauxUSD: d.tauxUSD != null ? String(d.tauxUSD) : '' })
       setSelectedTheme(savedTheme)
       setTheme(savedTheme)
       if (['fr', 'en', 'ar'].includes(savedLocale)) setLocale(savedLocale as 'fr' | 'en' | 'ar')
@@ -316,7 +316,13 @@ export default function SettingsPage() {
   const saveLanguage = async () => {
     setSaving(true)
     try {
-      await settingsApi.updatePreferences({ langue: prefs.langue, devise: prefs.devise, formatDate: prefs.formatDate })
+      await settingsApi.updatePreferences({
+        langue: prefs.langue,
+        devise: prefs.devise,
+        formatDate: prefs.formatDate,
+        tauxEUR: prefs.tauxEUR !== '' ? parseFloat(prefs.tauxEUR) : null,
+        tauxUSD: prefs.tauxUSD !== '' ? parseFloat(prefs.tauxUSD) : null,
+      })
       if (['fr', 'en', 'ar'].includes(prefs.langue)) setLocale(prefs.langue as 'fr' | 'en' | 'ar')
       success('Préférences enregistrées', 'Langue et région mises à jour.')
       triggerSaved()
@@ -721,6 +727,48 @@ export default function SettingsPage() {
                   <option>MM/DD/YYYY</option>
                   <option>YYYY-MM-DD</option>
                 </select>
+              </div>
+            </div>
+
+            {/* ── Exchange rates ── */}
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-4 space-y-3">
+              <div>
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{t('pages.settings.language.tauxConversion')}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t('pages.settings.language.tauxDesc')}</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">{t('pages.settings.language.tauxEUR')}</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">1 EUR =</span>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      placeholder="10.85"
+                      value={prefs.tauxEUR}
+                      onChange={e => setPrefs(p => ({ ...p, tauxEUR: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                    <span className="text-xs text-slate-500 dark:text-slate-400">MAD</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">{t('pages.settings.language.tauxUSD')}</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">1 USD =</span>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      placeholder="9.90"
+                      value={prefs.tauxUSD}
+                      onChange={e => setPrefs(p => ({ ...p, tauxUSD: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                    <span className="text-xs text-slate-500 dark:text-slate-400">MAD</span>
+                  </div>
+                </div>
               </div>
             </div>
 

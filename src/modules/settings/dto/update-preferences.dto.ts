@@ -1,4 +1,4 @@
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class UpdatePreferencesDto {
   @IsOptional()
@@ -18,4 +18,16 @@ export class UpdatePreferencesDto {
   @IsString()
   @IsIn(['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'])
   formatDate?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0.01)
+  @Max(99999)
+  tauxEUR?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0.01)
+  @Max(99999)
+  tauxUSD?: number;
 }

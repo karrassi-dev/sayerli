@@ -148,6 +148,34 @@ export default function DashboardPage() {
 
   const monthlyData = analytics?.revenus.mensuel ?? EMPTY_MONTHS
 
+  // ── Currency conversion for KPI totals ───────────────────────────────────
+  const defaultDevise = entreprise?.devise ?? 'MAD'
+  const tauxEUR = entreprise?.tauxEUR ?? null
+  const tauxUSD = entreprise?.tauxUSD ?? null
+  const hasMultiDevise = (analytics?.parDevise?.length ?? 0) > 1
+  const ratesConfigured = tauxEUR !== null && tauxUSD !== null
+
+  function toMAD(amount: number, devise: string): number {
+    if (devise === 'EUR') return amount * (tauxEUR ?? 1)
+    if (devise === 'USD') return amount * (tauxUSD ?? 1)
+    return amount
+  }
+  function toMADRate(devise: string): number {
+    if (devise === 'EUR') return tauxEUR ?? 1
+    if (devise === 'USD') return tauxUSD ?? 1
+    return 1
+  }
+  function convert(amount: number, from: string): number {
+    return toMAD(amount, from) / toMADRate(defaultDevise)
+  }
+
+  const convertedCA = analytics && hasMultiDevise && ratesConfigured
+    ? analytics.parDevise.reduce((s, d) => s + convert(d.caPaye, d.devise), 0)
+    : null
+  const convertedEnAttente = analytics && hasMultiDevise && ratesConfigured
+    ? analytics.parDevise.reduce((s, d) => s + convert(d.caEnAttente, d.devise), 0)
+    : null
+
   return (
     <div className="space-y-5 pb-8">
 
@@ -223,8 +251,18 @@ export default function DashboardPage() {
         <StatsCard
           loading={loading}
           label={t('dashboard.totalRevenue')}
-          value={analytics ? formatMAD(analytics.paiements.total) : '—'}
-          sub={analytics ? `${formatMAD(analytics.caEnAttente)} ${t('dashboard.caEnAttenteDesc')}` : undefined}
+          value={analytics
+            ? convertedCA !== null
+              ? formatCurrency(convertedCA, defaultDevise)
+              : formatMAD(analytics.paiements.total)
+            : '—'}
+          sub={analytics
+            ? convertedEnAttente !== null
+              ? `${formatCurrency(convertedEnAttente, defaultDevise)} ${t('dashboard.caEnAttenteDesc')} · ${t('dashboard.tauxIndicatif')}`
+              : hasMultiDevise && !ratesConfigured
+                ? t('dashboard.tauxNonConfig')
+                : `${formatMAD(analytics.caEnAttente)} ${t('dashboard.caEnAttenteDesc')}`
+            : undefined}
           icon={TrendingUp}
           trend={analytics?.revenus.evolution}
           color="blue"

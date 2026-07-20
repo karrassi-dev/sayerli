@@ -219,7 +219,7 @@ export const settingsApi = {
 
   // Preferences
   getPreferences: () => api.get('/settings/preferences'),
-  updatePreferences: (data: { langue?: string; theme?: string; devise?: string; formatDate?: string }) =>
+  updatePreferences: (data: { langue?: string; theme?: string; devise?: string; formatDate?: string; tauxEUR?: number | null; tauxUSD?: number | null }) =>
     api.patch('/settings/preferences', data),
 
   // Notifications
