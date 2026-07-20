@@ -18,14 +18,24 @@ import {
 import { dashboardApi, facturesApi } from '@/lib/api'
 import { formatMAD } from '@/lib/mock-data'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { ROLE_DEFAULTS, PermissionKey } from '@/lib/role-permissions'
+
+// ── Permission helper ────────────────────────────────────────────────────────
+
+function canDo(perm: PermissionKey, role: string | undefined, removed: string[]): boolean {
+  if (!role) return false
+  if (role.toUpperCase() === 'PROPRIETAIRE') return true
+  const defaults = ROLE_DEFAULTS[role.toUpperCase()] ?? []
+  return defaults.includes(perm) && !removed.includes(perm)
+}
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const QUICK_ACTIONS = [
-  { href: '/dashboard/devis?action=create',    icon: '📄', labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950' },
-  { href: '/dashboard/factures?action=create', icon: '🧾', labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950' },
-  { href: '/dashboard/clients?action=create',  icon: '👤', labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950' },
-  { href: '/dashboard/paiements?action=create',icon: '💰', labelKey: 'dashboard.payments',   color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950' },
+const QUICK_ACTIONS: { href: string; icon: string; labelKey: string; color: string; permission: PermissionKey }[] = [
+  { href: '/dashboard/devis?action=create',    icon: '📄', labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950', permission: 'devis.create' },
+  { href: '/dashboard/factures?action=create', icon: '🧾', labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950',                 permission: 'factures.create' },
+  { href: '/dashboard/clients?action=create',  icon: '👤', labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950',       permission: 'clients.create' },
+  { href: '/dashboard/paiements?action=create',icon: '💰', labelKey: 'dashboard.payments',   color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950',       permission: 'paiements.create' },
 ]
 
 const ACTIVITY_COLORS: Record<string, string> = {
@@ -119,6 +129,11 @@ export default function DashboardPage() {
   const [typeFilter, setTypeFilter] = useState<TypeClientFilter>('ALL')
   const [relancingId, setRelancingId] = useState<string | null>(null)
 
+  const removed = user?.permissionsRetirees ?? []
+  const role    = user?.role ?? ''
+
+  const visibleQuickActions = QUICK_ACTIONS.filter(a => canDo(a.permission, role, removed))
+
   const showProfileBanner =
     !bannerDismissed &&
     entreprise !== null &&
@@ -200,10 +215,12 @@ export default function DashboardPage() {
               )
             })}
           </div>
-          <Link href="/dashboard/devis?action=create" className="btn-primary text-sm hidden sm:flex">
-            <Plus className="w-4 h-4" />
-            {t('dashboard.newQuote')}
-          </Link>
+          {canDo('devis.create', role, removed) && (
+            <Link href="/dashboard/devis?action=create" className="btn-primary text-sm hidden sm:flex">
+              <Plus className="w-4 h-4" />
+              {t('dashboard.newQuote')}
+            </Link>
+          )}
         </div>
       </div>
 
@@ -345,7 +362,7 @@ export default function DashboardPage() {
         <div className="card rounded-2xl p-5">
           <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-4">{t('dashboard.quickActions')}</h2>
           <div className="grid grid-cols-2 gap-3">
-            {QUICK_ACTIONS.map(a => (
+            {visibleQuickActions.map(a => (
               <Link
                 key={a.href}
                 href={a.href}
@@ -484,13 +501,18 @@ export default function DashboardPage() {
                       'Merci pour votre confiance.',
                     ].join('\n')
 
+                const canRelancer = canDo('factures.relance', role, removed)
+
                 const handleRelancer = async () => {
                   setRelancingId(f.id)
                   try {
                     await facturesApi.relancer(f.id)
-                  } catch { /* email failed silently — still open WhatsApp */ }
-                  finally { setRelancingId(null) }
-                  if (phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+                    if (phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+                  } catch {
+                    // backend rejected (403, rate limit, etc.) — do not open WhatsApp
+                  } finally {
+                    setRelancingId(null)
+                  }
                 }
 
                 return (
@@ -516,18 +538,20 @@ export default function DashboardPage() {
                         )}
                       </div>
                     </div>
-                    <button
-                      onClick={handleRelancer}
-                      disabled={relancingId === f.id}
-                      title={t('dashboard.relancer')}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all bg-[#25D366] hover:bg-[#1ebe5d] text-white disabled:opacity-60"
-                    >
-                      {relancingId === f.id
-                        ? <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        : <Bell className="w-3 h-3" />
-                      }
-                      <span className="hidden sm:inline">{t('dashboard.relancer')}</span>
-                    </button>
+                    {canRelancer && (
+                      <button
+                        onClick={handleRelancer}
+                        disabled={relancingId === f.id}
+                        title={t('dashboard.relancer')}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all bg-[#25D366] hover:bg-[#1ebe5d] text-white disabled:opacity-60"
+                      >
+                        {relancingId === f.id
+                          ? <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          : <Bell className="w-3 h-3" />
+                        }
+                        <span className="hidden sm:inline">{t('dashboard.relancer')}</span>
+                      </button>
+                    )}
                   </div>
                 )
               })}

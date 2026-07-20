@@ -15,6 +15,7 @@ import { CreerUtilisateurDto } from './dto/creer-utilisateur.dto';
 import { ModifierUtilisateurDto } from './dto/modifier-utilisateur.dto';
 import { AccepterInvitationDto } from './dto/accepter-invitation.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Permission } from '../../common/decorators/permission.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
@@ -26,6 +27,7 @@ export class UsersController {
 
   @Get()
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
+  @Permission('equipe.read')
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('recherche') recherche?: string,
@@ -35,6 +37,7 @@ export class UsersController {
 
   @Get(':id')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
+  @Permission('equipe.read')
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,

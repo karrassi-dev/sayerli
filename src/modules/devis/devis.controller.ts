@@ -15,6 +15,7 @@ import { CreerDevisDto } from './dto/creer-devis.dto';
 import { ModifierStatutDevisDto } from './dto/modifier-statut-devis.dto';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Permission } from '../../common/decorators/permission.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
 
 @Controller('devis')
@@ -23,6 +24,7 @@ export class DevisController {
 
   @Get()
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.read')
   async lister(
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
     @Query('statut') statut?: StatutDevis,
@@ -34,6 +36,7 @@ export class DevisController {
 
   @Get(':id')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.read')
   async obtenir(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -43,6 +46,7 @@ export class DevisController {
 
   @Get(':id/pdf')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.read')
   async obtenirPourPdf(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -52,6 +56,7 @@ export class DevisController {
 
   @Post()
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.create')
   async creer(
     @Body() dto: CreerDevisDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -61,6 +66,7 @@ export class DevisController {
 
   @Put(':id')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.edit')
   async modifier(
     @Param('id') id: string,
     @Body() dto: CreerDevisDto,
@@ -71,6 +77,7 @@ export class DevisController {
 
   @Patch(':id/statut')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.edit')
   async modifierStatut(
     @Param('id') id: string,
     @Body() dto: ModifierStatutDevisDto,
@@ -81,6 +88,7 @@ export class DevisController {
 
   @Post(':id/lien-public')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.send')
   async genererLien(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -90,6 +98,7 @@ export class DevisController {
 
   @Post(':id/dupliquer')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE, RoleType.ASSISTANT)
+  @Permission('devis.create')
   async dupliquer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -99,6 +108,7 @@ export class DevisController {
 
   @Post(':id/convertir-facture')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
+  @Permission('factures.create')
   async convertirEnFacture(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
@@ -108,6 +118,7 @@ export class DevisController {
 
   @Delete(':id')
   @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.PROPRIETAIRE)
+  @Permission('devis.delete')
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
