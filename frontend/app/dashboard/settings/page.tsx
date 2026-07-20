@@ -53,18 +53,18 @@ const PRESET_COLORS = [
 ]
 
 const PLAN_LABELS: Record<string, { label: string; prix: string; features: string[] }> = {
-  STARTER: { label: 'Starter', prix: '0',   features: ['5 clients', '5 devis/mois', '5 factures/mois', '1 utilisateur', '3 relances/mois', '10 emails/mois'] },
-  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '100 devis/mois', '100 factures/mois', '1 utilisateur', 'Relances illimitées', '100 emails/mois', 'Journal des ventes', 'Support email 48h'] },
-  BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', '3 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
+  STARTER: { label: 'Starter', prix: '0',   features: ['5 clients', '5 devis/mois', '5 factures/mois', '2 utilisateurs', '3 relances/mois', '5 emails/mois'] },
+  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '100 devis/mois', '100 factures/mois', '5 utilisateurs', 'Relances illimitées', 'Emails illimités', 'Journal des ventes', 'Support email 48h'] },
+  BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', '12 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
 }
 
 const PLAN_ORDER: Record<string, number> = { STARTER: 0, PRO: 1, BUSINESS: 2 }
 const WA_OWNER = '447476607473'
 
 const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number }> = {
-  STARTER:  { clients: 3,  devisParMois: 5,  facturesParMois: 5,  utilisateurs: 1, relancesParMois: 3,  receiptsParMois: 5  },
-  PRO:      { clients: 20, devisParMois: 20, facturesParMois: 20, utilisateurs: 1, relancesParMois: -1, receiptsParMois: -1 },
-  BUSINESS: { clients: -1, devisParMois: -1, facturesParMois: -1, utilisateurs: 3, relancesParMois: -1, receiptsParMois: -1 },
+  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5  },
+  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1 },
+  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1 },
 }
 
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
