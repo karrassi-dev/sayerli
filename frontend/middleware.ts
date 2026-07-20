@@ -5,16 +5,18 @@ const TOKEN_KEY = 'sayerli_token'
 
 // Maps route prefixes to the permission key required to access them
 const ROUTE_PERMISSION_MAP: Record<string, string> = {
-  '/dashboard/clients':      'clients.read',
-  '/dashboard/devis':        'devis.read',
-  '/dashboard/factures':     'factures.read',
-  '/dashboard/paiements':    'paiements.read',
-  '/dashboard/declarations': 'paiements.declarations',
-  '/dashboard/export':       'export',
-  '/dashboard/catalogue':    'catalogue.read',
-  '/dashboard/equipe':       'equipe.read',
-  '/dashboard/settings':     'settings',
-  '/dashboard':              'dashboard',
+  '/dashboard/clients':          'clients.read',
+  '/dashboard/devis':            'devis.read',
+  '/dashboard/factures':         'factures.read',
+  '/dashboard/paiements':        'paiements.read',
+  '/dashboard/declarations-tva': 'paiements.declarations',
+  '/dashboard/declarations':     'paiements.declarations',
+  '/dashboard/export':           'export',
+  '/dashboard/catalogue':        'catalogue.read',
+  '/dashboard/equipe':           'equipe.read',
+  '/dashboard/settings':         'settings',
+  '/dashboard/bons-livraison':   'bons-livraison.read',
+  '/dashboard':                  'dashboard',
 }
 
 function decodeJwt(token: string): { role: string | null; superAdmin: boolean; permissionsRetirees: string[] } {

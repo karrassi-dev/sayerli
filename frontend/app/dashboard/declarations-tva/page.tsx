@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { Calculator, AlertCircle, Info, RefreshCw } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
+import { canDo } from '@/lib/permissions'
 import { declarationsTvaApi } from '@/lib/api'
 import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -68,7 +69,10 @@ function periodPresets() {
 
 export default function DeclarationsTVAPage() {
   const { t } = useTranslation()
-  const { entreprise } = useAuth()
+  const { entreprise, user } = useAuth()
+  const role = user?.role ?? ''
+  const removed: string[] = user?.permissionsRetirees ?? []
+  const canView = canDo('paiements.declarations', role, removed)
 
   const presets = periodPresets()
 
@@ -85,6 +89,7 @@ export default function DeclarationsTVAPage() {
   const labelClass = 'text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block'
 
   const calculer = async () => {
+    if (!canView) return
     setLoading(true)
     setError(null)
     try {
@@ -101,7 +106,7 @@ export default function DeclarationsTVAPage() {
   }
 
   // Auto-calculate on mount with current month
-  useEffect(() => { calculer() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (canView) calculer() }, [canView]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sync taux from entreprise on load
   useEffect(() => {
@@ -141,7 +146,7 @@ export default function DeclarationsTVAPage() {
           </div>
         </div>
         {/* Download PDF button */}
-        {pdfData && (
+        {pdfData && canView && (
           <DeclarationTVADownloadButton
             data={pdfData}
             debut={debut}
@@ -254,7 +259,7 @@ export default function DeclarationsTVAPage() {
 
         <button
           onClick={calculer}
-          disabled={loading || !debut || !fin}
+          disabled={loading || !debut || !fin || !canView}
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-60 transition-all"
         >
           {loading
