@@ -21,8 +21,20 @@ export class LogsService {
 
   log(dto: LogDto): void {
     this.prisma.activityLog
-      .create({ data: dto as Prisma.ActivityLogCreateInput })
-      .catch(err => this.logger.error(`Failed to write activity log [${dto.action}]: ${err?.message ?? err}`));
+      .create({
+        data: {
+          entrepriseId: dto.entrepriseId,
+          userId: dto.userId,
+          userNom: dto.userNom,
+          action: dto.action,
+          entityType: dto.entityType,
+          ...(dto.entityId   !== undefined && { entityId:   dto.entityId }),
+          ...(dto.entityRef  !== undefined && { entityRef:  dto.entityRef }),
+          ...(dto.metadata   !== undefined && { metadata:   dto.metadata as Prisma.InputJsonValue }),
+        },
+      })
+      .then(() => this.logger.log(`[OK] ${dto.action} by ${dto.userNom || dto.userId}`))
+      .catch(err => this.logger.error(`[FAIL] ${dto.action}: ${err?.message ?? err}`));
   }
 
   async lister(

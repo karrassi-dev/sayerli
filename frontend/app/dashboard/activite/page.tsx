@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Activity, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { Activity, ChevronLeft, ChevronRight, X, RefreshCw } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -95,6 +95,7 @@ export default function ActivitePage() {
   const [meta, setMeta] = useState<PaginationMeta>({ total: 0, page: 1, limit: 50, totalPages: 1 })
   const [membres, setMembres] = useState<Membre[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
   const [filterUserId, setFilterUserId] = useState('')
   const [filterType, setFilterType] = useState('')
@@ -104,8 +105,9 @@ export default function ActivitePage() {
 
   const canView = canDo('settings', role, removed)
 
-  const fetchLogs = useCallback(async () => {
-    setLoading(true)
+  const fetchLogs = useCallback(async (silent = false) => {
+    if (silent) setRefreshing(true)
+    else setLoading(true)
     try {
       const params: Record<string, string | number> = { page }
       if (filterUserId) params.userId = filterUserId
@@ -122,9 +124,10 @@ export default function ActivitePage() {
         totalPages: d?.perPage ? Math.ceil((d?.total ?? 0) / d.perPage) : 1,
       })
     } catch {
-      setLogs([])
+      if (!silent) setLogs([])
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
   }, [page, filterUserId, filterType, filterFrom, filterTo])
 
@@ -141,6 +144,12 @@ export default function ActivitePage() {
   useEffect(() => {
     if (!canView) return
     fetchLogs()
+  }, [canView, fetchLogs])
+
+  useEffect(() => {
+    if (!canView) return
+    const id = setInterval(() => fetchLogs(true), 30000)
+    return () => clearInterval(id)
   }, [canView, fetchLogs])
 
   const handleFilterChange = () => {
@@ -247,6 +256,16 @@ export default function ActivitePage() {
               {t('pages.activite.filterReset')}
             </button>
           )}
+
+          {/* Manual refresh */}
+          <button
+            onClick={() => fetchLogs()}
+            disabled={loading}
+            className="ml-auto flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
+          >
+            <RefreshCw className={cn('w-3.5 h-3.5', refreshing && 'animate-spin')} />
+            Actualiser
+          </button>
         </div>
       </div>
 
