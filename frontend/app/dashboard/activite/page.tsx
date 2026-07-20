@@ -50,14 +50,16 @@ const AVATAR_COLORS = [
   'from-pink-500 to-pink-600',
 ]
 
-function getAvatarColor(userId: string): string {
+function getAvatarColor(userId: string | null | undefined): string {
+  if (!userId) return AVATAR_COLORS[0]
   let hash = 0
   for (let i = 0; i < userId.length; i++) hash = userId.charCodeAt(i) + ((hash << 5) - hash)
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-function getInitials(nom: string): string {
-  return nom.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+function getInitials(nom: string | null | undefined): string {
+  if (!nom) return '?'
+  return nom.split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?'
 }
 
 function relativeTime(dateStr: string): string {
@@ -109,8 +111,10 @@ export default function ActivitePage() {
       if (filterFrom) params.dateDebut = filterFrom
       if (filterTo) params.dateFin = filterTo
       const res = await api.get('/logs', { params })
-      setLogs(res.data.data ?? [])
-      setMeta(res.data.meta ?? { total: 0, page: 1, limit: 50, totalPages: 1 })
+      const d = res.data
+      const logsArr = Array.isArray(d?.data) ? d.data : Array.isArray(d) ? d : []
+      setLogs(logsArr)
+      setMeta(d?.meta ?? { total: 0, page: 1, limit: 50, totalPages: 1 })
     } catch {
       setLogs([])
     } finally {
@@ -120,7 +124,12 @@ export default function ActivitePage() {
 
   useEffect(() => {
     if (!canView) return
-    api.get('/logs/membres').then(res => setMembres(res.data ?? [])).catch(() => {})
+    api.get('/logs/membres')
+      .then(res => {
+        const d = res.data
+        setMembres(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : [])
+      })
+      .catch(() => {})
   }, [canView])
 
   useEffect(() => {
