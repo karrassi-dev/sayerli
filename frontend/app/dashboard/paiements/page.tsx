@@ -16,6 +16,8 @@ import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useAuth } from '@/hooks/useAuth'
+import { canDo } from '@/lib/permissions'
 import { paiementsApi, facturesApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
@@ -113,6 +115,9 @@ const PAYABLE_STATUTS = ['ENVOYEE', 'PARTIELLE', 'EN_RETARD']
 export default function PaiementsPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
+  const { user } = useAuth()
+  const removed = user?.permissionsRetirees ?? []
+  const role = user?.role ?? ''
 
   const [paiements, setPaiements] = useState<ApiPaiement[]>([])
   const [stats, setStats] = useState<ApiStats | null>(null)
@@ -272,6 +277,7 @@ export default function PaiementsPage() {
   // ── Handlers ───────────────────────────────────────────────────────────────
 
   function openCreate() {
+    if (!canDo('paiements.create', role, removed)) return
     setForm({ ...EMPTY_FORM, datePaiement: todayISO() })
     setFormErrors({})
     fetchFacturesPayables()
@@ -360,13 +366,15 @@ export default function PaiementsPage() {
                 Timeline
               </button>
             </div>
-            <button
-              onClick={openCreate}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
-            >
-              <Plus className="w-4 h-4" />
-              {t('pages.paiements.addPaiement')}
-            </button>
+            {canDo('paiements.create', role, removed) && (
+              <button
+                onClick={openCreate}
+                className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
+              >
+                <Plus className="w-4 h-4" />
+                {t('pages.paiements.addPaiement')}
+              </button>
+            )}
           </div>
         }
       />
@@ -498,7 +506,7 @@ export default function PaiementsPage() {
                                     align="right"
                                     items={[
                                       { label: 'Voir', icon: Eye, onClick: () => setSelected(p) },
-                                      { label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(p), variant: 'danger' as const },
+                                      ...(canDo('paiements.delete', role, removed) ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(p), variant: 'danger' as const }] : []),
                                     ]}
                                   />
                                 </div>

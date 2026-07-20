@@ -11,6 +11,8 @@ import { Modal, ConfirmModal } from '@/components/dashboard/ui/Modal'
 import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
+import { useAuth } from '@/hooks/useAuth'
+import { canDo } from '@/lib/permissions'
 import { catalogueApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { formatMAD } from '@/lib/mock-data'
@@ -139,6 +141,9 @@ function ItemFormFields({ form, errors, onChange }: {
 export default function CataloguePage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
+  const { user } = useAuth()
+  const removed = user?.permissionsRetirees ?? []
+  const role = user?.role ?? ''
 
   const [items, setItems] = useState<CatalogueItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -205,7 +210,10 @@ export default function CataloguePage() {
     if (errors[f]) setErrors(e => { const n = { ...e }; delete n[f]; return n })
   }
 
-  const openCreate = () => { setForm(EMPTY_FORM); setErrors({}); setCreateOpen(true) }
+  const openCreate = () => {
+    if (!canDo('catalogue.manage', role, removed)) return
+    setForm(EMPTY_FORM); setErrors({}); setCreateOpen(true)
+  }
   const openEdit = (item: CatalogueItem) => {
     setForm({
       nom: item.nom,
@@ -312,10 +320,12 @@ export default function CataloguePage() {
         title={t('pages.catalogue.title')}
         sub={t('pages.catalogue.sub')}
         actions={
-          <button className="btn-primary text-sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" />
-            {t('pages.catalogue.add')}
-          </button>
+          canDo('catalogue.manage', role, removed) ? (
+            <button className="btn-primary text-sm" onClick={openCreate}>
+              <Plus className="w-4 h-4" />
+              {t('pages.catalogue.add')}
+            </button>
+          ) : undefined
         }
       />
 
@@ -369,7 +379,7 @@ export default function CataloguePage() {
             icon={Package}
             title={t('pages.catalogue.empty.title')}
             desc={t('pages.catalogue.empty.desc')}
-            action={{ label: t('pages.catalogue.add'), onClick: openCreate }}
+            action={canDo('catalogue.manage', role, removed) ? { label: t('pages.catalogue.add'), onClick: openCreate } : undefined}
             color="blue"
           />
         ) : (
@@ -411,10 +421,10 @@ export default function CataloguePage() {
                         </span>
                       </td>
                       <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
-                        <ActionMenu items={[
+                        <ActionMenu items={canDo('catalogue.manage', role, removed) ? [
                           { label: t('common.edit'), icon: Pencil, onClick: () => openEdit(item) },
                           { label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(item), variant: 'danger', separator: true },
-                        ]} />
+                        ] : []} />
                       </td>
                     </tr>
                   ))}
@@ -443,10 +453,10 @@ export default function CataloguePage() {
                     </div>
                     {item.description && <p className="text-xs text-slate-400 truncate mt-0.5">{item.description}</p>}
                   </div>
-                  <ActionMenu items={[
+                  <ActionMenu items={canDo('catalogue.manage', role, removed) ? [
                     { label: t('common.edit'), icon: Pencil, onClick: () => openEdit(item) },
                     { label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(item), variant: 'danger', separator: true },
-                  ]} />
+                  ] : []} />
                 </div>
               ))}
             </div>

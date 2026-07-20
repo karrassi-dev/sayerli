@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
+import { canDo } from '@/lib/permissions'
 import { api } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
@@ -292,7 +293,9 @@ const PERIOD_KEYS: Period[] = ['thisMonth', 'lastMonth', 'last3Months', 'thisYea
 
 export default function ExportPage() {
   const { t }          = useTranslation()
-  const { entreprise } = useAuth()
+  const { entreprise, user } = useAuth()
+  const removed = user?.permissionsRetirees ?? []
+  const role    = user?.role ?? ''
 
   const [exportMode,      setExportMode]      = useState<ExportMode>('general')
   const [selected,        setSelected]        = useState<Set<EntityKey>>(
@@ -726,6 +729,7 @@ export default function ExportPage() {
         onClick={handleExport}
         disabled={
           loading ||
+          !canDo('export', role, removed) ||
           (exportMode === 'general' && selected.size === 0) ||
           (exportMode === 'journal' && enabledJournalCols.length === 0)
         }

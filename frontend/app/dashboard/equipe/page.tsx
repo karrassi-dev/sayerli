@@ -15,6 +15,7 @@ import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
+import { canDo } from '@/lib/permissions'
 import { equipeApi, authApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import {
@@ -126,7 +127,9 @@ const EQUIPE_LIMIT: Record<string, number> = { STARTER: 2, PRO: 5, BUSINESS: 12 
 export default function EquipePage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
-  const { entreprise } = useAuth()
+  const { entreprise, user } = useAuth()
+  const removed = user?.permissionsRetirees ?? []
+  const role = user?.role ?? ''
 
   // i18n helpers — fall back to role-permissions.ts constants if key not yet translated
   const rl = (role: string) => { const k = `pages.equipe.roles.${role}.label`; const v = t(k); return v === k ? (ROLE_LABELS[role] ?? role) : v }
@@ -190,6 +193,7 @@ export default function EquipePage() {
   // ── Computed ───────────────────────────────────────────────────────────────
 
   const isAdmin = currentUserRole === 'ADMIN' || currentUserRole === 'PROPRIETAIRE'
+  const canManage = canDo('equipe.manage', role, removed)
   const activeCount = membres.filter(m => m.statut === 'ACTIF').length
   const planLimite = EQUIPE_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 1
 
@@ -381,7 +385,7 @@ export default function EquipePage() {
         title={t('pages.equipe.title')}
         sub={t('pages.equipe.sub')}
         actions={
-          isAdmin ? (
+          canManage ? (
             <div className="flex items-center gap-2">
               {planLimite !== -1 && (
                 <span className={cn(
@@ -457,7 +461,7 @@ export default function EquipePage() {
             icon={UserCog}
             title={t('pages.equipe.empty.title')}
             desc={t('pages.equipe.empty.desc')}
-            action={isAdmin ? { label: t('pages.equipe.inviteMember'), onClick: openInvite } : undefined}
+            action={canManage ? { label: t('pages.equipe.inviteMember'), onClick: openInvite } : undefined}
             color="blue"
           />
         </div>
@@ -513,7 +517,7 @@ export default function EquipePage() {
             })}
 
             {/* Invite placeholder */}
-            {isAdmin && (
+            {canManage && (
               <button
                 onClick={openInvite}
                 className="card rounded-2xl p-5 border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-3 text-center hover:border-primary-400 dark:hover:border-primary-600 hover:bg-primary-50/50 dark:hover:bg-primary-950/20 transition-all group min-h-[160px]"
@@ -597,7 +601,7 @@ export default function EquipePage() {
                 </div>
               </div>
 
-              {isAdmin && !isMe && (
+              {canManage && !isMe && (
                 <div className="flex flex-wrap gap-2 pt-2">
                   <button
                     onClick={() => { setSelectedMember(null); openEdit(selectedMember) }}
