@@ -111,6 +111,7 @@ export class DevisService {
             remise,
             totalHT,
             totalTTC,
+            devise: dto.devise ?? 'MAD',
             dateExpiration: dto.dateExpiration ? new Date(dto.dateExpiration) : null,
             notes: dto.notes,
             lignes: {
@@ -347,6 +348,7 @@ export class DevisService {
             numeroFacture,
             publicToken: uuidv4(),
             statut: 'BROUILLON',
+            devise: (devis as any).devise ?? 'MAD',
             dateEcheance: devis.dateExpiration ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             taxe: devis.taxe,
             remise: devis.remise,

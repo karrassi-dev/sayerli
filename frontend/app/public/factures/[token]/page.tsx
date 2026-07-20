@@ -49,6 +49,7 @@ interface PublicFacture {
   id: string
   numeroFacture: string
   statut: string
+  devise?: string
   totalHT: number | string
   taxe: number | string
   totalTTC: number | string
@@ -85,8 +86,11 @@ interface DeclarationForm {
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : v }
 
-function formatMAD(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
+const CURRENCY_LOCALE: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
+function formatMAD(v: number | string, devise = 'MAD') {
+  const locale = CURRENCY_LOCALE[devise] ?? 'fr-MA'
+  const currency = CURRENCY_LOCALE[devise] ? devise : 'MAD'
+  return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v))
 }
 
 function formatDate(d: string | null | undefined) {
@@ -152,6 +156,7 @@ function DeclarationSuccessScreen({
     taxe: n(facture.taxe),
     totalTTC: n(facture.totalTTC),
     remise: n(facture.remise ?? 0),
+    devise: facture.devise ?? 'MAD',
     montantDejaPayeAvant: n(facture.montantPaye),
     devisReference: facture.devis?.reference ?? null,
     lignes: facture.lignes.map(l => ({
@@ -331,7 +336,7 @@ function DeclarationModal({
 
         <div className="p-5 space-y-4">
           <div className="p-3 bg-amber-50 border border-amber-200 rounded">
-            <p className="text-xs text-amber-700">Reste à payer : <strong>{formatMAD(restant)}</strong></p>
+            <p className="text-xs text-amber-700">Reste à payer : <strong>{formatMAD(restant, facture.devise)}</strong></p>
           </div>
 
           <div>
@@ -722,8 +727,8 @@ export default function PublicFacturePage() {
                   <tr key={l.id ?? i} className={i % 2 === 1 ? 'bg-gray-50' : ''}>
                     <td className="px-4 py-3 text-gray-900 font-medium border-b border-gray-100">{l.description}</td>
                     <td className="px-4 py-3 text-center text-gray-500 border-b border-gray-100 hidden sm:table-cell">{n(l.quantite)}</td>
-                    <td className="px-4 py-3 text-right text-gray-500 border-b border-gray-100 hidden sm:table-cell">{formatMAD(n(l.prixUnitaire))}</td>
-                    <td className="px-4 py-3 text-right font-bold text-gray-900 border-b border-gray-100">{formatMAD(n(l.quantite) * n(l.prixUnitaire))}</td>
+                    <td className="px-4 py-3 text-right text-gray-500 border-b border-gray-100 hidden sm:table-cell">{formatMAD(n(l.prixUnitaire), facture.devise)}</td>
+                    <td className="px-4 py-3 text-right font-bold text-gray-900 border-b border-gray-100">{formatMAD(n(l.quantite) * n(l.prixUnitaire), facture.devise)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -863,7 +868,7 @@ export default function PublicFacturePage() {
                 <p className={cn(
                   'text-xl font-black',
                   isOverdue ? 'text-red-600' : 'text-gray-900',
-                )}>{formatMAD(montantRestant)}</p>
+                )}>{formatMAD(montantRestant, facture.devise)}</p>
               </div>
             </div>
           )}

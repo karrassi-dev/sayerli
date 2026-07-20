@@ -19,7 +19,7 @@ import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { facturesApi, clientsApi, paiementsApi } from '@/lib/api'
 import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
-import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { cn, toWhatsAppNumber, formatCurrency } from '@/lib/utils'
 import { useCurrency } from '@/hooks/useCurrency'
 import { canDo } from '@/lib/permissions'
 
@@ -45,6 +45,7 @@ interface ApiFacture {
   id: string
   numeroFacture: string
   statut: string
+  devise?: string
   totalHT: number | string
   taxe: number | string
   totalTTC: number | string
@@ -73,6 +74,7 @@ interface FactureForm {
   clientId: string
   dateEcheance: string
   taxe: string
+  devise: string
   notes: string
   lignes: LigneForm[]
 }
@@ -89,7 +91,7 @@ interface PaiementForm {
 
 const EMPTY_LIGNE: LigneForm = { description: '', quantite: '1', prixUnitaire: '' }
 const EMPTY_FORM: FactureForm = {
-  clientId: '', dateEcheance: '', taxe: '20', notes: '', lignes: [{ ...EMPTY_LIGNE }],
+  clientId: '', dateEcheance: '', taxe: '20', devise: 'MAD', notes: '', lignes: [{ ...EMPTY_LIGNE }],
 }
 const EMPTY_PAIEMENT: PaiementForm = {
   montant: '', methode: 'VIREMENT', reference: '', datePaiement: new Date().toISOString().split('T')[0], notes: '',
@@ -163,6 +165,14 @@ function FactureFormFields({
         <div>
           <label className={labelClass}>{t('pages.factures.form.taxe')}</label>
           <input type="number" min="0" max="100" step="1" value={form.taxe} onChange={e => onChange('taxe', e.target.value)} className={inputClass} />
+        </div>
+        <div>
+          <label className={labelClass}>{t('pages.devis.form.devise') || 'Devise'}</label>
+          <select value={form.devise} onChange={e => onChange('devise' as keyof Omit<FactureForm, 'lignes'>, e.target.value)} className={inputClass}>
+            <option value="MAD">MAD — Dirham</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="USD">USD — Dollar</option>
+          </select>
         </div>
       </div>
 
@@ -383,6 +393,7 @@ export default function FacturesPage() {
     clientId: form.clientId,
     dateEcheance: form.dateEcheance || undefined,
     taxe: parseFloat(form.taxe) || 0,
+    devise: form.devise || 'MAD',
     notes: form.notes.trim() || undefined,
     lignes: form.lignes.map(l => ({
       description: l.description.trim(),
@@ -405,7 +416,7 @@ export default function FacturesPage() {
       setLimitModal({ resource: 'factures', limite: facturesLimite, actuel: facturesCeMois })
       return
     }
-    setForm(EMPTY_FORM)
+    setForm({ ...EMPTY_FORM, devise: entreprise?.devise ?? 'MAD' })
     setFormErrors({})
     setCreateOpen(true)
   }
@@ -445,6 +456,7 @@ export default function FacturesPage() {
       clientId: full.client.id,
       dateEcheance: full.dateEcheance ? full.dateEcheance.split('T')[0] : '',
       taxe: String(n(full.taxe)),
+      devise: full.devise ?? entreprise?.devise ?? 'MAD',
       notes: full.notes ?? '',
       lignes: (full.lignes ?? [{ description: '', quantite: 1, prixUnitaire: 0, total: 0, ordre: 0 }]).map(l => ({
         description: l.description,
@@ -871,12 +883,12 @@ export default function FacturesPage() {
                           <p className="text-xs text-slate-400">{facture.client.nomEntreprise || '—'}</p>
                         </td>
                         <td className="px-4 py-3.5">
-                          <span className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(facture.totalTTC)}</span>
+                          <span className="text-sm font-bold text-slate-900 dark:text-white">{formatCurrency(facture.totalTTC, facture.devise)}</span>
                         </td>
                         <td className="px-4 py-3.5">
                           <div>
                             <div className="flex justify-between text-xs mb-1">
-                              <span className="text-slate-500">{formatMAD(facture.montantPaye)}</span>
+                              <span className="text-slate-500">{formatCurrency(facture.montantPaye, facture.devise)}</span>
                               <span className={facture.statut === 'PAYEE' ? 'text-green-600' : 'text-amber-600'}>
                                 {Math.round(pctPaid)}%
                               </span>
@@ -931,7 +943,7 @@ export default function FacturesPage() {
                   </div>
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{facture.client.nom}</p>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white flex-shrink-0">{formatMAD(facture.totalTTC)}</span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-white flex-shrink-0">{formatCurrency(facture.totalTTC, facture.devise)}</span>
                   </div>
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-xs text-slate-400">{t('pages.factures.col.dueDate')}: {formatDate(facture.dateEcheance)}</p>
@@ -1004,21 +1016,21 @@ export default function FacturesPage() {
               <div className="grid grid-cols-3 gap-3">
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                   <p className="text-xs text-slate-400 mb-1">Total HT</p>
-                  <p className="font-bold text-slate-900 dark:text-white text-sm">{formatMAD(selected.totalHT)}</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-sm">{formatCurrency(selected.totalHT, selected.devise)}</p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                   <p className="text-xs text-slate-400 mb-1">TVA {n(selected.taxe)}%</p>
-                  <p className="font-bold text-slate-900 dark:text-white text-sm">{formatMAD(n(selected.totalTTC) - n(selected.totalHT))}</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-sm">{formatCurrency(n(selected.totalTTC) - n(selected.totalHT), selected.devise)}</p>
                 </div>
                 <div className="p-3 bg-primary-50 dark:bg-primary-950/50 rounded-xl">
                   <p className="text-xs text-primary-600 dark:text-primary-400 mb-1">Total TTC</p>
-                  <p className="font-black text-primary-700 dark:text-primary-300 text-sm">{formatMAD(selected.totalTTC)}</p>
+                  <p className="font-black text-primary-700 dark:text-primary-300 text-sm">{formatCurrency(selected.totalTTC, selected.devise)}</p>
                 </div>
               </div>
               {n(selected.remise) > 0 && (
                 <div className="flex items-center justify-between px-3 py-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl text-sm">
                   <span className="text-amber-700 dark:text-amber-400 font-medium">Remise appliquée</span>
-                  <span className="font-bold text-amber-700 dark:text-amber-400">−{formatMAD(selected.remise)}</span>
+                  <span className="font-bold text-amber-700 dark:text-amber-400">−{formatCurrency(selected.remise, selected.devise)}</span>
                 </div>
               )}
 
@@ -1027,7 +1039,7 @@ export default function FacturesPage() {
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-500">{t('pages.factures.stats.paid')}</span>
                   <span className="font-bold text-slate-900 dark:text-white">
-                    {formatMAD(selected.montantPaye)} / {formatMAD(selected.totalTTC)}
+                    {formatCurrency(selected.montantPaye, selected.devise)} / {formatCurrency(selected.totalTTC, selected.devise)}
                   </span>
                 </div>
                 <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
@@ -1038,7 +1050,7 @@ export default function FacturesPage() {
                 </div>
                 {restant > 0 && (
                   <p className="text-xs text-slate-400 mt-1.5">
-                    Reste à payer : <span className="font-semibold text-slate-600 dark:text-slate-300">{formatMAD(restant)}</span>
+                    Reste à payer : <span className="font-semibold text-slate-600 dark:text-slate-300">{formatCurrency(restant, selected?.devise)}</span>
                   </p>
                 )}
               </div>
@@ -1052,7 +1064,7 @@ export default function FacturesPage() {
                       <div key={l.id ?? i} className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm">
                         <span className="text-slate-700 dark:text-slate-300 flex-1 truncate">{l.description}</span>
                         <span className="text-slate-500 mx-4 shrink-0">×{n(l.quantite)}</span>
-                        <span className="font-bold text-slate-900 dark:text-white shrink-0">{formatMAD(n(l.quantite) * n(l.prixUnitaire))}</span>
+                        <span className="font-bold text-slate-900 dark:text-white shrink-0">{formatCurrency(n(l.quantite) * n(l.prixUnitaire), selected.devise)}</span>
                       </div>
                     ))}
                   </div>
@@ -1219,7 +1231,7 @@ export default function FacturesPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-slate-400">{t('pages.factures.payment.restant')}</p>
-                  <p className="text-sm font-black text-amber-600 dark:text-amber-400">{formatMAD(restant)}</p>
+                  <p className="text-sm font-black text-amber-600 dark:text-amber-400">{formatCurrency(restant, selected?.devise)}</p>
                 </div>
               </div>
 

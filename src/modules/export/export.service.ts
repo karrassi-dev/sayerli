@@ -72,6 +72,7 @@ export class ExportService {
         select: {
           numeroFacture: true,
           statut: true,
+          devise: true,
           totalHT: true,
           taxe: true,
           totalTTC: true,

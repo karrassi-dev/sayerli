@@ -148,6 +148,7 @@ model Devis {
   createdAt                DateTime         @default(now())
   updatedAt                DateTime         @updatedAt
   remise                   Decimal          @default(0) @db.Decimal(12, 2)
+  devise                   String           @default("MAD")
   dateRefus                DateTime?
   dateEnvoi                DateTime?
   dateConsultation         DateTime?
@@ -200,6 +201,7 @@ model Facture {
   taxe                     Decimal               @default(20) @db.Decimal(5, 2)
   totalTTC                 Decimal               @default(0) @db.Decimal(12, 2)
   remise                   Decimal               @default(0) @db.Decimal(12, 2)
+  devise                   String                @default("MAD")
   montantPaye              Decimal               @default(0) @db.Decimal(12, 2)
   dateEcheance             DateTime?
   notes                    String?

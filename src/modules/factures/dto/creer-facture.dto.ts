@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsDateString,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -48,6 +49,10 @@ export class CreerFactureDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @IsOptional()
+  @IsIn(['MAD', 'EUR', 'USD'])
+  devise?: string;
 
   @IsArray()
   @ValidateNested({ each: true })

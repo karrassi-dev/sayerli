@@ -956,7 +956,8 @@
         "lignesRequired": "أضف سطراً واحداً على الأقل.",
         "designationRequired": "التسمية مطلوبة.",
         "quantiteInvalid": "يجب أن تكون الكمية > 0.",
-        "prixInvalid": "لا يمكن أن يكون السعر سالباً."
+        "prixInvalid": "لا يمكن أن يكون السعر سالباً.",
+        "devise": "العملة"
       },
       "publicPage": {
         "viewedBy": "تمت المشاهدة من قِبل العميل",
@@ -1036,7 +1037,8 @@
         "sousTotal": "المجموع الجزئي",
         "clientRequired": "يرجى اختيار عميل.",
         "lignesRequired": "أضف سطراً واحداً على الأقل.",
-        "designationRequired": "التسمية مطلوبة."
+        "designationRequired": "التسمية مطلوبة.",
+        "devise": "العملة"
       },
       "payment": {
         "title": "تسجيل دفعة",

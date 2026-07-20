@@ -956,7 +956,8 @@
         "lignesRequired": "Add at least one line.",
         "designationRequired": "Designation is required.",
         "quantiteInvalid": "Quantity must be > 0.",
-        "prixInvalid": "Price cannot be negative."
+        "prixInvalid": "Price cannot be negative.",
+        "devise": "Currency"
       },
       "publicPage": {
         "viewedBy": "Viewed by client",
@@ -1036,7 +1037,8 @@
         "sousTotal": "Subtotal",
         "clientRequired": "Please select a client.",
         "lignesRequired": "Add at least one line.",
-        "designationRequired": "Designation is required."
+        "designationRequired": "Designation is required.",
+        "devise": "Currency"
       },
       "payment": {
         "title": "Record Payment",

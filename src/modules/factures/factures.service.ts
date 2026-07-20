@@ -117,6 +117,7 @@ export class FacturesService {
             numeroFacture,
             publicToken: uuidv4(),
             statut: StatutFacture.BROUILLON,
+            devise: dto.devise ?? 'MAD',
             taxe,
             remise,
             totalHT,
@@ -164,6 +165,7 @@ export class FacturesService {
       where: { id },
       data: {
         clientId: dto.clientId,
+        devise: dto.devise ?? undefined,
         taxe,
         remise,
         totalHT,

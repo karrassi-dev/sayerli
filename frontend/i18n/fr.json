@@ -957,7 +957,8 @@
         "lignesRequired": "Ajoutez au moins une ligne.",
         "designationRequired": "La désignation est requise.",
         "quantiteInvalid": "La quantité doit être > 0.",
-        "prixInvalid": "Le prix ne peut pas être négatif."
+        "prixInvalid": "Le prix ne peut pas être négatif.",
+        "devise": "Devise"
       },
       "publicPage": {
         "viewedBy": "Consulté par le client",
@@ -1037,7 +1038,8 @@
         "sousTotal": "Sous-total",
         "clientRequired": "Veuillez sélectionner un client.",
         "lignesRequired": "Ajoutez au moins une ligne.",
-        "designationRequired": "La désignation est requise."
+        "designationRequired": "La désignation est requise.",
+        "devise": "Devise"
       },
       "payment": {
         "title": "Enregistrer un paiement",

@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsDateString,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -44,6 +45,10 @@ export class CreerDevisDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @IsOptional()
+  @IsIn(['MAD', 'EUR', 'USD'])
+  devise?: string;
 
   @IsArray({ message: 'Les lignes du devis sont requises.' })
   @ValidateNested({ each: true })

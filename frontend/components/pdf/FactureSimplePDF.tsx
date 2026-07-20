@@ -19,6 +19,7 @@ export interface FactureSimplePDFProps {
   taxe: number
   totalTTC: number
   remise?: number
+  devise?: string
   devisReference: string | null
   template?: string
   lignes: { description: string; quantite: number; prixUnitaire: number }[]
@@ -46,8 +47,11 @@ export interface FactureSimplePDFProps {
   }
 }
 
-function fmt(v: number) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v) + ' MAD'
+const CURRENCY_LOCALE: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
+function fmt(v: number, devise = 'MAD') {
+  const locale = CURRENCY_LOCALE[devise] ?? 'fr-MA'
+  const currency = CURRENCY_LOCALE[devise] ? devise : 'MAD'
+  return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)
 }
 function fmtDate(d: string | null | undefined) {
   if (!d) return '—'
@@ -146,8 +150,9 @@ function tplConfig(template: string, brand: string) {
 
 export default function FactureSimplePDF({
   numeroFacture, createdAt, dateEcheance, notes, totalHT, taxe, totalTTC,
-  remise = 0, devisReference, template = 'classic', lignes, client, entreprise,
+  remise = 0, devise = 'MAD', devisReference, template = 'classic', lignes, client, entreprise,
 }: FactureSimplePDFProps) {
+  const f = (v: number) => fmt(v, devise)
   const brand = entreprise.couleurPrimaire || '#2563eb'
   const sousTotal = lignes.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0)
   const tva = totalTTC - totalHT
@@ -329,8 +334,8 @@ export default function FactureSimplePDF({
           <View key={i} style={[s.tRow, i % 2 === 1 ? s.tRowAlt : {}]}>
             <Text style={s.tD}>{l.description}</Text>
             <Text style={s.tN}>{l.quantite}</Text>
-            <Text style={s.tR}>{fmt(l.prixUnitaire)}</Text>
-            <Text style={s.tRBold}>{fmt(l.quantite * l.prixUnitaire)}</Text>
+            <Text style={s.tR}>{f(l.prixUnitaire)}</Text>
+            <Text style={s.tRBold}>{f(l.quantite * l.prixUnitaire)}</Text>
           </View>
         ))}
       </View>
@@ -340,22 +345,22 @@ export default function FactureSimplePDF({
         <View style={s.totalsBox}>
           <View style={s.totRow}>
             <Text style={s.totLbl}>Sous-total HT</Text>
-            <Text style={s.totVal}>{fmt(sousTotal)}</Text>
+            <Text style={s.totVal}>{f(sousTotal)}</Text>
           </View>
           {remise > 0 && (
             <View style={s.totRow}>
               <Text style={s.totLbl}>Remise</Text>
-              <Text style={[s.totVal, { color: '#dc2626' }]}>−{fmt(remise)}</Text>
+              <Text style={[s.totVal, { color: '#dc2626' }]}>−{f(remise)}</Text>
             </View>
           )}
           <View style={s.totRow}>
             <Text style={s.totLbl}>TVA {taxe}%</Text>
-            <Text style={s.totVal}>{fmt(totalTTC - totalHT)}</Text>
+            <Text style={s.totVal}>{f(totalTTC - totalHT)}</Text>
           </View>
           <View style={s.totDiv} />
           <View style={s.totTTCRow}>
             <Text style={s.totTTCLbl}>TOTAL TTC</Text>
-            <Text style={s.totTTCVal}>{fmt(totalTTC)}</Text>
+            <Text style={s.totTTCVal}>{f(totalTTC)}</Text>
           </View>
         </View>
       </View>

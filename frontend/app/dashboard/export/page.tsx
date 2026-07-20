@@ -45,6 +45,7 @@ const JOURNAL_COL_DEFS: { key: string; label: string; width: number; isNumber?: 
   { key: 'montantPaye',    label: 'Montant Payé (MAD)',   width: 18, isNumber: true },
   { key: 'resteAPayer',    label: 'Reste à Payer (MAD)',  width: 18, isNumber: true },
   { key: 'statut',         label: 'Statut',               width: 16 },
+  { key: 'devise',         label: 'Devise',               width: 10 },
 ]
 
 const DEFAULT_JOURNAL_COLS: JournalColState[] = JOURNAL_COL_DEFS.map(c => ({ key: c.key, enabled: true }))
@@ -206,6 +207,7 @@ function getJournalCellValue(f: any, key: string): string | number {
     case 'montantPaye':   return paye
     case 'resteAPayer':   return reste
     case 'statut':        return STATUS_JV[f.statut] || f.statut
+    case 'devise':        return f.devise || 'MAD'
     default:              return ''
   }
 }

@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { devisApi, clientsApi } from '@/lib/api'
 import { CataloguePicker } from '@/components/dashboard/ui/CataloguePicker'
-import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { cn, toWhatsAppNumber, formatCurrency } from '@/lib/utils'
 import { useCurrency } from '@/hooks/useCurrency'
 import { canDo } from '@/lib/permissions'
 
@@ -46,6 +46,7 @@ interface ApiDevis {
   id: string
   reference: string
   statut: string
+  devise?: string
   totalHT: number | string
   remise: number | string
   taxe: number | string
@@ -76,6 +77,7 @@ interface DevisForm {
   dateExpiration: string
   taxe: string
   remise: string
+  devise: string
   notes: string
   lignes: LigneForm[]
 }
@@ -84,7 +86,7 @@ interface DevisForm {
 
 const EMPTY_LIGNE: LigneForm = { description: '', quantite: '1', prixUnitaire: '' }
 const EMPTY_FORM: DevisForm = {
-  clientId: '', dateExpiration: '', taxe: '20', remise: '0', notes: '', lignes: [{ ...EMPTY_LIGNE }],
+  clientId: '', dateExpiration: '', taxe: '20', remise: '0', devise: 'MAD', notes: '', lignes: [{ ...EMPTY_LIGNE }],
 }
 const PER_PAGE = 5
 
@@ -175,6 +177,14 @@ function DevisFormFields({
           <div>
             <label className={labelClass}>{t('pages.devis.form.remise')} ({devise})</label>
             <input type="number" min="0" step="0.01" value={form.remise} onChange={e => onChange('remise', e.target.value)} className={inputClass} />
+          </div>
+          <div>
+            <label className={labelClass}>{t('pages.devis.form.devise') || 'Devise'}</label>
+            <select value={form.devise} onChange={e => onChange('devise' as keyof Omit<DevisForm, 'lignes'>, e.target.value)} className={inputClass}>
+              <option value="MAD">MAD — Dirham</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="USD">USD — Dollar</option>
+            </select>
           </div>
         </div>
       </div>
@@ -416,6 +426,7 @@ export default function DevisPage() {
     dateExpiration: form.dateExpiration || undefined,
     taxe: parseFloat(form.taxe) || 0,
     remise: parseFloat(form.remise) || 0,
+    devise: form.devise || 'MAD',
     notes: form.notes.trim() || undefined,
     lignes: form.lignes.map(l => ({
       description: l.description.trim(),
@@ -438,7 +449,7 @@ export default function DevisPage() {
       setLimitModal({ resource: 'devis', limite: planLimite, actuel: devisCeMois })
       return
     }
-    setForm(EMPTY_FORM)
+    setForm({ ...EMPTY_FORM, devise: entreprise?.devise ?? 'MAD' })
     setFormErrors({})
     setCreateOpen(true)
   }
@@ -479,6 +490,7 @@ export default function DevisPage() {
       dateExpiration: full.dateExpiration ? full.dateExpiration.split('T')[0] : '',
       taxe: String(n(full.taxe)),
       remise: String(n(full.remise)),
+      devise: full.devise ?? entreprise?.devise ?? 'MAD',
       notes: full.notes ?? '',
       lignes: (full.lignes ?? [{ description: '', quantite: 1, prixUnitaire: 0 }]).map(l => ({
         description: l.description,
@@ -767,8 +779,8 @@ export default function DevisPage() {
                       </td>
                       <td className="px-4 py-3.5"><StatusBadge variant={toStatutUI(devis.statut) as never} dot /></td>
                       <td className="px-4 py-3.5">
-                        <p className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</p>
-                        <p className="text-xs text-slate-400">HT: {formatMAD(devis.totalHT)}</p>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{formatCurrency(devis.totalTTC, devis.devise)}</p>
+                        <p className="text-xs text-slate-400">HT: {formatCurrency(devis.totalHT, devis.devise)}</p>
                       </td>
                       <td className="px-4 py-3.5 text-xs text-slate-500">{formatDate(devis.dateExpiration)}</td>
                       <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
@@ -831,7 +843,7 @@ export default function DevisPage() {
                           Email
                         </button>
                       )}
-                      <span className="text-sm font-bold text-slate-900 dark:text-white">{formatMAD(devis.totalTTC)}</span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{formatCurrency(devis.totalTTC, devis.devise)}</span>
                       <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
                     </div>
                   </div>
@@ -862,15 +874,15 @@ export default function DevisPage() {
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                 <p className="text-xs text-slate-400 mb-1">Total HT</p>
-                <p className="font-bold text-slate-900 dark:text-white text-sm">{formatMAD(selected.totalHT)}</p>
+                <p className="font-bold text-slate-900 dark:text-white text-sm">{formatCurrency(selected.totalHT, selected.devise)}</p>
               </div>
               <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                 <p className="text-xs text-slate-400 mb-1">TVA {n(selected.taxe)}%</p>
-                <p className="font-bold text-slate-900 dark:text-white text-sm">{formatMAD(n(selected.totalTTC) - n(selected.totalHT))}</p>
+                <p className="font-bold text-slate-900 dark:text-white text-sm">{formatCurrency(n(selected.totalTTC) - n(selected.totalHT), selected.devise)}</p>
               </div>
               <div className="p-3 bg-primary-50 dark:bg-primary-950/50 rounded-xl">
                 <p className="text-xs text-primary-600 dark:text-primary-400 mb-1">Total TTC</p>
-                <p className="font-black text-primary-700 dark:text-primary-300 text-sm">{formatMAD(selected.totalTTC)}</p>
+                <p className="font-black text-primary-700 dark:text-primary-300 text-sm">{formatCurrency(selected.totalTTC, selected.devise)}</p>
               </div>
             </div>
 
@@ -882,7 +894,7 @@ export default function DevisPage() {
                     <div key={l.id ?? i} className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm">
                       <span className="text-slate-700 dark:text-slate-300 flex-1 truncate">{l.description}</span>
                       <span className="text-slate-500 mx-4 shrink-0">×{n(l.quantite)}</span>
-                      <span className="font-bold text-slate-900 dark:text-white shrink-0">{formatMAD(n(l.quantite) * n(l.prixUnitaire))}</span>
+                      <span className="font-bold text-slate-900 dark:text-white shrink-0">{formatCurrency(n(l.quantite) * n(l.prixUnitaire), selected.devise)}</span>
                     </div>
                   ))}
                 </div>

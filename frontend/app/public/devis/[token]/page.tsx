@@ -31,6 +31,7 @@ interface PublicDevis {
   id: string
   reference: string
   statut: string
+  devise?: string
   totalHT: number | string
   remise: number | string
   taxe: number | string
@@ -55,8 +56,11 @@ interface PublicDevis {
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : v }
 
-function formatMAD(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
+const CURRENCY_LOCALE: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
+function formatMAD(v: number | string, devise = 'MAD') {
+  const locale = CURRENCY_LOCALE[devise] ?? 'fr-MA'
+  const currency = CURRENCY_LOCALE[devise] ? devise : 'MAD'
+  return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v))
 }
 
 function formatDate(d: string | null | undefined) {
@@ -166,6 +170,7 @@ function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt:
     remise: parseFloat(String(devis.remise)) || 0,
     taxe: parseFloat(String(devis.taxe)) || 0,
     totalTTC: parseFloat(String(devis.totalTTC)) || 0,
+    devise: devis.devise ?? 'MAD',
     template: devis.entreprise.templateDocument ?? 'classic',
     lignes: devis.lignes.map(l => ({
       description: l.description,
@@ -540,8 +545,8 @@ export default function PublicDevisPage() {
                   <tr key={l.id ?? i} className={i % 2 === 1 ? 'bg-gray-50' : ''}>
                     <td className="px-4 py-3 text-gray-900 font-medium border-b border-gray-100">{l.description}</td>
                     <td className="px-4 py-3 text-center text-gray-500 border-b border-gray-100 hidden sm:table-cell">{n(l.quantite)}</td>
-                    <td className="px-4 py-3 text-right text-gray-500 border-b border-gray-100 hidden sm:table-cell">{formatMAD(n(l.prixUnitaire))}</td>
-                    <td className="px-4 py-3 text-right font-bold text-gray-900 border-b border-gray-100">{formatMAD(n(l.quantite) * n(l.prixUnitaire))}</td>
+                    <td className="px-4 py-3 text-right text-gray-500 border-b border-gray-100 hidden sm:table-cell">{formatMAD(n(l.prixUnitaire), devis.devise)}</td>
+                    <td className="px-4 py-3 text-right font-bold text-gray-900 border-b border-gray-100">{formatMAD(n(l.quantite) * n(l.prixUnitaire), devis.devise)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -553,21 +558,21 @@ export default function PublicDevisPage() {
             <div className="w-64">
               <div className="flex justify-between text-sm text-gray-600 py-2 border-b border-gray-100">
                 <span>Sous-total</span>
-                <span>{formatMAD(sousTotal)}</span>
+                <span>{formatMAD(sousTotal, devis.devise)}</span>
               </div>
               {n(devis.remise) > 0 && (
                 <div className="flex justify-between text-sm text-red-500 py-2 border-b border-gray-100">
                   <span>Remise</span>
-                  <span>−{formatMAD(devis.remise)}</span>
+                  <span>−{formatMAD(devis.remise, devis.devise)}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm text-gray-600 py-2 border-b border-gray-100">
                 <span>TVA {n(devis.taxe)}%</span>
-                <span>{formatMAD(n(devis.totalTTC) - n(devis.totalHT))}</span>
+                <span>{formatMAD(n(devis.totalTTC) - n(devis.totalHT), devis.devise)}</span>
               </div>
               <div className="flex justify-between font-bold px-4 py-3 mt-2" style={{ ...totalBgStyle, color: totalTextColor }}>
                 <span className="text-sm tracking-wide">TOTAL TTC</span>
-                <span className="text-base">{formatMAD(devis.totalTTC)}</span>
+                <span className="text-base">{formatMAD(devis.totalTTC, devis.devise)}</span>
               </div>
             </div>
           </div>
