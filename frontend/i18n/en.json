@@ -938,7 +938,7 @@
         "clientPlaceholder": "Select a client",
         "dateExpiration": "Expiration Date",
         "taxe": "VAT (%)",
-        "remise": "Discount (MAD)",
+        "remise": "Discount",
         "notes": "Notes",
         "notesPlaceholder": "Terms, remarks...",
         "addLine": "Add Line",

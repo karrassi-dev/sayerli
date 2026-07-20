@@ -714,6 +714,7 @@ interface FormFieldsProps {
 }
 
 function PaiementFormFields({ form, errors, isEdit, facturesPayables, onFieldChange, onFactureSelect, t }: FormFieldsProps) {
+  const { fmt: formatMAD } = useCurrency()
   const selectedFacture = facturesPayables.find(f => f.id === form.factureId) ?? null
   const restant = selectedFacture
     ? Math.max(0, parseFloat(String(selectedFacture.totalTTC)) - parseFloat(String(selectedFacture.montantPaye)))

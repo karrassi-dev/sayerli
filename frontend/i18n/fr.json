@@ -939,7 +939,7 @@
         "clientPlaceholder": "Sélectionner un client",
         "dateExpiration": "Date d'expiration",
         "taxe": "TVA (%)",
-        "remise": "Remise (MAD)",
+        "remise": "Remise",
         "notes": "Notes",
         "notesPlaceholder": "Conditions, remarques...",
         "addLine": "Ajouter une ligne",

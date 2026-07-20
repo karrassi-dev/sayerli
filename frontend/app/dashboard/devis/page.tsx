@@ -132,6 +132,7 @@ function DevisFormFields({
   removeLigne: (i: number) => void
 }) {
   const { t } = useTranslation()
+  const { fmt: formatMAD, devise } = useCurrency()
   const [pickerOpen, setPickerOpen] = useState(false)
   const inputClass = 'w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
   const labelClass = 'text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block'
@@ -172,7 +173,7 @@ function DevisFormFields({
             <input type="number" min="0" max="100" step="1" value={form.taxe} onChange={e => onChange('taxe', e.target.value)} className={inputClass} />
           </div>
           <div>
-            <label className={labelClass}>{t('pages.devis.form.remise')}</label>
+            <label className={labelClass}>{t('pages.devis.form.remise')} ({devise})</label>
             <input type="number" min="0" step="0.01" value={form.remise} onChange={e => onChange('remise', e.target.value)} className={inputClass} />
           </div>
         </div>

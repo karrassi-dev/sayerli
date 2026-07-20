@@ -473,9 +473,9 @@ export default function DashboardPage() {
                   ? [
                       `Bonjour ${f.clientNom},`,
                       '',
-                      `Nous avons bien reçu votre paiement de *${fmtMAD(f.montantPaye)}* sur votre facture *${f.numero}* d'un montant total de *${fmtMAD(f.totalTTC)}*.`,
+                      `Nous avons bien reçu votre paiement de *${formatMAD(f.montantPaye)}* sur votre facture *${f.numero}* d'un montant total de *${formatMAD(f.totalTTC)}*.`,
                       '',
-                      `Il reste un solde de *${fmtMAD(reste)}* à régler. Pourriez-vous régulariser ce solde dans les meilleurs délais ?`,
+                      `Il reste un solde de *${formatMAD(reste)}* à régler. Pourriez-vous régulariser ce solde dans les meilleurs délais ?`,
                       '',
                       `Consultez votre facture ici : ${url}`,
                       '',
@@ -484,7 +484,7 @@ export default function DashboardPage() {
                   : [
                       `Bonjour ${f.clientNom},`,
                       '',
-                      `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${fmtMAD(f.totalTTC)}*.`,
+                      `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${formatMAD(f.totalTTC)}*.`,
                       '',
                       `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
                       '',
@@ -516,11 +516,11 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-xs font-bold text-red-600 dark:text-red-400">
-                          {f.montantPaye > 0 ? `${fmtMAD(reste)} restant` : fmtMAD(f.totalTTC)}
+                          {f.montantPaye > 0 ? `${formatMAD(reste)} restant` : formatMAD(f.totalTTC)}
                         </span>
                         {f.montantPaye > 0 && (
                           <span className="text-[10px] text-green-600 dark:text-green-400 flex-shrink-0">
-                            {fmtMAD(f.montantPaye)} payé
+                            {formatMAD(f.montantPaye)} payé
                           </span>
                         )}
                         {days > 0 && (

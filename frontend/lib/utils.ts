@@ -19,7 +19,8 @@ const CURRENCY_LOCALE: Record<string, string> = {
   USD: 'en-US',
 }
 
-export function formatCurrency(amount: number, devise = 'MAD'): string {
+export function formatCurrency(amount: number | string, devise = 'MAD'): string {
+  const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount
   const locale = CURRENCY_LOCALE[devise] ?? 'fr-MA'
   const currency = Object.keys(CURRENCY_LOCALE).includes(devise) ? devise : 'MAD'
   return new Intl.NumberFormat(locale, {
@@ -27,7 +28,7 @@ export function formatCurrency(amount: number, devise = 'MAD'): string {
     currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(amount)
+  }).format(num)
 }
 
 export function formatDate(date: string | Date, locale = 'fr-FR'): string {
