@@ -45,8 +45,10 @@ export class PaiementsController {
   async enregistrer(
     @Body() dto: CreerPaiementDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.paiementsService.enregistrerPaiement(dto, entrepriseId);
+    return this.paiementsService.enregistrerPaiement(dto, entrepriseId, userId, userNom);
   }
 
   @Delete(':id')

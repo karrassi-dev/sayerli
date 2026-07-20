@@ -5,12 +5,16 @@ import {
 } from '@nestjs/common';
 import { MethodePaiement, StatutFacture } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LogsService } from '../logs/logs.service';
 import { CreerPaiementDto } from './dto/creer-paiement.dto';
 import { ModifierPaiementDto } from './dto/modifier-paiement.dto';
 
 @Injectable()
 export class PaiementsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private logs: LogsService,
+  ) {}
 
   async listerPaiements(
     entrepriseId: string,
@@ -63,7 +67,7 @@ export class PaiementsService {
     return paiement;
   }
 
-  async enregistrerPaiement(dto: CreerPaiementDto, entrepriseId: string) {
+  async enregistrerPaiement(dto: CreerPaiementDto, entrepriseId: string, userId: string, userNom: string) {
     const facture = await this.prisma.facture.findFirst({
       where: { id: dto.factureId, entrepriseId },
       include: { paiements: true },
@@ -135,6 +139,14 @@ export class PaiementsService {
       }),
     ]);
 
+    this.logs.log({
+      entrepriseId, userId, userNom,
+      action: 'PAIEMENT_ENREGISTRE',
+      entityType: 'PAIEMENT',
+      entityId: paiement.id,
+      entityRef: paiement.facture.numeroFacture,
+      metadata: { montant: dto.montant, methode: dto.methode },
+    });
     return paiement;
   }
 

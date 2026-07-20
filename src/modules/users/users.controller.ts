@@ -50,8 +50,10 @@ export class UsersController {
   async inviter(
     @Body() dto: CreerUtilisateurDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') acteurId: string,
+    @UtilisateurCourant('nom') acteurNom: string,
   ) {
-    return this.usersService.inviterUtilisateur(dto, entrepriseId);
+    return this.usersService.inviterUtilisateur(dto, entrepriseId, acteurId, acteurNom);
   }
 
   @Patch(':id')
@@ -60,8 +62,10 @@ export class UsersController {
     @Param('id') id: string,
     @Body() dto: ModifierUtilisateurDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') acteurId: string,
+    @UtilisateurCourant('nom') acteurNom: string,
   ) {
-    return this.usersService.modifierUtilisateur(id, dto, entrepriseId);
+    return this.usersService.modifierUtilisateur(id, dto, entrepriseId, acteurId, acteurNom);
   }
 
   @Post(':id/reinviter')
@@ -88,8 +92,10 @@ export class UsersController {
   async activer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') acteurId: string,
+    @UtilisateurCourant('nom') acteurNom: string,
   ) {
-    return this.usersService.activerUtilisateur(id, entrepriseId);
+    return this.usersService.activerUtilisateur(id, entrepriseId, acteurId, acteurNom);
   }
 
   @Delete(':id')

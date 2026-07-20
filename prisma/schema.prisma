@@ -388,6 +388,24 @@ model ProduitService {
   @@map("produits_services")
 }
 
+model ActivityLog {
+  id           String   @id @default(uuid())
+  entrepriseId String
+  userId       String
+  userNom      String
+  action       String
+  entityType   String
+  entityId     String?
+  entityRef    String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([entrepriseId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
 model ContactSubmission {
   id        String   @id @default(uuid())
   name      String

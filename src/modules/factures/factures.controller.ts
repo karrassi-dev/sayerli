@@ -69,8 +69,10 @@ export class FacturesController {
   async creer(
     @Body() dto: CreerFactureDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.facturesService.creerFacture(dto, entrepriseId);
+    return this.facturesService.creerFacture(dto, entrepriseId, userId, userNom);
   }
 
   @Put(':id')
@@ -101,8 +103,10 @@ export class FacturesController {
   async envoyer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.facturesService.envoyerFacture(id, entrepriseId);
+    return this.facturesService.envoyerFacture(id, entrepriseId, userId, userNom);
   }
 
   @Post(':id/relancer')
@@ -111,8 +115,10 @@ export class FacturesController {
   async relancer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.facturesService.relancerFacture(id, entrepriseId);
+    return this.facturesService.relancerFacture(id, entrepriseId, userId, userNom);
   }
 
   @Patch('declarations/:id/approuver')
@@ -142,8 +148,10 @@ export class FacturesController {
   async annuler(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.facturesService.annulerFacture(id, entrepriseId);
+    return this.facturesService.annulerFacture(id, entrepriseId, userId, userNom);
   }
 
   @Delete(':id')
@@ -152,8 +160,10 @@ export class FacturesController {
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.facturesService.supprimerFacture(id, entrepriseId);
+    return this.facturesService.supprimerFacture(id, entrepriseId, userId, userNom);
   }
 }
 

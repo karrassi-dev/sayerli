@@ -60,8 +60,10 @@ export class DevisController {
   async creer(
     @Body() dto: CreerDevisDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.devisService.creerDevis(dto, entrepriseId);
+    return this.devisService.creerDevis(dto, entrepriseId, userId, userNom);
   }
 
   @Put(':id')
@@ -92,8 +94,10 @@ export class DevisController {
   async genererLien(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.devisService.genererLienPublic(id, entrepriseId);
+    return this.devisService.genererLienPublic(id, entrepriseId, userId, userNom);
   }
 
   @Post(':id/dupliquer')
@@ -102,8 +106,10 @@ export class DevisController {
   async dupliquer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.devisService.dupliquerDevis(id, entrepriseId);
+    return this.devisService.dupliquerDevis(id, entrepriseId, userId, userNom);
   }
 
   @Post(':id/convertir-facture')
@@ -112,8 +118,10 @@ export class DevisController {
   async convertirEnFacture(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.devisService.convertirEnFacture(id, entrepriseId);
+    return this.devisService.convertirEnFacture(id, entrepriseId, userId, userNom);
   }
 
   @Delete(':id')
@@ -122,8 +130,10 @@ export class DevisController {
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.devisService.supprimerDevis(id, entrepriseId);
+    return this.devisService.supprimerDevis(id, entrepriseId, userId, userNom);
   }
 }
 

@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { RoleType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LogsService } from '../logs/logs.service';
 import { CreerUtilisateurDto } from './dto/creer-utilisateur.dto';
 import { ModifierUtilisateurDto } from './dto/modifier-utilisateur.dto';
 import { AccepterInvitationDto } from './dto/accepter-invitation.dto';
@@ -25,6 +26,7 @@ function computeStatut(actif: boolean, invitationToken: string | null): string {
 export class UsersService {
   constructor(
     private prisma: PrismaService,
+    private logs: LogsService,
     private email: EmailService,
   ) {}
 
@@ -105,7 +107,7 @@ export class UsersService {
     };
   }
 
-  async inviterUtilisateur(dto: CreerUtilisateurDto, entrepriseId: string) {
+  async inviterUtilisateur(dto: CreerUtilisateurDto, entrepriseId: string, acteurId = '', acteurNom = '') {
     const [entreprise, actuelUtilisateurs] = await Promise.all([
       this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true, nom: true } }),
       this.prisma.utilisateur.count({ where: { entrepriseId } }),
@@ -176,6 +178,7 @@ export class UsersService {
       });
     }
 
+    if (acteurId) this.logs.log({ entrepriseId, userId: acteurId, userNom: acteurNom, action: 'MEMBRE_INVITE', entityType: 'MEMBRE', entityId: utilisateur.id, entityRef: nomComplet, metadata: { role: utilisateur.role } });
     return {
       ...utilisateur,
       nomComplet,
@@ -220,7 +223,7 @@ export class UsersService {
     return { message: 'Invitation renvoyée avec succès.' };
   }
 
-  async modifierUtilisateur(id: string, dto: ModifierUtilisateurDto, entrepriseId: string) {
+  async modifierUtilisateur(id: string, dto: ModifierUtilisateurDto, entrepriseId: string, acteurId = '', acteurNom = '') {
     const utilisateur = await this.prisma.utilisateur.findFirst({
       where: { id, entrepriseId },
     });
@@ -250,11 +253,9 @@ export class UsersService {
       },
     });
 
-    return {
-      ...updated,
-      nomComplet: updated.prenom ? `${updated.prenom} ${updated.nom}` : updated.nom,
-      statut: computeStatut(updated.actif, updated.invitationToken),
-    };
+    const nomComplet = updated.prenom ? `${updated.prenom} ${updated.nom}` : updated.nom;
+    if (acteurId) this.logs.log({ entrepriseId, userId: acteurId, userNom: acteurNom, action: 'MEMBRE_MODIFIE', entityType: 'MEMBRE', entityId: id, entityRef: nomComplet });
+    return { ...updated, nomComplet, statut: computeStatut(updated.actif, updated.invitationToken) };
   }
 
   async desactiverUtilisateur(id: string, entrepriseId: string, demandeurId: string) {
@@ -278,15 +279,13 @@ export class UsersService {
       }
     }
 
-    await this.prisma.utilisateur.update({
-      where: { id },
-      data: { actif: false },
-    });
-
+    const nomCible = utilisateur.nom;
+    await this.prisma.utilisateur.update({ where: { id }, data: { actif: false } });
+    this.logs.log({ entrepriseId, userId: demandeurId, userNom: '', action: 'MEMBRE_DESACTIVE', entityType: 'MEMBRE', entityId: id, entityRef: nomCible });
     return { message: 'Compte désactivé avec succès.' };
   }
 
-  async activerUtilisateur(id: string, entrepriseId: string) {
+  async activerUtilisateur(id: string, entrepriseId: string, acteurId = '', acteurNom = '') {
     const utilisateur = await this.prisma.utilisateur.findFirst({
       where: { id, entrepriseId },
     });
@@ -298,11 +297,8 @@ export class UsersService {
       throw new BadRequestException('Ce membre doit d\'abord accepter son invitation.');
     }
 
-    await this.prisma.utilisateur.update({
-      where: { id },
-      data: { actif: true },
-    });
-
+    await this.prisma.utilisateur.update({ where: { id }, data: { actif: true } });
+    if (acteurId) this.logs.log({ entrepriseId, userId: acteurId, userNom: acteurNom, action: 'MEMBRE_ACTIVE', entityType: 'MEMBRE', entityId: id, entityRef: utilisateur.nom });
     return { message: 'Compte réactivé avec succès.' };
   }
 
@@ -324,7 +320,9 @@ export class UsersService {
       }
     }
 
+    const nomCible = utilisateur.nom;
     await this.prisma.utilisateur.delete({ where: { id } });
+    this.logs.log({ entrepriseId, userId: demandeurId, userNom: '', action: 'MEMBRE_SUPPRIME', entityType: 'MEMBRE', entityId: id, entityRef: nomCible });
     return { message: 'Membre retiré avec succès.' };
   }
 

@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, StatutDevis } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LogsService } from '../logs/logs.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CreerDevisDto } from './dto/creer-devis.dto';
 import { ModifierStatutDevisDto } from './dto/modifier-statut-devis.dto';
@@ -16,6 +17,7 @@ import { retryOnConflict } from '../../common/utils/retry';
 export class DevisService {
   constructor(
     private prisma: PrismaService,
+    private logs: LogsService,
     private notificationsService: NotificationsService,
   ) {}
 
@@ -74,7 +76,7 @@ export class DevisService {
     return devis;
   }
 
-  async creerDevis(dto: CreerDevisDto, entrepriseId: string) {
+  async creerDevis(dto: CreerDevisDto, entrepriseId: string, userId = '', userNom = '') {
     const entreprise = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
       select: { plan: true },
@@ -94,7 +96,7 @@ export class DevisService {
     const remise = dto.remise ?? 0;
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
 
-    return retryOnConflict(() =>
+    const devis = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const count = await tx.devis.count({ where: { entrepriseId } });
         const reference = this.genererReferenceDev(count);
@@ -128,6 +130,8 @@ export class DevisService {
         });
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'DEVIS_CREE', entityType: 'DEVIS', entityId: devis.id, entityRef: devis.reference });
+    return devis;
   }
 
   async modifierDevis(id: string, dto: CreerDevisDto, entrepriseId: string) {
@@ -207,7 +211,7 @@ export class DevisService {
     return devisMaj;
   }
 
-  async genererLienPublic(id: string, entrepriseId: string, joursValidite?: number) {
+  async genererLienPublic(id: string, entrepriseId: string, userId = '', userNom = '', joursValidite?: number) {
     const devis = await this.prisma.devis.findFirst({ where: { id, entrepriseId } });
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
@@ -221,6 +225,7 @@ export class DevisService {
       update: { token: uuidv4(), expiration, utilise: false },
     });
 
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'DEVIS_LIEN_GENERE', entityType: 'DEVIS', entityId: id, entityRef: devis.reference });
     return {
       token: lien.token,
       expiration: lien.expiration,
@@ -302,7 +307,7 @@ export class DevisService {
     return { statut: newStatut };
   }
 
-  async convertirEnFacture(id: string, entrepriseId: string) {
+  async convertirEnFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const entreprise = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
       select: { plan: true },
@@ -326,7 +331,7 @@ export class DevisService {
       throw new BadRequestException('Ce devis a déjà été converti en facture.');
     }
 
-    return retryOnConflict(() =>
+    const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const countFactures = await tx.facture.count({ where: { entrepriseId } });
         const numeroFacture = `FAC-${new Date().getFullYear()}-${String(countFactures + 1).padStart(4, '0')}`;
@@ -358,9 +363,11 @@ export class DevisService {
         });
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_CONVERTIE', entityType: 'FACTURE', entityId: facture.id, entityRef: facture.numeroFacture, metadata: { devisRef: devis.reference } });
+    return facture;
   }
 
-  async dupliquerDevis(id: string, entrepriseId: string) {
+  async dupliquerDevis(id: string, entrepriseId: string, userId = '', userNom = '') {
     const entreprise = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
       select: { plan: true },
@@ -377,7 +384,7 @@ export class DevisService {
     });
     if (!devis) throw new NotFoundException('Devis introuvable.');
 
-    return retryOnConflict(() =>
+    const copie = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const count = await tx.devis.count({ where: { entrepriseId } });
         const reference = this.genererReferenceDev(count);
@@ -410,9 +417,11 @@ export class DevisService {
         });
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'DEVIS_DUPLIQUE', entityType: 'DEVIS', entityId: copie.id, entityRef: copie.reference, metadata: { sourceRef: devis.reference } });
+    return copie;
   }
 
-  async supprimerDevis(id: string, entrepriseId: string) {
+  async supprimerDevis(id: string, entrepriseId: string, userId = '', userNom = '') {
     const devis = await this.prisma.devis.findFirst({ where: { id, entrepriseId } });
     if (!devis) throw new NotFoundException('Devis introuvable.');
     if (devis.statut !== StatutDevis.BROUILLON) {
@@ -423,6 +432,7 @@ export class DevisService {
       throw new BadRequestException('Ce devis est lié à une facture et ne peut pas être supprimé.');
     }
     await this.prisma.devis.delete({ where: { id } });
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'DEVIS_SUPPRIME', entityType: 'DEVIS', entityId: id, entityRef: devis.reference });
     return { message: 'Devis supprimé avec succès.' };
   }
 }

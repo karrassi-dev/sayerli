@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { retryOnConflict } from '../../common/utils/retry';
 import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LogsService } from '../logs/logs.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { EmailService } from '../email/email.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
@@ -20,6 +21,7 @@ import { RejeterDeclarationDto } from './dto/rejeter-declaration.dto';
 export class FacturesService {
   constructor(
     private prisma: PrismaService,
+    private logs: LogsService,
     private notificationsService: NotificationsService,
     private emailService: EmailService,
   ) {}
@@ -75,7 +77,7 @@ export class FacturesService {
     return facture;
   }
 
-  async creerFacture(dto: CreerFactureDto, entrepriseId: string) {
+  async creerFacture(dto: CreerFactureDto, entrepriseId: string, userId = '', userNom = '') {
     const entreprise = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
       select: { plan: true },
@@ -102,7 +104,7 @@ export class FacturesService {
     const remise = dto.remise ?? 0;
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
 
-    return retryOnConflict(() =>
+    const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const count = await tx.facture.count({ where: { entrepriseId } });
         const numeroFacture = this.genererNumeroFac(count);
@@ -138,6 +140,8 @@ export class FacturesService {
         });
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_CREEE', entityType: 'FACTURE', entityId: facture.id, entityRef: facture.numeroFacture });
+    return facture;
   }
 
   async modifierFacture(id: string, dto: CreerFactureDto, entrepriseId: string) {
@@ -207,7 +211,7 @@ export class FacturesService {
     });
   }
 
-  async envoyerFacture(id: string, entrepriseId: string) {
+  async envoyerFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
 
@@ -225,23 +229,25 @@ export class FacturesService {
     }
 
     const updated = await this.prisma.facture.findUnique({ where: { id } });
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_ENVOYEE', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });
     return {
       publicToken: updated!.publicToken,
       lienPublic: `/public/factures/${updated!.publicToken}`,
     };
   }
 
-  async supprimerFacture(id: string, entrepriseId: string) {
+  async supprimerFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
     if (facture.statut !== StatutFacture.BROUILLON) {
       throw new BadRequestException('Seules les factures en brouillon peuvent être supprimées.');
     }
     await this.prisma.facture.delete({ where: { id } });
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_SUPPRIMEE', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });
     return { message: 'Facture supprimée avec succès.' };
   }
 
-  async annulerFacture(id: string, entrepriseId: string) {
+  async annulerFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
     if (facture.statut === StatutFacture.PAYEE) {
@@ -256,10 +262,9 @@ export class FacturesService {
     if (facture.statut === StatutFacture.BROUILLON) {
       throw new BadRequestException('Supprimez la facture plutôt que de l\'annuler.');
     }
-    return this.prisma.facture.update({
-      where: { id },
-      data: { statut: StatutFacture.ANNULEE },
-    });
+    const result = await this.prisma.facture.update({ where: { id }, data: { statut: StatutFacture.ANNULEE } });
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_ANNULEE', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });
+    return result;
   }
 
   // ── Public portal ────────────────────────────────────────────────────────────
@@ -495,7 +500,7 @@ export class FacturesService {
 
   // ── Relance manuelle ─────────────────────────────────────────────────────────
 
-  async relancerFacture(id: string, entrepriseId: string) {
+  async relancerFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const entreprise = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
       select: { plan: true },
@@ -551,11 +556,8 @@ export class FacturesService {
       level,
     });
 
-    await this.prisma.facture.update({
-      where: { id },
-      data: { lastReminderSentAt: now },
-    });
-
+    await this.prisma.facture.update({ where: { id }, data: { lastReminderSentAt: now } });
+    if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_RELANCEE', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });
     return { message: 'Relance envoyée par email.' };
   }
 

@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LogsService } from '../logs/logs.service';
 import { CreerClientDto } from './dto/creer-client.dto';
 import { ModifierClientDto } from './dto/modifier-client.dto';
 import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
 
 @Injectable()
 export class ClientsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private logs: LogsService,
+  ) {}
 
   async listerClients(entrepriseId: string, recherche?: string) {
     const clients = await this.prisma.client.findMany({
@@ -54,7 +58,7 @@ export class ClientsService {
     return client;
   }
 
-  async creerClient(dto: CreerClientDto, entrepriseId: string) {
+  async creerClient(dto: CreerClientDto, entrepriseId: string, userId: string, userNom: string) {
     const entreprise = await this.prisma.entreprise.findUnique({
       where: { id: entrepriseId },
       select: { plan: true },
@@ -64,27 +68,26 @@ export class ClientsService {
     const actuel = await this.prisma.client.count({ where: { entrepriseId, actif: true } });
     verifierLimite('clients', actuel, limite);
 
-    return this.prisma.client.create({ data: { ...dto, entrepriseId } });
+    const client = await this.prisma.client.create({ data: { ...dto, entrepriseId } });
+    this.logs.log({ entrepriseId, userId, userNom, action: 'CLIENT_CREE', entityType: 'CLIENT', entityId: client.id, entityRef: client.nom });
+    return client;
   }
 
-  async modifierClient(id: string, dto: ModifierClientDto, entrepriseId: string) {
+  async modifierClient(id: string, dto: ModifierClientDto, entrepriseId: string, userId: string, userNom: string) {
     const client = await this.prisma.client.findFirst({ where: { id, entrepriseId } });
     if (!client) throw new NotFoundException('Client introuvable.');
 
-    return this.prisma.client.update({
-      where: { id },
-      data: dto,
-    });
+    const updated = await this.prisma.client.update({ where: { id }, data: dto });
+    this.logs.log({ entrepriseId, userId, userNom, action: 'CLIENT_MODIFIE', entityType: 'CLIENT', entityId: id, entityRef: client.nom });
+    return updated;
   }
 
-  async supprimerClient(id: string, entrepriseId: string) {
+  async supprimerClient(id: string, entrepriseId: string, userId: string, userNom: string) {
     const client = await this.prisma.client.findFirst({ where: { id, entrepriseId } });
     if (!client) throw new NotFoundException('Client introuvable.');
 
-    await this.prisma.client.update({
-      where: { id },
-      data: { actif: false },
-    });
+    await this.prisma.client.update({ where: { id }, data: { actif: false } });
+    this.logs.log({ entrepriseId, userId, userNom, action: 'CLIENT_SUPPRIME', entityType: 'CLIENT', entityId: id, entityRef: client.nom });
     return { message: 'Client archivé avec succès.' };
   }
 

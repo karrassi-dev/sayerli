@@ -28,8 +28,10 @@ export class CatalogueController {
   creer(
     @Body() dto: CreerProduitDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.service.creer(dto, entrepriseId);
+    return this.service.creer(dto, entrepriseId, userId, userNom);
   }
 
   @Patch(':id')
@@ -39,8 +41,10 @@ export class CatalogueController {
     @Param('id') id: string,
     @Body() dto: ModifierProduitDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.service.modifier(id, dto, entrepriseId);
+    return this.service.modifier(id, dto, entrepriseId, userId, userNom);
   }
 
   @Delete(':id')
@@ -49,7 +53,9 @@ export class CatalogueController {
   supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.service.supprimer(id, entrepriseId);
+    return this.service.supprimer(id, entrepriseId, userId, userNom);
   }
 }

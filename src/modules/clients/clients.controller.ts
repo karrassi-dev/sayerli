@@ -66,8 +66,10 @@ export class ClientsController {
   async creer(
     @Body() dto: CreerClientDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.clientsService.creerClient(dto, entrepriseId);
+    return this.clientsService.creerClient(dto, entrepriseId, userId, userNom);
   }
 
   @Patch(':id')
@@ -77,8 +79,10 @@ export class ClientsController {
     @Param('id') id: string,
     @Body() dto: ModifierClientDto,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.clientsService.modifierClient(id, dto, entrepriseId);
+    return this.clientsService.modifierClient(id, dto, entrepriseId, userId, userNom);
   }
 
   @Delete(':id')
@@ -87,7 +91,9 @@ export class ClientsController {
   async supprimer(
     @Param('id') id: string,
     @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
   ) {
-    return this.clientsService.supprimerClient(id, entrepriseId);
+    return this.clientsService.supprimerClient(id, entrepriseId, userId, userNom);
   }
 }
