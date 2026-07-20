@@ -108,7 +108,7 @@ const EMPTY_FORM: PaiementForm = {
   notes: '',
 }
 
-const PAYABLE_STATUTS = ['ENVOYEE', 'PARTIELLE', 'EN_RETARD']
+const PAYABLE_STATUTS = ['ENVOYEE', 'VUE', 'PARTIELLE', 'EN_RETARD']
 
 // ── Component ─────────────────────────────────────────────────────────────────
 

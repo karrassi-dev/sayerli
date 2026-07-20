@@ -363,7 +363,7 @@ export default function FacturesPage() {
   // ── Stats ──
   const totalPaid = facturesList.reduce((s, f) => s + n(f.montantPaye), 0)
   const pending = facturesList
-    .filter(f => f.statut === 'ENVOYEE' || f.statut === 'PARTIELLE')
+    .filter(f => f.statut === 'ENVOYEE' || f.statut === 'VUE' || f.statut === 'PARTIELLE' || f.statut === 'EN_RETARD')
     .reduce((s, f) => s + Math.max(0, n(f.totalTTC) - n(f.montantPaye)), 0)
   const overdueCount = facturesList.filter(f => f.statut === 'EN_RETARD').length
 
