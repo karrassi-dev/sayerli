@@ -115,7 +115,7 @@ export default function ActivitePage() {
       if (filterFrom) params.dateDebut = filterFrom
       if (filterTo) params.dateFin = filterTo
       const res = await api.get('/logs', { params })
-      const d = res.data
+      const d = res.data?.data ?? res.data
       setLogs(Array.isArray(d?.logs) ? d.logs : [])
       setMeta({
         total: d?.total ?? 0,
