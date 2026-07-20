@@ -387,10 +387,14 @@ export class EmailService {
     publicToken: string
     paiementId: string
     isFullyPaid: boolean
+    devise?: string
   }) {
     const url = `${this.frontendUrl}/public/factures/${opts.publicToken}/recu?p=${opts.paiementId}`
+    const devise = opts.devise ?? 'MAD'
+    const localeMap: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
+    const locale = localeMap[devise] ?? 'fr-MA'
     const fmt = (n: number) =>
-      new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' MAD'
+      new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' ' + devise
     const dateStr = opts.datePaiement.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
 
     const METHODE_LABELS: Record<string, string> = {
@@ -492,7 +496,7 @@ export class EmailService {
                           <td style="width:50%;">
                             <p style="margin:0;font-size:12px;color:#64748b;">Reste à payer</p>
                             <p style="margin:3px 0 0;font-size:14px;font-weight:700;color:${opts.isFullyPaid ? '#16a34a' : '#dc2626'};">
-                              ${opts.isFullyPaid ? '0,00 MAD ✓' : fmt(opts.montantRestant)}
+                              ${opts.isFullyPaid ? `0,00 ${devise} ✓` : fmt(opts.montantRestant)}
                             </p>
                           </td>
                         </tr>

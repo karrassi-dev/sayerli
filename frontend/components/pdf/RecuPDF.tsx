@@ -39,14 +39,19 @@ export interface RecuPDFProps {
   totalTTC: number | string
   montantPaye: number | string
   generatedAt: string
+  devise?: string
 }
 
 function n(v: number | string): number {
   return typeof v === 'string' ? parseFloat(v) || 0 : (v ?? 0)
 }
 
-function fmt(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
+const LOCALE_MAP: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
+
+function makeFmt(devise: string) {
+  const locale = LOCALE_MAP[devise] ?? 'fr-MA'
+  return (v: number | string) =>
+    new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' ' + devise
 }
 
 function fmtDate(d: string) {
@@ -54,8 +59,9 @@ function fmtDate(d: string) {
 }
 
 export default function RecuPDF({
-  numeroFacture, client, entreprise, paiements, totalTTC, montantPaye, generatedAt,
+  numeroFacture, client, entreprise, paiements, totalTTC, montantPaye, generatedAt, devise = 'MAD',
 }: RecuPDFProps) {
+  const fmt = makeFmt(devise)
   const brand     = entreprise.couleurPrimaire || '#16a34a'
   const total     = n(totalTTC)
   const cumul     = n(montantPaye)
@@ -366,7 +372,7 @@ export default function RecuPDF({
             {isFullyPaid ? '✓  Facture entièrement réglée' : 'Reste à payer'}
           </Text>
           <Text style={[styles.statusAmt, { color: isFullyPaid ? GREEN : AMBER }]}>
-            {isFullyPaid ? '0,00 MAD' : fmt(restant)}
+            {isFullyPaid ? `0,00 ${devise}` : fmt(restant)}
           </Text>
           <Text style={styles.summaryPlaceholder}></Text>
         </View>

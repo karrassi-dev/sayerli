@@ -478,6 +478,7 @@ export class FacturesService {
         publicToken: facture.publicToken,
         paiementId: createdPaiement.id,
         isFullyPaid: nouveauStatut === StatutFacture.PAYEE,
+        devise: facture.devise ?? 'MAD',
       });
     }
 

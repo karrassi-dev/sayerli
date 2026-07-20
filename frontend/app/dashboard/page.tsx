@@ -17,7 +17,7 @@ import {
 } from '@/components/dashboard/ui/Charts'
 import { dashboardApi, facturesApi } from '@/lib/api'
 import { useCurrency } from '@/hooks/useCurrency'
-import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { cn, toWhatsAppNumber, formatCurrency } from '@/lib/utils'
 import { PermissionKey } from '@/lib/role-permissions'
 import { canDo } from '@/lib/permissions'
 
@@ -64,6 +64,7 @@ interface DashboardAnalytics {
   revenus:  { mensuel: { mois: string; valeur: number }[]; ceMois: number; moisDernier: number; evolution: number }
   caEnAttente: number
   tauxRecouvrement: number
+  parDevise: { devise: string; caTotal: number; caPaye: number; caEnAttente: number }[]
   top5Clients: { clientId: string; nom: string; total: number }[]
   facturesEnRetard: { id: string; numero: string; clientNom: string; clientTelephone: string | null; totalTTC: number; montantPaye: number; dateEcheance: string | null; publicToken: string }[]
   facturesRecentes: { id: string; numero: string; clientNom: string; totalTTC: number; statut: string }[]
@@ -253,6 +254,36 @@ export default function DashboardPage() {
           color="orange"
         />
       </div>
+
+      {/* ── Per-devise breakdown (shown only when multiple devises are used) ── */}
+      {analytics && analytics.parDevise.length > 1 && (
+        <div className="card rounded-2xl p-4 sm:p-5">
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
+            Répartition par devise
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {analytics.parDevise.map(d => (
+              <div key={d.devise} className="rounded-xl bg-slate-50 dark:bg-slate-800/60 px-4 py-3">
+                <span className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase">{d.devise}</span>
+                <div className="mt-1.5 space-y-0.5">
+                  <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
+                    <span>CA total</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(d.caTotal, d.devise)}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
+                    <span>Payé</span>
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatCurrency(d.caPaye, d.devise)}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
+                    <span>En attente</span>
+                    <span className="font-semibold text-amber-600 dark:text-amber-400">{formatCurrency(d.caEnAttente, d.devise)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Row 2 · Revenue area + Invoice donut ───────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">

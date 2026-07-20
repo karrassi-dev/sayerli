@@ -44,6 +44,7 @@ export class DashboardAnalyticsService {
       recentActivity,
       caEnAttenteAgg,
       top5Raw,
+      parDeviseRaw,
       facturesEnRetardList,
     ] = await Promise.all([
       this.prisma.client.count({ where: clientWhere }),
@@ -129,6 +130,13 @@ export class DashboardAnalyticsService {
         _sum: { totalTTC: true },
         orderBy: { _sum: { totalTTC: 'desc' } },
         take: 5,
+      }),
+
+      // Per-devise breakdown (all non-draft, non-cancelled)
+      this.prisma.facture.groupBy({
+        by: ['devise'],
+        where: { ...factureWhere, statut: { notIn: [StatutFacture.BROUILLON, StatutFacture.ANNULEE] } },
+        _sum: { totalTTC: true, montantPaye: true },
       }),
 
       // Factures en retard with client info
@@ -247,6 +255,12 @@ export class DashboardAnalyticsService {
       valeur: monthMap.get(i + 1) ?? 0,
     }));
 
+    const parDevise = parDeviseRaw.map(row => {
+      const caTotal = Number(row._sum.totalTTC ?? 0);
+      const caPaye  = Number(row._sum.montantPaye ?? 0);
+      return { devise: row.devise ?? 'MAD', caTotal, caPaye, caEnAttente: Math.max(0, caTotal - caPaye) };
+    });
+
     const totalFacturé = totalRecu + caEnAttente;
     const tauxRecouvrement = totalFacturé > 0
       ? Math.round((totalRecu / totalFacturé) * 1000) / 10
@@ -264,6 +278,7 @@ export class DashboardAnalyticsService {
       revenus: { mensuel: revenueMensuel, ceMois, moisDernier, evolution },
       caEnAttente,
       tauxRecouvrement,
+      parDevise,
       top5Clients,
       facturesEnRetard: facturesEnRetardList.map(f => ({
         id: f.id,

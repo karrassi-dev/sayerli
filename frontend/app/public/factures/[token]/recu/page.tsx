@@ -27,6 +27,7 @@ interface PublicFacture {
   statut: string
   totalTTC: number | string
   montantPaye: number | string
+  devise: string
   client: { nom: string; email: string | null; telephone: string | null; nomEntreprise: string | null }
   paiements: PublicPaiement[]
   entreprise: {
@@ -40,8 +41,11 @@ interface PublicFacture {
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : (v ?? 0) }
 
-function fmt(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
+const LOCALE_MAP: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
+function makeFmt(devise: string) {
+  const locale = LOCALE_MAP[devise] ?? 'fr-MA'
+  return (v: number | string) =>
+    new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' ' + devise
 }
 
 function fmtDate(d: string | null | undefined) {
@@ -136,6 +140,8 @@ function RecuContent() {
   const totalTTC = n(facture.totalTTC)
   const restant = Math.max(0, totalTTC - cumulPaye)
   const isFullyPaid = restant < 0.01
+  const devise = facture.devise ?? 'MAD'
+  const fmt = makeFmt(devise)
   const brand = facture.entreprise.couleurPrimaire || '#16a34a'
   const logoUrl = facture.entreprise.logo ? resolveLogoUrl(facture.entreprise.logo) : null
 
@@ -164,6 +170,7 @@ function RecuContent() {
     totalTTC,
     montantPaye: cumulPaye,
     generatedAt,
+    devise,
   }
 
   return (
@@ -291,7 +298,7 @@ function RecuContent() {
                   <td
                     className={`px-3 py-2 text-right font-bold text-[11px] ${isFullyPaid ? 'text-green-700' : 'text-amber-700'}`}
                   >
-                    {isFullyPaid ? '0,00 MAD' : fmt(restant)}
+                    {isFullyPaid ? `0,00 ${devise}` : fmt(restant)}
                   </td>
                   <td></td>
                 </tr>
