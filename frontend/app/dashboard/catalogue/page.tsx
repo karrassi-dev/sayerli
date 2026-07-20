@@ -15,7 +15,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { canDo } from '@/lib/permissions'
 import { catalogueApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
-import { formatMAD } from '@/lib/mock-data'
+import { useCurrency } from '@/hooks/useCurrency'
 
 type TypeItem = 'PRODUIT' | 'SERVICE'
 
@@ -142,6 +142,7 @@ export default function CataloguePage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
   const { user } = useAuth()
+  const { fmt: formatMAD } = useCurrency()
   const removed = user?.permissionsRetirees ?? []
   const role = user?.role ?? ''
 

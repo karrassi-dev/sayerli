@@ -5,7 +5,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar,
 } from 'recharts'
-import { formatMAD } from '@/lib/mock-data'
+import { useCurrency } from '@/hooks/useCurrency'
 
 // ── Theme-aware colours ───────────────────────────────────────────────────────
 
@@ -89,6 +89,7 @@ export function RevenueAreaChart({
   loading?: boolean
 }) {
   const c = useChartColors()
+  const { fmt: formatMAD } = useCurrency()
 
   if (loading) return <ChartSkeleton height={180} />
   if (!data.some(d => d.valeur > 0)) return <EmptyChart label="Aucun revenu enregistré" />
@@ -146,6 +147,7 @@ export function PaymentsBarChart({
   loading?: boolean
 }) {
   const c = useChartColors()
+  const { fmt: formatMAD } = useCurrency()
 
   if (loading) return <ChartSkeleton height={160} />
   if (!data.some(d => d.valeur > 0)) return <EmptyChart label="Aucun paiement enregistré" />

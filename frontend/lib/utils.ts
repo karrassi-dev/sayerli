@@ -13,6 +13,23 @@ export function formatMAD(amount: number): string {
   }).format(amount)
 }
 
+const CURRENCY_LOCALE: Record<string, string> = {
+  MAD: 'fr-MA',
+  EUR: 'fr-FR',
+  USD: 'en-US',
+}
+
+export function formatCurrency(amount: number, devise = 'MAD'): string {
+  const locale = CURRENCY_LOCALE[devise] ?? 'fr-MA'
+  const currency = Object.keys(CURRENCY_LOCALE).includes(devise) ? devise : 'MAD'
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount)
+}
+
 export function formatDate(date: string | Date, locale = 'fr-FR'): string {
   return new Intl.DateTimeFormat(locale, {
     day: '2-digit',

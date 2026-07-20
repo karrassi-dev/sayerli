@@ -16,7 +16,7 @@ import {
   ChartSkeleton,
 } from '@/components/dashboard/ui/Charts'
 import { dashboardApi, facturesApi } from '@/lib/api'
-import { formatMAD } from '@/lib/mock-data'
+import { useCurrency } from '@/hooks/useCurrency'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
 import { PermissionKey } from '@/lib/role-permissions'
 import { canDo } from '@/lib/permissions'
@@ -115,6 +115,7 @@ function CardHeader({ title, sub, badge }: {
 export default function DashboardPage() {
   const { t } = useTranslation()
   const { user, entreprise } = useAuth()
+  const { fmt: formatMAD } = useCurrency()
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null)
   const [loading, setLoading] = useState(true)
   const [bannerDismissed, setBannerDismissed] = useState(false)
@@ -467,7 +468,6 @@ export default function DashboardPage() {
                 const days = daysOverdue(f.dateEcheance)
                 const phone = toWhatsAppNumber(f.clientTelephone)
                 const reste = Math.max(0, f.totalTTC - f.montantPaye)
-                const fmtMAD = (n: number) => n.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
                 const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://sayerli.com'}/public/factures/${f.publicToken}`
                 const msg = f.montantPaye > 0
                   ? [

@@ -20,6 +20,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { canDo } from '@/lib/permissions'
 import { paiementsApi, facturesApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -72,9 +73,6 @@ function n(v: number | string | null | undefined): number {
   return typeof v === 'string' ? parseFloat(v) || 0 : (v ?? 0)
 }
 
-function formatMAD(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
-}
 
 function formatDate(d: string | null | undefined) {
   if (!d) return '—'
@@ -116,6 +114,7 @@ export default function PaiementsPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
   const { user } = useAuth()
+  const { fmt: formatMAD } = useCurrency()
   const removed = user?.permissionsRetirees ?? []
   const role = user?.role ?? ''
 
@@ -758,7 +757,7 @@ function PaiementFormFields({ form, errors, isEdit, facturesPayables, onFieldCha
                 const restantF = Math.max(0, parseFloat(String(f.totalTTC)) - parseFloat(String(f.montantPaye)))
                 return (
                   <option key={f.id} value={f.id}>
-                    {f.numeroFacture} — {f.client.nom} — Restant: {restantF.toFixed(2)} MAD
+                    {f.numeroFacture} — {f.client.nom} — Restant: {formatMAD(restantF)}
                   </option>
                 )
               })}
@@ -777,7 +776,7 @@ function PaiementFormFields({ form, errors, isEdit, facturesPayables, onFieldCha
           </div>
           <div className="text-right">
             <p className="text-xs text-slate-500 mb-0.5">{t('pages.paiements.form.restant')}</p>
-            <p className="text-sm font-bold text-green-600 dark:text-green-400">{restant.toFixed(2)} MAD</p>
+            <p className="text-sm font-bold text-green-600 dark:text-green-400">{formatMAD(restant)}</p>
           </div>
         </div>
       )}

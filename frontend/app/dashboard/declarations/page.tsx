@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/useToast'
 import { useNotificationContext } from '@/components/providers/NotificationProvider'
 import { facturesApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import Link from 'next/link'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -44,10 +45,6 @@ interface Declaration {
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : v }
-
-function formatMAD(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
-}
 
 function formatDate(d: string | null | undefined) {
   if (!d) return '—'
@@ -91,6 +88,7 @@ function StatutBadge({ statut }: { statut: string }) {
 export default function DeclarationsPage() {
   const { t } = useTranslation()
   const { success, error: toastError, toasts, removeToast } = useToast()
+  const { fmt: formatMAD } = useCurrency()
   const { refresh: refreshBadge } = useNotificationContext()
 
   const [declarations, setDeclarations] = useState<Declaration[]>([])

@@ -20,6 +20,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { facturesApi, clientsApi, paiementsApi } from '@/lib/api'
 import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import { canDo } from '@/lib/permissions'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -97,9 +98,6 @@ const PER_PAGE = 5
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : v }
 
-function formatMAD(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
-}
 
 function formatDate(d: string | null | undefined) {
   if (!d) return '—'
@@ -268,6 +266,7 @@ export default function FacturesPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
   const { entreprise, user } = useAuth()
+  const { fmt: formatMAD } = useCurrency()
   const removed = user?.permissionsRetirees ?? []
   const role    = user?.role ?? ''
 
@@ -541,7 +540,7 @@ export default function FacturesPage() {
       const data = res.data?.data ?? res.data
       const url = `${window.location.origin}/public/factures/${data.publicToken}`
       const subject = `Votre facture ${f.numeroFacture}`
-      const body = `Bonjour ${f.client.nom},\n\nVeuillez trouver ci-dessous votre facture ${f.numeroFacture} d'un montant de ${f.totalTTC.toLocaleString('fr-MA', { minimumFractionDigits: 2 })} MAD.\n\nConsultez votre facture directement via ce lien :\n${url}\n\nPour toute question, n'hésitez pas à nous contacter.\n\nCordialement,`
+      const body = `Bonjour ${f.client.nom},\n\nVeuillez trouver ci-dessous votre facture ${f.numeroFacture} d'un montant de ${formatMAD(n(f.totalTTC))}.\n\nConsultez votre facture directement via ce lien :\n${url}\n\nPour toute question, n'hésitez pas à nous contacter.\n\nCordialement,`
       window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank')
       fetchFactures(search.trim() || undefined, filters.statut)
     } catch { toastError('Erreur', 'Impossible de générer le lien.') }
@@ -573,7 +572,7 @@ export default function FacturesPage() {
       return
     }
     const url = `${window.location.origin}/public/factures/${f.publicToken}`
-    const montant = n(f.totalTTC).toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
+    const montant = formatMAD(n(f.totalTTC))
     const lines = [
       `Bonjour ${f.client.nom},`,
       '',
@@ -614,7 +613,7 @@ export default function FacturesPage() {
       ? `${window.location.origin}/public/factures/${f.publicToken}/recu?p=${last.id}`
       : `${window.location.origin}/public/factures/${f.publicToken}/recu`
 
-    const fmtAmount = (v: number) => v.toLocaleString('fr-MA', { minimumFractionDigits: 2 }) + ' MAD'
+    const fmtAmount = formatMAD
     const lastAmount = last ? n(last.montant) : n(f.montantPaye)
     const restant = Math.max(0, n(f.totalTTC) - n(f.montantPaye))
     const isFullyPaid = restant < 0.01

@@ -21,6 +21,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { devisApi, clientsApi } from '@/lib/api'
 import { CataloguePicker } from '@/components/dashboard/ui/CataloguePicker'
 import { cn, toWhatsAppNumber } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import { canDo } from '@/lib/permissions'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -89,9 +90,6 @@ const PER_PAGE = 5
 
 function n(v: number | string) { return typeof v === 'string' ? parseFloat(v) || 0 : v }
 
-function formatMAD(v: number | string) {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n(v)) + ' MAD'
-}
 
 function formatDate(d: string | null | undefined) {
   if (!d) return '—'
@@ -311,6 +309,7 @@ export default function DevisPage() {
   const { t } = useTranslation()
   const { toasts, success, error: toastError, removeToast } = useToast()
   const { entreprise, user } = useAuth()
+  const { fmt: formatMAD } = useCurrency()
   const removed = user?.permissionsRetirees ?? []
   const role    = user?.role ?? ''
 
