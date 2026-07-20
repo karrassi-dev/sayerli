@@ -134,7 +134,8 @@ function DevisFormFields({
   removeLigne: (i: number) => void
 }) {
   const { t } = useTranslation()
-  const { fmt: formatMAD, devise } = useCurrency()
+  const formDevise = form.devise || 'MAD'
+  const fmtForm = (v: number) => formatCurrency(v, formDevise)
   const [pickerOpen, setPickerOpen] = useState(false)
   const inputClass = 'w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
   const labelClass = 'text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block'
@@ -175,7 +176,7 @@ function DevisFormFields({
             <input type="number" min="0" max="100" step="1" value={form.taxe} onChange={e => onChange('taxe', e.target.value)} className={inputClass} />
           </div>
           <div>
-            <label className={labelClass}>{t('pages.devis.form.remise')} ({devise})</label>
+            <label className={labelClass}>{t('pages.devis.form.remise')} ({formDevise})</label>
             <input type="number" min="0" step="0.01" value={form.remise} onChange={e => onChange('remise', e.target.value)} className={inputClass} />
           </div>
           <div>
@@ -228,7 +229,7 @@ function DevisFormFields({
                 className={cn(inputClass, 'bg-white dark:bg-slate-800 text-right')}
               />
               <span className="text-sm font-semibold text-slate-800 dark:text-white text-right px-2">
-                {formatMAD(calcLigne(ligne))}
+                {fmtForm(calcLigne(ligne))}
               </span>
               <button
                 onClick={() => removeLigne(i)}
@@ -290,21 +291,21 @@ function DevisFormFields({
         <div className="ml-auto w-full sm:w-64 space-y-1.5 text-sm">
           <div className="flex justify-between text-slate-600 dark:text-slate-400">
             <span>{t('pages.devis.form.sousTotal')}</span>
-            <span className="font-medium">{formatMAD(sousTotal)}</span>
+            <span className="font-medium">{fmtForm(sousTotal)}</span>
           </div>
           {remiseMtnt > 0 && (
             <div className="flex justify-between text-red-500">
               <span>{t('pages.devis.form.remise')}</span>
-              <span>−{formatMAD(remiseMtnt)}</span>
+              <span>−{fmtForm(remiseMtnt)}</span>
             </div>
           )}
           <div className="flex justify-between text-slate-600 dark:text-slate-400">
             <span>TVA {taxePct}%</span>
-            <span>{formatMAD(totalTTC - totalHT)}</span>
+            <span>{fmtForm(totalTTC - totalHT)}</span>
           </div>
           <div className="flex justify-between font-black text-slate-900 dark:text-white text-base pt-1.5 border-t border-slate-200 dark:border-slate-700">
             <span>Total TTC</span>
-            <span className="text-primary-600 dark:text-primary-400">{formatMAD(totalTTC)}</span>
+            <span className="text-primary-600 dark:text-primary-400">{fmtForm(totalTTC)}</span>
           </div>
         </div>
       </div>
