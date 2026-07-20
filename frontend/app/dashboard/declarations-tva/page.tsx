@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { Calculator, AlertCircle, Download, Info, RefreshCw } from 'lucide-react'
+import { Calculator, AlertCircle, Info, RefreshCw } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
 import { declarationsTvaApi } from '@/lib/api'
 import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
-const DeclarationTVAPDF = dynamic(() => import('@/components/pdf/DeclarationTVAPDF'), { ssr: false })
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const PDFDownloadLink = dynamic(() => import('@react-pdf/renderer').then(m => m.PDFDownloadLink as any), { ssr: false })
+const DeclarationTVADownloadButton = dynamic(
+  () => import('@/components/pdf/DeclarationTVADownloadButton'),
+  { ssr: false },
+)
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -140,23 +141,14 @@ export default function DeclarationsTVAPage() {
           </div>
         </div>
         {/* Download PDF button */}
-        {pdfData && typeof window !== 'undefined' && (
-          <PDFDownloadLink
-            document={<DeclarationTVAPDF {...pdfData} />}
-            fileName={`declaration-tva-${debut}-${fin}.pdf`}
-          >
-            {({ loading: pdfLoading }: { loading: boolean }) => (
-              <button
-                disabled={pdfLoading}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 transition-all"
-              >
-                {pdfLoading
-                  ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  : <Download className="w-3.5 h-3.5" />}
-                {pdfLoading ? t('declarationsTva.downloadLoading') : t('declarationsTva.downloadPdf')}
-              </button>
-            )}
-          </PDFDownloadLink>
+        {pdfData && (
+          <DeclarationTVADownloadButton
+            data={pdfData}
+            debut={debut}
+            fin={fin}
+            label={t('declarationsTva.downloadPdf')}
+            loadingLabel={t('declarationsTva.downloadLoading')}
+          />
         )}
       </div>
 
