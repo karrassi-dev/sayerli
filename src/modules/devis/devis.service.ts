@@ -32,8 +32,8 @@ export class DevisService {
     return { totalHT, totalTTC };
   }
 
-  private genererReferenceDev(count: number): string {
-    return `DEV-${new Date().getFullYear()}-${String(count + 1).padStart(4, '0')}`;
+  private genererReferenceDev(prefix: string, num: number): string {
+    return `${prefix || 'DEV'}-${new Date().getFullYear()}-${String(num).padStart(4, '0')}`;
   }
 
   async listerDevis(
@@ -98,8 +98,12 @@ export class DevisService {
 
     const devis = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
-        const count = await tx.devis.count({ where: { entrepriseId } });
-        const reference = this.genererReferenceDev(count);
+        const ent = await tx.entreprise.update({
+          where: { id: entrepriseId },
+          data: { prochainNumeroDevis: { increment: 1 } },
+          select: { prochainNumeroDevis: true, prefixeDevis: true },
+        });
+        const reference = this.genererReferenceDev(ent.prefixeDevis, ent.prochainNumeroDevis - 1);
 
         return tx.devis.create({
           data: {
@@ -337,8 +341,12 @@ export class DevisService {
 
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
-        const countFactures = await tx.facture.count({ where: { entrepriseId } });
-        const numeroFacture = `FAC-${new Date().getFullYear()}-${String(countFactures + 1).padStart(4, '0')}`;
+        const ent = await tx.entreprise.update({
+          where: { id: entrepriseId },
+          data: { prochainNumeroFacture: { increment: 1 } },
+          select: { prochainNumeroFacture: true, prefixeFacture: true },
+        });
+        const numeroFacture = `${ent.prefixeFacture || 'FAC'}-${new Date().getFullYear()}-${String(ent.prochainNumeroFacture - 1).padStart(4, '0')}`;
 
         return tx.facture.create({
           data: {
@@ -391,8 +399,12 @@ export class DevisService {
 
     const copie = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
-        const count = await tx.devis.count({ where: { entrepriseId } });
-        const reference = this.genererReferenceDev(count);
+        const ent = await tx.entreprise.update({
+          where: { id: entrepriseId },
+          data: { prochainNumeroDevis: { increment: 1 } },
+          select: { prochainNumeroDevis: true, prefixeDevis: true },
+        });
+        const reference = this.genererReferenceDev(ent.prefixeDevis, ent.prochainNumeroDevis - 1);
 
         return tx.devis.create({
           data: {

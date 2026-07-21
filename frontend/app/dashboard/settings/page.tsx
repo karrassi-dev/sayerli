@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes'
 import {
   User, Building2, Palette, Globe, Sun, Moon, Monitor, Bell, Shield, CreditCard,
   Camera, Check, ChevronRight, Eye, EyeOff, Zap, AlertCircle,
-  Mail, FileText, Receipt, AlertTriangle,
+  Mail, FileText, Receipt, AlertTriangle, Lock, Hash,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -137,7 +137,11 @@ export default function SettingsPage() {
   const [company, setCompany] = useState({
     nom: '', email: '', telephone: '', adresse: '', ville: '', pays: '', website: '', ice: '', rc: '',
     titulaireCompte: '', banque: '', rib: '', iban: '', swift: '',
-    typeCompte: 'pme', activite: '',
+    typeCompte: 'pme', activite: '', plan: '',
+  })
+  const [numbering, setNumbering] = useState({
+    prefixeFacture: 'FAC', prefixeDevis: 'DEV', prefixeBL: 'BL',
+    prochainNumeroFacture: 1, prochainNumeroDevis: 1, prochainNumeroBL: 1,
   })
   const [companyLoading, setCompanyLoading] = useState(true)
 
@@ -209,7 +213,15 @@ export default function SettingsPage() {
         website: d.website ?? '', ice: d.ice ?? '', rc: d.rc ?? '',
         titulaireCompte: d.titulaireCompte ?? '', banque: d.banque ?? '',
         rib: d.rib ?? '', iban: d.iban ?? '', swift: d.swift ?? '',
-        typeCompte: d.typeCompte ?? 'pme', activite: d.activite ?? '',
+        typeCompte: d.typeCompte ?? 'pme', activite: d.activite ?? '', plan: d.plan ?? '',
+      })
+      setNumbering({
+        prefixeFacture: d.prefixeFacture ?? 'FAC',
+        prefixeDevis: d.prefixeDevis ?? 'DEV',
+        prefixeBL: d.prefixeBL ?? 'BL',
+        prochainNumeroFacture: d.prochainNumeroFacture ?? 1,
+        prochainNumeroDevis: d.prochainNumeroDevis ?? 1,
+        prochainNumeroBL: d.prochainNumeroBL ?? 1,
       })
     }).catch(() => {}).finally(() => setCompanyLoading(false))
 
@@ -288,6 +300,16 @@ export default function SettingsPage() {
     try {
       await settingsApi.updateCompany(company)
       success('Entreprise mise à jour', 'Les informations de votre entreprise ont été enregistrées.')
+      triggerSaved()
+    } catch (err) { handleApiError(err) }
+    finally { setSaving(false) }
+  }
+
+  const saveNumbering = async () => {
+    setSaving(true)
+    try {
+      await settingsApi.updateCompany(numbering as any)
+      success(t('pages.settings.numerotation.saveSuccess'), '')
       triggerSaved()
     } catch (err) { handleApiError(err) }
     finally { setSaving(false) }
@@ -592,6 +614,89 @@ export default function SettingsPage() {
             <div className="flex justify-end pt-2">
               <SaveButton onClick={saveCompany} saving={saving} saved={saved} />
             </div>
+
+            {/* ── Numérotation ── */}
+          {(() => {
+            const isStarter = !company.plan || company.plan === 'STARTER'
+            const year = new Date().getFullYear()
+            const rows = [
+              { labelKey: 'factures', prefixKey: 'prefixeFacture' as const, numKey: 'prochainNumeroFacture' as const },
+              { labelKey: 'devis',    prefixKey: 'prefixeDevis'   as const, numKey: 'prochainNumeroDevis'   as const },
+              { labelKey: 'bonsLivraison', prefixKey: 'prefixeBL' as const, numKey: 'prochainNumeroBL'      as const },
+            ]
+            const inputCls = 'w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
+            return (
+              <div className="card rounded-2xl p-5 space-y-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Hash className="w-4 h-4 text-slate-400" />
+                      <h4 className="font-bold text-slate-900 dark:text-white text-sm">{t('pages.settings.numerotation.title')}</h4>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800">Pro & Business</span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.numerotation.subtitle')}</p>
+                  </div>
+                </div>
+
+                {isStarter ? (
+                  <div className="rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-8 text-center">
+                    <Lock className="w-6 h-6 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+                    <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">{t('pages.settings.numerotation.proOnly')}</p>
+                    <button
+                      onClick={() => setActiveTab('billing')}
+                      className="mt-3 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline"
+                    >
+                      {t('pages.settings.numerotation.voirPlans')} →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {rows.map(({ labelKey, prefixKey, numKey }) => {
+                      const prefix = numbering[prefixKey]
+                      const nextNum = numbering[numKey]
+                      const preview = `${prefix || '???'}-${year}-${String(nextNum || 1).padStart(4, '0')}`
+                      return (
+                        <div key={prefixKey} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3">
+                          <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">{t(`pages.settings.numerotation.${labelKey}`)}</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                            <div>
+                              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 block">{t('pages.settings.numerotation.prefixeLabel')}</label>
+                              <input
+                                type="text"
+                                maxLength={10}
+                                value={prefix}
+                                onChange={e => setNumbering(n => ({ ...n, [prefixKey]: e.target.value.toUpperCase() }))}
+                                className={inputCls}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 block">{t('pages.settings.numerotation.prochainNumeroLabel')}</label>
+                              <input
+                                type="number"
+                                min={1}
+                                value={nextNum}
+                                onChange={e => setNumbering(n => ({ ...n, [numKey]: Math.max(1, parseInt(e.target.value) || 1) }))}
+                                className={inputCls}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 block">{t('pages.settings.numerotation.apercu')}</label>
+                              <div className="px-3.5 py-2.5 rounded-xl bg-primary-50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-sm font-mono font-bold tracking-wide">
+                                {preview}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                    <div className="flex justify-end pt-1">
+                      <SaveButton onClick={saveNumbering} saving={saving} saved={saved} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+            })()}
           </div>
         )
       }

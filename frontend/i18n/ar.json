@@ -1468,6 +1468,19 @@
         "upgrade": "الترقية",
         "cancelPlan": "إلغاء الاشتراك"
       },
+      "numerotation": {
+        "title": "ترقيم المستندات",
+        "subtitle": "خصص البادئة ورقم البداية لفواتيرك وعروضك ووصولات التسليم.",
+        "prefixeLabel": "البادئة",
+        "prochainNumeroLabel": "الرقم التالي",
+        "apercu": "معاينة",
+        "factures": "الفواتير",
+        "devis": "العروض",
+        "bonsLivraison": "وصولات التسليم",
+        "proOnly": "متاح في خططي Pro وBusiness.",
+        "voirPlans": "عرض الخطط",
+        "saveSuccess": "تم تحديث الترقيم."
+      },
       "saveSuccess": "تم حفظ الإعدادات بنجاح"
     },
     "activite": {

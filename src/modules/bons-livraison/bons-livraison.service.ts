@@ -25,9 +25,12 @@ export class BonsLivraisonService {
   ) {}
 
   private async genererReference(entrepriseId: string): Promise<string> {
-    const year = new Date().getFullYear();
-    const count = await this.prisma.bonLivraison.count({ where: { entrepriseId } });
-    return `BL-${year}-${String(count + 1).padStart(4, '0')}`;
+    const ent = await this.prisma.entreprise.update({
+      where: { id: entrepriseId },
+      data: { prochainNumeroBL: { increment: 1 } },
+      select: { prochainNumeroBL: true, prefixeBL: true },
+    });
+    return `${ent.prefixeBL || 'BL'}-${new Date().getFullYear()}-${String(ent.prochainNumeroBL - 1).padStart(4, '0')}`;
   }
 
   async lister(entrepriseId: string, statut?: string, clientId?: string, recherche?: string) {

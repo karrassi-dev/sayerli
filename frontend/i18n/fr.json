@@ -1469,6 +1469,19 @@
         "upgrade": "Passer au plan supérieur",
         "cancelPlan": "Annuler l'abonnement"
       },
+      "numerotation": {
+        "title": "Numérotation des documents",
+        "subtitle": "Personnalisez le préfixe et le numéro de départ de vos factures, devis et bons de livraison.",
+        "prefixeLabel": "Préfixe",
+        "prochainNumeroLabel": "Prochain numéro",
+        "apercu": "Aperçu",
+        "factures": "Factures",
+        "devis": "Devis",
+        "bonsLivraison": "Bons de livraison",
+        "proOnly": "Disponible sur les plans Pro et Business.",
+        "voirPlans": "Voir les plans",
+        "saveSuccess": "Numérotation mise à jour."
+      },
       "saveSuccess": "Paramètres enregistrés avec succès"
     },
     "activite": {

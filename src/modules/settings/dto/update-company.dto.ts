@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export class UpdateCompanyDto {
   @IsOptional()
@@ -64,4 +64,31 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   activite?: string;
+
+  @IsOptional()
+  @IsString()
+  prefixeFacture?: string;
+
+  @IsOptional()
+  @IsString()
+  prefixeDevis?: string;
+
+  @IsOptional()
+  @IsString()
+  prefixeBL?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  prochainNumeroFacture?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  prochainNumeroDevis?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  prochainNumeroBL?: number;
 }

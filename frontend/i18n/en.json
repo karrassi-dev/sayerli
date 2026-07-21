@@ -1468,6 +1468,19 @@
         "upgrade": "Upgrade Plan",
         "cancelPlan": "Cancel Subscription"
       },
+      "numerotation": {
+        "title": "Document numbering",
+        "subtitle": "Customize the prefix and starting number for your invoices, quotes and delivery orders.",
+        "prefixeLabel": "Prefix",
+        "prochainNumeroLabel": "Next number",
+        "apercu": "Preview",
+        "factures": "Invoices",
+        "devis": "Quotes",
+        "bonsLivraison": "Delivery orders",
+        "proOnly": "Available on Pro and Business plans.",
+        "voirPlans": "View plans",
+        "saveSuccess": "Numbering updated."
+      },
       "saveSuccess": "Settings saved successfully"
     },
     "activite": {

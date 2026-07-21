@@ -93,6 +93,13 @@ export class SettingsService {
         swift: true,
         typeCompte: true,
         activite: true,
+        plan: true,
+        prefixeFacture: true,
+        prefixeDevis: true,
+        prefixeBL: true,
+        prochainNumeroFacture: true,
+        prochainNumeroDevis: true,
+        prochainNumeroBL: true,
       },
     });
     if (!company) throw new NotFoundException('Entreprise introuvable.');
@@ -117,6 +124,23 @@ export class SettingsService {
     if (dto.swift !== undefined) data.swift = dto.swift;
     if (dto.typeCompte !== undefined) data.typeCompte = dto.typeCompte;
     if (dto.activite !== undefined) data.activite = dto.activite;
+
+    const hasNumerotation = [dto.prefixeFacture, dto.prefixeDevis, dto.prefixeBL,
+      dto.prochainNumeroFacture, dto.prochainNumeroDevis, dto.prochainNumeroBL]
+      .some(v => v !== undefined);
+
+    if (hasNumerotation) {
+      const ent = await this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true } });
+      if (ent?.plan === 'STARTER') {
+        throw new ForbiddenException('La numérotation personnalisée est disponible sur les plans Pro et Business.');
+      }
+      if (dto.prefixeFacture !== undefined) data.prefixeFacture = (dto.prefixeFacture.trim().toUpperCase() || 'FAC').slice(0, 10);
+      if (dto.prefixeDevis !== undefined) data.prefixeDevis = (dto.prefixeDevis.trim().toUpperCase() || 'DEV').slice(0, 10);
+      if (dto.prefixeBL !== undefined) data.prefixeBL = (dto.prefixeBL.trim().toUpperCase() || 'BL').slice(0, 10);
+      if (dto.prochainNumeroFacture !== undefined) data.prochainNumeroFacture = Math.max(1, dto.prochainNumeroFacture);
+      if (dto.prochainNumeroDevis !== undefined) data.prochainNumeroDevis = Math.max(1, dto.prochainNumeroDevis);
+      if (dto.prochainNumeroBL !== undefined) data.prochainNumeroBL = Math.max(1, dto.prochainNumeroBL);
+    }
 
     return this.prisma.entreprise.update({
       where: { id: entrepriseId },

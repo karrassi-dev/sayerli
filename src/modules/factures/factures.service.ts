@@ -33,8 +33,8 @@ export class FacturesService {
     return { totalHT, totalTTC };
   }
 
-  private genererNumeroFac(count: number): string {
-    return `FAC-${new Date().getFullYear()}-${String(count + 1).padStart(4, '0')}`;
+  private genererNumeroFac(prefix: string, num: number): string {
+    return `${prefix || 'FAC'}-${new Date().getFullYear()}-${String(num).padStart(4, '0')}`;
   }
 
   async listerFactures(entrepriseId: string, statut?: StatutFacture, clientId?: string, recherche?: string) {
@@ -106,8 +106,12 @@ export class FacturesService {
 
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
-        const count = await tx.facture.count({ where: { entrepriseId } });
-        const numeroFacture = this.genererNumeroFac(count);
+        const ent = await tx.entreprise.update({
+          where: { id: entrepriseId },
+          data: { prochainNumeroFacture: { increment: 1 } },
+          select: { prochainNumeroFacture: true, prefixeFacture: true },
+        });
+        const numeroFacture = this.genererNumeroFac(ent.prefixeFacture, ent.prochainNumeroFacture - 1);
 
         return tx.facture.create({
           data: {
