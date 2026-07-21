@@ -448,7 +448,8 @@ export default function GraphView({ data }: { data: GraphData }) {
           id: e.id,
           source: e.source,
           target: e.target,
-          type: 'smoothstep',
+          type: 'default',
+          pathOptions: { curvature: 0.6 },
           animated: isHighlighted,
           markerEnd: {
             type: MarkerType.ArrowClosed,
