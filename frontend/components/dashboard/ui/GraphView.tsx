@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ReactFlow, Background, Controls, MiniMap, MarkerType,
   useNodesState, useEdgesState, BackgroundVariant,
+  Handle, Position,
   type Node, type Edge, type NodeProps,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
@@ -147,6 +148,12 @@ function GraphNode({ data }: NodeProps) {
   const cfg = NODE_CONFIG[d.nodeType]
   const Icon = cfg.icon
 
+  const handleStyle = {
+    opacity: 0, width: 6, height: 6,
+    minWidth: 6, minHeight: 6,
+    border: 'none', background: 'transparent',
+  }
+
   return (
     <div
       onMouseEnter={() => d.onHover(d.nodeId)}
@@ -159,6 +166,10 @@ function GraphNode({ data }: NodeProps) {
         transform: d.highlighted ? 'scale(1.1)' : 'scale(1)',
       }}
     >
+      <Handle type="target" position={Position.Top}    style={handleStyle} isConnectable={false} />
+      <Handle type="target" position={Position.Left}   style={handleStyle} isConnectable={false} />
+      <Handle type="source" position={Position.Bottom} style={handleStyle} isConnectable={false} />
+      <Handle type="source" position={Position.Right}  style={handleStyle} isConnectable={false} />
       <div
         className="flex items-center gap-2 px-3 py-2 rounded-2xl border text-white font-semibold text-xs whitespace-nowrap shadow-lg"
         style={{
