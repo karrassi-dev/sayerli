@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ReactFlow, Background, Controls, MiniMap, MarkerType,
   useNodesState, useEdgesState, BackgroundVariant,
@@ -193,9 +193,13 @@ const nodeTypes = { graphNode: GraphNode }
 function HoverCard({
   node,
   onNavigate,
+  onMouseEnter,
+  onMouseLeave,
 }: {
   node: RawNode | null
   onNavigate: (type: NodeType, id: string) => void
+  onMouseEnter: () => void
+  onMouseLeave: () => void
 }) {
   const { t } = useTranslation()
   if (!node) return null
@@ -226,7 +230,11 @@ function HoverCard({
   }
 
   return (
-    <div className="absolute bottom-6 right-6 z-50 w-64 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl p-4 pointer-events-none">
+    <div
+      className="absolute bottom-6 right-6 z-50 w-64 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl p-4 pointer-events-auto"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className="flex items-center gap-3 mb-3">
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -266,7 +274,7 @@ function HoverCard({
       </div>
       {node.type !== 'paiement' && (
         <button
-          className="pointer-events-auto mt-3 w-full text-xs font-semibold py-1.5 rounded-xl border transition-all"
+          className="mt-3 w-full text-xs font-semibold py-1.5 rounded-xl border transition-all hover:opacity-80"
           style={{ borderColor: cfg.color, color: cfg.color }}
           onClick={() => onNavigate(node.type, node.rawId)}
         >
@@ -342,6 +350,25 @@ export default function GraphView({ data }: { data: GraphData }) {
   const [activeFilters, setActiveFilters] = useState<Set<NodeType>>(new Set(FILTER_TYPES))
   const [search, setSearch] = useState('')
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Debounced hover: 300ms grace period so mouse can travel from node to popup
+  const handleHover = useCallback((id: string | null) => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+    if (id !== null) {
+      setHoveredId(id)
+    } else {
+      hoverTimeout.current = setTimeout(() => setHoveredId(null), 300)
+    }
+  }, [])
+
+  const handlePopupEnter = useCallback(() => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+  }, [])
+
+  const handlePopupLeave = useCallback(() => {
+    hoverTimeout.current = setTimeout(() => setHoveredId(null), 150)
+  }, [])
 
   const positions = useMemo(() => computeLayout(data.nodes, data.edges), [data.nodes, data.edges])
 
@@ -393,10 +420,19 @@ export default function GraphView({ data }: { data: GraphData }) {
           nodeId: n.id,
           highlighted: hoveredId ? connectedIds.has(n.id) : false,
           dimmed: hoveredId ? !connectedIds.has(n.id) : false,
-          onHover: setHoveredId,
+          onHover: handleHover,
         } satisfies GraphNodeData,
       })),
   [data.nodes, filteredNodeIds, positions, hoveredId, connectedIds])
+
+  const EDGE_COLORS: Record<string, string> = {
+    'client-devis':      NODE_CONFIG.devis.color,
+    'client-facture':    NODE_CONFIG.facture.color,
+    'client-bl':         NODE_CONFIG.bl.color,
+    'devis-facture':     NODE_CONFIG.facture.color,
+    'devis-bl':          NODE_CONFIG.bl.color,
+    'facture-paiement':  NODE_CONFIG.paiement.color,
+  }
 
   const rfEdges: Edge[] = useMemo(() =>
     data.edges
@@ -406,22 +442,30 @@ export default function GraphView({ data }: { data: GraphData }) {
           ? connectedIds.has(e.source) && connectedIds.has(e.target)
           : false
         const isDimmed = hoveredId ? !isHighlighted : false
+        const baseColor = EDGE_COLORS[e.edgeType] ?? '#6366f1'
+        const strokeColor = isHighlighted ? baseColor : (isDark ? '#475569' : '#94a3b8')
         return {
           id: e.id,
           source: e.source,
           target: e.target,
           type: 'smoothstep',
           animated: isHighlighted,
-          markerEnd: { type: MarkerType.ArrowClosed, width: 12, height: 12, color: isHighlighted ? '#94a3b8' : '#475569' },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            width: isHighlighted ? 14 : 10,
+            height: isHighlighted ? 14 : 10,
+            color: strokeColor,
+          },
           style: {
-            stroke: isHighlighted ? '#94a3b8' : '#334155',
-            strokeWidth: isHighlighted ? 2 : 1,
-            opacity: isDimmed ? 0.05 : isHighlighted ? 1 : 0.35,
+            stroke: strokeColor,
+            strokeWidth: isHighlighted ? 2.5 : 1.5,
+            opacity: isDimmed ? 0.06 : isHighlighted ? 1 : 0.65,
             transition: 'all 0.2s ease',
           },
         }
       }),
-  [data.edges, filteredNodeIds, hoveredId, connectedIds])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [data.edges, filteredNodeIds, hoveredId, connectedIds, isDark])
 
   const [nodes, setNodes, onNodesChange] = useNodesState(rfNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(rfEdges)
@@ -533,7 +577,12 @@ export default function GraphView({ data }: { data: GraphData }) {
       </ReactFlow>
 
       {/* Hover popup */}
-      <HoverCard node={hoveredNode} onNavigate={handleNavigate} />
+      <HoverCard
+        node={hoveredNode}
+        onNavigate={handleNavigate}
+        onMouseEnter={handlePopupEnter}
+        onMouseLeave={handlePopupLeave}
+      />
     </div>
   )
 }
