@@ -9,7 +9,7 @@ export class GraphService {
     const [clients, devis, factures, bonsLivraison, paiements] = await Promise.all([
       this.prisma.client.findMany({
         where: { entrepriseId },
-        select: { id: true, nom: true, prenom: true, typeClient: true },
+        select: { id: true, nom: true, typeClient: true },
       }),
       this.prisma.devis.findMany({
         where: { entrepriseId },
@@ -31,7 +31,7 @@ export class GraphService {
       }),
       this.prisma.paiement.findMany({
         where: { facture: { entrepriseId } },
-        select: { id: true, montant: true, factureId: true, createdAt: true, modePaiement: true },
+        select: { id: true, montant: true, factureId: true, createdAt: true, methode: true },
         orderBy: { createdAt: 'desc' },
         take: 200,
       }),
@@ -42,7 +42,7 @@ export class GraphService {
         id: `client-${c.id}`,
         type: 'client' as const,
         rawId: c.id,
-        label: c.prenom ? `${c.prenom} ${c.nom}` : c.nom,
+        label: c.nom,
         sublabel: c.typeClient,
         status: null as string | null,
         amount: null as number | null,
@@ -79,7 +79,7 @@ export class GraphService {
         type: 'paiement' as const,
         rawId: p.id,
         label: `${Number(p.montant).toFixed(0)} MAD`,
-        sublabel: p.modePaiement,
+        sublabel: p.methode,
         status: null,
         amount: Number(p.montant),
       })),
