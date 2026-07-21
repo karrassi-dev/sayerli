@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, FileText, Receipt, CreditCard,
   UserCog, Bell, Settings, LogOut, Menu, X,
   ChevronLeft, ChevronRight, ClipboardCheck, Download, Package,
-  Building2, ChevronsUpDown, Check, Activity, Calculator, Truck,
+  Building2, ChevronsUpDown, Check, Activity, Calculator, Truck, Share2,
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -29,6 +29,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/notifications',iconC: Bell,            key: 'notifications', permission: null },
   { href: '/dashboard/export',           iconC: Download,    key: 'export',           permission: 'export' },
   { href: '/dashboard/declarations-tva', iconC: Calculator,  key: 'declarationsTva',  permission: 'export' },
+  { href: '/dashboard/graphe',        iconC: Share2,          key: 'graphe',        permission: null },
   { href: '/dashboard/activite',     iconC: Activity,        key: 'activite',      permission: 'settings' },
   { href: '/dashboard/settings',     iconC: Settings,        key: 'settings',      permission: null },
 ]

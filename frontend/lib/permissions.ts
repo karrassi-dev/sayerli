@@ -21,6 +21,7 @@ export const ROUTE_ROLE_MAP: Record<string, string[]> = {
   '/dashboard/declarations-tva': ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
   '/dashboard/activite':         ['admin', 'proprietaire'],
   '/dashboard/bons-livraison':   ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant', 'comptable', 'comptable_externe', 'daf', 'associe'],
+  '/dashboard/graphe':           ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'comptable_externe', 'responsable_recouvrement', 'caissier', 'commercial', 'commercial_propre', 'assistant', 'associe'],
 }
 
 export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
@@ -35,6 +36,7 @@ export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
   export:           ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
   declarationsTva:  ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
   settings:         ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'comptable_externe', 'responsable_recouvrement', 'caissier', 'commercial', 'commercial_propre', 'assistant', 'associe'],
+  graphe:           ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'comptable_externe', 'responsable_recouvrement', 'caissier', 'commercial', 'commercial_propre', 'assistant', 'associe'],
   catalogue:     ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant'],
   activite:         ['admin', 'proprietaire'],
   bonsLivraison:    ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant', 'comptable', 'comptable_externe', 'daf', 'associe'],

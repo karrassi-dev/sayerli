@@ -311,7 +311,8 @@
       "logout": "Déconnexion",
       "catalogue": "Catalogue",
       "bonsLivraison": "Bons de livraison",
-      "activite": "Activité"
+      "activite": "Activité",
+      "graphe": "Graphe relationnel"
     },
     "payments": "Paiements",
     "thisMonth": "ce mois",
@@ -1740,6 +1741,46 @@
     "downloadLoading": "Génération PDF…",
     "generatedAt": "Générée le",
     "changeSettings": "Modifier dans Paramètres"
+  },
+  "graph": {
+    "title": "Graphe relationnel",
+    "sub": "Visualisez les connexions entre vos clients, devis, factures et bons de livraison.",
+    "refresh": "Actualiser",
+    "loading": "Construction du graphe…",
+    "error": "Impossible de charger le graphe.",
+    "retry": "Réessayer",
+    "searchPlaceholder": "Rechercher un document…",
+    "nodeTypes": {
+      "client": "Client",
+      "devis": "Devis",
+      "facture": "Facture",
+      "bl": "Bon de livraison",
+      "paiement": "Paiement"
+    },
+    "status": {
+      "brouillon": "Brouillon",
+      "envoye": "Envoyé",
+      "vu": "Vu",
+      "accepte": "Accepté",
+      "refuse": "Refusé",
+      "expire": "Expiré",
+      "annulee": "Annulée",
+      "payee": "Payée",
+      "partielle": "Partielle",
+      "enRetard": "En retard",
+      "livre": "Livré",
+      "enCours": "En cours"
+    },
+    "popup": {
+      "status": "Statut",
+      "amount": "Montant",
+      "type": "Type",
+      "open": "Ouvrir"
+    },
+    "empty": {
+      "title": "Aucune donnée",
+      "sub": "Créez des clients, devis ou factures pour voir le graphe."
+    }
   },
   "upgradeBanner": {
     "text": "✨ Vous souhaitez changer de plan ? Contactez-nous directement sur WhatsApp et nous nous occupons de tout pour vous",

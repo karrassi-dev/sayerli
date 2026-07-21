@@ -269,6 +269,11 @@ export const declarationsTvaApi = {
     api.get('/declarations-tva/calculer', { params }),
 }
 
+// Graph
+export const graphApi = {
+  getData: () => api.get('/graph'),
+}
+
 // Contact
 export const contactApi = {
   submit: (data: {

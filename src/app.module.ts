@@ -27,6 +27,7 @@ import { PortalModule } from './modules/portal/portal.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { DeclarationsTVAModule } from './modules/declarations-tva/declarations-tva.module';
 import { BonsLivraisonModule } from './modules/bons-livraison/bons-livraison.module';
+import { GraphModule } from './modules/graph/graph.module';
 
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -63,6 +64,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     LogsModule,
     DeclarationsTVAModule,
     BonsLivraisonModule,
+    GraphModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

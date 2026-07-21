@@ -311,7 +311,8 @@
       "logout": "Logout",
       "catalogue": "Catalog",
       "bonsLivraison": "Delivery Notes",
-      "activite": "Activity"
+      "activite": "Activity",
+      "graphe": "Relation Graph"
     },
     "payments": "Payments",
     "thisMonth": "this month",
@@ -1739,6 +1740,46 @@
     "downloadLoading": "Generating PDF…",
     "generatedAt": "Generated on",
     "changeSettings": "Edit in Settings"
+  },
+  "graph": {
+    "title": "Relation Graph",
+    "sub": "Visualize connections between your clients, quotes, invoices, and delivery notes.",
+    "refresh": "Refresh",
+    "loading": "Building graph…",
+    "error": "Failed to load the graph.",
+    "retry": "Retry",
+    "searchPlaceholder": "Search a document…",
+    "nodeTypes": {
+      "client": "Client",
+      "devis": "Quote",
+      "facture": "Invoice",
+      "bl": "Delivery Note",
+      "paiement": "Payment"
+    },
+    "status": {
+      "brouillon": "Draft",
+      "envoye": "Sent",
+      "vu": "Viewed",
+      "accepte": "Accepted",
+      "refuse": "Refused",
+      "expire": "Expired",
+      "annulee": "Cancelled",
+      "payee": "Paid",
+      "partielle": "Partial",
+      "enRetard": "Overdue",
+      "livre": "Delivered",
+      "enCours": "In progress"
+    },
+    "popup": {
+      "status": "Status",
+      "amount": "Amount",
+      "type": "Type",
+      "open": "Open"
+    },
+    "empty": {
+      "title": "No data",
+      "sub": "Create clients, quotes, or invoices to see the graph."
+    }
   },
   "upgradeBanner": {
     "text": "✨ Want to upgrade or change your plan? Reach out on WhatsApp and we'll take care of everything for you",
