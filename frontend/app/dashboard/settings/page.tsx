@@ -15,6 +15,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { settingsApi } from '@/lib/api'
 import { LOCALES } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { canDo } from '@/lib/permissions'
 import TemplateChooser from '@/components/settings/TemplateChooser'
 
 const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1').replace(/\/api\/v1\/?$/, '')
@@ -97,16 +98,25 @@ function FieldError({ msg }: { msg?: string }) {
   )
 }
 
+const PERSONAL_TABS: Tab[] = ['profile', 'language', 'theme', 'security']
+
 export default function SettingsPage() {
   const { t, setLocale } = useTranslation()
   const { setTheme } = useTheme()
   const { user } = useAuth()
   const { toasts, success, error: toastError, removeToast } = useToast()
+
+  const removedPerms: string[] = (user as any)?.permissionsRetirees ?? []
+  const hasSettingsPerm = canDo('settings', user?.role, removedPerms)
+  const visibleTabs = TABS.filter(tab => hasSettingsPerm || PERSONAL_TABS.includes(tab.key))
+
   const [activeTab, setActiveTab] = useState<Tab>('profile')
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search).get('tab') as Tab | null
-    if (p && TABS.some(t => t.key === p)) setActiveTab(p)
+    const allowed = hasSettingsPerm ? TABS.map(t => t.key) : PERSONAL_TABS
+    if (p && allowed.includes(p as Tab)) setActiveTab(p as Tab)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ─── Per-tab save state ──────────────────────────────────────────────────
@@ -1365,7 +1375,7 @@ export default function SettingsPage() {
           {/* Sidebar nav */}
           <aside className="lg:w-52 flex-shrink-0">
             <div className="lg:hidden flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
-              {TABS.map(({ key, icon: Icon }) => (
+              {visibleTabs.map(({ key, icon: Icon }) => (
                 <button
                   key={key}
                   onClick={() => { setActiveTab(key); setSaved(false); setFieldErrors({}) }}
@@ -1383,7 +1393,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="hidden lg:flex flex-col gap-0.5 card rounded-2xl p-2">
-              {TABS.map(({ key, icon: Icon }) => (
+              {visibleTabs.map(({ key, icon: Icon }) => (
                 <button
                   key={key}
                   onClick={() => { setActiveTab(key); setSaved(false); setFieldErrors({}) }}

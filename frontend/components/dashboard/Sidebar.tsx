@@ -30,7 +30,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/export',           iconC: Download,    key: 'export',           permission: 'export' },
   { href: '/dashboard/declarations-tva', iconC: Calculator,  key: 'declarationsTva',  permission: 'export' },
   { href: '/dashboard/activite',     iconC: Activity,        key: 'activite',      permission: 'settings' },
-  { href: '/dashboard/settings',     iconC: Settings,        key: 'settings',      permission: 'settings' },
+  { href: '/dashboard/settings',     iconC: Settings,        key: 'settings',      permission: null },
 ]
 
 const ROLE_COLORS: Record<string, string> = {

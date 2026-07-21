@@ -9,7 +9,7 @@ export function canDo(perm: PermissionKey, role: string | undefined, removed: st
 
 export const ROUTE_ROLE_MAP: Record<string, string[]> = {
   '/dashboard/equipe':       ['admin', 'proprietaire'],
-  '/dashboard/settings':     ['admin', 'proprietaire'],
+  '/dashboard/settings':     ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'comptable_externe', 'responsable_recouvrement', 'caissier', 'commercial', 'commercial_propre', 'assistant', 'associe'],
   '/dashboard/catalogue':    ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant'],
   '/dashboard/clients':      ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant', 'comptable_externe', 'responsable_recouvrement'],
   '/dashboard/devis':        ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant'],
@@ -34,7 +34,7 @@ export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
   notifications: ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'comptable', 'comptable_externe', 'daf', 'responsable_recouvrement', 'caissier', 'assistant', 'associe'],
   export:           ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
   declarationsTva:  ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf'],
-  settings:         ['admin', 'proprietaire'],
+  settings:         ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'comptable_externe', 'responsable_recouvrement', 'caissier', 'commercial', 'commercial_propre', 'assistant', 'associe'],
   catalogue:     ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant'],
   activite:         ['admin', 'proprietaire'],
   bonsLivraison:    ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant', 'comptable', 'comptable_externe', 'daf', 'associe'],
