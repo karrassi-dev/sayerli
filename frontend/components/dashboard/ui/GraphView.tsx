@@ -434,6 +434,15 @@ export default function GraphView({ data }: { data: GraphData }) {
     'facture-paiement':  NODE_CONFIG.paiement.color,
   }
 
+  const EDGE_LABELS: Record<string, string> = {
+    'client-devis':     t('graph.edgeLabels.clientDevis'),
+    'client-facture':   t('graph.edgeLabels.clientFacture'),
+    'client-bl':        t('graph.edgeLabels.clientBl'),
+    'devis-facture':    t('graph.edgeLabels.devisFacture'),
+    'devis-bl':         t('graph.edgeLabels.devisBl'),
+    'facture-paiement': t('graph.edgeLabels.facturePaiement'),
+  }
+
   const rfEdges: Edge[] = useMemo(() =>
     data.edges
       .filter(e => filteredNodeIds.has(e.source) && filteredNodeIds.has(e.target))
@@ -451,6 +460,18 @@ export default function GraphView({ data }: { data: GraphData }) {
           type: 'default',
           pathOptions: { curvature: 0.6 },
           animated: isHighlighted,
+          label: isHighlighted ? (EDGE_LABELS[e.edgeType] ?? '') : '',
+          labelStyle: {
+            fontSize: 10,
+            fontWeight: 600,
+            fill: baseColor,
+          },
+          labelBgStyle: {
+            fill: isDark ? '#0f172a' : '#ffffff',
+            fillOpacity: 0.85,
+          },
+          labelBgPadding: [4, 6] as [number, number],
+          labelBgBorderRadius: 6,
           markerEnd: {
             type: MarkerType.ArrowClosed,
             width: isHighlighted ? 14 : 10,
@@ -466,7 +487,7 @@ export default function GraphView({ data }: { data: GraphData }) {
         }
       }),
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  [data.edges, filteredNodeIds, hoveredId, connectedIds, isDark])
+  [data.edges, filteredNodeIds, hoveredId, connectedIds, isDark, t])
 
   const [nodes, setNodes, onNodesChange] = useNodesState(rfNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(rfEdges)

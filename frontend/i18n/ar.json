@@ -1770,6 +1770,14 @@
       "livre": "تم التسليم",
       "enCours": "قيد التنفيذ"
     },
+    "edgeLabels": {
+      "clientDevis": "عرض سعر",
+      "clientFacture": "فاتورة مباشرة",
+      "clientBl": "تسليم مباشر",
+      "devisFacture": "تحويل إلى فاتورة",
+      "devisBl": "وصل تسليم",
+      "facturePaiement": "دفعة مستلمة"
+    },
     "popup": {
       "status": "الحالة",
       "amount": "المبلغ",

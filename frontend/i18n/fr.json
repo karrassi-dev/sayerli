@@ -1771,6 +1771,14 @@
       "livre": "Livré",
       "enCours": "En cours"
     },
+    "edgeLabels": {
+      "clientDevis": "Devis créé",
+      "clientFacture": "Facture directe",
+      "clientBl": "BL direct",
+      "devisFacture": "Converti en facture",
+      "devisBl": "Bon de livraison",
+      "facturePaiement": "Paiement reçu"
+    },
     "popup": {
       "status": "Statut",
       "amount": "Montant",
