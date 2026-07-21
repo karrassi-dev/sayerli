@@ -75,9 +75,9 @@ function computeLayout(rawNodes: RawNode[], rawEdges: RawEdge[]): Record<string,
   const positions: Record<string, { x: number; y: number }> = {}
   const clients = rawNodes.filter(n => n.type === 'client')
   const cols = Math.ceil(Math.sqrt(clients.length))
-  const CLIENT_SPACING_X = 700
-  const CLIENT_SPACING_Y = 600
-  const DOC_RADIUS = 180
+  const CLIENT_SPACING_X = 1000
+  const CLIENT_SPACING_Y = 900
+  const DOC_RADIUS = 250
 
   clients.forEach((client, i) => {
     const col = i % cols
@@ -452,36 +452,38 @@ export default function GraphView({ data }: { data: GraphData }) {
           : false
         const isDimmed = hoveredId ? !isHighlighted : false
         const baseColor = EDGE_COLORS[e.edgeType] ?? '#6366f1'
-        const strokeColor = isHighlighted ? baseColor : (isDark ? '#475569' : '#94a3b8')
+        // dark mode needs a LIGHT colour to show on dark canvas; light mode needs dark
+        const defaultStroke = isDark ? '#94a3b8' : '#475569'
+        const strokeColor = isHighlighted ? baseColor : defaultStroke
         return {
           id: e.id,
           source: e.source,
           target: e.target,
           type: 'default',
-          pathOptions: { curvature: 0.6 },
+          pathOptions: { curvature: 0.5 },
           animated: isHighlighted,
           label: isHighlighted ? (EDGE_LABELS[e.edgeType] ?? '') : '',
           labelStyle: {
             fontSize: 10,
-            fontWeight: 600,
+            fontWeight: 700,
             fill: baseColor,
           },
           labelBgStyle: {
             fill: isDark ? '#0f172a' : '#ffffff',
-            fillOpacity: 0.85,
+            fillOpacity: 0.9,
           },
           labelBgPadding: [4, 6] as [number, number],
           labelBgBorderRadius: 6,
           markerEnd: {
             type: MarkerType.ArrowClosed,
-            width: isHighlighted ? 14 : 10,
-            height: isHighlighted ? 14 : 10,
+            width: isHighlighted ? 16 : 12,
+            height: isHighlighted ? 16 : 12,
             color: strokeColor,
           },
           style: {
             stroke: strokeColor,
-            strokeWidth: isHighlighted ? 2.5 : 1.5,
-            opacity: isDimmed ? 0.06 : isHighlighted ? 1 : 0.65,
+            strokeWidth: isHighlighted ? 3 : 2,
+            opacity: isDimmed ? 0.05 : isHighlighted ? 1 : 0.75,
             transition: 'all 0.2s ease',
           },
         }
