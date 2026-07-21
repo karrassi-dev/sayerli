@@ -2,7 +2,10 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { MethodePaiement, StatutFacture } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LogsService } from '../logs/logs.service';
@@ -14,7 +17,12 @@ export class PaiementsService {
   constructor(
     private prisma: PrismaService,
     private logs: LogsService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
   ) {}
+
+  private bustDashboard(entrepriseId: string) {
+    void this.cache.del(`dashboard:${entrepriseId}`);
+  }
 
   async listerPaiements(
     entrepriseId: string,
@@ -147,6 +155,7 @@ export class PaiementsService {
       entityRef: paiement.facture.numeroFacture,
       metadata: { montant: dto.montant, methode: dto.methode },
     });
+    this.bustDashboard(entrepriseId);
     return paiement;
   }
 

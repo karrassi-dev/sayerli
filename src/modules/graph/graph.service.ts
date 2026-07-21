@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class GraphService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
+  ) {}
 
   async getGraphData(entrepriseId: string) {
+    const cacheKey = `graph:${entrepriseId}`;
+    const cached = await this.cache.get<object>(cacheKey);
+    if (cached) return cached;
     const [clients, devis, factures, bonsLivraison, paiements] = await Promise.all([
       this.prisma.client.findMany({
         where: { entrepriseId },
@@ -124,6 +132,8 @@ export class GraphService {
       })),
     ];
 
-    return { nodes, edges };
+    const result = { nodes, edges };
+    await this.cache.set(cacheKey, result, 120_000);
+    return result;
   }
 }

@@ -90,7 +90,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     fetchAndCheck()
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') fetchAndCheck()
-    }, 30_000)
+    }, 60_000)
     const onVisibilityChange = () => {
       if (document.visibilityState === 'visible') fetchAndCheck()
     }

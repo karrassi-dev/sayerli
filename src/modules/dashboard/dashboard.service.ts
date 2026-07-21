@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { StatutDevis, StatutFacture, TypeClient } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -6,9 +8,28 @@ const MOIS_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep'
 
 @Injectable()
 export class DashboardAnalyticsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
+  ) {}
+
+  static cacheKey(entrepriseId: string, typeClient?: TypeClient) {
+    return `dashboard:${entrepriseId}${typeClient ? `:${typeClient}` : ''}`;
+  }
+
+  async invalidate(entrepriseId: string) {
+    await Promise.all(
+      ['', ...Object.values(TypeClient)].map(tc =>
+        this.cache.del(DashboardAnalyticsService.cacheKey(entrepriseId, tc as TypeClient || undefined)),
+      ),
+    );
+  }
 
   async getAnalytics(entrepriseId: string, typeClient?: TypeClient) {
+    const cacheKey = DashboardAnalyticsService.cacheKey(entrepriseId, typeClient);
+    const cached = await this.cache.get<object>(cacheKey);
+    if (cached) return cached;
+
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -266,7 +287,7 @@ export class DashboardAnalyticsService {
       ? Math.round((totalRecu / totalFacturé) * 1000) / 10
       : 0;
 
-    return {
+    const result = {
       clients: {
         total: totalClients,
         nouveauxCeMois: newClientsThisMonth,
@@ -299,5 +320,8 @@ export class DashboardAnalyticsService {
       })),
       activite: recentActivity,
     };
+
+    await this.cache.set(cacheKey, result, 60_000);
+    return result as typeof result;
   }
 }

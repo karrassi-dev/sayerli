@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LogsService } from '../logs/logs.service';
 import { CreerClientDto } from './dto/creer-client.dto';
@@ -10,7 +12,12 @@ export class ClientsService {
   constructor(
     private prisma: PrismaService,
     private logs: LogsService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
   ) {}
+
+  private bustDashboard(entrepriseId: string) {
+    void this.cache.del(`dashboard:${entrepriseId}`);
+  }
 
   async listerClients(entrepriseId: string, recherche?: string) {
     const clients = await this.prisma.client.findMany({
@@ -70,6 +77,7 @@ export class ClientsService {
 
     const client = await this.prisma.client.create({ data: { ...dto, entrepriseId } });
     this.logs.log({ entrepriseId, userId, userNom, action: 'CLIENT_CREE', entityType: 'CLIENT', entityId: client.id, entityRef: client.nom });
+    this.bustDashboard(entrepriseId);
     return client;
   }
 
@@ -79,6 +87,7 @@ export class ClientsService {
 
     const updated = await this.prisma.client.update({ where: { id }, data: dto });
     this.logs.log({ entrepriseId, userId, userNom, action: 'CLIENT_MODIFIE', entityType: 'CLIENT', entityId: id, entityRef: client.nom });
+    this.bustDashboard(entrepriseId);
     return updated;
   }
 
@@ -88,6 +97,7 @@ export class ClientsService {
 
     await this.prisma.client.update({ where: { id }, data: { actif: false } });
     this.logs.log({ entrepriseId, userId, userNom, action: 'CLIENT_SUPPRIME', entityType: 'CLIENT', entityId: id, entityRef: client.nom });
+    this.bustDashboard(entrepriseId);
     return { message: 'Client archivé avec succès.' };
   }
 

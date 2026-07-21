@@ -3,7 +3,10 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  Inject,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { Prisma, StatutFacture, StatutDeclaration } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { retryOnConflict } from '../../common/utils/retry';
@@ -24,7 +27,12 @@ export class FacturesService {
     private logs: LogsService,
     private notificationsService: NotificationsService,
     private emailService: EmailService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
   ) {}
+
+  private bustDashboard(entrepriseId: string) {
+    void this.cache.del(`dashboard:${entrepriseId}`);
+  }
 
   private calculerTotaux(lignes: { quantite: number; prixUnitaire: number }[], taxe: number, remise = 0) {
     const sousTotal = lignes.reduce((sum, l) => sum + l.quantite * l.prixUnitaire, 0);
@@ -146,6 +154,7 @@ export class FacturesService {
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_CREEE', entityType: 'FACTURE', entityId: facture.id, entityRef: facture.numeroFacture });
+    this.bustDashboard(entrepriseId);
     return facture;
   }
 
@@ -193,6 +202,7 @@ export class FacturesService {
     });
 
     if (userId) this.logs.log({ entrepriseId, userId, userNom: userNom ?? '', action: 'FACTURE_MODIFIEE', entityType: 'FACTURE', entityId: id, entityRef: updated.numeroFacture });
+    this.bustDashboard(entrepriseId);
     return updated;
   }
 
@@ -253,6 +263,7 @@ export class FacturesService {
     }
     await this.prisma.facture.delete({ where: { id } });
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_SUPPRIMEE', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });
+    this.bustDashboard(entrepriseId);
     return { message: 'Facture supprimée avec succès.' };
   }
 
@@ -486,6 +497,7 @@ export class FacturesService {
       });
     }
 
+    this.bustDashboard(entrepriseId);
     return { message: 'Déclaration approuvée et paiement enregistré.' };
   }
 

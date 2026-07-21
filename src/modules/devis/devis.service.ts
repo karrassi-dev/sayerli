@@ -2,7 +2,10 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { Prisma, StatutDevis } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LogsService } from '../logs/logs.service';
@@ -19,7 +22,12 @@ export class DevisService {
     private prisma: PrismaService,
     private logs: LogsService,
     private notificationsService: NotificationsService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
   ) {}
+
+  private bustDashboard(entrepriseId: string) {
+    void this.cache.del(`dashboard:${entrepriseId}`);
+  }
 
   private calculerTotaux(
     lignes: { quantite: number; prixUnitaire: number }[],
@@ -136,6 +144,7 @@ export class DevisService {
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'DEVIS_CREE', entityType: 'DEVIS', entityId: devis.id, entityRef: devis.reference });
+    this.bustDashboard(entrepriseId);
     return devis;
   }
 
@@ -186,6 +195,7 @@ export class DevisService {
     });
 
     if (userId) this.logs.log({ entrepriseId, userId, userNom: userNom ?? '', action: 'DEVIS_MODIFIE', entityType: 'DEVIS', entityId: id, entityRef: updated.reference });
+    this.bustDashboard(entrepriseId);
     return updated;
   }
 
@@ -377,6 +387,7 @@ export class DevisService {
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_CONVERTIE', entityType: 'FACTURE', entityId: facture.id, entityRef: facture.numeroFacture, metadata: { devisRef: devis.reference } });
+    this.bustDashboard(entrepriseId);
     return facture;
   }
 
@@ -450,6 +461,7 @@ export class DevisService {
     }
     await this.prisma.devis.delete({ where: { id } });
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'DEVIS_SUPPRIME', entityType: 'DEVIS', entityId: id, entityRef: devis.reference });
+    this.bustDashboard(entrepriseId);
     return { message: 'Devis supprimé avec succès.' };
   }
 }
