@@ -5,6 +5,7 @@ import { Throttle } from '@nestjs/throttler';
 import { BonsLivraisonService } from './bons-livraison.service';
 import { CreerBonLivraisonDto } from './dto/creer-bon-livraison.dto';
 import { ModifierBonLivraisonDto } from './dto/modifier-bon-livraison.dto';
+import { GrouperEnFactureDto } from './dto/grouper-en-facture.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Permission } from '../../common/decorators/permission.decorator';
 import { UtilisateurCourant } from '../../common/decorators/utilisateur-courant.decorator';
@@ -70,6 +71,18 @@ export class BonsLivraisonController {
     @UtilisateurCourant('nom') userNom: string,
   ) {
     return this.service.supprimer(id, entrepriseId, userId, userNom);
+  }
+
+  @Post('grouper-en-facture')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMMERCIAL, RoleType.PROPRIETAIRE, RoleType.COMMERCIAL_PROPRE)
+  @Permission('factures.create')
+  grouperEnFacture(
+    @Body() dto: GrouperEnFactureDto,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @UtilisateurCourant('id') userId: string,
+    @UtilisateurCourant('nom') userNom: string,
+  ) {
+    return this.service.grouperEnFacture(dto.blIds, dto.clientId, entrepriseId, userId, userNom);
   }
 
   @Post('depuis-devis/:devisId')

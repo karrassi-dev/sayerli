@@ -183,6 +183,7 @@ export const bonsLivraisonApi = {
   marquerLivre: (id: string) => api.post(`/bons-livraison/${id}/marquer-livre`),
   dupliquer: (id: string) => api.post(`/bons-livraison/${id}/dupliquer`),
   convertirEnFacture: (id: string) => api.post(`/bons-livraison/${id}/convertir-en-facture`),
+  grouperEnFacture: (data: { blIds: string[]; clientId: string }) => api.post('/bons-livraison/grouper-en-facture', data),
 }
 
 export const publicBLApi = {

@@ -3,17 +3,19 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
+import { Prisma, StatutDevis } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LogsService } from '../logs/logs.service';
 import { CreerBonLivraisonDto } from './dto/creer-bon-livraison.dto';
 import { ModifierBonLivraisonDto } from './dto/modifier-bon-livraison.dto';
 import { PLAN_LIMITS, verifierLimite } from '../../common/utils/plan-limits';
+import { retryOnConflict } from '../../common/utils/retry';
 import { v4 as uuidv4 } from 'uuid';
-import { StatutDevis } from '@prisma/client';
 
 const BL_INCLUDE = {
   client: { select: { id: true, nom: true, nomEntreprise: true, email: true, telephone: true, ice: true } },
   devis: { select: { id: true, reference: true } },
+  facture: { select: { id: true, numeroFacture: true } },
   lignes: { orderBy: { ordre: 'asc' as const } },
 };
 
@@ -211,6 +213,90 @@ export class BonsLivraisonService {
     });
     this.logs.log({ entrepriseId, userId, userNom, action: 'BL_DUPLIQUE', entityType: 'BON_LIVRAISON', entityId: nouveau.id, entityRef: nouveau.reference, metadata: { originalRef: original.reference } });
     return nouveau;
+  }
+
+  async grouperEnFacture(blIds: string[], clientId: string, entrepriseId: string, userId: string, userNom: string) {
+    if (blIds.length < 2) throw new BadRequestException('Sélectionnez au moins 2 bons de livraison.');
+
+    const bls = await this.prisma.bonLivraison.findMany({
+      where: { id: { in: blIds }, entrepriseId },
+      include: { lignes: { orderBy: { ordre: 'asc' } } },
+    });
+
+    if (bls.length !== blIds.length) throw new NotFoundException('Un ou plusieurs BL introuvables.');
+
+    if (bls.some(bl => bl.clientId !== clientId)) {
+      throw new BadRequestException('Tous les BL doivent appartenir au même client.');
+    }
+
+    if (bls.some(bl => bl.statut === 'BROUILLON')) {
+      throw new BadRequestException('Seuls les BL envoyés ou livrés peuvent être groupés en facture.');
+    }
+
+    if (bls.some(bl => bl.factureId !== null)) {
+      throw new BadRequestException('Un ou plusieurs BL sont déjà associés à une facture.');
+    }
+
+    const entreprise = await this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true } });
+    const limite = PLAN_LIMITS[entreprise!.plan].facturesParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('factures', actuel, limite);
+
+    const notes = bls.map(bl => `Réf. BL: ${bl.reference}`).join(' | ');
+
+    const facture = await retryOnConflict(() =>
+      this.prisma.$transaction(async (tx) => {
+        const ent = await tx.entreprise.update({
+          where: { id: entrepriseId },
+          data: { prochainNumeroFacture: { increment: 1 } },
+          select: { prochainNumeroFacture: true, prefixeFacture: true },
+        });
+        const numeroFacture = `${ent.prefixeFacture || 'FAC'}-${new Date().getFullYear()}-${String(ent.prochainNumeroFacture - 1).padStart(4, '0')}`;
+
+        const newFacture = await tx.facture.create({
+          data: {
+            entrepriseId,
+            clientId,
+            numeroFacture,
+            publicToken: uuidv4(),
+            statut: 'BROUILLON',
+            devise: 'MAD',
+            notes,
+            lignes: {
+              create: bls.flatMap((bl, blIdx) =>
+                bl.lignes.map(l => ({
+                  description: l.description,
+                  quantite: l.quantite,
+                  prixUnitaire: 0,
+                  total: 0,
+                  ordre: blIdx * 1000 + l.ordre,
+                })),
+              ),
+            },
+          },
+          include: { lignes: true, client: { select: { id: true, nom: true, email: true } } },
+        });
+
+        await tx.bonLivraison.updateMany({
+          where: { id: { in: blIds } },
+          data: { factureId: newFacture.id },
+        });
+
+        return newFacture;
+      }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
+    );
+
+    this.logs.log({
+      entrepriseId, userId, userNom,
+      action: 'BL_GROUPES_EN_FACTURE',
+      entityType: 'FACTURE',
+      entityId: facture.id,
+      entityRef: facture.numeroFacture,
+      metadata: { blRefs: bls.map(bl => bl.reference) },
+    });
+
+    return facture;
   }
 
   async creerDepuisDevis(devisId: string, entrepriseId: string, userId: string, userNom: string) {

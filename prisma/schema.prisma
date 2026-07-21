@@ -231,6 +231,7 @@ model Facture {
   devis                    Devis?                @relation(fields: [devisId], references: [id])
   entreprise               Entreprise            @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
   paiements                Paiement[]
+  bonsLivraison            BonLivraison[]
 
   @@unique([entrepriseId, numeroFacture])
   @@index([entrepriseId])
@@ -438,8 +439,10 @@ model BonLivraison {
   publicToken    String              @unique @default(uuid())
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
+  factureId      String?
   client         Client              @relation(fields: [clientId], references: [id])
   devis          Devis?              @relation(fields: [devisId], references: [id])
+  facture        Facture?            @relation(fields: [factureId], references: [id], onDelete: SetNull)
   entreprise     Entreprise          @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
   lignes         BonLivraisonLigne[]
 
