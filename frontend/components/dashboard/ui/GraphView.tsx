@@ -203,12 +203,10 @@ const nodeTypes = { graphNode: GraphNode }
 
 function HoverCard({
   node,
-  onNavigate,
   onMouseEnter,
   onMouseLeave,
 }: {
   node: RawNode | null
-  onNavigate: (type: NodeType, id: string) => void
   onMouseEnter: () => void
   onMouseLeave: () => void
 }) {
@@ -283,15 +281,6 @@ function HoverCard({
           </div>
         )}
       </div>
-      {node.type !== 'paiement' && (
-        <button
-          className="mt-3 w-full text-xs font-semibold py-1.5 rounded-xl border transition-all hover:opacity-80"
-          style={{ borderColor: cfg.color, color: cfg.color }}
-          onClick={() => onNavigate(node.type, node.rawId)}
-        >
-          {t('graph.popup.open')} →
-        </button>
-      )}
     </div>
   )
 }
@@ -518,17 +507,6 @@ export default function GraphView({ data }: { data: GraphData }) {
     })
   }, [])
 
-  const handleNavigate = useCallback((type: NodeType, id: string) => {
-    const routes: Record<NodeType, string> = {
-      client: '/dashboard/clients',
-      devis: '/dashboard/devis',
-      facture: '/dashboard/factures',
-      bl: '/dashboard/bons-livraison',
-      paiement: '/dashboard/paiements',
-    }
-    window.location.href = routes[type]
-  }, [])
-
   const isEmpty = data.nodes.length === 0
 
   return (
@@ -614,7 +592,6 @@ export default function GraphView({ data }: { data: GraphData }) {
       {/* Hover popup */}
       <HoverCard
         node={hoveredNode}
-        onNavigate={handleNavigate}
         onMouseEnter={handlePopupEnter}
         onMouseLeave={handlePopupLeave}
       />
