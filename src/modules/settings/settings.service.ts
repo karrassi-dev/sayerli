@@ -93,7 +93,6 @@ export class SettingsService {
         swift: true,
         typeCompte: true,
         activite: true,
-        plan: true,
         prefixeFacture: true,
         prefixeDevis: true,
         prefixeBL: true,
