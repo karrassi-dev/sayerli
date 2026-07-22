@@ -1928,6 +1928,13 @@
         "keywords": "best software morocco · Excel alternative · SME software"
       }
     },
+    "search": {
+      "placeholder": "Search articles...",
+      "noResults": "No articles found for"
+    },
+    "filter": {
+      "all": "All"
+    },
     "empty": {
       "title": "Articles coming soon",
       "sub": "We are preparing practical guides on invoicing, CRM and business management for Moroccan SMEs. Check back soon.",

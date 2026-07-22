@@ -1929,6 +1929,13 @@
         "keywords": "meilleur logiciel maroc · alternative Excel · logiciel PME"
       }
     },
+    "search": {
+      "placeholder": "Rechercher un article...",
+      "noResults": "Aucun article trouvé pour"
+    },
+    "filter": {
+      "all": "Tout"
+    },
     "empty": {
       "title": "Les articles arrivent bientôt",
       "sub": "Nous préparons des guides pratiques sur la facturation, le CRM et la gestion commerciale pour les PME marocaines. Revenez très prochainement.",
