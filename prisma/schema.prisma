@@ -457,6 +457,7 @@ model BonLivraisonLigne {
   bonLivraisonId String
   description    String
   quantite       Decimal      @default(1) @db.Decimal(10, 3)
+  prixUnitaire   Decimal      @default(0) @db.Decimal(12, 2)
   unite          String?
   ordre          Int          @default(0)
   bonLivraison   BonLivraison @relation(fields: [bonLivraisonId], references: [id], onDelete: Cascade)

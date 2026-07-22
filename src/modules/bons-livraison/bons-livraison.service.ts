@@ -100,6 +100,7 @@ export class BonsLivraisonService {
           create: (dto.lignes ?? []).map((l, i) => ({
             description: l.description,
             quantite: l.quantite ?? 1,
+            prixUnitaire: l.prixUnitaire ?? 0,
             unite: l.unite ?? null,
             ordre: l.ordre ?? i,
           })),
@@ -131,6 +132,7 @@ export class BonsLivraisonService {
             create: dto.lignes.map((l, i) => ({
               description: l.description,
               quantite: l.quantite ?? 1,
+              prixUnitaire: l.prixUnitaire ?? 0,
               unite: l.unite ?? null,
               ordre: l.ordre ?? i,
             })),
@@ -204,6 +206,7 @@ export class BonsLivraisonService {
           create: original.lignes.map(l => ({
             description: l.description,
             quantite: l.quantite,
+            prixUnitaire: l.prixUnitaire,
             unite: l.unite,
             ordre: l.ordre,
           })),
@@ -245,6 +248,19 @@ export class BonsLivraisonService {
 
     const notes = bls.map(bl => `Réf. BL: ${bl.reference}`).join(' | ');
 
+    const taxe = 20;
+    const lignesMerged = bls.flatMap((bl, blIdx) =>
+      bl.lignes.map(l => ({
+        description: l.description,
+        quantite: Number(l.quantite),
+        prixUnitaire: Number(l.prixUnitaire),
+        total: Number(l.quantite) * Number(l.prixUnitaire),
+        ordre: blIdx * 1000 + l.ordre,
+      })),
+    );
+    const totalHT = lignesMerged.reduce((sum, l) => sum + l.total, 0);
+    const totalTTC = totalHT + totalHT * (taxe / 100);
+
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const ent = await tx.entreprise.update({
@@ -262,18 +278,11 @@ export class BonsLivraisonService {
             publicToken: uuidv4(),
             statut: 'BROUILLON',
             devise: 'MAD',
+            taxe,
+            totalHT,
+            totalTTC,
             notes,
-            lignes: {
-              create: bls.flatMap((bl, blIdx) =>
-                bl.lignes.map(l => ({
-                  description: l.description,
-                  quantite: l.quantite,
-                  prixUnitaire: 0,
-                  total: 0,
-                  ordre: blIdx * 1000 + l.ordre,
-                })),
-              ),
-            },
+            lignes: { create: lignesMerged },
           },
           include: { lignes: true, client: { select: { id: true, nom: true, email: true } } },
         });
@@ -321,6 +330,7 @@ export class BonsLivraisonService {
           create: devis.lignes.map(l => ({
             description: l.description,
             quantite: l.quantite,
+            prixUnitaire: l.prixUnitaire,
             unite: null,
             ordre: l.ordre,
           })),
@@ -341,31 +351,52 @@ export class BonsLivraisonService {
       throw new BadRequestException('Seuls les bons de livraison livrés peuvent être convertis en facture.');
     }
 
-    const countFactures = await this.prisma.facture.count({ where: { entrepriseId } });
-    const numeroFacture = `FAC-${new Date().getFullYear()}-${String(countFactures + 1).padStart(4, '0')}`;
+    const entreprise = await this.prisma.entreprise.findUnique({ where: { id: entrepriseId }, select: { plan: true } });
+    const limite = PLAN_LIMITS[entreprise!.plan].facturesParMois;
+    const debutMois = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const actuel = await this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
+    verifierLimite('factures', actuel, limite);
 
-    const facture = await this.prisma.facture.create({
-      data: {
-        entrepriseId,
-        clientId: bl.clientId,
-        devisId: bl.devisId ?? undefined,
-        numeroFacture,
-        publicToken: uuidv4(),
-        statut: 'BROUILLON',
-        devise: 'MAD',
-        notes: bl.notes ? `Ref. BL: ${bl.reference}\n${bl.notes}` : `Ref. BL: ${bl.reference}`,
-        lignes: {
-          create: bl.lignes.map(l => ({
-            description: l.description,
-            quantite: l.quantite,
-            prixUnitaire: 0,
-            total: 0,
-            ordre: l.ordre,
-          })),
-        },
-      },
-      include: { lignes: true, client: true },
-    });
+    const taxe = 20;
+    const lignesData = bl.lignes.map(l => ({
+      description: l.description,
+      quantite: Number(l.quantite),
+      prixUnitaire: Number(l.prixUnitaire),
+      total: Number(l.quantite) * Number(l.prixUnitaire),
+      ordre: l.ordre,
+    }));
+    const totalHT = lignesData.reduce((sum, l) => sum + l.total, 0);
+    const totalTTC = totalHT + totalHT * (taxe / 100);
+
+    const facture = await retryOnConflict(() =>
+      this.prisma.$transaction(async (tx) => {
+        const ent = await tx.entreprise.update({
+          where: { id: entrepriseId },
+          data: { prochainNumeroFacture: { increment: 1 } },
+          select: { prochainNumeroFacture: true, prefixeFacture: true },
+        });
+        const numeroFacture = `${ent.prefixeFacture || 'FAC'}-${new Date().getFullYear()}-${String(ent.prochainNumeroFacture - 1).padStart(4, '0')}`;
+
+        return tx.facture.create({
+          data: {
+            entrepriseId,
+            clientId: bl.clientId,
+            devisId: bl.devisId ?? undefined,
+            numeroFacture,
+            publicToken: uuidv4(),
+            statut: 'BROUILLON',
+            devise: 'MAD',
+            taxe,
+            totalHT,
+            totalTTC,
+            notes: bl.notes ? `Ref. BL: ${bl.reference}\n${bl.notes}` : `Ref. BL: ${bl.reference}`,
+            lignes: { create: lignesData },
+          },
+          include: { lignes: true, client: true },
+        });
+      }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
+    );
+
     this.logs.log({ entrepriseId, userId, userNom, action: 'BL_CONVERTI_FACTURE', entityType: 'FACTURE', entityId: facture.id, entityRef: facture.numeroFacture, metadata: { blRef: bl.reference } });
     return facture;
   }

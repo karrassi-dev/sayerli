@@ -10,6 +10,10 @@ export class LigneBLDto {
   quantite?: number;
 
   @IsOptional()
+  @Type(() => Number)
+  prixUnitaire?: number;
+
+  @IsOptional()
   @IsString()
   unite?: string;
 
