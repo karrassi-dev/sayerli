@@ -179,7 +179,6 @@ export class BonsLivraisonService {
     const bl = await this.prisma.bonLivraison.findUnique({ where: { publicToken: token } });
     if (!bl) throw new NotFoundException('Bon de livraison introuvable.');
     if (bl.statut === 'LIVRE') return { message: 'Déjà confirmé.' };
-    if (bl.statut === 'BROUILLON') throw new BadRequestException('Ce bon de livraison n\'a pas encore été envoyé.');
     const updated = await this.prisma.bonLivraison.update({
       where: { publicToken: token }, data: { statut: 'LIVRE' }, include: BL_INCLUDE,
     });
