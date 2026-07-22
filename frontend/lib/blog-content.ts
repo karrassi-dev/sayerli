@@ -730,6 +730,620 @@ export const ARTICLES: Record<string, ArticleData> = {
     },
   },
 
+  // ── ARTICLE 6 ────────────────────────────────────────────────────────────────
+  'facturer-auto-entrepreneur-maroc': {
+    slug: 'facturer-auto-entrepreneur-maroc',
+    image: '/blog/facturer-auto-entrepreneur-maroc.webp',
+    readingTime: 7,
+    content: {
+
+      // ── FRENCH ──────────────────────────────────────────────────────────────
+      fr: {
+        title: 'Comment facturer en tant qu\'auto-entrepreneur au Maroc : mentions obligatoires et IF fiscal',
+        description: 'Guide complet pour émettre des factures conformes en tant qu\'auto-entrepreneur au Maroc : mentions obligatoires, identifiant fiscal (IF), numérotation, exonération TVA et erreurs à éviter.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Vous avez votre identifiant fiscal, votre premier client est prêt à payer — et là, la question se pose : comment créer une facture conforme ? Que doit-elle contenir exactement ? Qu\'est-ce que la mention d\'exonération TVA ? Comment numéroter mes factures ?',
+          },
+          {
+            type: 'p',
+            text: 'Une facture mal rédigée n\'est pas qu\'un problème esthétique. Elle peut être refusée par un client sérieux, poser des problèmes lors d\'un contrôle fiscal, ou invalider vos déclarations trimestrielles. Ce guide couvre tout ce que doit contenir une facture d\'auto-entrepreneur conforme au droit marocain — mention par mention.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Pourquoi la conformité de vos factures est cruciale',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La facture est votre document commercial et fiscal de référence. En tant qu\'auto-entrepreneur, elle remplit plusieurs fonctions simultanément : preuve de la prestation pour votre client, justificatif pour votre déclaration trimestrielle de CA, et document opposable en cas de litige ou de contrôle fiscal.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Un client entreprise (B2B) peut refuser de vous payer si la facture ne mentionne pas votre IF',
+                  'La Direction Générale des Impôts peut requalifier une facture non conforme lors d\'un contrôle',
+                  'Une numérotation incohérente ou des trous dans la séquence peuvent éveiller des soupçons lors d\'un audit',
+                  'Certaines grandes entreprises exigent des factures conformes pour leur propre comptabilité',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Facture vs reçu vs bon de commande',
+                body: 'La facture est le document qui acte la livraison d\'un bien ou d\'une prestation et déclenche l\'obligation de paiement. Elle diffère du devis (proposition commerciale avant la prestation) et du reçu (confirmation de paiement après). L\'auto-entrepreneur émet des factures, pas de simples reçus.',
+              },
+            ],
+          },
+          {
+            h2: 'Les mentions obligatoires sur chaque facture',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Voici la liste complète des mentions qui doivent figurer sur toute facture émise par un auto-entrepreneur marocain. Aucune n\'est facultative :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Détail / exemple'],
+                rows: [
+                  ['Vos nom et prénom', 'Ou votre nom commercial si vous en avez un enregistré'],
+                  ['Votre adresse', 'L\'adresse déclarée lors de votre inscription au portail'],
+                  ['Votre Identifiant Fiscal (IF)', '"IF : 12345678" — obtenu à l\'inscription'],
+                  ['Numéro de facture', 'Séquentiel et continu : FA-2025-001, FA-2025-002…'],
+                  ['Date d\'émission', 'La date à laquelle la facture est émise'],
+                  ['Coordonnées du client', 'Nom/raison sociale, adresse, ICE si entreprise'],
+                  ['Description de la prestation', 'Détaillée — "Développement site vitrine — mai 2025"'],
+                  ['Quantité et prix unitaire HT', 'Pour chaque ligne de prestation'],
+                  ['Montant total HT', 'Somme de toutes les lignes'],
+                  ['Mention d\'exonération TVA', '"Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX"'],
+                  ['Montant TTC', 'Égal au HT puisque TVA = 0'],
+                  ['Modalités de paiement', 'Délai, mode (virement, chèque, espèces…)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Mentions souvent oubliées',
+                body: 'Les deux mentions les plus fréquemment oubliées sont : (1) la mention explicite d\'exonération TVA avec le numéro IF, et (2) les coordonnées complètes du client. Ces deux oublis sont les plus courants lors des contrôles et peuvent invalider la facture.',
+              },
+            ],
+          },
+          {
+            h2: 'L\'Identifiant Fiscal (IF) : tout comprendre',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'Identifiant Fiscal est le numéro qui vous a été attribué par la Direction Générale des Impôts lors de votre inscription sur le portail auto-entrepreneur. C\'est votre numéro de référence fiscal unique — l\'équivalent du numéro SIRET en France, mais pour les auto-entrepreneurs marocains.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Où le trouver : dans l\'email de confirmation reçu lors de votre inscription, ou dans votre espace personnel sur portail.auto-entrepreneur.ma',
+                  'Format : une série de chiffres (généralement 7 à 8 chiffres)',
+                  'Où le mettre sur la facture : dans l\'en-tête, clairement visible, à côté de votre nom et adresse',
+                  'Comment le mentionner : "IF : 12345678" ou "Identifiant Fiscal : 12345678"',
+                  'Obligatoire sur : toutes les factures, sans exception',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'IF introuvable ?',
+                body: 'Si vous ne retrouvez plus votre IF, connectez-vous à portail.auto-entrepreneur.ma — il est visible dans votre tableau de bord et sur votre attestation d\'inscription téléchargeable. Vous pouvez également le demander directement auprès du centre régional des impôts (CRI) de votre wilaya.',
+              },
+            ],
+          },
+          {
+            h2: 'La mention d\'exonération TVA : comment la rédiger',
+            blocks: [
+              {
+                type: 'p',
+                text: 'En tant qu\'auto-entrepreneur, vous êtes légalement exonéré de TVA. Cela signifie que vous ne collectez pas de TVA sur vos factures et que le montant facturé est identique HT et TTC. Mais cette exonération doit être mentionnée explicitement sur chaque facture — sans quoi le client peut légitimement se demander pourquoi il n\'y a pas de TVA.',
+              },
+              {
+                type: 'p',
+                text: 'La formulation standard recommandée est la suivante :',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Formulation exacte à utiliser',
+                body: '"Exonéré de TVA en vertu du régime auto-entrepreneur — Identifiant Fiscal (IF) n° XXXXXXXX"\n\nOu en version courte : "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX"',
+              },
+              {
+                type: 'p',
+                text: 'Cette mention rassure votre client et protège les deux parties. Elle indique clairement que l\'absence de TVA n\'est pas une erreur mais une exonération légale liée à votre statut. Placez-la sous le total de la facture, bien visible.',
+              },
+            ],
+          },
+          {
+            h2: 'La numérotation des factures : la règle d\'or',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La numérotation des factures n\'est pas libre. Elle doit suivre une séquence chronologique continue et sans trous. Voici les règles à respecter absolument :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Chronologique : chaque numéro doit être supérieur au précédent',
+                  'Continue : pas de trou dans la numérotation (pas de FA-001, FA-003 sans FA-002)',
+                  'Unique : aucun numéro ne peut être utilisé deux fois',
+                  'Format recommandé : FA-AAAA-NNN (ex : FA-2025-001) pour intégrer l\'année et faciliter l\'archivage',
+                  'Jamais rétroactive : une facture ne peut pas être antidatée',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Que faire en cas d\'erreur sur une facture ?',
+                body: 'Vous ne pouvez pas supprimer ou modifier une facture déjà envoyée. Si vous faites une erreur, la procédure correcte est d\'émettre un avoir (note de crédit) qui annule la facture incorrecte, puis de réémettre une nouvelle facture avec un nouveau numéro. Ne modifiez jamais une facture envoyée.',
+              },
+            ],
+          },
+          {
+            h2: 'Exemple d\'une facture auto-entrepreneur conforme',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Voici la structure type d\'une facture conforme pour un auto-entrepreneur marocain prestataire de services :',
+              },
+              {
+                type: 'table',
+                headers: ['Zone de la facture', 'Contenu'],
+                rows: [
+                  ['En-tête (haut gauche)', 'Votre nom complet\nVotre adresse\nIF : 12345678\nVotre téléphone / email'],
+                  ['En-tête (haut droite)', 'FACTURE N° FA-2025-007\nDate : 15 mai 2025'],
+                  ['Informations client', 'Nom ou raison sociale du client\nAdresse du client\nICE : 001234567000012 (si entreprise)'],
+                  ['Corps — lignes', 'Description | Qté | Prix unitaire HT | Total HT'],
+                  ['Pied de facture', 'Total HT : 8 000 MAD\nTVA : Exonéré\nTotal TTC : 8 000 MAD'],
+                  ['Mention légale', '"Exonéré de TVA — Auto-entrepreneur IF n° 12345678"'],
+                  ['Paiement', 'Virement bancaire sous 30 jours\nRIB : XXXX XXXX XXXX'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Générez des factures conformes en 2 minutes avec Sayerli',
+                body: 'Sayerli intègre automatiquement toutes les mentions obligatoires : votre IF, la mention d\'exonération TVA, la numérotation séquentielle, et les coordonnées de votre client. Créez, envoyez et suivez vos factures en MAD depuis un seul outil. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer ma première facture',
+              },
+            ],
+          },
+          {
+            h2: 'Les 7 erreurs les plus fréquentes sur les factures auto-entrepreneur',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Après analyse de centaines de factures émises par des auto-entrepreneurs marocains, voici les erreurs qui reviennent le plus souvent :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'IF absent ou incorrect — c\'est la mention la plus importante et la plus souvent oubliée',
+                  'Pas de mention d\'exonération TVA — le client ne sait pas pourquoi il n\'y a pas de TVA',
+                  'Numérotation incohérente — des sauts dans la séquence ou des numéros répétés',
+                  'Description trop vague — "Prestation de services" sans détail n\'est pas suffisant',
+                  'Pas de date d\'émission — pourtant obligatoire et déterminante pour vos déclarations',
+                  'Coordonnées client incomplètes — surtout l\'ICE manquant pour les clients entreprises',
+                  'Facture modifiée après envoi — toujours émettre un avoir et une nouvelle facture à la place',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli élimine ces erreurs par construction',
+                body: 'Avec Sayerli, chaque facture est générée avec toutes les mentions légales préremplies. La numérotation est automatique et séquentielle. Vous ne pouvez pas oublier l\'IF ni la mention TVA — ils sont inclus d\'office. Fini les refus de paiement pour facture non conforme.',
+                href: '/fonctionnalites',
+                cta: 'Voir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ─────────────────────────────────────────────────────────────
+      en: {
+        title: 'How to Invoice as an Auto-Entrepreneur in Morocco: Mandatory Mentions and Tax Identifier',
+        description: 'Complete guide to issuing compliant invoices as an auto-entrepreneur in Morocco: mandatory mentions, tax identifier (IF), numbering, VAT exemption notice and mistakes to avoid.',
+        intro: [
+          {
+            type: 'p',
+            text: 'You have your tax identifier, your first client is ready to pay — and then the question hits: how do you create a compliant invoice? What exactly does it need to include? What is the VAT exemption notice? How do you number your invoices?',
+          },
+          {
+            type: 'p',
+            text: 'A poorly written invoice is not just an aesthetic problem. It can be rejected by a serious client, cause issues during a tax audit, or invalidate your quarterly declarations. This guide covers everything a compliant auto-entrepreneur invoice must contain under Moroccan law — mention by mention.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Why invoice compliance is critical',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Your invoice is your key commercial and fiscal document. As an auto-entrepreneur, it serves multiple functions at once: proof of service for your client, supporting document for your quarterly revenue declaration, and an enforceable record in case of dispute or tax audit.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'A B2B client may refuse to pay if the invoice does not include your tax identifier (IF)',
+                  'The Direction Générale des Impôts can challenge a non-compliant invoice during an audit',
+                  'Inconsistent numbering or gaps in the sequence can raise red flags during a review',
+                  'Large companies often require compliant invoices for their own accounting',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Invoice vs receipt vs purchase order',
+                body: 'An invoice is the document that confirms delivery of a service or product and triggers the payment obligation. It differs from a quote (commercial proposal before the work) and a receipt (payment confirmation after). Auto-entrepreneurs issue invoices, not simple receipts.',
+              },
+            ],
+          },
+          {
+            h2: 'Mandatory mentions on every invoice',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Here is the complete list of mentions that must appear on every invoice issued by a Moroccan auto-entrepreneur. None of them are optional:',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Detail / example'],
+                rows: [
+                  ['Your full name', 'Or your trade name if you have one registered'],
+                  ['Your address', 'The address declared during your portal registration'],
+                  ['Your Tax Identifier (IF)', '"IF: 12345678" — assigned at registration'],
+                  ['Invoice number', 'Sequential and continuous: INV-2025-001, INV-2025-002…'],
+                  ['Issue date', 'The date the invoice is issued'],
+                  ['Client details', 'Name/company name, address, ICE number if a company'],
+                  ['Description of service', 'Detailed — "Website development — May 2025"'],
+                  ['Quantity and unit price', 'For each line item'],
+                  ['Total amount (excl. VAT)', 'Sum of all lines'],
+                  ['VAT exemption notice', '"VAT-exempt — Auto-entrepreneur IF No. XXXXXXXX"'],
+                  ['Total amount incl. VAT', 'Equal to excl. VAT since VAT = 0'],
+                  ['Payment terms', 'Deadline, method (bank transfer, cheque, cash…)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Most frequently forgotten mentions',
+                body: 'The two most commonly omitted mentions are: (1) the explicit VAT exemption notice with the IF number, and (2) complete client details. These two omissions are the most common during audits and can invalidate the invoice.',
+              },
+            ],
+          },
+          {
+            h2: 'The Tax Identifier (IF): everything you need to know',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The Tax Identifier is the number assigned to you by the Direction Générale des Impôts when you registered on the auto-entrepreneur portal. It is your unique fiscal reference number — the Moroccan auto-entrepreneur equivalent of a SIRET number in France.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Where to find it: in the confirmation email received at registration, or in your personal space on portail.auto-entrepreneur.ma',
+                  'Format: a series of digits (usually 7 to 8 digits)',
+                  'Where to put it on the invoice: in the header, clearly visible, next to your name and address',
+                  'How to write it: "IF: 12345678" or "Tax Identifier: 12345678"',
+                  'Required on: every invoice, without exception',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Cannot find your IF?',
+                body: 'If you cannot locate your IF, log in to portail.auto-entrepreneur.ma — it is visible on your dashboard and on your downloadable registration certificate. You can also request it directly from the regional tax centre (CRI) of your province.',
+              },
+            ],
+          },
+          {
+            h2: 'The VAT exemption notice: how to write it',
+            blocks: [
+              {
+                type: 'p',
+                text: 'As an auto-entrepreneur, you are legally VAT-exempt. This means you do not collect VAT on your invoices and the invoiced amount is the same before and after tax. But this exemption must be stated explicitly on every invoice — otherwise the client may legitimately wonder why there is no VAT.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Exact wording to use',
+                body: '"VAT-exempt under the auto-entrepreneur regime — Tax Identifier (IF) No. XXXXXXXX"\n\nShort version: "VAT-exempt — Auto-entrepreneur IF No. XXXXXXXX"',
+              },
+              {
+                type: 'p',
+                text: 'This mention reassures your client and protects both parties. It clearly states that the absence of VAT is not an error but a legal exemption tied to your status. Place it below the invoice total, clearly visible.',
+              },
+            ],
+          },
+          {
+            h2: 'Invoice numbering: the golden rule',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Invoice numbering is not free-form. It must follow a continuous chronological sequence with no gaps. Here are the rules to follow without exception:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Chronological: each number must be higher than the previous one',
+                  'Continuous: no gaps in the sequence (no INV-001, INV-003 without INV-002)',
+                  'Unique: no number may be used twice',
+                  'Recommended format: INV-YYYY-NNN (e.g. INV-2025-001) to include the year and ease archiving',
+                  'Never retroactive: an invoice cannot be backdated',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'What to do if you made an error on an invoice?',
+                body: 'You cannot delete or modify an invoice that has already been sent. The correct procedure is to issue a credit note that cancels the incorrect invoice, then reissue a new invoice with a new number. Never edit a sent invoice.',
+              },
+            ],
+          },
+          {
+            h2: 'Example of a compliant auto-entrepreneur invoice',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Here is the standard structure of a compliant invoice for a Moroccan auto-entrepreneur providing services:',
+              },
+              {
+                type: 'table',
+                headers: ['Invoice section', 'Content'],
+                rows: [
+                  ['Header (top left)', 'Your full name\nYour address\nIF: 12345678\nYour phone / email'],
+                  ['Header (top right)', 'INVOICE No. INV-2025-007\nDate: 15 May 2025'],
+                  ['Client information', 'Client name or company name\nClient address\nICE: 001234567000012 (if company)'],
+                  ['Body — line items', 'Description | Qty | Unit price | Total'],
+                  ['Invoice footer', 'Total excl. VAT: 8,000 MAD\nVAT: Exempt\nTotal incl. VAT: 8,000 MAD'],
+                  ['Legal notice', '"VAT-exempt — Auto-entrepreneur IF No. 12345678"'],
+                  ['Payment', 'Bank transfer within 30 days\nIBAN: XXXX XXXX XXXX'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Generate compliant invoices in 2 minutes with Sayerli',
+                body: 'Sayerli automatically includes all mandatory mentions: your IF, the VAT exemption notice, sequential numbering, and your client\'s details. Create, send and track your invoices in MAD from one tool. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'Create my first invoice',
+              },
+            ],
+          },
+          {
+            h2: 'The 7 most common auto-entrepreneur invoice mistakes',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'Missing or incorrect IF — the most important mention and the most often forgotten',
+                  'No VAT exemption notice — the client does not know why there is no VAT',
+                  'Inconsistent numbering — gaps in the sequence or repeated numbers',
+                  'Vague description — "Service provision" without detail is not sufficient',
+                  'No issue date — mandatory and critical for your quarterly declarations',
+                  'Incomplete client details — especially the missing ICE for business clients',
+                  'Invoice modified after sending — always issue a credit note and a new invoice instead',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli eliminates these mistakes by design',
+                body: 'With Sayerli, every invoice is generated with all legal mentions pre-filled. Numbering is automatic and sequential. You cannot forget the IF or the VAT notice — they are included by default. No more payment rejections due to non-compliant invoices.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ──────────────────────────────────────────────────────────────
+      ar: {
+        title: 'كيف تُفوتر كمقاول ذاتي بالمغرب: البيانات الإلزامية والمعرّف الضريبي',
+        description: 'دليل شامل لإصدار فواتير مطابقة كمقاول ذاتي بالمغرب: البيانات الإلزامية، المعرّف الضريبي (IF)، الترقيم، إشعار الإعفاء من الضريبة على القيمة المضافة، والأخطاء الواجب تجنبها.',
+        intro: [
+          {
+            type: 'p',
+            text: 'حصلت على معرّفك الضريبي، وعميلك الأول مستعد للدفع — ثم يطرح السؤال نفسه: كيف أُنشئ فاتورة مطابقة؟ ما الذي يجب أن تحتويه بالضبط؟ ما المقصود بإشعار الإعفاء من الضريبة على القيمة المضافة؟ كيف أُرقّم فواتيري؟',
+          },
+          {
+            type: 'p',
+            text: 'فاتورة مكتوبة بشكل خاطئ ليست مجرد مشكلة مظهرية. قد يرفضها عميل جاد، وقد تُسبّب مشاكل عند مراجعة جبائية، أو تُفسد تصريحاتك الفصلية. يغطي هذا الدليل كل ما يجب أن تحتويه فاتورة المقاول الذاتي المطابقة للقانون المغربي — بياناً بياناً.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'لماذا مطابقة فواتيرك أمر بالغ الأهمية',
+            blocks: [
+              {
+                type: 'p',
+                text: 'فاتورتك هي وثيقتك التجارية والجبائية المرجعية. بوصفك مقاولاً ذاتياً، تؤدي وظائف متعددة في آنٍ واحد: دليل على الخدمة أو المنتج لعميلك، مستند داعم لتصريحك الفصلي برقم الأعمال، ووثيقة قابلة للاحتجاج بها في حالة نزاع أو مراجعة جبائية.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'عميل من الشركات قد يرفض الدفع إذا خلت الفاتورة من معرّفك الضريبي',
+                  'قد تطعن المديرية العامة للضرائب في فاتورة غير مطابقة خلال مراجعة جبائية',
+                  'ترقيم متضارب أو ثغرات في التسلسل قد تُثير الشكوك عند أي تدقيق',
+                  'تشترط كثير من الشركات الكبرى فواتير مطابقة لمحاسبتها الخاصة',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الفاتورة مقابل الوصل مقابل أمر الشراء',
+                body: 'الفاتورة هي الوثيقة التي تُثبت تسليم خدمة أو منتج وتُفعّل الالتزام بالدفع. تختلف عن عرض الأسعار (اقتراح تجاري قبل الخدمة) والوصل (تأكيد الدفع بعدها). المقاول الذاتي يُصدر فواتير لا مجرد وصولات.',
+              },
+            ],
+          },
+          {
+            h2: 'البيانات الإلزامية في كل فاتورة',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إليك القائمة الكاملة للبيانات الواجب ذكرها في كل فاتورة يُصدرها مقاول ذاتي مغربي. لا شيء منها اختياري:',
+              },
+              {
+                type: 'table',
+                headers: ['البيان', 'التفصيل / مثال'],
+                rows: [
+                  ['اسمك الكامل', 'أو اسمك التجاري إن كان مسجلاً'],
+                  ['عنوانك', 'العنوان المُصرَّح به عند التسجيل على البوابة'],
+                  ['معرّفك الضريبي (IF)', '"IF: 12345678" — يُسنَد عند التسجيل'],
+                  ['رقم الفاتورة', 'تسلسلي ومتواصل: FA-2025-001، FA-2025-002…'],
+                  ['تاريخ الإصدار', 'التاريخ الذي أُصدرت فيه الفاتورة'],
+                  ['بيانات العميل', 'الاسم/الشركة، العنوان، رقم ICE إن كان شركة'],
+                  ['وصف الخدمة', 'مفصَّل — "تطوير موقع إلكتروني — ماي 2025"'],
+                  ['الكمية والسعر الوحدوي', 'لكل سطر من سطور الخدمة'],
+                  ['المجموع الإجمالي (دون الضريبة)', 'مجموع جميع السطور'],
+                  ['إشعار الإعفاء من الضريبة على القيمة المضافة', '"معفى من الضريبة على القيمة المضافة — مقاول ذاتي IF رقم XXXXXXXX"'],
+                  ['المجموع الإجمالي (شاملاً الضريبة)', 'يساوي المجموع دون الضريبة إذ الضريبة = 0'],
+                  ['شروط الدفع', 'الأجل، الطريقة (تحويل بنكي، شيك، نقداً…)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'البيانات الأكثر نسياناً',
+                body: 'أكثر بيانَين يُنسيان هما: (1) إشعار الإعفاء من الضريبة على القيمة المضافة مع رقم المعرّف الضريبي، و(2) البيانات الكاملة للعميل. هذان الإغفالان الأكثر شيوعاً عند المراجعات وقد يُبطلان الفاتورة.',
+              },
+            ],
+          },
+          {
+            h2: 'المعرّف الضريبي (IF): كل ما تحتاج معرفته',
+            blocks: [
+              {
+                type: 'p',
+                text: 'المعرّف الضريبي هو الرقم الذي أسندته لك المديرية العامة للضرائب عند تسجيلك على بوابة المقاول الذاتي. إنه رقم مرجعيّك الجبائي الفريد — ما يقابل رقم SIRET في فرنسا، لكن للمقاولين الذاتيين المغاربة.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'أين تجده: في بريد التأكيد الذي تلقيته عند التسجيل، أو في فضائك الشخصي على portail.auto-entrepreneur.ma',
+                  'الصيغة: سلسلة أرقام (عادةً من 7 إلى 8 أرقام)',
+                  'أين تضعه في الفاتورة: في الترويسة، مرئياً بوضوح، بجانب اسمك وعنوانك',
+                  'كيفية كتابته: "IF: 12345678" أو "المعرّف الضريبي: 12345678"',
+                  'إلزامي في: جميع الفواتير، دون استثناء',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'لا تجد معرّفك الضريبي؟',
+                body: 'إذا لم تعثر على معرّفك الضريبي، سجّل الدخول إلى portail.auto-entrepreneur.ma — يظهر في لوحة قيادتك وعلى شهادة تسجيلك القابلة للتحميل. يمكنك أيضاً طلبه مباشرةً من المركز الجهوي للضرائب في إقليمك.',
+              },
+            ],
+          },
+          {
+            h2: 'إشعار الإعفاء من الضريبة على القيمة المضافة: كيف تكتبه',
+            blocks: [
+              {
+                type: 'p',
+                text: 'بوصفك مقاولاً ذاتياً، أنت معفى قانونياً من الضريبة على القيمة المضافة. ذلك يعني أنك لا تجمعها من عملائك وأن المبلغ المُفوتَر متطابق قبل الضريبة وبعدها. لكن هذا الإعفاء يجب ذكره صراحةً في كل فاتورة — وإلا قد يتساءل العميل بحق لماذا لا توجد ضريبة على القيمة المضافة.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الصياغة الدقيقة الموصى باستخدامها',
+                body: '"معفى من الضريبة على القيمة المضافة بموجب نظام المقاول الذاتي — المعرّف الضريبي (IF) رقم XXXXXXXX"\n\nأو بالنسخة المختصرة: "معفى من الضريبة على القيمة المضافة — مقاول ذاتي IF رقم XXXXXXXX"',
+              },
+              {
+                type: 'p',
+                text: 'يطمئن هذا البيان عميلك ويحمي الطرفين. يُوضح صراحةً أن غياب الضريبة على القيمة المضافة ليس خطأ بل إعفاء قانوني مرتبط بوضعك. ضعه أسفل الإجمالي في الفاتورة، مرئياً بوضوح.',
+              },
+            ],
+          },
+          {
+            h2: 'ترقيم الفواتير: القاعدة الذهبية',
+            blocks: [
+              {
+                type: 'p',
+                text: 'ترقيم الفواتير ليس حراً. يجب أن يتبع تسلسلاً زمنياً متواصلاً بلا ثغرات. إليك القواعد الواجب احترامها دون استثناء:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'زمني: كل رقم يجب أن يكون أعلى من السابق',
+                  'متواصل: لا ثغرات في التسلسل (لا FA-001 ثم FA-003 دون FA-002)',
+                  'فريد: لا يُستخدم أي رقم مرتين',
+                  'الصيغة الموصى بها: FA-سسسس-NNN (مثال: FA-2025-001) لتضمين السنة وتسهيل الأرشفة',
+                  'غير رجعية أبداً: لا يجوز تأريخ فاتورة بتاريخ سابق',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'ماذا تفعل إذا أخطأت في فاتورة؟',
+                body: 'لا يمكنك حذف أو تعديل فاتورة أُرسلت. الإجراء الصحيح هو إصدار أمر تخفيض (avoir) يُلغي الفاتورة الخاطئة، ثم إصدار فاتورة جديدة برقم جديد. لا تُعدّل أبداً فاتورة تم إرسالها.',
+              },
+            ],
+          },
+          {
+            h2: 'مثال على فاتورة مقاول ذاتي مطابقة',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إليك الهيكل النموذجي لفاتورة مطابقة لمقاول ذاتي مغربي مقدّم للخدمات:',
+              },
+              {
+                type: 'table',
+                headers: ['قسم الفاتورة', 'المحتوى'],
+                rows: [
+                  ['الترويسة (أعلى اليسار)', 'اسمك الكامل\nعنوانك\nIF: 12345678\nهاتفك / بريدك الإلكتروني'],
+                  ['الترويسة (أعلى اليمين)', 'فاتورة رقم FA-2025-007\nالتاريخ: 15 ماي 2025'],
+                  ['بيانات العميل', 'اسم العميل أو الشركة\nعنوان العميل\nICE: 001234567000012 (إن كان شركة)'],
+                  ['الجسم — سطور الخدمة', 'الوصف | الكمية | السعر الوحدوي | الإجمالي'],
+                  ['ذيل الفاتورة', 'المجموع (دون الضريبة): 8,000 درهم\nالضريبة على القيمة المضافة: معفى\nالمجموع الإجمالي: 8,000 درهم'],
+                  ['البيان القانوني', '"معفى من الضريبة على القيمة المضافة — مقاول ذاتي IF رقم 12345678"'],
+                  ['الدفع', 'تحويل بنكي في أجل 30 يوماً\nRIB: XXXX XXXX XXXX'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'أنشئ فواتير مطابقة في دقيقتين مع Sayerli',
+                body: 'يُضمّن Sayerli تلقائياً جميع البيانات الإلزامية: معرّفك الضريبي، إشعار الإعفاء من الضريبة على القيمة المضافة، الترقيم التسلسلي، وبيانات عميلك. أنشئ فواتيرك وأرسلها وتتبّع مدفوعاتها بالدرهم من أداة واحدة. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء أول فاتورة',
+              },
+            ],
+          },
+          {
+            h2: 'أكثر 7 أخطاء شيوعاً في فواتير المقاولين الذاتيين',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'غياب المعرّف الضريبي أو خطؤه — البيان الأهم والأكثر نسياناً',
+                  'غياب إشعار الإعفاء من الضريبة على القيمة المضافة — العميل لا يعرف سبب غياب الضريبة',
+                  'ترقيم متضارب — ثغرات في التسلسل أو أرقام متكررة',
+                  'وصف مبهم — "تقديم خدمات" دون تفصيل غير كافٍ',
+                  'غياب تاريخ الإصدار — إلزامي وحاسم لتصريحاتك الفصلية',
+                  'بيانات عميل ناقصة — لا سيما غياب ICE لعملاء الشركات',
+                  'تعديل الفاتورة بعد إرسالها — أصدر دائماً أمر تخفيض وفاتورة جديدة بدلاً من ذلك',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli يُلغي هذه الأخطاء بتصميمه',
+                body: 'مع Sayerli، تُولَّد كل فاتورة بجميع البيانات القانونية مُعبَّأةً مسبقاً. الترقيم تلقائي وتسلسلي. لا يمكنك أن تنسى المعرّف الضريبي ولا إشعار الضريبة — فكلاهما مُدرَج بشكل تلقائي. وداعاً لرفض المدفوعات بسبب فاتورة غير مطابقة.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
   // ── ARTICLE 5 ────────────────────────────────────────────────────────────────
   'ir-liberatoire-auto-entrepreneur-maroc': {
     slug: 'ir-liberatoire-auto-entrepreneur-maroc',
