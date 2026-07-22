@@ -20,15 +20,26 @@ export function FinalCta() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-white/10 rounded-full blur-3xl" />
 
             <div className="relative px-6 py-12 sm:px-16 sm:py-20">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white text-sm font-semibold mb-6">
-                🇲🇦 Sayerli — Made in Morocco
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 text-white text-sm font-semibold mb-6 border border-white/20">
+                🇲🇦 Conçu pour le Maroc · Données hébergées en Europe
               </div>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
                 {t('cta.title')}
               </h2>
-              <p className="text-primary-100 text-base sm:text-lg mb-8 sm:mb-10 max-w-2xl mx-auto">
+              <p className="text-primary-100 text-base sm:text-lg mb-5 max-w-2xl mx-auto">
                 {t('cta.sub')}
               </p>
+
+              {/* Mini trust row */}
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-8 sm:mb-10 text-sm text-white/70">
+                {['Sans carte bancaire', 'Annulable à tout moment', 'Support WhatsApp direct'].map(item => (
+                  <span key={item} className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-300" />
+                    {item}
+                  </span>
+                ))}
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Link
                   href="/register"

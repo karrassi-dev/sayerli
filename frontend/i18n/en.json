@@ -65,20 +65,33 @@
     }
   },
   "howItWorks": {
-    "badge": "How It Works",
-    "title": "Up and running in 3 minutes",
-    "sub": "No training needed. Sayerli is designed for Moroccan entrepreneurs.",
+    "badge": "Your Workflow",
+    "title": "From quote to payment — zero re-entry",
+    "sub": "Sayerli follows the real flow of your transactions. Every step chains automatically — no data to retype.",
     "step1": {
-      "title": "Create Your Account",
-      "desc": "Register your company in a few clicks. No credit card required."
+      "title": "Sign up in 30 seconds",
+      "desc": "Create your company, add your logo and tax info (ICE, IF, RC). No credit card needed.",
+      "chip": "Ready in 30s"
     },
     "step2": {
-      "title": "Add Your Clients",
-      "desc": "Import or create your client base. Add their details easily."
+      "title": "Add clients & catalogue",
+      "desc": "Centralise your clients with ICE and tax IDs. Build your service catalogue to reuse your rates in one click.",
+      "chip": "Clients ready"
     },
     "step3": {
-      "title": "Generate & Collect",
-      "desc": "Send quotes, convert them to invoices, and collect your payments."
+      "title": "Send a quote in 2 min",
+      "desc": "Write in MAD, EUR or USD. Share by WhatsApp or email — your client accepts or declines directly from their phone.",
+      "chip": "→ Quote on WhatsApp"
+    },
+    "step4": {
+      "title": "Delivery note → Invoice",
+      "desc": "On acceptance, generate the delivery note. Once delivered, convert to invoice in one click — lines, prices and currency carried over automatically.",
+      "chip": "→ DN → Invoice"
+    },
+    "step5": {
+      "title": "Collect & track everything",
+      "desc": "Record bank transfer, cash or cheque. Reminders fire automatically. The sales journal is always ready for your accountant.",
+      "chip": "✓ Collected"
     }
   },
   "pricing": {
@@ -1834,21 +1847,21 @@
     "cta": "Contact us"
   },
   "testimonials": {
-    "badge": "Trusted by entrepreneurs",
-    "title": "Moroccan entrepreneurs saving time every day",
-    "sub": "Join hundreds of freelancers, auto-entrepreneurs and SMEs managing their business with Sayerli.",
-    "q1name": "Youssef B.",
-    "q1role": "Freelance Web Developer",
+    "badge": "Already managing their business with Sayerli",
+    "title": "Real results, not marketing copy",
+    "sub": "Freelancers, self-employed and Moroccan SMEs — here's what they actually say.",
+    "q1name": "Youssef A.",
+    "q1role": "Freelance web developer",
     "q1city": "Casablanca",
-    "q1quote": "Before Sayerli, I spent hours on Excel making quotes. Now I send them in 2 minutes and my clients receive something professional. The time saved is incredible.",
-    "q2name": "Salma A.",
-    "q2role": "Self-employed, HR Consulting",
+    "q1quote": "I used to edit a generic PDF in Word. Clients sometimes waited 2 days. With Sayerli, it takes 3 minutes — the client gets a professional link on WhatsApp and accepts from their phone.",
+    "q2name": "Sara M.",
+    "q2role": "HR Consultant, self-employed",
     "q2city": "Rabat",
-    "q2quote": "Sayerli lets me track my payments without stress. I know exactly who has paid and who still owes. It's simple, fast, and it really works.",
-    "q3name": "Hassan M.",
-    "q3role": "SME Manager, Import/Export",
+    "q2quote": "What convinced me was the delivery note. Before, I had to retype everything into an invoice. Now: quote accepted → delivery note → invoice in one click. Zero re-entry. Zero errors.",
+    "q3name": "Hassan B.",
+    "q3role": "Manager, trading company",
     "q3city": "Tangier",
-    "q3quote": "We manage a team of 5 with Sayerli. Invoices come out cleanly in MAD and we have the entire client history one click away. I recommend it to every Moroccan business owner."
+    "q3quote": "We have 3 sales reps creating quotes every day. The sales journal gives me in 10 seconds what my accountant used to ask for at the end of every month. The time savings are immediate."
   },
   "completeProfile": {
     "title": "Complete your profile",

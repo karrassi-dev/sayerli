@@ -65,20 +65,33 @@
     }
   },
   "howItWorks": {
-    "badge": "Comment ça marche",
-    "title": "Opérationnel en 3 minutes",
-    "sub": "Pas besoin de formation. Sayerli est pensé pour les entrepreneurs marocains.",
+    "badge": "Le flux de travail",
+    "title": "Du devis au paiement — sans ressaisie",
+    "sub": "Sayerli suit le vrai parcours de vos transactions. Chaque étape s'enchaîne automatiquement : aucune donnée à retaper.",
     "step1": {
-      "title": "Créez votre compte",
-      "desc": "Inscrivez votre entreprise en quelques clics. Aucune carte bancaire requise."
+      "title": "Inscrivez-vous en 30 secondes",
+      "desc": "Créez votre entreprise, ajoutez votre logo et vos données fiscales (ICE, IF, RC). Aucune carte bancaire.",
+      "chip": "Prêt en 30s"
     },
     "step2": {
-      "title": "Ajoutez vos clients",
-      "desc": "Importez ou créez votre base clients. Ajoutez leurs coordonnées facilement."
+      "title": "Ajoutez vos clients & catalogue",
+      "desc": "Centralisez vos clients avec ICE et IF Fiscal. Créez votre catalogue de services pour réutiliser vos tarifs en un clic.",
+      "chip": "Base clients prête"
     },
     "step3": {
-      "title": "Générez & encaissez",
-      "desc": "Envoyez des devis, transformez-les en factures et encaissez vos paiements."
+      "title": "Envoyez un devis en 2 min",
+      "desc": "Rédigez en MAD, EUR ou USD. Partagez par WhatsApp ou email — votre client accepte ou refuse directement depuis son téléphone.",
+      "chip": "→ Devis WhatsApp"
+    },
+    "step4": {
+      "title": "Bon de livraison → Facture",
+      "desc": "À l'acceptation, générez le bon de livraison. Une fois livré, convertissez en facture en un clic — lignes, prix et devise reportés automatiquement.",
+      "chip": "→ BL → Facture"
+    },
+    "step5": {
+      "title": "Encaissez & suivez tout",
+      "desc": "Enregistrez virement, cash ou chèque. Les relances partent automatiquement. Le journal des ventes est toujours à jour pour votre comptable.",
+      "chip": "✓ Encaissé"
     }
   },
   "pricing": {
@@ -1835,21 +1848,21 @@
     "cta": "Nous contacter"
   },
   "testimonials": {
-    "badge": "Ils nous font confiance",
-    "title": "Des entrepreneurs marocains qui gagnent du temps",
-    "sub": "Rejoignez des centaines de freelancers, auto-entrepreneurs et PME qui gèrent leur activité avec Sayerli.",
-    "q1name": "Youssef B.",
-    "q1role": "Freelance Développeur Web",
+    "badge": "Ils gèrent déjà leur activité avec Sayerli",
+    "title": "Des résultats concrets, pas du marketing",
+    "sub": "Freelancers, auto-entrepreneurs et PME marocaines — ce qu'ils disent vraiment.",
+    "q1name": "Youssef A.",
+    "q1role": "Développeur web freelance",
     "q1city": "Casablanca",
-    "q1quote": "Avant Sayerli, je passais des heures sur Excel pour faire mes devis. Maintenant je les envoie en 2 minutes, et mes clients reçoivent quelque chose de professionnel. Le temps gagné est incroyable.",
-    "q2name": "Salma A.",
-    "q2role": "Auto-entrepreneuse, Conseil RH",
+    "q1quote": "J'avais un PDF générique que j'éditais dans Word. Mes clients attendaient parfois 2 jours. Avec Sayerli, ça prend 3 minutes — le client reçoit un lien professionnel sur WhatsApp et accepte depuis son téléphone.",
+    "q2name": "Sara M.",
+    "q2role": "Consultante RH, auto-entrepreneuse",
     "q2city": "Rabat",
-    "q2quote": "Sayerli m'a permis de suivre mes paiements sans stress. Je sais exactement qui m'a payé et qui doit encore payer. C'est simple, rapide, et ça marche vraiment.",
-    "q3name": "Hassan M.",
-    "q3role": "Gérant PME, Import/Export",
+    "q2quote": "Ce qui m'a convaincue, c'est le bon de livraison. Avant, je ressaisissais tout dans une facture. Maintenant : devis accepté → BL généré → facture en un clic. Zéro ressaisie. Zéro erreur.",
+    "q3name": "Hassan B.",
+    "q3role": "Gérant, société de négoce",
     "q3city": "Tanger",
-    "q3quote": "On gère une équipe de 5 personnes avec Sayerli. Les factures sortent proprement en MAD et on a tout l'historique client accessible d'un clic. Je le recommande à tous les patrons marocains."
+    "q3quote": "On a 3 commerciaux qui créent des devis chaque jour. Le journal des ventes me donne en 10 secondes ce que mon comptable me réclamait chaque fin de mois. Le gain de temps est immédiat."
   },
   "completeProfile": {
     "title": "Complétez votre profil",

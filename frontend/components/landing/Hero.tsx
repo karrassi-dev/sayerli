@@ -106,9 +106,9 @@ export function Hero() {
                   {/* Top row stats */}
                   <div className="grid grid-cols-3 gap-3 mb-4">
                     {[
-                      { label: 'Clients', value: '47', color: 'bg-blue-500' },
-                      { label: 'Devis', value: '12', color: 'bg-teal-500' },
-                      { label: 'CA (MAD)', value: '84K', color: 'bg-purple-500' },
+                      { label: 'Clients actifs', value: '47', color: 'bg-blue-500' },
+                      { label: 'BL ce mois', value: '18', color: 'bg-amber-500' },
+                      { label: 'CA (MAD)', value: '84K', color: 'bg-green-500' },
                     ].map(({ label, value, color }) => (
                       <div key={label} className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3">
                         <div className={`w-6 h-1.5 rounded-full ${color} mb-2`} />
@@ -139,12 +139,13 @@ export function Hero() {
                   {/* Recent invoices */}
                   <div className="space-y-2">
                     {[
-                      { name: 'Atlas Marketing', amount: '8,400 MAD', status: 'Payée', color: 'text-green-600 bg-green-50 dark:bg-green-950/30' },
-                      { name: 'Boutique Rachidi', amount: '12,000 MAD', status: 'En attente', color: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30' },
-                      { name: 'Restaurant Atlas', amount: '5,200 MAD', status: 'Brouillon', color: 'text-slate-600 bg-slate-100 dark:bg-slate-800' },
-                    ].map(({ name, amount, status, color }) => (
-                      <div key={name} className="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                      { ref: 'FAC-2026-0031', name: 'Atlas Marketing', amount: '8,400 MAD', status: 'Payée', color: 'text-green-600 bg-green-50 dark:bg-green-950/30' },
+                      { ref: 'FAC-2026-0030', name: 'Boutique Rachidi', amount: '12,000 MAD', status: 'Envoyée', color: 'text-blue-600 bg-blue-50 dark:bg-blue-950/30' },
+                      { ref: 'BL-2026-0042',  name: 'Groupe Tazi SARL', amount: '5,200 MAD', status: 'Livré', color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/30' },
+                    ].map(({ ref, name, amount, status, color }) => (
+                      <div key={ref} className="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                         <div>
+                          <div className="text-[10px] font-mono text-slate-400 mb-0.5">{ref}</div>
                           <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">{name}</div>
                           <div className="text-xs text-slate-500">{amount}</div>
                         </div>
@@ -165,21 +166,24 @@ export function Hero() {
               {/* Floating cards */}
               <div className="absolute -top-4 -right-4 card shadow-lg p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                    <span className="text-green-600 text-sm">✓</span>
+                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/60 flex items-center justify-center flex-shrink-0">
+                    <span className="text-green-600 dark:text-green-400 text-sm font-bold">✓</span>
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-800 dark:text-white">+8,400 MAD</div>
-                    <div className="text-xs text-slate-500">Paiement reçu</div>
+                    <div className="text-xs font-bold text-slate-800 dark:text-white">+8 400 MAD</div>
+                    <div className="text-[10px] text-slate-500">Paiement reçu · FAC-2026-0031</div>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -left-4 card shadow-lg p-3 rounded-xl border border-slate-100 dark:border-slate-700">
-                <div className="text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Devis envoyé</div>
-                <div className="text-xs text-slate-500">Atlas Marketing</div>
-                <div className="mt-1 w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5">
-                  <div className="h-1.5 rounded-full bg-gradient-to-r from-primary-500 to-teal-500 w-3/4" />
+              <div className="absolute -bottom-4 -left-4 card shadow-lg p-3 rounded-xl border border-slate-100 dark:border-slate-700 min-w-[170px]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="text-xs font-semibold text-slate-700 dark:text-slate-200">BL → Facture</div>
+                  <span className="text-[10px] bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded-full font-medium">Auto</span>
+                </div>
+                <div className="text-[10px] text-slate-500 mb-2">Groupe Tazi SARL · 5 200 MAD</div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1">
+                  <div className="h-1 rounded-full bg-gradient-to-r from-amber-400 to-teal-500 w-4/5" />
                 </div>
               </div>
             </div>
