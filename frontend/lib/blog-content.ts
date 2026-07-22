@@ -729,4 +729,551 @@ export const ARTICLES: Record<string, ArticleData> = {
       },
     },
   },
+
+  // ── ARTICLE 2 ────────────────────────────────────────────────────────────────
+  'plafond-ca-auto-entrepreneur-maroc': {
+    slug: 'plafond-ca-auto-entrepreneur-maroc',
+    image: '/blog/seuil-ca-auto-entrepreneur-maroc.webp',
+    readingTime: 6,
+    content: {
+
+      // ── FRENCH ────────────────────────────────────────────────────────────
+      fr: {
+        title: 'Plafond de CA auto-entrepreneur au Maroc : 500 000 MAD services, 2 000 000 MAD commerce',
+        description: 'Comprendre les plafonds de chiffre d\'affaires du régime auto-entrepreneur au Maroc : comment les calculer, que faire en cas de dépassement, et quelle structure adopter ensuite.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Vous venez de vous lancer en tant qu\'auto-entrepreneur au Maroc, votre activité décolle et vous commencez à voir des chiffres sérieux arriver. Très bien. Mais à un moment précis, une question devient urgente : est-ce que je vais dépasser le plafond de chiffre d\'affaires autorisé ? Et si oui, qu\'est-ce qui m\'attend ?',
+          },
+          {
+            type: 'p',
+            text: 'Le plafond de CA est l\'une des règles les plus importantes — et les plus mal comprises — du régime auto-entrepreneur marocain. Beaucoup d\'indépendants le découvrent trop tard, en pleine croissance, et se retrouvent à devoir tout réorganiser dans l\'urgence. Ce guide vous explique tout : les seuils exacts, comment calculer votre CA, ce qui se passe si vous dépassez, et comment anticiper la transition sereinement.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Les deux plafonds du régime auto-entrepreneur au Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le régime auto-entrepreneur au Maroc fixe deux plafonds annuels de chiffre d\'affaires selon la nature de votre activité. Ces seuils ont été revus à la hausse pour permettre aux indépendants de croître sans sortir trop tôt du régime simplifié :',
+              },
+              {
+                type: 'table',
+                headers: ['Type d\'activité', 'Plafond annuel de CA'],
+                rows: [
+                  ['Prestations de services', '500 000 MAD'],
+                  ['Activités commerciales et artisanales', '2 000 000 MAD'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'La distinction entre "services" et "commerce" est essentielle. Si vous êtes développeur web, designer, consultant, coach ou formateur, vous relevez des prestations de services — plafond à 500 000 MAD. Si vous achetez et revendez des produits physiques, ou exercez une activité artisanale, vous relevez du commerce — plafond à 2 000 000 MAD.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Règle des deux années consécutives',
+                body: 'Le dépassement du plafond n\'entraîne pas de sortie automatique du régime dès la première année. Vous devez dépasser le seuil deux années consécutives pour être obligé de changer de régime. Une seule bonne année ne suffit pas à vous faire basculer.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment calculer exactement votre chiffre d\'affaires ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le chiffre d\'affaires pris en compte pour le plafond, c\'est le montant total hors taxes encaissé sur l\'année civile (du 1er janvier au 31 décembre). Attention à ne pas confondre avec le bénéfice — on parle bien du total de ce que vous avez facturé et encaissé, avant toute déduction de charges.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'On compte : toutes les factures encaissées dans l\'année, quelle que soit la date de la prestation',
+                  'On ne déduit pas : vos charges, achats de matériel, déplacements ou autres frais professionnels',
+                  'On exclut : les remboursements de frais refacturés à l\'identique (avances clients remboursées)',
+                  'Devise : tout est converti en MAD au taux du jour de l\'encaissement si vous facturez en EUR ou USD',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Piège à éviter',
+                body: 'Certains auto-entrepreneurs croient que le CA se calcule sur les factures émises, pas encaissées. C\'est faux pour ce régime. C\'est bien la date d\'encaissement qui compte. Une facture émise en décembre mais payée en janvier est comptée dans l\'année suivante.',
+              },
+            ],
+          },
+          {
+            h2: 'Activités mixtes : comment gérer plusieurs types d\'activités ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Si vous exercez à la fois des activités de services et des activités commerciales — par exemple vous êtes graphiste (service) ET vous vendez des impressions (commerce) — la règle de calcul devient proportionnelle. La loi prévoit une règle de trois pour vérifier si vous respectez les seuils :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Calculez le CA réalisé en services et divisez-le par 500 000',
+                  'Calculez le CA réalisé en commerce et divisez-le par 2 000 000',
+                  'Additionnez les deux résultats',
+                  'Si le total est inférieur ou égal à 1 : vous êtes dans les limites du régime',
+                  'Si le total dépasse 1 pendant deux années consécutives : vous devez changer de régime',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Exemple concret',
+                body: 'Vous avez encaissé 300 000 MAD de services et 800 000 MAD de ventes commerciales. Calcul : (300 000 / 500 000) + (800 000 / 2 000 000) = 0,6 + 0,4 = 1,0. Vous êtes exactement à la limite. L\'année suivante, soyez vigilant.',
+              },
+            ],
+          },
+          {
+            h2: 'Que se passe-t-il concrètement si vous dépassez le plafond ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le dépassement du plafond pendant deux années consécutives entraîne la sortie automatique du régime auto-entrepreneur. Voici ce que cela implique en pratique :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Vous basculez vers le régime fiscal de droit commun (régime du résultat net ou forfaitaire selon votre CA)',
+                  'Vous devenez assujetti à la TVA — vous devez la collecter sur vos factures et la déclarer trimestriellement',
+                  'Vous avez l\'obligation de tenir une comptabilité complète (journal, grand livre, bilan)',
+                  'Votre IR se calcule sur le bénéfice net (revenus − charges) et non plus sur le CA brut',
+                  'La CNSS bascule vers des cotisations calculées différemment',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Ce changement n\'est pas nécessairement une mauvaise nouvelle. Cela signifie que votre activité a suffisamment grandi pour justifier une structure plus solide. La vraie erreur est de ne pas l\'anticiper et de se retrouver à devoir tout réorganiser dans l\'urgence en fin d\'année.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Suivez votre CA en temps réel avec Sayerli',
+                body: 'Le tableau de bord Sayerli affiche votre chiffre d\'affaires mensuel et cumulé en temps réel. Vous visualisez instantanément où vous en êtes par rapport à votre plafond annuel — sans Excel, sans calcul manuel. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Voir mon tableau de bord',
+              },
+            ],
+          },
+          {
+            h2: 'Comment anticiper le dépassement avant qu\'il arrive ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La bonne pratique est de commencer à surveiller votre CA dès que vous atteignez 60% du plafond. Pour les prestataires de services, ça signifie déclencher l\'alerte à partir de 300 000 MAD annuel. Pour les activités commerciales, à partir de 1 200 000 MAD.',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Tenez un suivi mensuel de vos encaissements — ne vous contentez pas de regarder en fin d\'année',
+                  'Projetez votre CA annuel à partir de septembre sur la base des mois écoulés',
+                  'Consultez un comptable ou un conseiller dès 70% du seuil atteint',
+                  'Commencez les démarches de création de SARL si la tendance est au dépassement',
+                  'Ne signez pas de nouveaux gros contrats sans avoir clarifié votre situation fiscale',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Bonne nouvelle',
+                body: 'Le dépassement d\'une seule année ne vous oblige à rien. Vous pouvez dépasser le plafond une année et rester dans le régime si vous repassez en dessous l\'année suivante. C\'est la règle des deux années consécutives qui déclenche la sortie obligatoire.',
+              },
+            ],
+          },
+          {
+            h2: 'Quelle structure adopter après le régime auto-entrepreneur ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Quand votre activité dépasse les plafonds auto-entrepreneur, deux options principales s\'offrent à vous :',
+              },
+              {
+                type: 'table',
+                headers: ['Structure', 'Pour qui ?', 'Avantage principal'],
+                rows: [
+                  ['Personne physique — régime du résultat net', 'Activité individuelle en croissance', 'Pas de création de société, mais comptabilité obligatoire'],
+                  ['SARL / SARLAU', 'Activité en fort développement, clients grands comptes', 'Responsabilité limitée, image professionnelle renforcée, IS à 20%'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'La SARL est souvent recommandée car elle sépare votre patrimoine personnel de celui de l\'entreprise — vous ne risquez plus vos biens personnels en cas de litige. Elle permet aussi d\'accueillir des associés, d\'être plus crédible auprès des banques et de certains grands comptes qui refusent les personnes physiques.',
+              },
+              {
+                type: 'p',
+                text: 'La création d\'une SARL au Maroc prend entre 4 et 8 semaines et coûte entre 2 000 et 5 000 MAD selon que vous passez par un professionnel ou non. Un expert-comptable peut vous accompagner sur le choix du régime fiscal optimal (IS vs IR) selon votre situation.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli s\'adapte à votre croissance',
+                body: 'Que vous soyez auto-entrepreneur, personne physique ou SARL, Sayerli gère votre facturation, vos devis, vos bons de livraison et votre journal des ventes. Un seul outil qui grandit avec vous.',
+                href: '/fonctionnalites',
+                cta: 'Découvrir toutes les fonctionnalités',
+              },
+            ],
+          },
+          {
+            h2: 'Ce qu\'il faut retenir en 5 points',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Services : plafond annuel à 500 000 MAD — Commerce/Artisanat : plafond à 2 000 000 MAD',
+                  'Le CA se calcule sur les montants encaissés dans l\'année, pas sur les factures émises',
+                  'Le dépassement d\'une seule année ne vous force pas à changer de régime — deux années consécutives sont nécessaires',
+                  'Commencez à vous préparer dès 60-70% du plafond atteint : consultez un professionnel',
+                  'La transition vers une SARL n\'est pas une punition, c\'est le signe que votre activité a grandi',
+                ],
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ───────────────────────────────────────────────────────────
+      en: {
+        title: 'Auto-Entrepreneur Revenue Cap in Morocco: 500,000 MAD for Services, 2,000,000 MAD for Commerce',
+        description: 'Everything you need to know about the auto-entrepreneur revenue caps in Morocco: how to calculate your revenue, what happens when you exceed the limit, and which structure to move to next.',
+        intro: [
+          {
+            type: 'p',
+            text: 'You launched as an auto-entrepreneur in Morocco, your business is growing and serious money is coming in. Great. But at some point, one question becomes urgent: am I going to exceed the authorized revenue cap? And if so, what happens?',
+          },
+          {
+            type: 'p',
+            text: 'The revenue cap is one of the most important — and most misunderstood — rules of the Moroccan auto-entrepreneur regime. Many independent workers discover it too late, in the middle of a growth phase, and end up having to reorganize everything in a rush. This guide explains it all: the exact thresholds, how to calculate your revenue, what happens if you exceed, and how to anticipate the transition calmly.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'The two revenue caps in Morocco\'s auto-entrepreneur regime',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Activity type', 'Annual revenue cap'],
+                rows: [
+                  ['Service activities', '500,000 MAD'],
+                  ['Commercial and craft activities', '2,000,000 MAD'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'The distinction between "services" and "commerce" is essential. If you are a web developer, designer, consultant, coach or trainer, you fall under service activities — cap at 500,000 MAD. If you buy and resell physical products, or practice a craft, you fall under commerce — cap at 2,000,000 MAD.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'The two consecutive years rule',
+                body: 'Exceeding the cap does not trigger automatic exit from the regime in the first year. You must exceed the threshold for two consecutive years before being required to change regime. One good year alone is not enough to push you out.',
+              },
+            ],
+          },
+          {
+            h2: 'How to calculate your revenue exactly',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The revenue taken into account for the cap is the total amount received (collected) in the calendar year (January 1 to December 31), before any deductions. Do not confuse this with profit — we are talking about the total you invoiced and collected, before any expenses.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Count: all invoices collected during the year, regardless of when the work was done',
+                  'Do not deduct: your expenses, equipment purchases, travel or other professional costs',
+                  'Exclude: expense reimbursements passed through to the client at cost',
+                  'Currency: everything is converted to MAD at the exchange rate on the collection date if you invoice in EUR or USD',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Common mistake to avoid',
+                body: 'Some auto-entrepreneurs believe revenue is calculated on invoices issued, not collected. That is wrong for this regime. It is the collection date that matters. An invoice issued in December but paid in January counts in the following year.',
+              },
+            ],
+          },
+          {
+            h2: 'Mixed activities: managing multiple types of work',
+            blocks: [
+              {
+                type: 'p',
+                text: 'If you carry out both service and commercial activities, a proportional rule applies:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Divide your service revenue by 500,000',
+                  'Divide your commercial revenue by 2,000,000',
+                  'Add the two results together',
+                  'If the total is ≤ 1: you are within the regime limits',
+                  'If the total exceeds 1 for two consecutive years: you must change regime',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Concrete example',
+                body: 'You collected 300,000 MAD in services and 800,000 MAD in commercial sales. Calculation: (300,000 / 500,000) + (800,000 / 2,000,000) = 0.6 + 0.4 = 1.0. You are exactly at the limit. Be vigilant the following year.',
+              },
+            ],
+          },
+          {
+            h2: 'What happens if you exceed the cap?',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'You switch to the standard tax regime (net result or flat rate depending on your revenue)',
+                  'You become VAT-liable — you must collect and declare VAT quarterly',
+                  'You are required to keep full accounting records (journal, ledger, balance sheet)',
+                  'Your income tax is calculated on net profit (revenue − expenses) instead of gross revenue',
+                  'CNSS contributions are calculated differently',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Track your revenue in real time with Sayerli',
+                body: 'Sayerli\'s dashboard shows your monthly and cumulative revenue in real time. You instantly see where you stand against your annual cap — no Excel, no manual calculations. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'View my dashboard',
+              },
+            ],
+          },
+          {
+            h2: 'How to anticipate the cap before it hits',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'Track your collected revenue monthly — do not wait until year end',
+                  'Project your annual revenue from September based on months already elapsed',
+                  'Consult an accountant or advisor once you hit 70% of the threshold',
+                  'Start SARL incorporation proceedings if the trend points to exceeding the cap',
+                  'Do not sign large new contracts without clarifying your tax situation first',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Good news',
+                body: 'Exceeding the cap for just one year does not force you to change anything. You can exceed in one year and stay in the regime if you fall back below the following year. It is the two consecutive years rule that triggers mandatory exit.',
+              },
+            ],
+          },
+          {
+            h2: 'What structure to move to after auto-entrepreneur?',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Structure', 'Best for', 'Main benefit'],
+                rows: [
+                  ['Individual business — net result regime', 'Solo activity in growth phase', 'No company to create, but full accounting required'],
+                  ['SARL / SARLAU', 'Strong growth, large clients', 'Limited liability, stronger professional image, 20% corporate tax'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli grows with your business',
+                body: 'Whether you are an auto-entrepreneur, individual business or SARL, Sayerli handles your invoices, quotes, delivery notes and sales journal. One tool that scales with you.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+          {
+            h2: '5 things to remember',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Services: annual cap at 500,000 MAD — Commerce/Crafts: cap at 2,000,000 MAD',
+                  'Revenue is calculated on amounts collected in the year, not on invoices issued',
+                  'Exceeding the cap for one year alone does not force a regime change — two consecutive years are required',
+                  'Start preparing at 60-70% of the cap reached: consult a professional',
+                  'Transitioning to an SARL is not a penalty — it means your business has grown',
+                ],
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ────────────────────────────────────────────────────────────
+      ar: {
+        title: 'سقف رقم الأعمال للمقاول الذاتي بالمغرب: 500,000 درهم للخدمات و2,000,000 درهم للتجارة',
+        description: 'كل ما تحتاج معرفته عن سقف رقم الأعمال لنظام المقاول الذاتي بالمغرب: كيفية حسابه، ما يحدث عند التجاوز، والهيكل القانوني الأنسب بعد ذلك.',
+        intro: [
+          {
+            type: 'p',
+            text: 'انطلقت كمقاول ذاتي بالمغرب، ونشاطك يتطور ومداخيل جدية بدأت تتدفق. رائع. لكن في لحظة ما، يصبح سؤال واحد ملحاً: هل سأتجاوز سقف رقم الأعمال المسموح به؟ وإذا حدث ذلك، فماذا ينتظرني؟',
+          },
+          {
+            type: 'p',
+            text: 'سقف رقم الأعمال هو أحد أهم القواعد — وأكثرها سوء فهم — في نظام المقاول الذاتي المغربي. يكتشفه كثيرون متأخرين، في خضم مرحلة نمو، فيضطرون لإعادة تنظيم كل شيء على عجل. هذا الدليل يشرح كل شيء: السقوف الدقيقة، كيفية حساب رقم الأعمال، ما يحدث عند التجاوز، وكيف تستعد للانتقال بهدوء.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'السقفان في نظام المقاول الذاتي بالمغرب',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['نوع النشاط', 'السقف السنوي لرقم الأعمال'],
+                rows: [
+                  ['تقديم الخدمات', '500,000 درهم'],
+                  ['الأنشطة التجارية والحرفية', '2,000,000 درهم'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'التمييز بين "الخدمات" و"التجارة" أمر جوهري. إذا كنت مطوراً للويب، مصمماً، مستشاراً، مدرباً أو مكوِّناً، فأنت ضمن فئة تقديم الخدمات — سقفك 500,000 درهم. إذا كنت تشتري وتعيد بيع المنتجات المادية، أو تمارس حرفة يدوية، فأنت ضمن التجارة — سقفك 2,000,000 درهم.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'قاعدة السنتين المتتاليتين',
+                body: 'تجاوز السقف لا يُخرجك تلقائياً من النظام في السنة الأولى. يجب أن تتجاوز الحد لسنتين متتاليتين لكي يلزمك تغيير النظام. سنة جيدة واحدة لا تكفي لإخراجك.',
+              },
+            ],
+          },
+          {
+            h2: 'كيف تحسب رقم أعمالك بدقة؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'رقم الأعمال المعتمد لحساب السقف هو المبلغ الإجمالي المُحصَّل (المستلم) خلال السنة الميلادية (من فاتح يناير إلى 31 ديسمبر)، قبل أي خصومات. لا تخلط بين رقم الأعمال والربح — نتحدث عن مجموع ما فوترته وحصّلته، قبل أي مصاريف.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'تُحتسب: جميع الفواتير المحصّلة خلال السنة، بصرف النظر عن تاريخ إنجاز الخدمة',
+                  'لا تُخصم: مصاريفك، مشترياتك من معدات، أو أي تكاليف مهنية أخرى',
+                  'تُستثنى: استرداد المصاريف المُعاد فوترتها للعميل بنفس القيمة',
+                  'العملة: يُحوَّل كل شيء إلى درهم بسعر الصرف في تاريخ التحصيل إذا كنت تفوتر بالأورو أو الدولار',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'خطأ شائع يجب تجنبه',
+                body: 'يظن بعض المقاولين الذاتيين أن رقم الأعمال يُحسب على الفواتير المُصدَرة لا المُحصَّلة. هذا خطأ في هذا النظام. تاريخ التحصيل هو المعتمد. فاتورة صادرة في ديسمبر لكن مدفوعة في يناير تُحسب في السنة التالية.',
+              },
+            ],
+          },
+          {
+            h2: 'الأنشطة المختلطة: إدارة أنواع متعددة من الأعمال',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إذا كنت تمارس أنشطة خدمات وتجارة في آنٍ واحد، تُطبَّق قاعدة تناسبية:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'اقسم رقم أعمال الخدمات على 500,000',
+                  'اقسم رقم أعمال التجارة على 2,000,000',
+                  'اجمع النتيجتين',
+                  'إذا كان المجموع ≤ 1: أنت ضمن حدود النظام',
+                  'إذا تجاوز المجموع 1 لسنتين متتاليتين: يجب تغيير النظام',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'مثال عملي',
+                body: 'حصّلت 300,000 درهم من الخدمات و800,000 درهم من المبيعات التجارية. الحساب: (300,000 ÷ 500,000) + (800,000 ÷ 2,000,000) = 0.6 + 0.4 = 1.0. أنت بالضبط عند الحد. كن يقظاً في السنة القادمة.',
+              },
+            ],
+          },
+          {
+            h2: 'ماذا يحدث عند تجاوز السقف؟',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'تنتقل إلى النظام الجبائي العام (نظام الصافي الحقيقي أو الجزافي حسب رقم الأعمال)',
+                  'تصبح خاضعاً للضريبة على القيمة المضافة — يجب جمعها وتصريحها كل ثلاثة أشهر',
+                  'يُلزمك الأمر بمسك محاسبة كاملة (يومية، دفتر الأستاذ، الميزانية)',
+                  'تُحسب ضريبة الدخل على الربح الصافي (المداخيل − المصاريف) لا على رقم الأعمال الخام',
+                  'تتغير طريقة احتساب اشتراكات الصندوق الوطني للضمان الاجتماعي',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'تتبّع رقم أعمالك في الوقت الفعلي مع Sayerli',
+                body: 'تُظهر لوحة قيادة Sayerli رقم أعمالك الشهري والتراكمي في الوقت الفعلي. ترى فوراً أين أنت من سقفك السنوي — دون Excel، دون حسابات يدوية. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'عرض لوحة القيادة',
+              },
+            ],
+          },
+          {
+            h2: 'كيف تستعد للتجاوز قبل وقوعه؟',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'تتبّع مداخيلك المحصّلة شهرياً — لا تنتظر نهاية السنة',
+                  'قدّر رقم أعمالك السنوي ابتداءً من شهر سبتمبر استناداً إلى الأشهر المنقضية',
+                  'استشر محاسباً أو مستشاراً حين تبلغ 70% من السقف',
+                  'ابدأ إجراءات تأسيس شركة ذات مسؤولية محدودة إذا كان التوجه نحو التجاوز واضحاً',
+                  'لا توقّع عقوداً كبيرة جديدة دون توضيح وضعك الجبائي أولاً',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'خبر جيد',
+                body: 'تجاوز السقف لسنة واحدة فقط لا يُلزمك بشيء. يمكنك التجاوز في سنة والبقاء في النظام إذا عدت دون السقف في السنة التالية. قاعدة السنتين المتتاليتين هي التي تُفعّل الخروج الإلزامي.',
+              },
+            ],
+          },
+          {
+            h2: 'أي هيكل قانوني بعد نظام المقاول الذاتي؟',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['الهيكل', 'الأنسب لـ', 'الميزة الرئيسية'],
+                rows: [
+                  ['شخص طبيعي — نظام الصافي الحقيقي', 'نشاط فردي في طور النمو', 'لا حاجة لتأسيس شركة، لكن محاسبة كاملة إلزامية'],
+                  ['شركة ذات مسؤولية محدودة / ش.م.م.أ', 'نمو قوي، عملاء كبار', 'مسؤولية محدودة، صورة أكثر احترافية، ضريبة الشركات 20%'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli يتطور مع نشاطك',
+                body: 'سواء كنت مقاولاً ذاتياً، شخصاً طبيعياً أو شركة ذات مسؤولية محدودة، يدير Sayerli فواتيرك وعروض أسعارك وسندات التسليم ودفتر مبيعاتك. أداة واحدة تنمو معك.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+          {
+            h2: '5 نقاط أساسية يجب تذكرها',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'الخدمات: سقف سنوي 500,000 درهم — التجارة والحرف: سقف 2,000,000 درهم',
+                  'يُحسب رقم الأعمال على المبالغ المحصّلة خلال السنة، لا على الفواتير المُصدَرة',
+                  'تجاوز السقف لسنة واحدة لا يُوجب تغيير النظام — السنتان المتتاليتان هما الشرط',
+                  'ابدأ التحضير حين تبلغ 60-70% من السقف: استشر مختصاً',
+                  'الانتقال إلى شركة ذات مسؤولية محدودة ليس عقوبة — بل دليل على نمو نشاطك',
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
 }

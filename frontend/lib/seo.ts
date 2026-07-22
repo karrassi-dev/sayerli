@@ -157,6 +157,25 @@ export const BLOG_POSTS: BlogPost[] = [
     image: '/blog/sayerli-entrepreneur-au-maroc.webp',
     readingTime: 8,
   },
+  {
+    slug: 'plafond-ca-auto-entrepreneur-maroc',
+    title: 'Plafond de CA auto-entrepreneur au Maroc : 500 000 MAD services, 2 000 000 MAD commerce',
+    description: 'Comprendre les plafonds de chiffre d\'affaires du régime auto-entrepreneur au Maroc : comment les calculer, que faire en cas de dépassement, et quelle structure adopter ensuite.',
+    category: 'autoEntrepreneur',
+    keywords: [
+      'plafond auto entrepreneur maroc',
+      'plafond ca auto entrepreneur maroc',
+      'seuil auto entrepreneur maroc',
+      'chiffre affaires auto entrepreneur maroc',
+      'depasser plafond auto entrepreneur maroc',
+      'auto entrepreneur maroc 2025',
+      'sarl maroc',
+      'facture auto entrepreneur maroc',
+    ],
+    publishedAt: '2026-07-22',
+    image: '/blog/seuil-ca-auto-entrepreneur-maroc.webp',
+    readingTime: 6,
+  },
 ]
 
 export interface BlogPost {
