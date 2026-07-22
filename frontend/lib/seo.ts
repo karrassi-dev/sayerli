@@ -136,7 +136,28 @@ export function buildMetadata({
 }
 
 // ── Blog posts registry ───────────────────────────────────────────────────────
-export const BLOG_POSTS: BlogPost[] = []
+export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'comment-devenir-auto-entrepreneur-maroc',
+    title: 'Comment devenir auto-entrepreneur au Maroc en 2025 : le guide complet',
+    description: 'Statut, démarches, plafond de CA, CNSS, fiscalité et obligations de facturation. Tout ce qu\'il faut savoir pour se lancer comme auto-entrepreneur au Maroc.',
+    category: 'autoEntrepreneur',
+    keywords: [
+      'auto entrepreneur maroc',
+      'comment devenir auto entrepreneur maroc',
+      'declaration auto entrepreneur maroc',
+      'cnss auto entrepreneur maroc',
+      'plafond auto entrepreneur maroc',
+      'impot auto entrepreneur maroc',
+      'facture auto entrepreneur maroc',
+      'freelance maroc',
+      'logiciel facturation maroc',
+    ],
+    publishedAt: '2026-07-22',
+    image: '/blog/sayerli-entrepreneur-au-maroc.webp',
+    readingTime: 8,
+  },
+]
 
 export interface BlogPost {
   slug: string

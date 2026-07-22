@@ -1887,9 +1887,9 @@
   "blog": {
     "hero": {
       "badge": "Ressources & Guides",
-      "title": "Guides pratiques pour les",
-      "titleHighlight": "PME marocaines",
-      "sub": "Facturation, CRM, devis et gestion commerciale. Des articles concrets écrits pour les freelancers, auto-entrepreneurs et PME au Maroc.",
+      "title": "Le blog des",
+      "titleHighlight": "entrepreneurs marocains",
+      "sub": "Facturation, devis, TVA, CNSS et gestion d'entreprise. Des guides concrets pour les freelancers, auto-entrepreneurs et PME au Maroc.",
       "articles": "article",
       "articles_plural": "articles",
       "updated": "Mis à jour régulièrement"

@@ -3,91 +3,25 @@
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  ArrowRight, Clock, Search, Receipt, Truck, Briefcase,
-  Calculator, Users, BarChart3, PenLine,
-} from 'lucide-react'
+import { ArrowRight, Clock, Search, PenLine } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { BLOG_POSTS, type BlogPost } from '@/lib/seo'
+import { CAT_META, CATEGORY_KEYS, type CategoryKey } from '@/components/blog/blogCategories'
 
-// ── Category config ────────────────────────────────────────────────────────────
-const CATEGORY_KEYS = [
-  'facturation',
-  'devis',
-  'autoEntrepreneur',
-  'tva',
-  'freelance',
-  'comparatifs',
-] as const
-
-type CategoryKey = typeof CATEGORY_KEYS[number]
-
-const CAT_META: Record<CategoryKey, {
-  icon: React.ElementType
-  gradient: string
-  pill: string
-  activePill: string
-  badge: string
-}> = {
-  facturation: {
-    icon: Receipt,
-    gradient: 'from-blue-500 to-blue-600',
-    pill: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-700 hover:text-blue-600 dark:hover:text-blue-400',
-    activePill: 'bg-blue-600 border-blue-600 text-white',
-    badge: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900',
-  },
-  devis: {
-    icon: Truck,
-    gradient: 'from-amber-500 to-orange-500',
-    pill: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-amber-300 dark:hover:border-amber-700 hover:text-amber-600 dark:hover:text-amber-400',
-    activePill: 'bg-amber-500 border-amber-500 text-white',
-    badge: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900',
-  },
-  autoEntrepreneur: {
-    icon: Briefcase,
-    gradient: 'from-green-500 to-emerald-600',
-    pill: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-green-300 dark:hover:border-green-700 hover:text-green-600 dark:hover:text-green-400',
-    activePill: 'bg-green-600 border-green-600 text-white',
-    badge: 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-100 dark:border-green-900',
-  },
-  tva: {
-    icon: Calculator,
-    gradient: 'from-purple-500 to-violet-600',
-    pill: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-purple-300 dark:hover:border-purple-700 hover:text-purple-600 dark:hover:text-purple-400',
-    activePill: 'bg-purple-600 border-purple-600 text-white',
-    badge: 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900',
-  },
-  freelance: {
-    icon: Users,
-    gradient: 'from-teal-500 to-teal-600',
-    pill: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-600 dark:hover:text-teal-400',
-    activePill: 'bg-teal-600 border-teal-600 text-white',
-    badge: 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900',
-  },
-  comparatifs: {
-    icon: BarChart3,
-    gradient: 'from-rose-500 to-pink-600',
-    pill: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-rose-300 dark:hover:border-rose-700 hover:text-rose-600 dark:hover:text-rose-400',
-    activePill: 'bg-rose-600 border-rose-600 text-white',
-    badge: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-100 dark:border-rose-900',
-  },
+function formatDate(d: string, locale: string) {
+  const loc = locale === 'ar' ? 'ar-MA' : locale === 'en' ? 'en-US' : 'fr-MA'
+  return new Date(d).toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-// ── Post card ──────────────────────────────────────────────────────────────────
 function PostCard({ post }: { post: BlogPost }) {
   const { t, locale } = useTranslation()
-  const meta = CAT_META[post.category as CategoryKey]
-  const Icon = meta?.icon
-
-  const dateStr = new Date(post.publishedAt).toLocaleDateString(
-    locale === 'ar' ? 'ar-MA' : locale === 'en' ? 'en-US' : 'fr-MA',
-    { day: 'numeric', month: 'long', year: 'numeric' },
-  )
+  const cat = CAT_META[post.category as CategoryKey]
+  const Icon = cat?.icon
 
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900/80 overflow-hidden hover:shadow-2xl hover:shadow-black/8 dark:hover:shadow-black/30 hover:-translate-y-1 transition-all duration-300"
+      className={`group flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900/80 overflow-hidden hover:shadow-2xl hover:shadow-black/8 dark:hover:shadow-black/30 hover:-translate-y-1 transition-all duration-300 ${cat?.border ?? ''}`}
     >
       {/* Cover */}
       <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-slate-800 flex-shrink-0">
@@ -100,11 +34,11 @@ function PostCard({ post }: { post: BlogPost }) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className={`absolute inset-0 bg-gradient-to-br ${meta?.gradient ?? 'from-slate-400 to-slate-500'} opacity-10 dark:opacity-20`} />
+          <div className={`absolute inset-0 bg-gradient-to-br ${cat?.gradient ?? 'from-slate-400 to-slate-500'} opacity-10 dark:opacity-20`} />
         )}
-        {meta && (
+        {cat && Icon && (
           <div className="absolute top-3 left-3">
-            <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-semibold backdrop-blur-sm ${meta.badge}`}>
+            <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-semibold backdrop-blur-sm ${cat.badge}`}>
               <Icon className="w-3 h-3" />
               {t(`blog.categories.${post.category}.name`)}
             </span>
@@ -115,7 +49,7 @@ function PostCard({ post }: { post: BlogPost }) {
       {/* Body */}
       <div className="flex flex-col flex-1 p-5">
         <div className="flex items-center gap-2 mb-3 text-xs text-slate-400 dark:text-slate-500">
-          <time dateTime={post.publishedAt}>{dateStr}</time>
+          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt, locale)}</time>
           {post.readingTime && (
             <>
               <span className="text-slate-200 dark:text-slate-700">·</span>
@@ -143,7 +77,6 @@ function PostCard({ post }: { post: BlogPost }) {
   )
 }
 
-// ── Main page ──────────────────────────────────────────────────────────────────
 export function BlogPageContent() {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
@@ -172,11 +105,8 @@ export function BlogPageContent() {
     <>
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <div className="relative overflow-hidden bg-white dark:bg-slate-950">
-        {/* subtle radial glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(99,102,241,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(99,102,241,0.18),transparent)]" />
-
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-14 sm:pt-28 sm:pb-20 text-center">
-          {/* — BLOG — label */}
           <div className="inline-flex items-center gap-3 mb-7">
             <span className="h-px w-8 bg-primary-400 dark:bg-primary-500" />
             <span className="text-xs font-bold tracking-[0.2em] uppercase text-primary-600 dark:text-primary-400">
@@ -201,7 +131,6 @@ export function BlogPageContent() {
       {/* ── Search + filters ─────────────────────────────────────────────────── */}
       <div className="sticky top-16 z-20 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/80">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3">
-          {/* Search bar */}
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 pointer-events-none" />
             <input
@@ -213,9 +142,8 @@ export function BlogPageContent() {
             />
           </div>
 
-          {/* Category pills */}
+          {/* Category pills — wrap to new lines */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* All pill */}
             <button
               onClick={() => setActiveCategory('all')}
               className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
@@ -252,7 +180,6 @@ export function BlogPageContent() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
 
         {!hasAnyPosts ? (
-          /* Global empty state — no posts at all yet */
           <div className="flex flex-col items-center justify-center text-center py-20">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-500 flex items-center justify-center mb-6 shadow-xl shadow-primary-500/25">
               <PenLine className="w-8 h-8 text-white" />
@@ -272,13 +199,13 @@ export function BlogPageContent() {
             </Link>
           </div>
         ) : filtered.length === 0 ? (
-          /* Search / filter returned nothing */
           <div className="flex flex-col items-center justify-center text-center py-20">
             <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-5">
               <Search className="w-7 h-7 text-slate-400 dark:text-slate-500" />
             </div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              {t('blog.search.noResults')} &ldquo;{search || t(`blog.categories.${activeCategory as CategoryKey}.name`)}&rdquo;
+              {t('blog.search.noResults')}{' '}
+              &ldquo;{search || (activeCategory !== 'all' ? t(`blog.categories.${activeCategory}.name`) : '')}&rdquo;
             </h2>
             <button
               onClick={() => { setSearch(''); setActiveCategory('all') }}
@@ -288,7 +215,6 @@ export function BlogPageContent() {
             </button>
           </div>
         ) : (
-          /* Posts grid */
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((post) => (
               <PostCard key={post.slug} post={post} />
@@ -298,7 +224,7 @@ export function BlogPageContent() {
 
         {/* ── CTA ────────────────────────────────────────────────────────────── */}
         <div className="mt-20 rounded-2xl overflow-hidden">
-          <div className="relative bg-gradient-to-br from-slate-900 via-primary-950 to-indigo-950 dark:from-slate-900 dark:via-primary-950 dark:to-indigo-950 p-8 sm:p-12">
+          <div className="relative bg-gradient-to-br from-slate-900 via-primary-950 to-indigo-950 p-8 sm:p-12">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.2),transparent_60%)]" />
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" />
             <div className="relative text-center max-w-lg mx-auto">

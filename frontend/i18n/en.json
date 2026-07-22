@@ -1886,9 +1886,9 @@
   "blog": {
     "hero": {
       "badge": "Resources & Guides",
-      "title": "Practical guides for",
-      "titleHighlight": "Moroccan SMEs",
-      "sub": "Invoicing, CRM, quotes and business management. Concrete articles written for freelancers, self-employed workers, and SMEs in Morocco.",
+      "title": "The blog for",
+      "titleHighlight": "Moroccan entrepreneurs",
+      "sub": "Invoicing, quotes, VAT, CNSS and business management. Practical guides for freelancers, self-employed workers, and SMEs in Morocco.",
       "articles": "article",
       "articles_plural": "articles",
       "updated": "Regularly updated"
