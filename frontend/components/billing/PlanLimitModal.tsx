@@ -7,7 +7,7 @@ import { Modal } from '@/components/dashboard/ui/Modal'
 interface PlanLimitModalProps {
   open: boolean
   onClose: () => void
-  resource: 'clients' | 'devis' | 'factures' | 'bons-livraison' | 'utilisateurs'
+  resource: 'clients' | 'devis' | 'factures' | 'bons-livraison' | 'utilisateurs' | 'journal'
   limite: number
   actuel: number
 }
@@ -18,6 +18,7 @@ const RESOURCE_LABELS: Record<string, { label: string; upgrade: string }> = {
   factures:         { label: 'factures ce mois',          upgrade: 'factures illimitées' },
   'bons-livraison': { label: 'bons de livraison ce mois', upgrade: 'BL illimités' },
   utilisateurs:     { label: 'membres d\'équipe',         upgrade: "plus d'utilisateurs" },
+  journal:          { label: 'journal des ventes',         upgrade: 'le journal des ventes' },
 }
 
 export function PlanLimitModal({ open, onClose, resource, limite, actuel }: PlanLimitModalProps) {
@@ -38,22 +39,27 @@ export function PlanLimitModal({ open, onClose, resource, limite, actuel }: Plan
         </div>
 
         <h2 className="text-lg font-black text-slate-900 dark:text-white mb-2">
-          Limite atteinte
+          {limite === 0 ? 'Fonctionnalité Pro' : 'Limite atteinte'}
         </h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-          Vous avez atteint la limite de <span className="font-semibold text-slate-700 dark:text-slate-300">{limite} {info.label}</span> de votre plan actuel.
+          {limite === 0
+            ? <>Le <span className="font-semibold text-slate-700 dark:text-slate-300">{info.label}</span> n'est pas disponible sur votre plan actuel.</>
+            : <>Vous avez atteint la limite de <span className="font-semibold text-slate-700 dark:text-slate-300">{limite} {info.label}</span> de votre plan actuel.</>
+          }
         </p>
 
-        {/* Usage bar */}
-        <div className="w-full mb-5">
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
-            <span className="capitalize">{info.label}</span>
-            <span className="font-semibold text-red-500">{actuel} / {limite}</span>
+        {/* Usage bar — only for count-based limits */}
+        {limite > 0 && (
+          <div className="w-full mb-5">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+              <span className="capitalize">{info.label}</span>
+              <span className="font-semibold text-red-500">{actuel} / {limite}</span>
+            </div>
+            <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+              <div className="h-full rounded-full bg-red-500 transition-all" style={{ width: `${pct}%` }} />
+            </div>
           </div>
-          <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
-            <div className="h-full rounded-full bg-red-500 transition-all" style={{ width: `${pct}%` }} />
-          </div>
-        </div>
+        )}
 
         {/* Upgrade suggestion */}
         <div className="w-full p-3 rounded-xl bg-primary-50 dark:bg-primary-950/30 border border-primary-100 dark:border-primary-900 mb-5 text-left">

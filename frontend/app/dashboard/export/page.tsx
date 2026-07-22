@@ -5,13 +5,14 @@ import {
   Download, FileSpreadsheet, FileText,
   Users, File, Receipt, CreditCard, Calendar,
   CheckSquare, Square, ChevronRight, BookOpen,
-  GripVertical, RotateCcw,
+  GripVertical, RotateCcw, Lock,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
 import { canDo } from '@/lib/permissions'
 import { api } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 
 /* ─── types ─────────────────────────────────────────────────── */
 
@@ -312,6 +313,9 @@ export default function ExportPage() {
 
   /* journal column configurator state */
   const [journalCols,     setJournalCols]     = useState<JournalColState[]>(DEFAULT_JOURNAL_COLS)
+  const [journalLimitOpen, setJournalLimitOpen] = useState(false)
+
+  const canUseJournal = entreprise?.plan === 'PRO' || entreprise?.plan === 'BUSINESS'
   const [dragIdx,         setDragIdx]         = useState<number | null>(null)
   const [dragOverIdx,     setDragOverIdx]     = useState<number | null>(null)
 
@@ -442,24 +446,35 @@ export default function ExportPage() {
         </button>
 
         <button
-          onClick={() => { setExportMode('journal'); setPeriod('all') }}
+          onClick={() => {
+            if (!canUseJournal) { setJournalLimitOpen(true); return }
+            setExportMode('journal'); setPeriod('all')
+          }}
           className={cn(
-            'flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-all',
+            'flex items-start gap-3 p-4 rounded-2xl border-2 text-left transition-all relative',
             exportMode === 'journal'
               ? 'border-teal-500 bg-teal-50 dark:bg-teal-950/30'
               : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-300',
+            !canUseJournal && 'opacity-70',
           )}
         >
           <div className={cn(
             'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5',
             exportMode === 'journal' ? 'bg-teal-100 dark:bg-teal-900' : 'bg-slate-100 dark:bg-slate-800',
           )}>
-            <BookOpen className={cn('w-4 h-4', exportMode === 'journal' ? 'text-teal-600' : 'text-slate-500')} />
+            {canUseJournal
+              ? <BookOpen className={cn('w-4 h-4', exportMode === 'journal' ? 'text-teal-600' : 'text-slate-500')} />
+              : <Lock className="w-4 h-4 text-amber-500" />}
           </div>
-          <div>
-            <p className={cn('text-sm font-bold', exportMode === 'journal' ? 'text-teal-700 dark:text-teal-300' : 'text-slate-800 dark:text-slate-200')}>
-              Journal des ventes
-            </p>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <p className={cn('text-sm font-bold', exportMode === 'journal' ? 'text-teal-700 dark:text-teal-300' : 'text-slate-800 dark:text-slate-200')}>
+                Journal des ventes
+              </p>
+              {!canUseJournal && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-semibold">Pro</span>
+              )}
+            </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Format comptable — HT, TVA, TTC, payé, reste à payer
             </p>
@@ -785,6 +800,14 @@ export default function ExportPage() {
           )}
         </div>
       )}
+
+      <PlanLimitModal
+        open={journalLimitOpen}
+        onClose={() => setJournalLimitOpen(false)}
+        resource="journal"
+        limite={0}
+        actuel={1}
+      />
     </div>
   )
 }
