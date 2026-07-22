@@ -1883,5 +1883,68 @@
     "title": "Complétez votre profil",
     "desc": "Ajoutez votre activité pour qu'elle apparaisse sur vos devis et factures.",
     "cta": "Compléter"
+  },
+  "blog": {
+    "hero": {
+      "badge": "Ressources & Guides",
+      "title": "Guides pratiques pour les",
+      "titleHighlight": "PME marocaines",
+      "sub": "Facturation, CRM, devis et gestion commerciale. Des articles concrets écrits pour les freelancers, auto-entrepreneurs et PME au Maroc.",
+      "articles": "article",
+      "articles_plural": "articles",
+      "updated": "Mis à jour régulièrement"
+    },
+    "categories": {
+      "title": "Parcourez par thème",
+      "sub": "6 catégories couvrant tout ce que vous devez savoir pour gérer votre activité au Maroc.",
+      "comingSoon": "Bientôt",
+      "facturation": {
+        "name": "Facturation",
+        "desc": "Créer, envoyer et gérer vos factures. Mentions obligatoires, modèles PDF et bonnes pratiques.",
+        "keywords": "facture maroc · facture PDF · facturation freelance"
+      },
+      "devis": {
+        "name": "Devis & Bons de livraison",
+        "desc": "Du devis accepté au bon de livraison signé, jusqu'à la facture en un clic.",
+        "keywords": "devis maroc · bon de livraison · modèle devis"
+      },
+      "autoEntrepreneur": {
+        "name": "Auto-Entrepreneur",
+        "desc": "Statut, déclaration, CNSS, plafond et tout ce qu'il faut savoir pour se lancer au Maroc.",
+        "keywords": "auto entrepreneur maroc · CNSS · déclaration"
+      },
+      "tva": {
+        "name": "TVA & Fiscalité",
+        "desc": "Calcul de la TVA, ICE, patente, taxe professionnelle et obligations fiscales marocaines.",
+        "keywords": "calcul TVA maroc · ICE · taxe professionnelle"
+      },
+      "freelance": {
+        "name": "Guides Freelance",
+        "desc": "Tarifs, contrats, facturation et gestion de votre activité en tant que freelance au Maroc.",
+        "keywords": "freelance maroc · tarif · contrat freelance"
+      },
+      "comparatifs": {
+        "name": "Comparatifs & Outils",
+        "desc": "Comparez les logiciels et découvrez les meilleures alternatives à Excel pour les PME.",
+        "keywords": "meilleur logiciel maroc · alternative Excel · logiciel PME"
+      }
+    },
+    "empty": {
+      "title": "Les articles arrivent bientôt",
+      "sub": "Nous préparons des guides pratiques sur la facturation, le CRM et la gestion commerciale pour les PME marocaines. Revenez très prochainement.",
+      "cta": "Retour à l'accueil"
+    },
+    "posts": {
+      "all": "Tous les articles",
+      "read": "Lire l'article",
+      "min": "min"
+    },
+    "cta": {
+      "badge": "🇲🇦 Conçu pour le Maroc",
+      "title": "Essayez Sayerli gratuitement",
+      "sub": "CRM, Devis, Bons de livraison et Facturation en MAD. Sans carte bancaire — opérationnel en 5 minutes.",
+      "primary": "Commencer gratuitement",
+      "secondary": "Voir les fonctionnalités"
+    }
   }
 }

@@ -1882,5 +1882,68 @@
     "title": "Complete your profile",
     "desc": "Add your activity so it appears on your quotes and invoices.",
     "cta": "Complete now"
+  },
+  "blog": {
+    "hero": {
+      "badge": "Resources & Guides",
+      "title": "Practical guides for",
+      "titleHighlight": "Moroccan SMEs",
+      "sub": "Invoicing, CRM, quotes and business management. Concrete articles written for freelancers, self-employed workers, and SMEs in Morocco.",
+      "articles": "article",
+      "articles_plural": "articles",
+      "updated": "Regularly updated"
+    },
+    "categories": {
+      "title": "Browse by topic",
+      "sub": "6 categories covering everything you need to know to manage your business in Morocco.",
+      "comingSoon": "Coming soon",
+      "facturation": {
+        "name": "Invoicing",
+        "desc": "Create, send and manage your invoices. Required fields, PDF templates and best practices.",
+        "keywords": "invoice morocco · PDF invoice · freelance invoicing"
+      },
+      "devis": {
+        "name": "Quotes & Delivery Notes",
+        "desc": "From accepted quote to signed delivery note, all the way to a one-click invoice.",
+        "keywords": "quote morocco · delivery note · quote template"
+      },
+      "autoEntrepreneur": {
+        "name": "Self-Employed",
+        "desc": "Status, declaration, CNSS, thresholds and everything you need to get started in Morocco.",
+        "keywords": "self-employed morocco · CNSS · declaration"
+      },
+      "tva": {
+        "name": "VAT & Taxation",
+        "desc": "VAT calculations, ICE, business license, professional tax and Moroccan tax obligations.",
+        "keywords": "VAT calculation morocco · ICE · professional tax"
+      },
+      "freelance": {
+        "name": "Freelance Guides",
+        "desc": "Rates, contracts, invoicing and managing your freelance business in Morocco.",
+        "keywords": "freelance morocco · rates · freelance contract"
+      },
+      "comparatifs": {
+        "name": "Comparisons & Tools",
+        "desc": "Compare software and discover the best Excel alternatives for SMEs.",
+        "keywords": "best software morocco · Excel alternative · SME software"
+      }
+    },
+    "empty": {
+      "title": "Articles coming soon",
+      "sub": "We are preparing practical guides on invoicing, CRM and business management for Moroccan SMEs. Check back soon.",
+      "cta": "Back to home"
+    },
+    "posts": {
+      "all": "All articles",
+      "read": "Read article",
+      "min": "min"
+    },
+    "cta": {
+      "badge": "🇲🇦 Built for Morocco",
+      "title": "Try Sayerli for free",
+      "sub": "CRM, Quotes, Delivery Notes and Invoicing in MAD. No credit card — ready in 5 minutes.",
+      "primary": "Start for free",
+      "secondary": "See features"
+    }
   }
 }
