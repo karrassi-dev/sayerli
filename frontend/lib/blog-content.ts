@@ -730,6 +730,565 @@ export const ARTICLES: Record<string, ArticleData> = {
     },
   },
 
+  // ── ARTICLE 4 ────────────────────────────────────────────────────────────────
+  'cnss-auto-entrepreneur-maroc': {
+    slug: 'cnss-auto-entrepreneur-maroc',
+    image: '/blog/cnss-auto-entrepreneur-maroc.webp',
+    readingTime: 6,
+    content: {
+
+      // ── FRENCH ──────────────────────────────────────────────────────────────
+      fr: {
+        title: 'CNSS auto-entrepreneur au Maroc : cotisations, couverture sociale et déclarations',
+        description: 'Tout savoir sur la CNSS pour les auto-entrepreneurs au Maroc : taux de cotisation, couverture AMO, retraite, prestations familiales, et comment faire vos déclarations trimestrielles.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Travailler à son compte au Maroc sans couverture sociale, c\'est prendre un risque réel. Un accident, une maladie, quelques semaines sans pouvoir travailler — et sans filet de protection, la situation peut vite devenir critique. C\'est précisément l\'un des problèmes que le régime auto-entrepreneur résout : il donne accès à la CNSS dès le premier dirham de chiffre d\'affaires déclaré.',
+          },
+          {
+            type: 'p',
+            text: 'Pourtant, beaucoup d\'auto-entrepreneurs marocains ne comprennent pas vraiment ce qu\'ils paient ni ce qu\'ils reçoivent en retour. Ce guide répond à toutes ces questions : les taux exacts, ce que couvre la CNSS concrètement, comment déclarer, et les erreurs à éviter.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Pourquoi la CNSS est obligatoire pour les auto-entrepreneurs',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Contrairement aux idées reçues, la CNSS n\'est pas optionnelle pour les auto-entrepreneurs au Maroc. L\'affiliation et les cotisations trimestrielles font partie des obligations légales du régime, au même titre que les déclarations fiscales. En vous inscrivant sur portail.auto-entrepreneur.ma, vous êtes automatiquement affilié à la CNSS.',
+              },
+              {
+                type: 'p',
+                text: 'Cette obligation est en réalité une protection. La CNSS vous ouvre droit à trois types de couverture : l\'assurance maladie obligatoire (AMO), la retraite, et les prestations familiales. Pour un indépendant qui n\'a pas d\'employeur pour le protéger, c\'est un filet de sécurité indispensable.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Si vous êtes déjà salarié',
+                body: 'Si vous cumulez votre activité auto-entrepreneur avec un emploi salarié pour lequel votre employeur cotise déjà à la CNSS, vous n\'êtes pas obligé de doubler vos cotisations. Contactez votre agence CNSS locale pour confirmer votre situation et éviter de payer deux fois.',
+              },
+            ],
+          },
+          {
+            h2: 'Les taux de cotisation CNSS selon votre activité',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Les cotisations CNSS se calculent en pourcentage de votre chiffre d\'affaires déclaré chaque trimestre. Ce mécanisme est pensé pour être proportionnel : vous payez peu quand vous gagnez peu, plus quand votre activité décolle. Voici les taux en vigueur :',
+              },
+              {
+                type: 'table',
+                headers: ['Type d\'activité', 'Taux CNSS sur CA HT déclaré'],
+                rows: [
+                  ['Activités commerciales', '6%'],
+                  ['Activités artisanales', '6%'],
+                  ['Prestations de services', '10,4%'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Exemple concret : vous êtes développeur freelance (prestation de services) et vous déclarez 30 000 MAD de CA au premier trimestre. Votre cotisation CNSS sera de 30 000 × 10,4% = 3 120 MAD pour ce trimestre. Si votre CA est nul, la cotisation est nulle — mais la déclaration reste obligatoire.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Base de calcul : CA encaissé, pas facturé',
+                body: 'Comme pour l\'IR, la base de calcul des cotisations CNSS est le chiffre d\'affaires effectivement encaissé dans le trimestre, pas les factures émises. Une facture envoyée en mars mais payée en avril compte dans le deuxième trimestre.',
+              },
+            ],
+          },
+          {
+            h2: 'Ce que couvre concrètement la CNSS auto-entrepreneur',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Vos cotisations CNSS ne sont pas une taxe perdue — elles alimentent trois branches de protection sociale auxquelles vous avez droit :',
+              },
+              {
+                type: 'table',
+                headers: ['Couverture', 'Ce que ça signifie concrètement'],
+                rows: [
+                  ['AMO — Assurance Maladie Obligatoire', 'Remboursement partiel des soins médicaux, hospitalisations, médicaments, analyses'],
+                  ['Retraite', 'Pension de retraite proportionnelle aux cotisations versées tout au long de votre carrière'],
+                  ['Prestations familiales', 'Allocations familiales pour vos enfants à charge (sous conditions de durée de cotisation)'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'L\'AMO est souvent la couverture la plus immédiatement utile. Elle vous permet de bénéficier du remboursement d\'une partie de vos dépenses de santé auprès de la CNSS ou via les mutuelles conventionnées. Pour en bénéficier, vous devez être à jour de vos cotisations et avoir cotisé un minimum de trimestres.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'AMO : ouverture des droits',
+                body: 'Pour ouvrir vos droits à l\'AMO, vous devez avoir cotisé au moins 54 jours de travail au cours des 6 derniers mois (ou l\'équivalent en trimestres). Une fois les droits ouverts, vous et vos ayants droit (conjoint, enfants) êtes couverts pour les soins.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment déclarer et payer vos cotisations CNSS',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Les déclarations et paiements CNSS se font trimestriellement, en même temps que vos déclarations fiscales auprès de la DGI. Tout se passe sur le même portail : portail.auto-entrepreneur.ma. Le processus est le suivant :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Connectez-vous à portail.auto-entrepreneur.ma avec vos identifiants',
+                  'Accédez à la rubrique "Déclaration trimestrielle"',
+                  'Saisissez le montant total de votre chiffre d\'affaires encaissé sur le trimestre écoulé',
+                  'Le système calcule automatiquement votre cotisation CNSS et votre IR libératoire',
+                  'Procédez au paiement en ligne (carte bancaire, virement, ou paiement en agence CNSS)',
+                  'Conservez votre reçu de paiement — c\'est votre preuve de mise à jour',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Trimestre', 'Période couverte', 'Date limite de déclaration'],
+                rows: [
+                  ['T1', 'Janvier — Mars', '30 avril'],
+                  ['T2', 'Avril — Juin', '31 juillet'],
+                  ['T3', 'Juillet — Septembre', '31 octobre'],
+                  ['T4', 'Octobre — Décembre', '31 janvier (année suivante)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'CA nul = déclaration quand même',
+                body: 'Si vous n\'avez encaissé aucun chiffre d\'affaires sur un trimestre, vous devez quand même soumettre une déclaration à zéro. L\'omission répétée de déclarations peut entraîner des pénalités et la suspension de vos droits à la couverture sociale.',
+              },
+            ],
+          },
+          {
+            h2: 'Que se passe-t-il en cas de retard ou d\'impayé ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Ne pas payer ses cotisations CNSS à temps a des conséquences concrètes, au-delà des simples pénalités :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Pénalités de retard : des majorations s\'appliquent sur les montants dus',
+                  'Suspension des droits AMO : votre couverture maladie peut être suspendue tant que votre situation n\'est pas régularisée',
+                  'Impact sur la retraite : les trimestres non cotisés ne sont pas validés pour le calcul de votre pension',
+                  'Difficultés administratives : certaines démarches (prêts bancaires, renouvellements) nécessitent d\'être à jour CNSS',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Si vous avez des arriérés, il est possible de les régulariser progressivement en contactant votre agence CNSS. Des plans d\'apurement existent pour les auto-entrepreneurs en difficulté passagère.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Suivez votre CA trimestriel avec Sayerli',
+                body: 'Sayerli calcule automatiquement votre chiffre d\'affaires par trimestre à partir de vos factures encaissées. Plus besoin d\'additionner manuellement — vous arrivez à votre déclaration CNSS avec le bon chiffre, du premier coup. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Essayer Sayerli gratuitement',
+              },
+            ],
+          },
+          {
+            h2: 'Conseils pratiques pour bien gérer vos cotisations',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Voici les bonnes pratiques adoptées par les auto-entrepreneurs marocains les mieux organisés :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Provisionnez 10 à 11% de chaque paiement client reçu si vous êtes prestataire de services (10,4% CNSS + 2% IR = ~12,4% au total après la 3e année)',
+                  'Gardez un compte bancaire séparé pour votre activité et virez votre provision CNSS/IR à chaque encaissement',
+                  'Activez les rappels dans votre agenda pour les 4 dates limites trimestrielles',
+                  'Vérifiez chaque année votre relevé de carrière CNSS pour vous assurer que vos trimestres sont bien validés',
+                  'En cas de doute, contactez votre agence CNSS — les agents sont habitués aux questions des auto-entrepreneurs',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli : la gestion sereine de votre activité indépendante',
+                body: 'Dévis, factures, suivi des paiements, tableau de bord CA par trimestre — Sayerli centralise tout ce dont vous avez besoin pour piloter votre activité auto-entrepreneur et préparer vos déclarations sans stress. Gratuit au démarrage.',
+                href: '/fonctionnalites',
+                cta: 'Voir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ─────────────────────────────────────────────────────────────
+      en: {
+        title: 'CNSS for Auto-Entrepreneurs in Morocco: Contributions, Social Coverage and Declarations',
+        description: 'Everything you need to know about CNSS for auto-entrepreneurs in Morocco: contribution rates, AMO health insurance, retirement, family benefits, and how to file your quarterly declarations.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Working independently in Morocco without social coverage is a real risk. An accident, an illness, a few weeks unable to work — without a safety net, the situation can quickly become critical. This is one of the problems the auto-entrepreneur regime specifically solves: it gives you access to CNSS social security from the very first dirham of declared revenue.',
+          },
+          {
+            type: 'p',
+            text: 'Yet many Moroccan auto-entrepreneurs do not really understand what they are paying or what they get in return. This guide answers all those questions: the exact rates, what CNSS actually covers, how to file declarations, and the mistakes to avoid.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Why CNSS is mandatory for auto-entrepreneurs',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Contrary to popular belief, CNSS is not optional for auto-entrepreneurs in Morocco. Affiliation and quarterly contributions are a legal obligation of the regime, just like tax declarations. By registering on portail.auto-entrepreneur.ma, you are automatically affiliated with the CNSS.',
+              },
+              {
+                type: 'p',
+                text: 'This obligation is actually a form of protection. CNSS gives you access to three types of social coverage: mandatory health insurance (AMO), a retirement pension, and family benefits. For a self-employed worker with no employer to protect them, this safety net is essential.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'If you are already a salaried employee',
+                body: 'If you combine your auto-entrepreneur activity with a salaried job for which your employer already contributes to CNSS, you are not required to pay twice. Contact your local CNSS branch to confirm your situation and avoid double payment.',
+              },
+            ],
+          },
+          {
+            h2: 'CNSS contribution rates by activity type',
+            blocks: [
+              {
+                type: 'p',
+                text: 'CNSS contributions are calculated as a percentage of your declared quarterly revenue. This mechanism is designed to be proportional: you pay little when you earn little, more as your activity grows. Here are the current rates:',
+              },
+              {
+                type: 'table',
+                headers: ['Activity type', 'CNSS rate on declared revenue (excl. VAT)'],
+                rows: [
+                  ['Commercial activities', '6%'],
+                  ['Craft activities', '6%'],
+                  ['Service activities', '10.4%'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Concrete example: you are a freelance developer (service activity) and you declare 30,000 MAD in revenue for the first quarter. Your CNSS contribution will be 30,000 × 10.4% = 3,120 MAD for that quarter. If your revenue is zero, the contribution is zero — but the declaration is still mandatory.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Calculation base: collected revenue, not invoiced',
+                body: 'As with income tax, CNSS contributions are calculated on revenue actually collected during the quarter, not on invoices issued. An invoice sent in March but paid in April counts in the second quarter.',
+              },
+            ],
+          },
+          {
+            h2: 'What CNSS actually covers for auto-entrepreneurs',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Your CNSS contributions are not a lost tax — they fund three branches of social protection that you have a right to:',
+              },
+              {
+                type: 'table',
+                headers: ['Coverage', 'What it means in practice'],
+                rows: [
+                  ['AMO — Mandatory Health Insurance', 'Partial reimbursement of medical costs, hospitalizations, medication, lab tests'],
+                  ['Retirement', 'Pension proportional to contributions paid throughout your career'],
+                  ['Family benefits', 'Family allowances for your dependent children (subject to minimum contribution period)'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'AMO is often the most immediately useful coverage. It lets you claim partial reimbursement of healthcare expenses through CNSS or affiliated mutual insurance providers. To benefit, you must be up to date on contributions and have contributed for a minimum number of quarters.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'AMO: how rights are activated',
+                body: 'To activate your AMO rights, you must have contributed for at least 54 working days in the past 6 months (or the quarterly equivalent). Once rights are open, you and your dependants (spouse, children) are covered for healthcare.',
+              },
+            ],
+          },
+          {
+            h2: 'How to declare and pay your CNSS contributions',
+            blocks: [
+              {
+                type: 'p',
+                text: 'CNSS declarations and payments are made quarterly, at the same time as your tax declarations with the DGI. Everything happens on the same portal: portail.auto-entrepreneur.ma. The process is as follows:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Log in to portail.auto-entrepreneur.ma with your credentials',
+                  'Go to the "Quarterly Declaration" section',
+                  'Enter the total revenue collected during the past quarter',
+                  'The system automatically calculates your CNSS contribution and your IR libératoire',
+                  'Pay online (bank card, bank transfer, or in person at a CNSS branch)',
+                  'Keep your payment receipt — it is your proof that you are up to date',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Quarter', 'Period covered', 'Declaration deadline'],
+                rows: [
+                  ['Q1', 'January — March', 'April 30'],
+                  ['Q2', 'April — June', 'July 31'],
+                  ['Q3', 'July — September', 'October 31'],
+                  ['Q4', 'October — December', 'January 31 (following year)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Zero revenue = declaration still required',
+                body: 'If you collected no revenue during a quarter, you must still submit a zero declaration. Repeated missed declarations can result in penalties and suspension of your social coverage rights.',
+              },
+            ],
+          },
+          {
+            h2: 'What happens if you are late or do not pay?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Failing to pay CNSS contributions on time has real consequences beyond simple late fees:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Late penalties: surcharges apply to the amounts owed',
+                  'AMO suspension: your health coverage can be suspended until your situation is regularized',
+                  'Impact on retirement: quarters without contributions are not validated for pension calculation',
+                  'Administrative difficulties: some processes (bank loans, renewals) require proof of CNSS compliance',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'If you have arrears, it is possible to regularize them gradually by contacting your CNSS branch. Payment plans exist for auto-entrepreneurs going through a temporary difficult period.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Track your quarterly revenue with Sayerli',
+                body: 'Sayerli automatically calculates your revenue by quarter from your collected invoices. No more manual additions — you arrive at your CNSS declaration with the right figure, first time. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'Try Sayerli for free',
+              },
+            ],
+          },
+          {
+            h2: 'Practical tips for managing your contributions well',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Set aside 10 to 11% of every client payment received if you are a service provider (10.4% CNSS + 2% IR = ~12.4% total after year 3)',
+                  'Keep a separate bank account for your activity and transfer your CNSS/IR provision with each payment received',
+                  'Set calendar reminders for all 4 quarterly deadlines',
+                  'Check your CNSS career statement each year to confirm your quarters are properly validated',
+                  'When in doubt, contact your CNSS branch — agents are used to auto-entrepreneur questions',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli: stress-free management of your independent activity',
+                body: 'Quotes, invoices, payment tracking, quarterly revenue dashboard — Sayerli centralizes everything you need to run your auto-entrepreneur activity and prepare your declarations without hassle. Free to start.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ──────────────────────────────────────────────────────────────
+      ar: {
+        title: 'الصندوق الوطني للضمان الاجتماعي للمقاول الذاتي بالمغرب: الاشتراكات والتغطية والتصريحات',
+        description: 'كل ما تحتاج معرفته عن الصندوق الوطني للضمان الاجتماعي للمقاولين الذاتيين بالمغرب: نسب الاشتراك، التأمين الصحي الإلزامي، التقاعد، التعويضات العائلية، وكيفية إنجاز تصريحاتك الفصلية.',
+        intro: [
+          {
+            type: 'p',
+            text: 'العمل المستقل بالمغرب دون تغطية اجتماعية مجازفة حقيقية. حادثة، مرض، أسابيع من العجز عن العمل — وبدون شبكة حماية، قد يتحول الوضع إلى أزمة بسرعة. هذا تحديداً ما يحله نظام المقاول الذاتي: فهو يمنحك حق الانخراط في الصندوق الوطني للضمان الاجتماعي منذ أول درهم من رقم الأعمال المصرَّح به.',
+          },
+          {
+            type: 'p',
+            text: 'غير أن كثيراً من المقاولين الذاتيين المغاربة لا يفهمون حقاً ما يدفعونه ولا ما يحصلون عليه في المقابل. هذا الدليل يجيب عن جميع هذه الأسئلة: النسب الدقيقة، ما تشمله التغطية فعلياً، كيفية التصريح، والأخطاء الواجب تجنبها.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'لماذا الانخراط في الصندوق الوطني للضمان الاجتماعي إلزامي للمقاولين الذاتيين',
+            blocks: [
+              {
+                type: 'p',
+                text: 'خلافاً للاعتقاد الشائع، لا يُعدّ الانخراط في الصندوق الوطني للضمان الاجتماعي اختيارياً للمقاولين الذاتيين بالمغرب. الانخراط والاشتراكات الفصلية التزام قانوني ضمن النظام، شأنه شأن التصريحات الضريبية. بمجرد تسجيلك على بوابة portail.auto-entrepreneur.ma، تُنخرط تلقائياً في الصندوق الوطني للضمان الاجتماعي.',
+              },
+              {
+                type: 'p',
+                text: 'هذا الالتزام هو في حقيقته حماية. يمنحك الصندوق الوطني للضمان الاجتماعي الحق في ثلاثة أنواع من التغطية الاجتماعية: التأمين الصحي الإلزامي، التقاعد، والتعويضات العائلية. لمستقل لا يوجد صاحب عمل يحميه، هذا الأمان الاجتماعي لا غنى عنه.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'إذا كنت أجيراً في نفس الوقت',
+                body: 'إذا كنت تجمع بين نشاطك كمقاول ذاتي وعمل مأجور يؤدي فيه صاحب العمل اشتراكات الصندوق الوطني للضمان الاجتماعي عنك، فلست ملزماً بالازدواج في الاشتراكات. تواصل مع وكالة الصندوق المحلية لتأكيد وضعك وتجنب الدفع مرتين.',
+              },
+            ],
+          },
+          {
+            h2: 'نسب اشتراكات الصندوق الوطني للضمان الاجتماعي حسب نوع النشاط',
+            blocks: [
+              {
+                type: 'p',
+                text: 'تُحسب اشتراكات الصندوق الوطني للضمان الاجتماعي بنسبة مئوية من رقم أعمالك المصرَّح به كل فصل. هذه الآلية مُصمَّمة لتكون تناسبية: تدفع القليل حين تكسب القليل، وأكثر كلما توسّع نشاطك. إليك النسب المعمول بها:',
+              },
+              {
+                type: 'table',
+                headers: ['نوع النشاط', 'نسبة الاشتراك في الصندوق على رقم الأعمال المصرَّح به'],
+                rows: [
+                  ['الأنشطة التجارية', '6%'],
+                  ['الأنشطة الحرفية', '6%'],
+                  ['تقديم الخدمات', '10.4%'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'مثال عملي: أنت مطور مستقل (تقديم خدمات) وتُصرّح بـ 30,000 درهم من رقم الأعمال في الربع الأول. اشتراكك في الصندوق الوطني للضمان الاجتماعي سيكون: 30,000 × 10.4% = 3,120 درهم لذلك الربع. إذا كان رقم أعمالك صفراً، يكون الاشتراك صفراً — لكن التصريح يبقى إلزامياً.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'أساس الحساب: رقم الأعمال المحصَّل لا المُفوتَر',
+                body: 'كما هو الحال مع الضريبة على الدخل، يُحسب اشتراك الصندوق الوطني للضمان الاجتماعي على أساس رقم الأعمال المحصَّل فعلاً خلال الفصل، لا على الفواتير المُصدَرة. فاتورة أُرسلت في مارس لكن سُدِّدت في أبريل تُحسب في الربع الثاني.',
+              },
+            ],
+          },
+          {
+            h2: 'ما تشمله تغطية الصندوق الوطني للضمان الاجتماعي للمقاول الذاتي فعلياً',
+            blocks: [
+              {
+                type: 'p',
+                text: 'اشتراكاتك في الصندوق الوطني للضمان الاجتماعي ليست ضريبة مفقودة — بل تُموِّل ثلاثة فروع من الحماية الاجتماعية التي تحق لك:',
+              },
+              {
+                type: 'table',
+                headers: ['التغطية', 'ما تعنيه فعلياً'],
+                rows: [
+                  ['التأمين الصحي الإلزامي (AMO)', 'استرداد جزئي لتكاليف الرعاية الطبية والاستشفاء والأدوية والتحاليل'],
+                  ['التقاعد', 'معاش تقاعدي متناسب مع الاشتراكات المؤداة طوال مسيرتك المهنية'],
+                  ['التعويضات العائلية', 'تعويضات عائلية لأطفالك المعالين (بشرط مدة اشتراك أدنى)'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'التأمين الصحي الإلزامي هو في الغالب التغطية الأكثر فائدة على المدى القريب. يتيح لك استرداد جزء من نفقات الرعاية الصحية لدى الصندوق أو المؤسسات التكميلية المتعاقدة معه. للاستفادة منه يجب أن تكون في وضعية منتظمة من حيث الاشتراكات وأن تكون قد اشتركت عدداً أدنى من الأرباع.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'فتح حقوق التأمين الصحي الإلزامي',
+                body: 'لفتح حقوقك في التأمين الصحي الإلزامي، يجب أن تكون قد اشتركت ما لا يقل عن 54 يوم عمل خلال الأشهر الستة الأخيرة (أو ما يعادلها من الأرباع). بمجرد فتح هذه الحقوق، أنت ومن تعولهم (الزوج/الزوجة، الأطفال) مشمولون بالتغطية الصحية.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية التصريح وأداء اشتراكاتك في الصندوق',
+            blocks: [
+              {
+                type: 'p',
+                text: 'تُنجز تصريحات وأداءات الصندوق الوطني للضمان الاجتماعي فصلياً، في نفس وقت تصريحاتك الضريبية لدى المديرية العامة للضرائب. كل شيء يتم على نفس البوابة: portail.auto-entrepreneur.ma. وإليك مسار الإجراء:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'سجّل الدخول إلى portail.auto-entrepreneur.ma ببيانات حسابك',
+                  'توجّه إلى خانة "التصريح الفصلي"',
+                  'أدخل المبلغ الإجمالي لرقم الأعمال المحصَّل خلال الربع المنقضي',
+                  'يحسب النظام تلقائياً اشتراكك في الصندوق والضريبة على الدخل الجزافية',
+                  'أدِّ الاشتراك إلكترونياً (بطاقة بنكية، تحويل، أو حضورياً في وكالة الصندوق)',
+                  'احتفظ بوصل الأداء — فهو دليلك على أنك في وضعية انتظام',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['الربع', 'الفترة المشمولة', 'الموعد الأقصى للتصريح'],
+                rows: [
+                  ['الربع الأول', 'يناير — مارس', '30 أبريل'],
+                  ['الربع الثاني', 'أبريل — يونيو', '31 يوليوز'],
+                  ['الربع الثالث', 'يوليوز — شتنبر', '31 أكتوبر'],
+                  ['الربع الرابع', 'أكتوبر — دجنبر', '31 يناير (السنة التالية)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'رقم أعمال صفر = تصريح إلزامي على أي حال',
+                body: 'إذا لم تحصّل أي رقم أعمال خلال ربع ما، يجب عليك رغم ذلك تقديم تصريح بصفر. تكرار إغفال التصريحات قد يُفضي إلى غرامات وتعليق حقوقك في التغطية الاجتماعية.',
+              },
+            ],
+          },
+          {
+            h2: 'ماذا يحدث في حالة التأخر أو عدم الأداء؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'عدم أداء اشتراكات الصندوق في الوقت المحدد له تداعيات ملموسة تتجاوز مجرد الغرامات:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'غرامات التأخير: زيادات تُطبَّق على المبالغ المستحقة',
+                  'تعليق التأمين الصحي الإلزامي: قد تُوقَف تغطيتك الصحية إلى حين تسوية وضعيتك',
+                  'تأثير على التقاعد: الأرباع غير المؤدى عنها لا تُحتسب في حساب معاشك',
+                  'عراقيل إدارية: بعض الإجراءات (القروض البنكية، التجديدات) تشترط انتظام الوضعية لدى الصندوق',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'في حال وجود متأخرات، يمكن تسويتها تدريجياً بالتواصل مع وكالة الصندوق الوطني للضمان الاجتماعي. تتوفر خطط تقسيط للمقاولين الذاتيين الذين يمرون بصعوبات مؤقتة.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'تتبّع رقم أعمالك الفصلي مع Sayerli',
+                body: 'يحسب Sayerli تلقائياً رقم أعمالك حسب كل ربع انطلاقاً من فواتيرك المحصَّلة. لا حاجة لأي جمع يدوي — ستصل إلى تصريحك لدى الصندوق بالرقم الصحيح من المرة الأولى. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'جرّب Sayerli مجاناً',
+              },
+            ],
+          },
+          {
+            h2: 'نصائح عملية لإدارة اشتراكاتك بشكل جيد',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'خصّص 10 إلى 11% من كل مدفوعات العملاء إذا كنت مقدّم خدمات (10.4% للصندوق + 2% ضريبة على الدخل = ~12.4% إجمالاً بعد السنة الثالثة)',
+                  'احتفظ بحساب بنكي منفصل لنشاطك وحوّل مخصص الصندوق والضريبة عند كل تحصيل',
+                  'فعّل التذكيرات في مفكرتك للمواعيد الأربعة الفصلية',
+                  'راجع بيان مسيرتك المهنية لدى الصندوق الوطني للضمان الاجتماعي كل سنة للتحقق من أن أربعك مُعتمَدة',
+                  'في حال الشك، تواصل مع وكالة الصندوق — الموظفون معتادون على أسئلة المقاولين الذاتيين',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli: التسيير الهادئ لنشاطك المستقل',
+                body: 'عروض أسعار، فواتير، تتبع المدفوعات، لوحة قيادة رقم الأعمال الفصلي — Sayerli يجمع كل ما تحتاجه لإدارة نشاطك كمقاول ذاتي وتحضير تصريحاتك بدون توتر. مجاني للبدء.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
   // ── ARTICLE 3 ────────────────────────────────────────────────────────────────
   'inscription-auto-entrepreneur-maroc': {
     slug: 'inscription-auto-entrepreneur-maroc',
