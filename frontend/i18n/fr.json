@@ -33,11 +33,15 @@
     },
     "devis": {
       "title": "Devis professionnels",
-      "desc": "Créez et envoyez des devis en quelques minutes. Suivez leur statut en temps réel."
+      "desc": "Créez et envoyez des devis en quelques minutes en MAD, EUR ou USD. Acceptation en ligne via WhatsApp."
+    },
+    "bonsLivraison": {
+      "title": "Bons de livraison",
+      "desc": "Générez les BL depuis vos devis acceptés. Faites-les signer, marquez-les livrés et convertissez en facture en un clic."
     },
     "factures": {
       "title": "Factures automatiques",
-      "desc": "Convertissez vos devis acceptés en factures. Numérotation automatique conforme."
+      "desc": "Convertissez un BL ou un devis en facture. Remise, acomptes, paiements partiels — tout est géré."
     },
     "paiements": {
       "title": "Suivi des paiements",
@@ -369,10 +373,10 @@
   "dashboardShowcase": {
     "badge": "Produit en action",
     "title": "Voyez Sayerli travailler pour vous",
-    "sub": "Un tableau de bord pensé pour les entrepreneurs marocains. Simple, rapide, et toujours à portée de main.",
+    "sub": "Cinq modules intégrés, un seul endroit. Vos devis, BL, factures et paiements en temps réel.",
     "tableHeaders": {
-      "name": "Nom",
-      "company": "Entreprise",
+      "name": "Référence / Nom",
+      "company": "Client",
       "amount": "Montant",
       "status": "Statut"
     },
@@ -386,40 +390,50 @@
       "payee": "Payée",
       "partielle": "Partielle",
       "enRetard": "En retard",
-      "envoyee": "Envoyée"
+      "envoyee": "Envoyée",
+      "livre": "Livré",
+      "facture": "Facturé"
     },
     "tabs": {
       "clients": {
-        "label": "Gestion Clients",
+        "label": "Clients",
         "headline": "Tous vos clients, en un coup d'œil",
-        "desc": "Consultez l'historique complet de chaque client, ses devis, factures et paiements. Ajoutez des notes, filtrez par statut, et relancez en un clic.",
-        "point1": "Fiche client complète",
-        "point2": "Historique des transactions",
-        "point3": "Relance automatique"
+        "desc": "Gérez vos clients ENTREPRISE, FREELANCE et PARTICULIER avec ICE, IF Fiscal et historique complet. Portail client intégré pour acceptation en ligne.",
+        "point1": "Fiche client avec ICE / IF Fiscal",
+        "point2": "Historique devis, BL et factures",
+        "point3": "Portail client — lien unique sécurisé"
       },
       "devis": {
         "label": "Devis",
         "headline": "Des devis professionnels en 2 minutes",
-        "desc": "Créez, envoyez et suivez vos devis avec un lien de partage unique. Le client accepte en ligne — vous recevez une notification instantanée.",
-        "point1": "Numérotation automatique",
-        "point2": "Lien public de signature",
-        "point3": "Conversion en facture"
+        "desc": "Rédigez en MAD, EUR ou USD. Envoyez le lien par WhatsApp ou email — votre client accepte directement depuis son téléphone, sans compte.",
+        "point1": "Multi-devises MAD / EUR / USD",
+        "point2": "Lien public WhatsApp & email",
+        "point3": "Catalogue de services intégré"
+      },
+      "bonsLivraison": {
+        "label": "Bons de livraison",
+        "headline": "Du devis au BL en un clic",
+        "desc": "Générez le bon de livraison depuis un devis accepté. Envoyez-le, marquez-le livré, puis convertissez-le en facture — lignes, prix et devise reportés automatiquement.",
+        "point1": "Généré depuis le devis accepté",
+        "point2": "WhatsApp & email de livraison",
+        "point3": "Conversion BL → Facture en 1 clic"
       },
       "factures": {
         "label": "Factures",
         "headline": "Facturation rapide, paiements suivis",
-        "desc": "Générez des factures conformes en un clic depuis vos devis acceptés. Suivez les paiements, les retards et votre trésorerie en temps réel.",
-        "point1": "Conforme à la législation",
-        "point2": "Paiement partiel/total supporté",
-        "point3": "Alertes retards automatiques"
+        "desc": "Convertissez un BL ou un devis en facture. Suivez les paiements partiels, les retards et votre trésorerie. Journal des ventes prêt pour votre comptable.",
+        "point1": "Depuis un BL ou un devis accepté",
+        "point2": "Paiement partiel / acompte supporté",
+        "point3": "Journal des ventes (Pro & Business)"
       },
       "analytics": {
         "label": "Analytiques",
         "headline": "Pilotez votre croissance avec les données",
-        "desc": "Tableau de bord financier en temps réel. Visualisez votre CA mensuel, vos clients actifs, vos devis acceptés et vos factures impayées.",
-        "point1": "CA mensuel et annuel",
-        "point2": "Taux de conversion devis",
-        "point3": "Clients les plus rentables"
+        "desc": "Tableau de bord financier en temps réel. CA mensuel, taux de recouvrement, top 5 clients, factures en retard — tout en un seul écran.",
+        "point1": "CA mensuel et taux de recouvrement",
+        "point2": "Top 5 clients par CA facturé",
+        "point3": "Factures en retard avec relance directe"
       }
     }
   },
@@ -454,31 +468,31 @@
   },
   "workflow": {
     "badge": "Workflow complet",
-    "title": "Du client au paiement, en un seul flux",
-    "sub": "Sayerli accompagne chaque étape de votre processus commercial, de la prospection à l'encaissement.",
+    "title": "Devis → BL → Facture → Encaissé",
+    "sub": "Le vrai parcours de vos transactions, sans ressaisie. Sayerli relie chaque étape automatiquement.",
     "step1": {
       "title": "Créer le client",
-      "desc": "Ajoutez les coordonnées du client en 30 secondes. Nom, email, téléphone, entreprise."
+      "desc": "Ajoutez ICE, IF Fiscal, type (ENTREPRISE / FREELANCE / PARTICULIER) et les coordonnées en 30 secondes."
     },
     "step2": {
-      "title": "Créer le devis",
-      "desc": "Rédigez votre devis avec les lignes de services, les quantités et les prix. Aperçu en temps réel."
+      "title": "Envoyer le devis",
+      "desc": "Rédigez en MAD/EUR/USD. Partagez par WhatsApp ou email — lien public, sans compte client requis."
     },
     "step3": {
-      "title": "Client accepte",
-      "desc": "Envoyez un lien public. Le client visualise et accepte en ligne. Notification instantanée."
+      "title": "Client accepte en ligne",
+      "desc": "Le client clique sur Accepter depuis son téléphone. Vous recevez une notification instantanée."
     },
     "step4": {
-      "title": "Générer la facture",
-      "desc": "Convertissez le devis accepté en facture en un clic. Numérotation et mise en page automatiques."
+      "title": "Bon de livraison",
+      "desc": "Générez le BL depuis le devis accepté. Envoyez-le, marquez-le livré. Le client peut confirmer depuis son portail."
     },
     "step5": {
-      "title": "Recevoir le paiement",
-      "desc": "Enregistrez le paiement (cash, virement, carte). Facture marquée payée automatiquement."
+      "title": "Convertir en facture",
+      "desc": "Un clic depuis le BL livré. Lignes, prix et devise reportés automatiquement. Numérotation séquentielle."
     },
     "step6": {
-      "title": "Suivre les revenus",
-      "desc": "Visualisez votre chiffre d'affaires, vos tendances et vos meilleurs clients en temps réel."
+      "title": "Encaisser & analyser",
+      "desc": "Enregistrez le paiement. Relances auto si retard. Journal des ventes prêt pour votre comptable."
     }
   },
   "analytics": {
@@ -544,12 +558,13 @@
     "recommended": "Recommandé",
     "features": [
       "CRM clients (ICE, IF Fiscal)",
-      "Devis professionnels",
+      "Devis professionnels multi-devises",
+      "Bons de livraison (BL → Facture)",
       "Factures + reçu de paiement PDF",
       "Suivi paiements (partiel, acompte)",
       "Tableau de bord analytics temps réel",
       "Relances automatiques (email)",
-      "Multi-utilisateurs",
+      "Multi-utilisateurs & rôles",
       "Catalogue de produits / services",
       "Portail client (acceptation en ligne)",
       "Notifications & rappels",
@@ -576,12 +591,12 @@
       "detail3": "Historique des relances"
     },
     "item2": {
-      "title": "Génération de factures",
-      "desc": "Dès qu'un devis est accepté, Sayerli peut créer automatiquement la facture correspondante. Numérotation, mise en page, totaux — tout est géré.",
-      "tag": "Facturation",
-      "detail1": "Conversion devis → facture",
-      "detail2": "Numérotation séquentielle",
-      "detail3": "PDF téléchargeable"
+      "title": "Bon de livraison → Facture en 1 clic",
+      "desc": "Créez le bon de livraison depuis le devis accepté. Marquez-le livré. Convertissez-le en facture : lignes, prix et devise sont reportés automatiquement. Zéro ressaisie.",
+      "tag": "BL → Facture",
+      "detail1": "BL généré depuis devis accepté",
+      "detail2": "Conversion BL → facture 1 clic",
+      "detail3": "Lignes & devise portées auto"
     },
     "item3": {
       "title": "Suivi des paiements",

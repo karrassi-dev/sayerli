@@ -14,9 +14,9 @@ import { TrustSecurity } from '@/components/landing/TrustSecurity'
 import { FinalCta } from '@/components/landing/FinalCta'
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Fonctionnalités | Sayerli',
+  title: 'Fonctionnalités | Devis, Bons de livraison, Factures — Sayerli',
   description:
-    'Découvrez toutes les fonctionnalités de Sayerli : tableau de bord, devis, factures, CRM clients, suivi des paiements, automatisation et sécurité — tout ce dont votre PME marocaine a besoin.',
+    'Tout le workflow commercial en un seul outil : devis professionnels, bons de livraison, factures automatiques, suivi des paiements, portail client et journal des ventes. Conçu pour les PME marocaines.',
   path: '/fonctionnalites',
 })
 

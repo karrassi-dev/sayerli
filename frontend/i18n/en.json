@@ -33,11 +33,15 @@
     },
     "devis": {
       "title": "Professional Quotes",
-      "desc": "Create and send quotes in minutes. Track their status in real time."
+      "desc": "Create and send quotes in minutes in MAD, EUR or USD. Online acceptance via WhatsApp link."
+    },
+    "bonsLivraison": {
+      "title": "Delivery Notes",
+      "desc": "Generate delivery notes from accepted quotes. Get them signed, mark as delivered, convert to invoice in one click."
     },
     "factures": {
       "title": "Automatic Invoices",
-      "desc": "Convert accepted quotes into invoices instantly. Auto-numbered and compliant."
+      "desc": "Convert a delivery note or accepted quote into an invoice. Discounts, deposits, partial payments — all handled."
     },
     "paiements": {
       "title": "Payment Tracking",
@@ -369,10 +373,10 @@
   "dashboardShowcase": {
     "badge": "Product in Action",
     "title": "See Sayerli Working for You",
-    "sub": "A dashboard built for Moroccan entrepreneurs. Simple, fast, and always at hand.",
+    "sub": "Five integrated modules, one place. Your quotes, delivery notes, invoices and payments in real time.",
     "tableHeaders": {
-      "name": "Name",
-      "company": "Company",
+      "name": "Reference / Name",
+      "company": "Client",
       "amount": "Amount",
       "status": "Status"
     },
@@ -386,40 +390,50 @@
       "payee": "Paid",
       "partielle": "Partial",
       "enRetard": "Overdue",
-      "envoyee": "Sent"
+      "envoyee": "Sent",
+      "livre": "Delivered",
+      "facture": "Invoiced"
     },
     "tabs": {
       "clients": {
-        "label": "Client Management",
+        "label": "Clients",
         "headline": "All your clients, at a glance",
-        "desc": "View each client's full history — quotes, invoices, and payments. Add notes, filter by status, and follow up with one click.",
-        "point1": "Complete client profile",
-        "point2": "Full transaction history",
-        "point3": "Automatic follow-up"
+        "desc": "Manage COMPANY, FREELANCE and INDIVIDUAL clients with ICE, tax ID and full history. Integrated client portal for online acceptance.",
+        "point1": "Client profile with ICE / tax ID",
+        "point2": "Full quote, DN and invoice history",
+        "point3": "Client portal — unique secure link"
       },
       "devis": {
         "label": "Quotes",
         "headline": "Professional quotes in 2 minutes",
-        "desc": "Create, send, and track your quotes with a unique sharing link. The client accepts online — you get an instant notification.",
-        "point1": "Auto-numbering",
-        "point2": "Public signing link",
-        "point3": "Convert to invoice"
+        "desc": "Write in MAD, EUR or USD. Send the link by WhatsApp or email — your client accepts directly from their phone, no account needed.",
+        "point1": "Multi-currency MAD / EUR / USD",
+        "point2": "Public WhatsApp & email link",
+        "point3": "Integrated service catalogue"
+      },
+      "bonsLivraison": {
+        "label": "Delivery Notes",
+        "headline": "From quote to delivery note in one click",
+        "desc": "Generate the delivery note from an accepted quote. Send it, mark as delivered, then convert to invoice — lines, prices and currency carried over automatically.",
+        "point1": "Generated from accepted quote",
+        "point2": "WhatsApp & email delivery",
+        "point3": "Convert DN → Invoice in 1 click"
       },
       "factures": {
         "label": "Invoices",
         "headline": "Fast invoicing, tracked payments",
-        "desc": "Generate compliant invoices in one click from your accepted quotes. Track payments, delays, and cash flow in real time.",
-        "point1": "Legally compliant",
-        "point2": "Partial/full payment support",
-        "point3": "Automatic overdue alerts"
+        "desc": "Convert a delivery note or accepted quote into an invoice. Track partial payments, delays and cash flow. Sales journal ready for your accountant.",
+        "point1": "From a DN or accepted quote",
+        "point2": "Partial payment / deposit supported",
+        "point3": "Sales journal (Pro & Business)"
       },
       "analytics": {
         "label": "Analytics",
         "headline": "Drive growth with data",
-        "desc": "Real-time financial dashboard. Visualize your monthly revenue, active clients, accepted quotes, and unpaid invoices.",
-        "point1": "Monthly and annual revenue",
-        "point2": "Quote conversion rate",
-        "point3": "Most profitable clients"
+        "desc": "Real-time financial dashboard. Monthly revenue, recovery rate, top 5 clients, overdue invoices — all in one screen.",
+        "point1": "Monthly revenue and recovery rate",
+        "point2": "Top 5 clients by billed revenue",
+        "point3": "Overdue invoices with direct follow-up"
       }
     }
   },
@@ -454,31 +468,31 @@
   },
   "workflow": {
     "badge": "Complete Workflow",
-    "title": "From client to payment, in one flow",
-    "sub": "Sayerli guides every step of your commercial process, from prospecting to collection.",
+    "title": "Quote → DN → Invoice → Paid",
+    "sub": "The real flow of your transactions, with zero re-entry. Sayerli links every step automatically.",
     "step1": {
       "title": "Create the Client",
-      "desc": "Add client details in 30 seconds. Name, email, phone, company."
+      "desc": "Add ICE, tax ID, type (COMPANY / FREELANCE / INDIVIDUAL) and contact details in 30 seconds."
     },
     "step2": {
-      "title": "Create the Quote",
-      "desc": "Write your quote with service lines, quantities, and prices. Real-time preview."
+      "title": "Send the Quote",
+      "desc": "Write in MAD/EUR/USD. Share by WhatsApp or email — public link, no client account needed."
     },
     "step3": {
-      "title": "Client Accepts",
-      "desc": "Send a public link. The client views and accepts online. Instant notification."
+      "title": "Client Accepts Online",
+      "desc": "The client clicks Accept from their phone. You get an instant notification."
     },
     "step4": {
-      "title": "Generate the Invoice",
-      "desc": "Convert the accepted quote to an invoice in one click. Auto-numbering and layout."
+      "title": "Delivery Note",
+      "desc": "Generate the DN from the accepted quote. Send it, mark as delivered. Client can confirm from their portal."
     },
     "step5": {
-      "title": "Receive Payment",
-      "desc": "Record the payment (cash, transfer, card). Invoice marked paid automatically."
+      "title": "Convert to Invoice",
+      "desc": "One click from the delivered DN. Lines, prices and currency carried over automatically. Sequential numbering."
     },
     "step6": {
-      "title": "Track Revenue",
-      "desc": "Visualize your revenue, trends, and top clients in real time."
+      "title": "Collect & Analyse",
+      "desc": "Record the payment. Auto-reminders if overdue. Sales journal ready for your accountant."
     }
   },
   "analytics": {
@@ -543,13 +557,14 @@
     },
     "recommended": "Recommended",
     "features": [
-      "Client CRM (tax ID fields)",
-      "Professional quotes",
+      "Client CRM (ICE, tax ID)",
+      "Professional multi-currency quotes",
+      "Delivery notes (DN → Invoice)",
       "Invoices + payment receipt PDF",
       "Payment tracking (partial, deposit)",
       "Real-time analytics dashboard",
       "Automatic follow-ups (email)",
-      "Multi-user",
+      "Multi-user & roles",
       "Product / service catalogue",
       "Client portal (online acceptance)",
       "Notifications & reminders",
@@ -576,12 +591,12 @@
       "detail3": "Follow-up history"
     },
     "item2": {
-      "title": "Invoice Generation",
-      "desc": "When a quote is accepted, Sayerli can automatically create the corresponding invoice. Numbering, layout, totals — all handled.",
-      "tag": "Invoicing",
-      "detail1": "Quote → Invoice conversion",
-      "detail2": "Sequential numbering",
-      "detail3": "Downloadable PDF"
+      "title": "Delivery Note → Invoice in 1 Click",
+      "desc": "Create the delivery note from the accepted quote. Mark it delivered. Convert to invoice — lines, prices and currency carried over automatically. Zero re-entry.",
+      "tag": "DN → Invoice",
+      "detail1": "DN generated from accepted quote",
+      "detail2": "DN → Invoice conversion 1 click",
+      "detail3": "Lines & currency auto-carried"
     },
     "item3": {
       "title": "Payment Tracking",

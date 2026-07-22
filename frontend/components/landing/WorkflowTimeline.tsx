@@ -1,11 +1,11 @@
 'use client'
 
-import { UserPlus, FileText, ThumbsUp, Receipt, CreditCard, BarChart3 } from 'lucide-react'
+import { UserPlus, FileText, ThumbsUp, Truck, Receipt, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { useTranslation } from '@/hooks/useTranslation'
 
-const ICONS = [UserPlus, FileText, ThumbsUp, Receipt, CreditCard, BarChart3]
+const ICONS = [UserPlus, FileText, ThumbsUp, Truck, Receipt, BarChart3]
 const COLORS = [
   'from-blue-500 to-primary-600',
   'from-teal-500 to-emerald-600',
