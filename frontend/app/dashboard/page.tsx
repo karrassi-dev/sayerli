@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle } from 'lucide-react'
+import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle, Truck } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -23,11 +23,12 @@ import { canDo } from '@/lib/permissions'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const QUICK_ACTIONS: { href: string; icon: string; labelKey: string; color: string; permission: PermissionKey }[] = [
-  { href: '/dashboard/devis?action=create',    icon: '📄', labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950', permission: 'devis.create' },
-  { href: '/dashboard/factures?action=create', icon: '🧾', labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950',                 permission: 'factures.create' },
-  { href: '/dashboard/clients?action=create',  icon: '👤', labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950',       permission: 'clients.create' },
-  { href: '/dashboard/paiements?action=create',icon: '💰', labelKey: 'dashboard.payments',   color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950',       permission: 'paiements.create' },
+const QUICK_ACTIONS: { href: string; icon: React.ElementType; labelKey: string; color: string; permission: PermissionKey }[] = [
+  { href: '/dashboard/devis?action=create',          icon: Receipt,  labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950', permission: 'devis.create' },
+  { href: '/dashboard/factures?action=create',       icon: CreditCard, labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950',             permission: 'factures.create' },
+  { href: '/dashboard/bons-livraison?action=create', icon: Truck,    labelKey: 'dashboard.newBL',      color: 'bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-950',               permission: 'bons-livraison.manage' },
+  { href: '/dashboard/clients?action=create',        icon: Users,    labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950',   permission: 'clients.create' },
+  { href: '/dashboard/paiements?action=create',      icon: CreditCard, labelKey: 'dashboard.payments', color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950',  permission: 'paiements.create' },
 ]
 
 const ACTIVITY_COLORS: Record<string, string> = {
@@ -73,18 +74,18 @@ interface DashboardAnalytics {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatRelativeTime(dateStr: string): string {
+function formatRelativeTime(dateStr: string, t: (k: string) => string): string {
   const now = new Date()
   const d   = new Date(dateStr)
   const ms  = now.getTime() - d.getTime()
   const min = Math.floor(ms / 60000)
   const hr  = Math.floor(ms / 3600000)
   const day = Math.floor(ms / 86400000)
-  if (min < 2)  return "À l'instant"
-  if (min < 60) return `il y a ${min}min`
-  if (hr  < 24) return `il y a ${hr}h`
-  if (day === 1) return 'Hier'
-  if (day < 7)  return `Il y a ${day}j`
+  if (min < 2)   return t('dashboard.instant')
+  if (min < 60)  return t('dashboard.minutesAgo').replace('{min}', String(min))
+  if (hr  < 24)  return t('dashboard.hoursAgo').replace('{h}', String(hr))
+  if (day === 1) return t('dashboard.yesterday')
+  if (day < 7)   return t('dashboard.daysAgo').replace('{j}', String(day))
   return d.toLocaleDateString('fr-MA', { day: '2-digit', month: 'short' })
 }
 
@@ -134,8 +135,7 @@ export default function DashboardPage() {
     ['freelancer', 'auto-entrepreneur'].includes(entreprise.typeCompte ?? '') &&
     !entreprise.activite
 
-  const currentYear       = new Date().getFullYear()
-  const currentMonthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+  const currentYear = new Date().getFullYear()
 
   useEffect(() => {
     setLoading(true)
@@ -297,7 +297,7 @@ export default function DashboardPage() {
       {analytics && analytics.parDevise.length > 1 && (
         <div className="card rounded-2xl p-4 sm:p-5">
           <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
-            Répartition par devise
+            {t('dashboard.devisesTitle')}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {analytics.parDevise.map(d => (
@@ -305,15 +305,15 @@ export default function DashboardPage() {
                 <span className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase">{d.devise}</span>
                 <div className="mt-1.5 space-y-0.5">
                   <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
-                    <span>CA total</span>
+                    <span>{t('dashboard.caTotal')}</span>
                     <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(d.caTotal, d.devise)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
-                    <span>Payé</span>
+                    <span>{t('dashboard.paye')}</span>
                     <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatCurrency(d.caPaye, d.devise)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
-                    <span>En attente</span>
+                    <span>{t('dashboard.enAttente')}</span>
                     <span className="font-semibold text-amber-600 dark:text-amber-400">{formatCurrency(d.caEnAttente, d.devise)}</span>
                   </div>
                 </div>
@@ -330,7 +330,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 card rounded-2xl p-5">
           <CardHeader
             title={t('dashboard.revenueChart')}
-            sub={`${currentYear} — En MAD`}
+            sub={t('dashboard.revenueChartSub').replace('{year}', String(currentYear))}
             badge={
               analytics && analytics.revenus.evolution !== 0 ? (
                 <div className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${
@@ -348,7 +348,7 @@ export default function DashboardPage() {
             <RevenueAreaChart data={monthlyData} loading={loading} />
           </div>
           <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 capitalize">{currentMonthLabel}</span>
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 capitalize">{new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
             <span className="text-sm font-black text-slate-900 dark:text-white">
               {analytics ? formatMAD(analytics.revenus.ceMois) : '—'}
             </span>
@@ -359,7 +359,7 @@ export default function DashboardPage() {
         <div className="card rounded-2xl p-5">
           <CardHeader
             title={t('dashboard.invoiceStatus')}
-            sub="Répartition des factures"
+            sub={t('dashboard.invoiceStatusSub')}
             badge={<PieChart className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
           />
           <div style={{ height: 240 }}>
@@ -374,8 +374,8 @@ export default function DashboardPage() {
         {/* Payments monthly */}
         <div className="card rounded-2xl p-5">
           <CardHeader
-            title="Paiements reçus"
-            sub={`${currentYear} — mensuel`}
+            title={t('dashboard.paymentsChart')}
+            sub={t('dashboard.paymentsChartSub').replace('{year}', String(currentYear))}
             badge={<BarChart2 className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
           />
           <div style={{ height: 160 }}>
@@ -386,8 +386,8 @@ export default function DashboardPage() {
         {/* Quote conversion */}
         <div className="card rounded-2xl p-5">
           <CardHeader
-            title="Conversion devis"
-            sub={analytics ? `${analytics.devis.tauxAcceptation}% acceptés` : '—'}
+            title={t('dashboard.quotesChart')}
+            sub={analytics ? `${analytics.devis.tauxAcceptation}% ${t('dashboard.accepted')}` : '—'}
             badge={<Receipt className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
           />
           <div style={{ height: 160 }}>
@@ -398,8 +398,8 @@ export default function DashboardPage() {
         {/* Client stats */}
         <div className="card rounded-2xl p-5">
           <CardHeader
-            title="Aperçu clients"
-            sub="Actifs · Nouveaux · Total"
+            title={t('dashboard.clientsChart')}
+            sub={t('dashboard.clientsChartSub')}
             badge={<Users className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
           />
           <div style={{ height: 160 }}>
@@ -424,16 +424,19 @@ export default function DashboardPage() {
         <div className="card rounded-2xl p-5">
           <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-4">{t('dashboard.quickActions')}</h2>
           <div className="grid grid-cols-2 gap-3">
-            {visibleQuickActions.map(a => (
-              <Link
-                key={a.href}
-                href={a.href}
-                className={`flex flex-col items-center gap-2 p-3.5 rounded-xl text-center transition-all hover:-translate-y-0.5 group ${a.color}`}
-              >
-                <span className="text-2xl group-hover:scale-110 transition-transform">{a.icon}</span>
-                <span className="text-xs font-semibold leading-tight">{t(a.labelKey)}</span>
-              </Link>
-            ))}
+            {visibleQuickActions.map(a => {
+              const Icon = a.icon
+              return (
+                <Link
+                  key={a.href}
+                  href={a.href}
+                  className={`flex flex-col items-center gap-2 p-3.5 rounded-xl text-center transition-all hover:-translate-y-0.5 group ${a.color}`}
+                >
+                  <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold leading-tight">{t(a.labelKey)}</span>
+                </Link>
+              )
+            })}
           </div>
         </div>
 
@@ -585,11 +588,11 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-xs font-bold text-red-600 dark:text-red-400">
-                          {f.montantPaye > 0 ? `${formatMAD(reste)} restant` : formatMAD(f.totalTTC)}
+                          {f.montantPaye > 0 ? `${formatMAD(reste)} ${t('dashboard.restant')}` : formatMAD(f.totalTTC)}
                         </span>
                         {f.montantPaye > 0 && (
                           <span className="text-[10px] text-green-600 dark:text-green-400 flex-shrink-0">
-                            {formatMAD(f.montantPaye)} payé
+                            {formatMAD(f.montantPaye)} {t('dashboard.payeLabel')}
                           </span>
                         )}
                         {days > 0 && (
@@ -651,7 +654,7 @@ export default function DashboardPage() {
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${ACTIVITY_COLORS[a.type] ?? 'bg-slate-400'}`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-slate-800 dark:text-slate-200 leading-snug">{a.message}</p>
-                  <span className="text-[10px] text-slate-400">{formatRelativeTime(a.createdAt)}</span>
+                  <span className="text-[10px] text-slate-400">{formatRelativeTime(a.createdAt, t)}</span>
                 </div>
               </div>
             ))

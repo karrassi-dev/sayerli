@@ -114,6 +114,16 @@ export default function BonsLivraisonPage() {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
+  // ?action=create trigger (same pattern as devis/factures)
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    if (p.get('action') === 'create') {
+      window.history.replaceState(null, '', '/dashboard/bons-livraison')
+      openCreate()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const [search, setSearch] = useState('')
   const [filterStatut, setFilterStatut] = useState('')
   const [page, setPage] = useState(1)
