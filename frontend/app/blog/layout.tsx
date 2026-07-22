@@ -25,11 +25,11 @@ export const metadata: Metadata = buildMetadata({
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 pt-32">
+      <div className="pt-16">
         {children}
-      </main>
+      </div>
       <Footer />
     </div>
   )
