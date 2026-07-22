@@ -730,6 +730,711 @@ export const ARTICLES: Record<string, ArticleData> = {
     },
   },
 
+  // ── ARTICLE 7 ────────────────────────────────────────────────────────────────
+  'mentions-obligatoires-facture-maroc': {
+    slug: 'mentions-obligatoires-facture-maroc',
+    image: '/blog/mentions-obligatoires-facture-maroc.webp',
+    readingTime: 7,
+    content: {
+
+      // ── FRENCH ──────────────────────────────────────────────────────────────
+      fr: {
+        title: 'Mentions obligatoires sur une facture au Maroc : le guide complet 2025',
+        description: 'Toutes les mentions obligatoires sur une facture au Maroc : ICE, IF, TVA, numérotation, coordonnées, délais de paiement. Guide complet pour auto-entrepreneurs, freelancers et PME.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Au Maroc, une facture n\'est pas un simple document comptable — c\'est une pièce juridique encadrée par la loi. Une facture incomplète peut être refusée par votre client, rejetée lors d\'un contrôle fiscal, ou invalider votre droit au remboursement de TVA. Pourtant, la majorité des erreurs constatées sur les factures marocaines concernent des oublis simples : un numéro ICE manquant, une mention TVA absente, une numérotation incohérente.',
+          },
+          {
+            type: 'p',
+            text: 'Ce guide recense toutes les mentions obligatoires selon votre situation — auto-entrepreneur, freelance, SARL ou SA assujettie à la TVA — avec les formulations exactes à utiliser et les erreurs les plus courantes à éviter.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Pourquoi les mentions obligatoires sont une obligation légale',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Les mentions obligatoires sur les factures au Maroc sont régies par le Code Général des Impôts (CGI) et les dispositions de la loi sur la TVA. Elles ne sont pas de simples recommandations — leur absence peut avoir des conséquences concrètes :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Rejet de la facture par le client, notamment les entreprises dont la comptabilité est auditée',
+                  'Impossibilité pour votre client de déduire la TVA sur vos prestations si les mentions TVA sont incorrectes',
+                  'Remise en cause de la déductibilité de la charge lors d\'un contrôle fiscal',
+                  'Pénalités en cas de facturation non conforme répétée',
+                  'Litige commercial difficile à trancher sans facture opposable',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Facture obligatoire dès quel montant ?',
+                body: 'Au Maroc, la facture est obligatoire pour toute transaction entre professionnels (B2B), quel que soit le montant. Pour les transactions avec des particuliers (B2C), elle est obligatoire au-delà de 10 000 MAD. En dessous, une note ou un reçu peut suffire — mais émettre une facture reste toujours la meilleure pratique.',
+              },
+            ],
+          },
+          {
+            h2: 'Les mentions communes à toutes les factures au Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Quel que soit votre statut juridique — auto-entrepreneur, personne physique, SARL ou SA — ces mentions doivent figurer sur chaque facture que vous émettez :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Détail'],
+                rows: [
+                  ['Identité du vendeur / prestataire', 'Nom complet ou raison sociale, adresse complète'],
+                  ['Numéro de facture', 'Séquentiel, continu, sans trou (FA-2025-001, FA-2025-002…)'],
+                  ['Date d\'émission', 'Date à laquelle la facture est établie'],
+                  ['Identité du client', 'Nom/raison sociale, adresse complète'],
+                  ['Description de la prestation ou du bien', 'Suffisamment détaillée pour identifier la transaction'],
+                  ['Quantité', 'Nombre d\'unités, d\'heures, de jours selon la nature de la prestation'],
+                  ['Prix unitaire hors taxes', 'Pour chaque ligne de la facture'],
+                  ['Montant total hors taxes (HT)', 'Somme de toutes les lignes'],
+                  ['Modalités de paiement', 'Délai (30, 60 jours…), mode (virement, chèque, espèces)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Description insuffisante : le piège le plus courant',
+                body: 'Une description comme "Prestation de services", "Travaux" ou "Consultation" est trop vague. En cas de contrôle, l\'administration fiscale peut remettre en cause la réalité de la prestation. Soyez précis : "Développement d\'une application mobile iOS — sprint 3 — mars 2025" est une description valide.',
+              },
+            ],
+          },
+          {
+            h2: 'Mentions spécifiques aux auto-entrepreneurs et personnes physiques',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Si vous êtes auto-entrepreneur ou personne physique exerçant sous le régime simplifié, deux mentions supplémentaires s\'appliquent à toutes vos factures :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Détail et formulation'],
+                rows: [
+                  ['Identifiant Fiscal (IF)', '"IF : XXXXXXXX" — attribué lors de votre inscription. À placer dans l\'en-tête, clairement visible.'],
+                  ['Mention d\'exonération TVA', '"Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". Obligatoire sous le total de la facture.'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Pas de TVA = pas de ligne TVA, mais une mention obligatoire',
+                body: 'Une erreur fréquente est de laisser une ligne TVA à 0% ou de ne rien mettre. La bonne pratique est de remplacer entièrement la ligne TVA par la mention d\'exonération explicite. Votre montant HT = votre montant TTC, et la mention légale explique pourquoi.',
+              },
+            ],
+          },
+          {
+            h2: 'Mentions spécifiques aux entreprises assujetties à la TVA (SARL, SA…)',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Si vous opérez via une société (SARL, SA, SARLAU) ou une personne physique assujettie à la TVA, des mentions supplémentaires s\'ajoutent — en particulier les identifiants officiels de votre entreprise :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Détail'],
+                rows: [
+                  ['ICE (Identifiant Commun de l\'Entreprise)', 'Numéro à 15 chiffres attribué par le Registre de Commerce. Obligatoire pour toute entreprise immatriculée.'],
+                  ['Numéro RC (Registre de Commerce)', 'Numéro d\'immatriculation au Registre de Commerce.'],
+                  ['Identifiant Fiscal (IF)', 'Numéro fiscal attribué par la DGI, différent de l\'ICE.'],
+                  ['Numéro de patente', 'Numéro de taxe professionnelle (anciennement "patente").'],
+                  ['Taux de TVA appliqué', '20%, 10%, 7% ou 0% selon la nature de la prestation.'],
+                  ['Montant de TVA', 'Montant exact de la TVA calculé sur le HT.'],
+                  ['Montant TTC', 'Montant HT + TVA.'],
+                  ['Forme juridique et capital social', 'Ex : "SARL au capital de 100 000 MAD"'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'ICE vs IF : quelle différence ?',
+                body: 'L\'ICE (Identifiant Commun de l\'Entreprise) est un identifiant unique attribué à chaque entreprise immatriculée au Maroc — il regroupe l\'ensemble de vos identifiants officiels. L\'IF (Identifiant Fiscal) est attribué spécifiquement par la Direction Générale des Impôts. Les deux sont distincts et doivent tous les deux figurer sur vos factures si vous êtes une société.',
+              },
+            ],
+          },
+          {
+            h2: 'La numérotation des factures : règles et bonnes pratiques',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La numérotation est une mention obligatoire qui obéit à des règles strictes. Une numérotation incorrecte est l\'un des premiers signaux d\'alerte lors d\'un contrôle fiscal :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Séquentielle : chaque numéro doit être supérieur au précédent, sans exception',
+                  'Continue : aucun trou dans la séquence — si vous annulez une facture, émettez un avoir plutôt que de supprimer le numéro',
+                  'Chronologique : les numéros doivent correspondre à l\'ordre des dates d\'émission',
+                  'Unique : un numéro ne peut être utilisé qu\'une seule fois',
+                  'Format recommandé : FA-AAAA-NNN (ex : FA-2025-047) pour intégrer l\'année',
+                  'Non modifiable : une facture émise ne peut être ni modifiée ni supprimée — seul un avoir peut la corriger',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Que faire si vous avez des trous dans votre numérotation ?',
+                body: 'Si vous constatez des trous dans votre numérotation (une facture supprimée par erreur, par exemple), documentez l\'incident par écrit et conservez la preuve. L\'administration fiscale peut accepter une explication justifiée, mais les trous répétés et inexpliqués sont interprétés comme une tentative de dissimulation de chiffre d\'affaires.',
+              },
+            ],
+          },
+          {
+            h2: 'Tableau récapitulatif : mentions par type de professionnel',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Voici un récapitulatif rapide pour savoir exactement quelles mentions s\'appliquent à votre situation :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Auto-entrepreneur', 'Personne physique (droit commun)', 'SARL / SA'],
+                rows: [
+                  ['Nom / Raison sociale + adresse', '✓', '✓', '✓'],
+                  ['Numéro de facture séquentiel', '✓', '✓', '✓'],
+                  ['Date d\'émission', '✓', '✓', '✓'],
+                  ['Coordonnées client', '✓', '✓', '✓'],
+                  ['Description détaillée', '✓', '✓', '✓'],
+                  ['Prix HT + total HT', '✓', '✓', '✓'],
+                  ['Modalités de paiement', '✓', '✓', '✓'],
+                  ['Identifiant Fiscal (IF)', '✓', '✓', '✓'],
+                  ['Mention exonération TVA', '✓', 'Si exonéré', '—'],
+                  ['Taux + montant TVA', '—', 'Si assujetti', '✓'],
+                  ['ICE (15 chiffres)', '—', 'Recommandé', '✓'],
+                  ['Numéro RC', '—', '—', '✓'],
+                  ['Numéro de patente', '—', 'Selon cas', '✓'],
+                  ['Forme juridique + capital', '—', '—', '✓'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'Checklist rapide avant d\'envoyer chaque facture',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Avant d\'envoyer votre prochaine facture, passez cette checklist en revue :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Mon nom / raison sociale et mon adresse sont présents dans l\'en-tête',
+                  'Mon identifiant fiscal (IF) est visible',
+                  'Le numéro de facture est séquentiel et dans la bonne série',
+                  'La date d\'émission est correcte',
+                  'Les coordonnées complètes du client figurent sur la facture',
+                  'Chaque ligne de prestation est décrite avec suffisamment de détail',
+                  'Les prix unitaires et totaux HT sont corrects',
+                  'La mention TVA est correcte : soit le taux + montant TVA (si assujetti), soit la mention d\'exonération (si auto-entrepreneur)',
+                  'Les modalités de paiement sont clairement indiquées (délai + mode)',
+                  'L\'ICE du client est mentionné si c\'est une entreprise',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli génère des factures 100% conformes automatiquement',
+                body: 'Avec Sayerli, toutes ces mentions sont générées automatiquement à partir de votre profil et des informations client. Numérotation séquentielle, IF, ICE client, mention TVA ou exonération — rien n\'est oublié. Créez une facture conforme en moins de 2 minutes. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer ma première facture conforme',
+              },
+            ],
+          },
+          {
+            h2: 'Les 5 erreurs de mentions les plus sanctionnées',
+            blocks: [
+              {
+                type: 'p',
+                text: 'D\'après les retours de contrôles fiscaux et les pratiques constatées au Maroc, voici les cinq erreurs qui posent le plus de problèmes :',
+              },
+              {
+                type: 'table',
+                headers: ['Erreur', 'Conséquence possible'],
+                rows: [
+                  ['IF ou ICE absent', 'Facture rejetée par le client ou l\'administration'],
+                  ['Pas de mention TVA (ni taux ni exonération)', 'Impossibilité de déduire la TVA pour le client, remise en cause lors d\'audit'],
+                  ['Description trop vague', 'Administration peut contester la réalité de la prestation'],
+                  ['Trou dans la numérotation', 'Soupçon de dissimulation de CA, pénalités potentielles'],
+                  ['Date incorrecte ou absente', 'Problème pour rattacher la charge à un exercice fiscal'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Ne laissez plus la conformité au hasard',
+                body: 'Sayerli intègre les règles de facturation marocaines directement dans l\'outil. Que vous soyez auto-entrepreneur, freelance ou PME, vos factures respectent automatiquement toutes les obligations légales. Devis, factures, avoirs — tout en MAD, tout conforme. Démarrez gratuitement.',
+                href: '/fonctionnalites',
+                cta: 'Voir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ─────────────────────────────────────────────────────────────
+      en: {
+        title: 'Mandatory Mentions on a Moroccan Invoice: The Complete 2025 Guide',
+        description: 'All mandatory mentions required on a Moroccan invoice: ICE, IF, VAT, numbering, contact details, payment terms. Complete guide for auto-entrepreneurs, freelancers and SMEs.',
+        intro: [
+          {
+            type: 'p',
+            text: 'In Morocco, an invoice is not just an accounting document — it is a legal instrument governed by law. An incomplete invoice can be rejected by your client, challenged during a tax audit, or invalidate your VAT deduction rights. Yet the vast majority of errors found on Moroccan invoices come down to simple omissions: a missing ICE number, an absent VAT mention, or inconsistent numbering.',
+          },
+          {
+            type: 'p',
+            text: 'This guide lists all mandatory mentions based on your legal status — auto-entrepreneur, freelancer, SARL or SA subject to VAT — with the exact wording to use and the most common mistakes to avoid.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Why mandatory mentions are a legal obligation',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Mandatory invoice mentions in Morocco are governed by the General Tax Code (CGI) and VAT legislation. They are not mere recommendations — their absence can have real consequences:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Invoice rejected by the client, especially companies whose accounts are audited',
+                  'Your client losing the right to deduct VAT on your services if VAT mentions are incorrect',
+                  'The expense being disallowed as a deduction during a tax audit',
+                  'Penalties for repeated non-compliant invoicing',
+                  'Commercial disputes that are harder to resolve without an enforceable invoice',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'When is an invoice legally required?',
+                body: 'In Morocco, an invoice is mandatory for all B2B transactions regardless of amount. For B2C transactions, it is mandatory above 10,000 MAD. Below that, a note or receipt may suffice — but issuing a proper invoice is always best practice.',
+              },
+            ],
+          },
+          {
+            h2: 'Mentions required on all Moroccan invoices',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Regardless of your legal status — auto-entrepreneur, individual trader, SARL or SA — these mentions must appear on every invoice you issue:',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Detail'],
+                rows: [
+                  ['Seller / service provider identity', 'Full name or company name, complete address'],
+                  ['Invoice number', 'Sequential, continuous, no gaps (INV-2025-001, INV-2025-002…)'],
+                  ['Issue date', 'The date the invoice is drawn up'],
+                  ['Client identity', 'Name / company name, complete address'],
+                  ['Description of service or product', 'Detailed enough to identify the transaction'],
+                  ['Quantity', 'Number of units, hours, days depending on the nature of the service'],
+                  ['Unit price excluding tax', 'For each line item'],
+                  ['Total amount excluding tax', 'Sum of all lines'],
+                  ['Payment terms', 'Deadline (30, 60 days…), method (bank transfer, cheque, cash)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Vague description: the most common trap',
+                body: 'A description such as "Service provision", "Work" or "Consulting" is too vague. During a tax audit, the tax authority may challenge the reality of the service. Be specific: "iOS mobile app development — sprint 3 — March 2025" is a valid description.',
+              },
+            ],
+          },
+          {
+            h2: 'Specific mentions for auto-entrepreneurs and individual traders',
+            blocks: [
+              {
+                type: 'p',
+                text: 'If you are an auto-entrepreneur or an individual trader under the simplified regime, two additional mentions apply to all your invoices:',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Detail and wording'],
+                rows: [
+                  ['Tax Identifier (IF)', '"IF: XXXXXXXX" — assigned at registration. Place in the header, clearly visible.'],
+                  ['VAT exemption notice', '"VAT-exempt — Auto-entrepreneur IF No. XXXXXXXX". Mandatory below the invoice total.'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'No VAT = no VAT line, but a mandatory notice',
+                body: 'A common mistake is leaving a VAT line at 0% or leaving it blank. Best practice is to replace the VAT line entirely with the explicit exemption notice. Your pre-tax amount equals your total amount, and the legal notice explains why.',
+              },
+            ],
+          },
+          {
+            h2: 'Specific mentions for VAT-registered companies (SARL, SA…)',
+            blocks: [
+              {
+                type: 'p',
+                text: 'If you operate through a company (SARL, SA, SARLAU) or as a VAT-registered individual trader, additional mentions are required — in particular your company\'s official identifiers:',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Detail'],
+                rows: [
+                  ['ICE (Common Business Identifier)', '15-digit number assigned by the Trade Register. Mandatory for all registered companies.'],
+                  ['RC number (Trade Register)', 'Your company\'s Trade Register registration number.'],
+                  ['Tax Identifier (IF)', 'Tax number assigned by the DGI, distinct from the ICE.'],
+                  ['Patente number', 'Professional tax number (formerly called "patente").'],
+                  ['VAT rate applied', '20%, 10%, 7% or 0% depending on the type of service.'],
+                  ['VAT amount', 'Exact VAT amount calculated on the pre-tax total.'],
+                  ['Total including VAT', 'Pre-tax total + VAT.'],
+                  ['Legal form and share capital', 'E.g. "SARL with share capital of 100,000 MAD"'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'ICE vs IF: what is the difference?',
+                body: 'The ICE (Identifiant Commun de l\'Entreprise) is a unique identifier assigned to every registered business in Morocco — it consolidates all your official identifiers. The IF (Identifiant Fiscal) is assigned specifically by the Direction Générale des Impôts. Both are distinct and must both appear on your invoices if you are a company.',
+              },
+            ],
+          },
+          {
+            h2: 'Invoice numbering: rules and best practices',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Numbering is a mandatory mention subject to strict rules. Incorrect numbering is one of the first red flags during a tax audit:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Sequential: each number must be higher than the previous one, without exception',
+                  'Continuous: no gaps in the sequence — if you cancel an invoice, issue a credit note rather than deleting the number',
+                  'Chronological: numbers must match the order of issue dates',
+                  'Unique: a number may only be used once',
+                  'Recommended format: INV-YYYY-NNN (e.g. INV-2025-047) to include the year',
+                  'Non-modifiable: an issued invoice cannot be edited or deleted — only a credit note can correct it',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'What if you have gaps in your numbering?',
+                body: 'If you find gaps in your numbering (e.g. an invoice accidentally deleted), document the incident in writing and keep the evidence. The tax authority may accept a justified explanation, but repeated unexplained gaps are interpreted as an attempt to conceal revenue.',
+              },
+            ],
+          },
+          {
+            h2: 'Summary table: mentions by professional type',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Mention', 'Auto-entrepreneur', 'Individual trader (standard)', 'SARL / SA'],
+                rows: [
+                  ['Name / company name + address', '✓', '✓', '✓'],
+                  ['Sequential invoice number', '✓', '✓', '✓'],
+                  ['Issue date', '✓', '✓', '✓'],
+                  ['Client details', '✓', '✓', '✓'],
+                  ['Detailed description', '✓', '✓', '✓'],
+                  ['Unit price + total excl. VAT', '✓', '✓', '✓'],
+                  ['Payment terms', '✓', '✓', '✓'],
+                  ['Tax Identifier (IF)', '✓', '✓', '✓'],
+                  ['VAT exemption notice', '✓', 'If exempt', '—'],
+                  ['VAT rate + VAT amount', '—', 'If VAT-registered', '✓'],
+                  ['ICE (15 digits)', '—', 'Recommended', '✓'],
+                  ['RC number', '—', '—', '✓'],
+                  ['Patente number', '—', 'Depending', '✓'],
+                  ['Legal form + share capital', '—', '—', '✓'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'Quick checklist before sending each invoice',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'My name / company name and address are in the header',
+                  'My tax identifier (IF) is visible',
+                  'The invoice number is sequential and in the correct series',
+                  'The issue date is correct',
+                  'The client\'s complete details appear on the invoice',
+                  'Each service line is described in sufficient detail',
+                  'Unit prices and pre-tax totals are correct',
+                  'The VAT mention is correct: either the rate + VAT amount (if registered) or the exemption notice (if auto-entrepreneur)',
+                  'Payment terms are clearly stated (deadline + method)',
+                  'The client\'s ICE is included if they are a company',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli generates 100% compliant invoices automatically',
+                body: 'With Sayerli, all these mentions are generated automatically from your profile and client information. Sequential numbering, IF, client ICE, VAT mention or exemption — nothing is forgotten. Create a compliant invoice in under 2 minutes. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'Create my first compliant invoice',
+              },
+            ],
+          },
+          {
+            h2: 'The 5 most penalized mention errors',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Error', 'Possible consequence'],
+                rows: [
+                  ['Missing IF or ICE', 'Invoice rejected by client or tax authority'],
+                  ['No VAT mention (no rate and no exemption notice)', 'Client loses VAT deduction right, challenged in audit'],
+                  ['Vague description', 'Tax authority may contest the reality of the service'],
+                  ['Gap in numbering sequence', 'Suspicion of revenue concealment, potential penalties'],
+                  ['Incorrect or missing date', 'Problem allocating the expense to a tax period'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Stop leaving compliance to chance',
+                body: 'Sayerli builds Moroccan invoicing rules directly into the tool. Whether you are an auto-entrepreneur, freelancer or SME, your invoices automatically comply with all legal requirements. Quotes, invoices, credit notes — all in MAD, all compliant. Start free.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ──────────────────────────────────────────────────────────────
+      ar: {
+        title: 'البيانات الإلزامية في الفاتورة بالمغرب: الدليل الشامل 2025',
+        description: 'جميع البيانات الإلزامية في الفاتورة بالمغرب: ICE وIF والضريبة على القيمة المضافة والترقيم وبيانات التواصل وآجال الدفع. دليل شامل للمقاولين الذاتيين والمستقلين والمقاولات الصغيرة.',
+        intro: [
+          {
+            type: 'p',
+            text: 'في المغرب، الفاتورة ليست مجرد وثيقة محاسبية — بل هي صك قانوني يُنظّمه القانون. فاتورة ناقصة قد يرفضها عميلك، أو تُطعن فيها عند مراجعة جبائية، أو تُسقط حقّك في استرداد الضريبة على القيمة المضافة. ومع ذلك، تعود غالبية الأخطاء المُلاحَظة في الفواتير المغربية إلى إغفالات بسيطة: رقم ICE مفقود، إشعار ضريبة على القيمة المضافة غائب، أو ترقيم متضارب.',
+          },
+          {
+            type: 'p',
+            text: 'يستعرض هذا الدليل جميع البيانات الإلزامية حسب وضعيتك القانونية — مقاول ذاتي، مستقل، شركة ذات مسؤولية محدودة أو شركة مساهمة خاضعة للضريبة على القيمة المضافة — مع الصياغات الدقيقة الواجب استخدامها والأخطاء الأكثر شيوعاً الواجب تجنبها.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'لماذا البيانات الإلزامية التزام قانوني',
+            blocks: [
+              {
+                type: 'p',
+                text: 'تخضع البيانات الإلزامية في الفواتير بالمغرب للمدونة العامة للضرائب وأحكام قانون الضريبة على القيمة المضافة. وهي ليست مجرد توصيات — غيابها قد يُفضي إلى عواقب ملموسة:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'رفض الفاتورة من قِبل العميل، ولا سيما الشركات التي تخضع حساباتها للتدقيق',
+                  'فقدان عميلك حق خصم الضريبة على القيمة المضافة على خدماتك إذا كانت بيانات الضريبة غير صحيحة',
+                  'الطعن في قابلية خصم المصروف خلال مراجعة جبائية',
+                  'غرامات في حالة الفوترة غير المطابقة المتكررة',
+                  'نزاعات تجارية يصعب الفصل فيها دون فاتورة قابلة للاحتجاج بها',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'متى تكون الفاتورة إلزامية قانوناً؟',
+                body: 'في المغرب، الفاتورة إلزامية في جميع المعاملات بين المهنيين (B2B) بصرف النظر عن المبلغ. في المعاملات مع الأفراد (B2C)، تصبح إلزامية فوق 10,000 درهم. دون ذلك قد تكفي مذكرة أو وصل — غير أن إصدار فاتورة سليمة يبقى أفضل ممارسة دائماً.',
+              },
+            ],
+          },
+          {
+            h2: 'البيانات المشتركة في جميع الفواتير بالمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'بصرف النظر عن وضعك القانوني — مقاول ذاتي، تاجر فرد، شركة ذات مسؤولية محدودة أو شركة مساهمة — هذه البيانات يجب أن تظهر في كل فاتورة تُصدرها:',
+              },
+              {
+                type: 'table',
+                headers: ['البيان', 'التفصيل'],
+                rows: [
+                  ['هوية البائع / مقدّم الخدمة', 'الاسم الكامل أو الاسم التجاري، العنوان الكامل'],
+                  ['رقم الفاتورة', 'تسلسلي، متواصل، بلا ثغرات (FA-2025-001، FA-2025-002…)'],
+                  ['تاريخ الإصدار', 'التاريخ الذي حُرِّرت فيه الفاتورة'],
+                  ['هوية العميل', 'الاسم/الشركة، العنوان الكامل'],
+                  ['وصف الخدمة أو البضاعة', 'مفصَّل بما يكفي لتحديد المعاملة'],
+                  ['الكمية', 'عدد الوحدات أو الساعات أو الأيام حسب طبيعة الخدمة'],
+                  ['السعر الوحدوي (دون الضريبة)', 'لكل سطر من سطور الفاتورة'],
+                  ['المجموع الإجمالي (دون الضريبة)', 'مجموع جميع السطور'],
+                  ['شروط الدفع', 'الأجل (30، 60 يوماً…)، الطريقة (تحويل، شيك، نقداً)'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'الوصف المبهم: الفخ الأكثر شيوعاً',
+                body: 'وصف من قبيل "تقديم خدمات" أو "أشغال" أو "استشارة" مبهم للغاية. عند مراجعة جبائية، قد تطعن الإدارة الضريبية في واقعية الخدمة. كن دقيقاً: "تطوير تطبيق موبايل iOS — sprint 3 — مارس 2025" وصف صالح.',
+              },
+            ],
+          },
+          {
+            h2: 'بيانات خاصة بالمقاولين الذاتيين والأشخاص الطبيعيين',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إذا كنت مقاولاً ذاتياً أو شخصاً طبيعياً يمارس في إطار النظام المبسط، يُضاف بيانان إلزاميان لجميع فواتيرك:',
+              },
+              {
+                type: 'table',
+                headers: ['البيان', 'التفصيل والصياغة'],
+                rows: [
+                  ['المعرّف الضريبي (IF)', '"IF: XXXXXXXX" — يُسنَد عند التسجيل. يُوضَع في الترويسة مرئياً بوضوح.'],
+                  ['إشعار الإعفاء من الضريبة على القيمة المضافة', '"معفى من الضريبة على القيمة المضافة — مقاول ذاتي IF رقم XXXXXXXX". إلزامي أسفل مجموع الفاتورة.'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'لا ضريبة = لا سطر للضريبة، لكن إشعار إلزامي',
+                body: 'خطأ شائع هو ترك سطر الضريبة بنسبة 0% أو تركه فارغاً. الممارسة السليمة هي استبدال سطر الضريبة كلياً بإشعار الإعفاء الصريح. مجموعك قبل الضريبة = مجموعك الإجمالي، والبيان القانوني يُوضّح السبب.',
+              },
+            ],
+          },
+          {
+            h2: 'بيانات خاصة بالشركات الخاضعة للضريبة على القيمة المضافة (ش.م.م، ش.أ…)',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إذا كنت تُدير شركة (ش.م.م، ش.أ، ش.م.م.أ) أو شخصاً طبيعياً خاضعاً للضريبة على القيمة المضافة، تُضاف بيانات إضافية — ولا سيما المعرّفات الرسمية لشركتك:',
+              },
+              {
+                type: 'table',
+                headers: ['البيان', 'التفصيل'],
+                rows: [
+                  ['ICE (المعرّف المشترك للمقاولة)', 'رقم من 15 خانة تُسنده سجلات التجارة. إلزامي لكل شركة مسجَّلة.'],
+                  ['رقم RC (السجل التجاري)', 'رقم تسجيل الشركة في السجل التجاري.'],
+                  ['المعرّف الضريبي (IF)', 'الرقم الضريبي الصادر عن المديرية العامة للضرائب، مغاير لـ ICE.'],
+                  ['رقم الحصة الضريبية (البطانة)', 'رقم الضريبة المهنية (المعروفة سابقاً بـ "البطانة").'],
+                  ['نسبة الضريبة على القيمة المضافة المطبّقة', '20% أو 10% أو 7% أو 0% حسب طبيعة الخدمة.'],
+                  ['مبلغ الضريبة على القيمة المضافة', 'المبلغ الدقيق للضريبة محسوباً على المجموع قبل الضريبة.'],
+                  ['المجموع الإجمالي (شاملاً الضريبة)', 'المجموع قبل الضريبة + مبلغ الضريبة.'],
+                  ['الشكل القانوني ورأس المال الاجتماعي', 'مثال: "شركة ذات مسؤولية محدودة برأس مال 100,000 درهم"'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'ICE مقابل IF: ما الفرق؟',
+                body: 'ICE (المعرّف المشترك للمقاولة) هو معرّف فريد يُسنَد لكل شركة مسجَّلة بالمغرب — يجمع جميع معرّفاتك الرسمية. أما IF (المعرّف الضريبي) فيُسنَد تحديداً من المديرية العامة للضرائب. كلاهما مستقل عن الآخر ويجب أن يظهرا معاً في فواتيرك إذا كنت شركة.',
+              },
+            ],
+          },
+          {
+            h2: 'ترقيم الفواتير: القواعد وأفضل الممارسات',
+            blocks: [
+              {
+                type: 'p',
+                text: 'الترقيم بيان إلزامي يخضع لقواعد صارمة. ترقيم غير سليم هو أول إشارة تنبيه عند أي مراجعة جبائية:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'تسلسلي: كل رقم يجب أن يكون أعلى من السابق، دون استثناء',
+                  'متواصل: لا ثغرات في التسلسل — إذا ألغيت فاتورة، أصدر أمر تخفيض بدلاً من حذف الرقم',
+                  'زمني: يجب أن تتطابق الأرقام مع ترتيب تواريخ الإصدار',
+                  'فريد: لا يُستخدم أي رقم مرتين',
+                  'الصيغة الموصى بها: FA-سسسس-NNN (مثال: FA-2025-047) لتضمين السنة',
+                  'غير قابل للتعديل: لا يجوز تعديل فاتورة صادرة أو حذفها — فقط أمر تخفيض يمكنه تصحيحها',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'ماذا تفعل إن وجدت ثغرات في ترقيمك؟',
+                body: 'إذا اكتشفت ثغرات في ترقيمك (مثلاً فاتورة حُذفت عن طريق الخطأ)، وثّق الحادثة كتابةً واحتفظ بالدليل. قد تقبل الإدارة الضريبية تبريراً مدعوماً، لكن الثغرات المتكررة وغير المبررة تُفسَّر على أنها محاولة لإخفاء رقم الأعمال.',
+              },
+            ],
+          },
+          {
+            h2: 'جدول ملخص: البيانات حسب نوع المهني',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['البيان', 'مقاول ذاتي', 'شخص طبيعي (نظام عام)', 'ش.م.م / ش.أ'],
+                rows: [
+                  ['الاسم/الشركة + العنوان', '✓', '✓', '✓'],
+                  ['رقم الفاتورة التسلسلي', '✓', '✓', '✓'],
+                  ['تاريخ الإصدار', '✓', '✓', '✓'],
+                  ['بيانات العميل', '✓', '✓', '✓'],
+                  ['وصف مفصَّل', '✓', '✓', '✓'],
+                  ['السعر الوحدوي + الإجمالي قبل الضريبة', '✓', '✓', '✓'],
+                  ['شروط الدفع', '✓', '✓', '✓'],
+                  ['المعرّف الضريبي (IF)', '✓', '✓', '✓'],
+                  ['إشعار الإعفاء من الضريبة', '✓', 'إن كان معفى', '—'],
+                  ['نسبة + مبلغ الضريبة', '—', 'إن كان خاضعاً', '✓'],
+                  ['ICE (15 خانة)', '—', 'موصى به', '✓'],
+                  ['رقم RC', '—', '—', '✓'],
+                  ['رقم الضريبة المهنية', '—', 'حسب الحالة', '✓'],
+                  ['الشكل القانوني + رأس المال', '—', '—', '✓'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'قائمة مراجعة سريعة قبل إرسال كل فاتورة',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'اسمي/شركتي وعنواني موجودان في الترويسة',
+                  'معرّفي الضريبي (IF) مرئي بوضوح',
+                  'رقم الفاتورة تسلسلي وضمن السلسلة الصحيحة',
+                  'تاريخ الإصدار صحيح',
+                  'البيانات الكاملة للعميل مذكورة في الفاتورة',
+                  'كل سطر خدمة موصوف بتفصيل كافٍ',
+                  'الأسعار الوحدوية والمجاميع قبل الضريبة صحيحة',
+                  'بيان الضريبة صحيح: إما النسبة + المبلغ (إن كنت خاضعاً) أو إشعار الإعفاء (إن كنت مقاولاً ذاتياً)',
+                  'شروط الدفع مذكورة بوضوح (الأجل + الطريقة)',
+                  'رقم ICE للعميل مذكور إن كان شركة',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli يولّد فواتير مطابقة 100% تلقائياً',
+                body: 'مع Sayerli، تُولَّد جميع هذه البيانات تلقائياً انطلاقاً من ملفك الشخصي ومعلومات العميل. ترقيم تسلسلي، IF، ICE العميل، بيان الضريبة أو الإعفاء — لا شيء يُنسى. أنشئ فاتورة مطابقة في أقل من دقيقتين. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء أول فاتورة مطابقة',
+              },
+            ],
+          },
+          {
+            h2: 'أكثر 5 أخطاء في البيانات تعرّضاً للعقوبة',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['الخطأ', 'العاقبة المحتملة'],
+                rows: [
+                  ['غياب IF أو ICE', 'رفض الفاتورة من العميل أو الإدارة الضريبية'],
+                  ['غياب بيان الضريبة (لا نسبة ولا إشعار إعفاء)', 'فقدان العميل لحق خصم الضريبة، طعن عند التدقيق'],
+                  ['وصف مبهم', 'قد تطعن الإدارة الضريبية في واقعية الخدمة'],
+                  ['ثغرة في تسلسل الترقيم', 'اشتباه بإخفاء رقم الأعمال، غرامات محتملة'],
+                  ['تاريخ خاطئ أو مفقود', 'إشكالية في نسب المصروف لسنة ضريبية محددة'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'لا تترك المطابقة للصدفة بعد اليوم',
+                body: 'يُدمج Sayerli قواعد الفوترة المغربية مباشرةً في الأداة. سواء كنت مقاولاً ذاتياً أو مستقلاً أو مقاولة صغيرة، تمتثل فواتيرك تلقائياً لجميع الالتزامات القانونية. عروض أسعار وفواتير وأوامر تخفيض — كلها بالدرهم، كلها مطابقة. ابدأ مجاناً.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
   // ── ARTICLE 6 ────────────────────────────────────────────────────────────────
   'facturer-auto-entrepreneur-maroc': {
     slug: 'facturer-auto-entrepreneur-maroc',
