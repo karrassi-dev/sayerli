@@ -214,7 +214,7 @@ export function BlogPageContent() {
           </div>
 
           {/* Category pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
+          <div className="flex flex-wrap items-center gap-2">
             {/* All pill */}
             <button
               onClick={() => setActiveCategory('all')}
