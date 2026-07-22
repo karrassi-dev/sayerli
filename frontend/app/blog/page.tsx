@@ -1,28 +1,21 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Clock, BookOpen, BarChart3, Users, Tag } from 'lucide-react'
+import { ArrowRight, Clock, BookOpen, BarChart3, Users, PenLine, Tag } from 'lucide-react'
 import { buildMetadata, BLOG_POSTS, SITE_URL } from '@/lib/seo'
 import { OrganizationJsonLd } from '@/components/seo/JsonLd'
 
 export const metadata: Metadata = buildMetadata({
   title: 'Blog Sayerli | Guides Facturation, CRM et Gestion — Freelancers & PME Maroc',
   description:
-    "Guides et tutoriels sur la facturation, le CRM, les devis et la gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc. Apprenez à optimiser votre gestion d'entreprise.",
+    "Guides et tutoriels sur la facturation, le CRM, les devis et la gestion commerciale pour freelancers, auto-entrepreneurs et PME au Maroc.",
   path: '/blog',
 })
 
-const READING_TIMES: Record<string, number> = {
-  'comment-creer-un-devis-au-maroc': 4,
-  'meilleur-logiciel-de-facturation-maroc': 5,
-  'crm-pour-pme-maroc': 4,
-  'gestion-clients-pour-entreprises-marocaines': 4,
-  'alternative-excel-pour-gerer-son-entreprise': 5,
-}
-
-const CATEGORY_STYLE: Record<string, { badge: string; icon: React.ElementType }> = {
-  Guides:      { badge: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900',   icon: BookOpen  },
-  Comparatifs: { badge: 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900',   icon: BarChart3 },
-  CRM:         { badge: 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900', icon: Users },
+const CATEGORY_STYLE: Record<string, { badge: string; gradient: string; icon: React.ElementType }> = {
+  Guides:      { badge: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900',     gradient: 'from-blue-500 to-blue-600',   icon: BookOpen  },
+  Comparatifs: { badge: 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900',     gradient: 'from-teal-500 to-teal-600',   icon: BarChart3 },
+  CRM:         { badge: 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900', gradient: 'from-purple-500 to-purple-600', icon: Users },
 }
 
 function formatDate(d: string) {
@@ -43,11 +36,10 @@ export default function BlogPage() {
       description: post.description,
       url: `${SITE_URL}/blog/${post.slug}`,
       datePublished: post.publishedAt,
+      ...(post.image ? { image: post.image } : {}),
       keywords: post.keywords.join(', '),
     })),
   }
-
-  const [featured, ...rest] = BLOG_POSTS
 
   return (
     <>
@@ -72,125 +64,113 @@ export default function BlogPage() {
             Facturation, CRM, devis et gestion commerciale. Des articles concrets écrits pour les
             freelancers, auto-entrepreneurs et PME au Maroc.
           </p>
-          <div className="flex items-center gap-6 mt-8 text-sm text-slate-400 dark:text-slate-500">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
-              {BLOG_POSTS.length} articles
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
-              Mis à jour régulièrement
-            </span>
-          </div>
+          {BLOG_POSTS.length > 0 && (
+            <div className="flex items-center gap-6 mt-8 text-sm text-slate-400 dark:text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
+                {BLOG_POSTS.length} article{BLOG_POSTS.length > 1 ? 's' : ''}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                Mis à jour régulièrement
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ── Content ──────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
 
-        {/* Featured post */}
-        {featured && (() => {
-          const cat = CATEGORY_STYLE[featured.category]
-          const CatIcon = cat?.icon ?? BookOpen
-          return (
+        {BLOG_POSTS.length === 0 ? (
+          /* ── Empty state ─────────────────────────────── */
+          <div className="flex flex-col items-center justify-center text-center py-20 sm:py-28">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20">
+              <PenLine className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-3">
+              Les articles arrivent bientôt
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-md leading-relaxed mb-8">
+              Nous préparons des guides pratiques sur la facturation, le CRM et la gestion
+              commerciale pour les PME marocaines. Revenez très prochainement.
+            </p>
             <Link
-              href={`/blog/${featured.slug}`}
-              className="group block mb-12 rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 hover:shadow-2xl hover:shadow-black/5 hover:border-primary-200 dark:hover:border-primary-800 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+              href="/"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm transition-all shadow-lg shadow-primary-500/20 hover:-translate-y-0.5 group"
             >
-              <div className="h-1 bg-gradient-to-r from-primary-500 to-teal-500" />
-              <div className="p-6 sm:p-8 lg:p-10">
-                <div className="flex flex-wrap items-center gap-3 mb-5">
-                  <span className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-semibold ${cat?.badge ?? ''}`}>
-                    <CatIcon className="w-3 h-3" />
-                    {featured.category}
-                  </span>
-                  <span className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
-                    <Clock className="w-3 h-3" />
-                    {READING_TIMES[featured.slug] ?? 4} min de lecture
-                  </span>
-                  <time className="text-xs text-slate-400 dark:text-slate-500" dateTime={featured.publishedAt}>
-                    {formatDate(featured.publishedAt)}
-                  </time>
-                  <span className="text-xs px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-900 font-semibold">
-                    À la une
-                  </span>
-                </div>
-
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-4 leading-snug group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                  {featured.title}
-                </h2>
-
-                <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-6 max-w-2xl">
-                  {featured.description}
-                </p>
-
-                <div className="flex flex-wrap items-center gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    {featured.keywords.slice(0, 3).map((kw) => (
-                      <span key={kw} className="text-xs px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-                        {kw}
-                      </span>
-                    ))}
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 dark:text-primary-400 group-hover:gap-2.5 transition-all">
-                    Lire l&apos;article
-                    <ArrowRight className="w-4 h-4" />
-                  </span>
-                </div>
-              </div>
+              Retour à l&apos;accueil
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
-          )
-        })()}
+          </div>
+        ) : (
+          /* ── Posts grid ──────────────────────────────── */
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {BLOG_POSTS.map((post) => {
+              const cat = CATEGORY_STYLE[post.category]
+              const CatIcon = cat?.icon ?? BookOpen
+              return (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 overflow-hidden hover:shadow-xl hover:shadow-black/5 hover:border-primary-200 dark:hover:border-primary-800 hover:-translate-y-0.5 transition-all duration-300"
+                >
+                  {/* Cover image */}
+                  <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className={`absolute inset-0 bg-gradient-to-br ${cat?.gradient ?? 'from-slate-400 to-slate-500'} opacity-10 dark:opacity-20`} />
+                    )}
+                    {/* Category badge over image */}
+                    <div className="absolute top-3 left-3">
+                      <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-semibold backdrop-blur-sm ${cat?.badge ?? ''}`}>
+                        <CatIcon className="w-3 h-3" />
+                        {post.category}
+                      </span>
+                    </div>
+                  </div>
 
-        {/* Section title */}
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6">
-          Tous les articles
-        </h2>
+                  {/* Card body */}
+                  <div className="flex flex-col flex-1 p-5">
+                    <div className="flex items-center gap-3 mb-3 text-xs text-slate-400 dark:text-slate-500">
+                      <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                      {post.readingTime && (
+                        <>
+                          <span>·</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {post.readingTime} min
+                          </span>
+                        </>
+                      )}
+                    </div>
 
-        {/* Rest of posts grid */}
-        <div className="grid sm:grid-cols-2 gap-5">
-          {rest.map((post) => {
-            const cat = CATEGORY_STYLE[post.category]
-            const CatIcon = cat?.icon ?? BookOpen
-            return (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:shadow-black/5 hover:border-primary-200 dark:hover:border-primary-800 hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-semibold ${cat?.badge ?? ''}`}>
-                    <CatIcon className="w-3 h-3" />
-                    {post.category}
-                  </span>
-                  <span className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500 flex-shrink-0">
-                    <Clock className="w-3 h-3" />
-                    {READING_TIMES[post.slug] ?? 4} min
-                  </span>
-                </div>
+                    <h2 className="text-base font-bold text-slate-900 dark:text-white leading-snug mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors flex-1">
+                      {post.title}
+                    </h2>
 
-                <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3 leading-snug group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors flex-1">
-                  {post.title}
-                </h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-4">
+                      {post.description}
+                    </p>
 
-                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5 line-clamp-2">
-                  {post.description}
-                </p>
+                    <div className="flex items-center gap-1 text-xs font-semibold text-primary-600 dark:text-primary-400 group-hover:gap-1.5 transition-all mt-auto">
+                      Lire l&apos;article <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
 
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
-                  <time className="text-xs text-slate-400 dark:text-slate-500" dateTime={post.publishedAt}>
-                    {formatDate(post.publishedAt)}
-                  </time>
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary-600 dark:text-primary-400 group-hover:gap-1.5 transition-all">
-                    Lire <ArrowRight className="w-3 h-3" />
-                  </span>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-
-        {/* CTA */}
+        {/* ── CTA ──────────────────────────────────────────── */}
         <div className="mt-16 rounded-2xl overflow-hidden">
           <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-teal-600 p-8 sm:p-10">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:28px_28px]" />

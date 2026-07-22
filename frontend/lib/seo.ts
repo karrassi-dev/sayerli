@@ -135,49 +135,8 @@ export function buildMetadata({
   }
 }
 
-// ── Blog posts registry (future SEO pages) ────────────────────────────────────
-export const BLOG_POSTS: BlogPost[] = [
-  {
-    slug: 'comment-creer-un-devis-au-maroc',
-    title: 'Comment créer un devis professionnel au Maroc',
-    description: 'Guide complet pour créer un devis conforme aux exigences marocaines. Mentions obligatoires, modèles et outils pour PME.',
-    category: 'Guides',
-    keywords: ['comment créer un devis au maroc', 'logiciel devis maroc', 'modèle devis maroc'],
-    publishedAt: '2024-12-01',
-  },
-  {
-    slug: 'meilleur-logiciel-de-facturation-maroc',
-    title: 'Meilleur logiciel de facturation au Maroc en 2025',
-    description: 'Comparatif des meilleurs logiciels de facturation pour les PME marocaines. Fonctionnalités, prix et avis.',
-    category: 'Comparatifs',
-    keywords: ['meilleur logiciel de facturation au maroc', 'logiciel facturation maroc', 'logiciel pme maroc'],
-    publishedAt: '2024-11-15',
-  },
-  {
-    slug: 'crm-pour-pme-maroc',
-    title: 'Pourquoi les PME marocaines ont besoin d\'un CRM',
-    description: 'Découvrez comment un CRM peut transformer la gestion commerciale de votre entreprise marocaine et augmenter vos ventes.',
-    category: 'CRM',
-    keywords: ['crm maroc', 'crm pour pme maroc', 'gestion clients maroc', 'logiciel crm pour petites entreprises maroc'],
-    publishedAt: '2024-11-01',
-  },
-  {
-    slug: 'gestion-clients-pour-entreprises-marocaines',
-    title: 'Gestion des clients pour entreprises marocaines : guide pratique',
-    description: 'Tout ce que vous devez savoir sur la gestion client au Maroc. CRM, suivi, facturation et fidélisation.',
-    category: 'Guides',
-    keywords: ['gestion clients maroc', 'gestion commerciale maroc', 'logiciel de gestion maroc'],
-    publishedAt: '2024-10-15',
-  },
-  {
-    slug: 'alternative-excel-pour-gerer-son-entreprise',
-    title: 'Arrêtez Excel : la meilleure alternative pour gérer votre entreprise au Maroc',
-    description: 'Excel n\'est plus suffisant pour gérer une PME. Découvrez les meilleures alternatives pour la facturation, les devis et le CRM au Maroc.',
-    category: 'Comparatifs',
-    keywords: ['alternative excel gestion entreprise maroc', 'logiciel pme maroc', 'logiciel de gestion maroc'],
-    publishedAt: '2024-10-01',
-  },
-]
+// ── Blog posts registry ───────────────────────────────────────────────────────
+export const BLOG_POSTS: BlogPost[] = []
 
 export interface BlogPost {
   slug: string
@@ -186,4 +145,6 @@ export interface BlogPost {
   category: string
   keywords: string[]
   publishedAt: string
+  image?: string       // cover image URL (optional for now)
+  readingTime?: number // minutes
 }
