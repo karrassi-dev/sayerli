@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import {
   Truck, Plus, Pencil, Trash2, Copy, Send, CheckCircle,
-  Link, X, FileText, Layers,
+  Link, X, FileText, Layers, MessageCircle, Mail, ChevronRight,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -21,7 +21,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
 import { bonsLivraisonApi, clientsApi, devisApi } from '@/lib/api'
-import { cn } from '@/lib/utils'
+import { cn, toWhatsAppNumber } from '@/lib/utils'
 import { canDo } from '@/lib/permissions'
 
 const BonLivraisonDownloadButton = dynamic(
@@ -106,7 +106,7 @@ export default function BonsLivraisonPage() {
   const router = useRouter()
   const role = user?.role?.toLowerCase() ?? ''
   const removed: string[] = user?.permissionsRetirees ?? []
-  const ent = entreprise as any // JWT returns full Entreprise; type is narrower than runtime
+  const ent = entreprise as any
 
   const [items, setItems] = useState<ApiBL[]>([])
   const [clients, setClients] = useState<ApiClient[]>([])
@@ -129,7 +129,6 @@ export default function BonsLivraisonPage() {
   const [convertTarget, setConvertTarget] = useState<ApiBL | null>(null)
   const [limitModal, setLimitModal] = useState<{ limite: number; actuel: number } | null>(null)
 
-  // Multi-select for grouping
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [grouperOpen, setGrouperOpen] = useState(false)
   const [grouping, setGrouping] = useState(false)
@@ -157,8 +156,6 @@ export default function BonsLivraisonPage() {
     clientsApi.list().then(r => setClients(r.data?.data ?? r.data ?? []))
     devisApi.list({ statut: 'ACCEPTE' }).then(r => setDevisList(r.data?.data ?? r.data ?? []))
   }, [])
-
-  // ── Pagination ─────────────────────────────────────────────────────────────
 
   const paginated = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
   const byStatut = (s: string) => items.filter(i => i.statut === s).length
@@ -331,14 +328,64 @@ export default function BonsLivraisonPage() {
 
   const handleCopyLink = (bl: ApiBL) => {
     navigator.clipboard.writeText(`${baseUrl}/public/bl/${bl.publicToken}`)
-    success('Lien copié dans le presse-papier.')
+    success(t('pages.bonsLivraison.linkCopied'))
   }
 
-  // ── Multi-select helpers ───────────────────────────────────────────────────
+  const handleWhatsApp = async (bl: ApiBL) => {
+    const phone = toWhatsAppNumber(bl.client.telephone)
+    if (!phone) {
+      error('Erreur', t('pages.bonsLivraison.noPhone'))
+      return
+    }
+    setActionLoading(`wa_${bl.id}`)
+    try {
+      if (bl.statut === 'BROUILLON') {
+        await bonsLivraisonApi.envoyer(bl.id)
+        loadItems()
+        if (selected?.id === bl.id) setSelected(s => s ? { ...s, statut: 'ENVOYE' } : s)
+      }
+      const url = `${baseUrl}/public/bl/${bl.publicToken}`
+      const msg = `Bonjour ${bl.client.nom}, veuillez consulter votre bon de livraison ${bl.reference} ici : ${url}`
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string | string[] } } }
+      const msg = e?.response?.data?.message
+      error('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Erreur.'))
+    } finally { setActionLoading(null) }
+  }
+
+  const handleEmail = async (bl: ApiBL) => {
+    const clientEmail = bl.client.email
+    if (!clientEmail) {
+      error('Erreur', t('pages.bonsLivraison.noEmail'))
+      return
+    }
+    setActionLoading(`email_${bl.id}`)
+    try {
+      if (bl.statut === 'BROUILLON') {
+        await bonsLivraisonApi.envoyer(bl.id)
+        loadItems()
+        if (selected?.id === bl.id) setSelected(s => s ? { ...s, statut: 'ENVOYE' } : s)
+      }
+      const url = `${baseUrl}/public/bl/${bl.publicToken}`
+      const subject = `Votre bon de livraison ${bl.reference}`
+      const body = `Bonjour ${bl.client.nom},\n\nVeuillez trouver ci-dessous votre bon de livraison ${bl.reference}.\n\nConsultez-le directement via ce lien :\n${url}\n\nCordialement,`
+      window.open(
+        `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(clientEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+        '_blank',
+      )
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string | string[] } } }
+      const msg = e?.response?.data?.message
+      error('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Erreur.'))
+    } finally { setActionLoading(null) }
+  }
+
+  // ── Multi-select ───────────────────────────────────────────────────────────
 
   const toggleSelect = (bl: ApiBL, e: React.MouseEvent) => {
     e.stopPropagation()
-    if (bl.factureId) return // already invoiced — not selectable
+    if (bl.factureId) return
     setSelectedIds(prev => {
       const next = new Set(prev)
       next.has(bl.id) ? next.delete(bl.id) : next.add(bl.id)
@@ -418,6 +465,8 @@ export default function BonsLivraisonPage() {
     const canConvert = canDo('factures.create', role, removed)
     return [
       { label: t('pages.bonsLivraison.actions.voirPublic'), icon: Link, onClick: () => handleCopyLink(bl) },
+      ...(canManage ? [{ label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(bl) }] : []),
+      ...(canManage ? [{ label: 'Email', icon: Mail, onClick: () => handleEmail(bl) }] : []),
       ...(canManage && bl.statut === 'BROUILLON' ? [{ label: t('pages.bonsLivraison.actions.envoyer'), icon: Send, onClick: () => handleEnvoyer(bl) }] : []),
       ...(canManage && bl.statut === 'ENVOYE' ? [{ label: t('pages.bonsLivraison.actions.marquerLivre'), icon: CheckCircle, onClick: () => handleMarquerLivre(bl) }] : []),
       ...(canConvert && bl.statut === 'LIVRE' ? [{ label: t('pages.bonsLivraison.actions.convertir'), icon: FileText, onClick: () => setConvertTarget(bl) }] : []),
@@ -431,10 +480,16 @@ export default function BonsLivraisonPage() {
     return new Date(d).toLocaleDateString('fr-MA', { day: '2-digit', month: '2-digit', year: 'numeric' })
   }
 
+  const statusFilters = [
+    { value: 'BROUILLON', label: t('pages.bonsLivraison.statuts.BROUILLON') },
+    { value: 'ENVOYE',    label: t('pages.bonsLivraison.statuts.ENVOYE') },
+    { value: 'LIVRE',     label: t('pages.bonsLivraison.statuts.LIVRE') },
+  ]
+
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div dir={dir} className="space-y-6">
+    <div dir={dir}>
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
       <PageHeader
@@ -443,7 +498,7 @@ export default function BonsLivraisonPage() {
         actions={canDo('bons-livraison.manage', role, removed) ? (
           <button
             onClick={openCreate}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-all"
+            className="btn-primary text-sm"
           >
             <Plus className="w-4 h-4" />
             {t('pages.bonsLivraison.add')}
@@ -452,38 +507,29 @@ export default function BonsLivraisonPage() {
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <StatsCard label={t('pages.bonsLivraison.stats.total')} value={loading ? '—' : items.length} icon={Truck} color="blue" />
         <StatsCard label={t('pages.bonsLivraison.stats.brouillon')} value={loading ? '—' : byStatut('BROUILLON')} icon={Pencil} color="teal" />
         <StatsCard label={t('pages.bonsLivraison.stats.envoye')} value={loading ? '—' : byStatut('ENVOYE')} icon={Send} color="orange" />
         <StatsCard label={t('pages.bonsLivraison.stats.livre')} value={loading ? '—' : byStatut('LIVRE')} icon={CheckCircle} color="green" />
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <SearchFilter
-          value={search}
-          onChange={v => { setSearch(v); setPage(1) }}
-          placeholder={t('pages.bonsLivraison.searchPlaceholder')}
-        />
-        <select
-          value={filterStatut}
-          onChange={e => { setFilterStatut(e.target.value); setPage(1) }}
-          className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
-        >
-          <option value="">Tous les statuts</option>
-          <option value="BROUILLON">{t('pages.bonsLivraison.statuts.BROUILLON')}</option>
-          <option value="ENVOYE">{t('pages.bonsLivraison.statuts.ENVOYE')}</option>
-          <option value="LIVRE">{t('pages.bonsLivraison.statuts.LIVRE')}</option>
-        </select>
-      </div>
+      {/* Search & Filters */}
+      <SearchFilter
+        value={search}
+        onChange={v => { setSearch(v); setPage(1) }}
+        placeholder={t('pages.bonsLivraison.searchPlaceholder')}
+        filters={[{ key: 'statut', label: t('common.status'), options: statusFilters }]}
+        activeFilters={filterStatut ? { statut: filterStatut } : {}}
+        onFilterChange={(_, v) => { setFilterStatut(v); setPage(1) }}
+      />
 
       {/* Grouper action bar */}
       {selectedIds.size >= 2 && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800 rounded-2xl">
+        <div className="flex items-center gap-3 px-4 py-3 mb-4 bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800 rounded-2xl">
           <Layers className="w-4 h-4 text-primary-600 dark:text-primary-400 flex-shrink-0" />
           <span className="text-sm font-medium text-primary-700 dark:text-primary-300 flex-1">
-            {selectedIds.size} BL sélectionnés
+            {selectedIds.size} {t('pages.bonsLivraison.blSelected')}
             {grouperValidation?.error && (
               <span className="ml-2 text-amber-600 dark:text-amber-400 font-normal">— {grouperValidation.error}</span>
             )}
@@ -507,37 +553,39 @@ export default function BonsLivraisonPage() {
       )}
 
       {/* Table */}
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <span className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
-        </div>
-      ) : items.length === 0 ? (
-        <EmptyState
-          icon={Truck}
-          title={t('pages.bonsLivraison.empty.title')}
-          desc={t('pages.bonsLivraison.empty.desc')}
-          action={canDo('bons-livraison.manage', role, removed) ? {
-            label: t('pages.bonsLivraison.add'),
-            onClick: openCreate,
-          } : undefined}
-        />
-      ) : (
-        <>
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div className="card rounded-2xl overflow-hidden">
+        {loading ? (
+          <div className="p-8 space-y-3">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="h-14 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+            ))}
+          </div>
+        ) : items.length === 0 ? (
+          <EmptyState
+            icon={Truck}
+            title={t('pages.bonsLivraison.empty.title')}
+            desc={t('pages.bonsLivraison.empty.desc')}
+            action={canDo('bons-livraison.manage', role, removed) ? {
+              label: t('pages.bonsLivraison.add'),
+              onClick: openCreate,
+            } : undefined}
+          />
+        ) : (
+          <>
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-100 dark:border-slate-800">
+                  <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
                     <th className="px-4 py-3 w-10" />
-                    {['reference','client','devis','date','livraison','statut','actions'].map(col => (
-                      <th key={col} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    {['reference', 'client', 'devis', 'date', 'livraison', 'statut', 'actions'].map(col => (
+                      <th key={col} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                         {t(`pages.bonsLivraison.col.${col}`)}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
                   {paginated.map(bl => {
                     const cfg = STATUT_CONFIG[bl.statut] ?? STATUT_CONFIG.BROUILLON
                     const isSelected = selectedIds.has(bl.id)
@@ -546,12 +594,12 @@ export default function BonsLivraisonPage() {
                       <tr
                         key={bl.id}
                         className={cn(
-                          'hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer',
+                          'hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors cursor-pointer',
                           isSelected && 'bg-primary-50/60 dark:bg-primary-950/30',
                         )}
                         onClick={() => setSelected(bl)}
                       >
-                        <td className="px-4 py-3 w-10" onClick={e => e.stopPropagation()}>
+                        <td className="px-4 py-3.5 w-10" onClick={e => e.stopPropagation()}>
                           {!isInvoiced && (
                             <input
                               type="checkbox"
@@ -562,17 +610,27 @@ export default function BonsLivraisonPage() {
                             />
                           )}
                         </td>
-                        <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white">{bl.reference}</td>
-                        <td className="px-4 py-3">
-                          <p className="text-sm text-slate-900 dark:text-white">{bl.client.nom}</p>
-                          {bl.client.nomEntreprise && <p className="text-xs text-slate-500 dark:text-slate-400">{bl.client.nomEntreprise}</p>}
+                        <td className="px-4 py-3.5">
+                          <span className="text-sm font-mono font-semibold text-slate-900 dark:text-white">{bl.reference}</span>
                         </td>
-                        <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{bl.devis?.reference ?? '—'}</td>
-                        <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{fmtDate(bl.createdAt)}</td>
-                        <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{fmtDate(bl.dateLivraison)}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3.5">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{bl.client.nom}</p>
+                          {bl.client.nomEntreprise && (
+                            <p className="text-xs text-slate-400">{bl.client.nomEntreprise}</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5 text-sm text-slate-500 dark:text-slate-400">
+                          {bl.devis?.reference ?? '—'}
+                        </td>
+                        <td className="px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
+                          {fmtDate(bl.createdAt)}
+                        </td>
+                        <td className="px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
+                          {fmtDate(bl.dateLivraison)}
+                        </td>
+                        <td className="px-4 py-3.5">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <StatusBadge variant={cfg.variant} label={cfg.label} />
+                            <StatusBadge variant={cfg.variant} label={cfg.label} dot />
                             {isInvoiced && (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">
                                 <FileText className="w-3 h-3" />
@@ -581,7 +639,7 @@ export default function BonsLivraisonPage() {
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                        <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
                           <ActionMenu items={makeActions(bl)} />
                         </td>
                       </tr>
@@ -597,94 +655,139 @@ export default function BonsLivraisonPage() {
                 const cfg = STATUT_CONFIG[bl.statut] ?? STATUT_CONFIG.BROUILLON
                 const isSelected = selectedIds.has(bl.id)
                 const isInvoiced = !!bl.factureId
+                const canManage = canDo('bons-livraison.manage', role, removed)
                 return (
                   <div
                     key={bl.id}
                     className={cn(
-                      'p-4 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer',
+                      'p-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors',
                       isSelected && 'bg-primary-50/60 dark:bg-primary-950/30',
                     )}
                     onClick={() => setSelected(bl)}
                   >
-                    {!isInvoiced && (
-                      <div onClick={e => e.stopPropagation()}>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => {}}
-                          onClick={e => toggleSelect(bl, e)}
-                          className="w-4 h-4 rounded accent-primary-600 cursor-pointer"
-                        />
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        {!isInvoiced && (
+                          <div onClick={e => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => {}}
+                              onClick={e => toggleSelect(bl, e)}
+                              className="w-4 h-4 rounded accent-primary-600 cursor-pointer"
+                            />
+                          </div>
+                        )}
+                        <span className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">
+                          {bl.reference}
+                        </span>
                       </div>
-                    )}
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center flex-shrink-0">
-                      <Truck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      <StatusBadge variant={cfg.variant} dot size="sm" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white">{bl.reference}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{bl.client.nom}</p>
-                      {isInvoiced && (
-                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
-                          {bl.facture?.numeroFacture ?? t('pages.bonsLivraison.facture')}
-                        </p>
-                      )}
-                    </div>
-                    <StatusBadge variant={cfg.variant} label={cfg.label} />
-                    <div onClick={e => e.stopPropagation()}>
-                      <ActionMenu items={makeActions(bl)} />
+
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{bl.client.nom}</p>
+
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs text-slate-400 truncate">
+                          {bl.client.nomEntreprise || fmtDate(bl.createdAt)}
+                        </span>
+                        {isInvoiced && (
+                          <span className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+                            {bl.facture?.numeroFacture ?? t('pages.bonsLivraison.facture')}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-1.5 flex-shrink-0" onClick={e => e.stopPropagation()}>
+                        {canManage && (
+                          <button
+                            onClick={e => { e.stopPropagation(); handleWhatsApp(bl) }}
+                            disabled={actionLoading === `wa_${bl.id}`}
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+                          >
+                            {actionLoading === `wa_${bl.id}`
+                              ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                              : <MessageCircle className="w-3 h-3" />}
+                            WhatsApp
+                          </button>
+                        )}
+                        {canManage && (
+                          <button
+                            onClick={e => { e.stopPropagation(); handleEmail(bl) }}
+                            disabled={actionLoading === `email_${bl.id}`}
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
+                          >
+                            {actionLoading === `email_${bl.id}`
+                              ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                              : <Mail className="w-3 h-3" />}
+                            Email
+                          </button>
+                        )}
+                        <div>
+                          <ActionMenu items={makeActions(bl)} />
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                      </div>
                     </div>
                   </div>
                 )
               })}
             </div>
-          </div>
 
-          {items.length > PAGE_SIZE && (
-            <Pagination page={page} total={items.length} perPage={PAGE_SIZE} onChange={setPage} />
-          )}
-        </>
-      )}
+            <div className="px-4 py-3">
+              <Pagination page={page} total={items.length} perPage={PAGE_SIZE} onChange={setPage} />
+            </div>
+          </>
+        )}
+      </div>
 
       {/* ── Detail modal ── */}
       {selected && (
-        <Modal
-          open
-          onClose={() => setSelected(null)}
-          title={selected.reference}
-          size="lg"
-        >
-          <div className="space-y-5">
-            {/* Status */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <StatusBadge
-                variant={STATUT_CONFIG[selected.statut]?.variant ?? 'brouillon'}
-                label={STATUT_CONFIG[selected.statut]?.label ?? selected.statut}
-              />
-              {selected.devis && (
-                <span className="text-xs text-slate-500 dark:text-slate-400">Devis : {selected.devis.reference}</span>
-              )}
-              {selected.facture && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">
-                  <FileText className="w-3.5 h-3.5" />
-                  {t('pages.bonsLivraison.facture')} — {selected.facture.numeroFacture}
-                </span>
-              )}
+        <Modal open onClose={() => setSelected(null)} title={selected.reference} size="lg">
+          <div className="space-y-4">
+            {/* Status + meta */}
+            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+              <div>
+                <p className="text-xs text-slate-400 mb-0.5">{t('pages.bonsLivraison.col.client')}</p>
+                <p className="font-semibold text-slate-900 dark:text-white">{selected.client.nom}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{selected.client.nomEntreprise || '—'}</p>
+                {selected.client.ice && (
+                  <p className="text-xs text-slate-400 mt-0.5">ICE: {selected.client.ice}</p>
+                )}
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <StatusBadge
+                  variant={STATUT_CONFIG[selected.statut]?.variant ?? 'brouillon'}
+                  label={STATUT_CONFIG[selected.statut]?.label ?? selected.statut}
+                  dot
+                />
+                {selected.facture && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">
+                    <FileText className="w-3.5 h-3.5" />
+                    {selected.facture.numeroFacture}
+                  </span>
+                )}
+              </div>
             </div>
 
-            {/* Client + dates */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Client</p>
-                <p className="font-medium text-slate-900 dark:text-white">{selected.client.nom}</p>
-                {selected.client.nomEntreprise && <p className="text-slate-500 dark:text-slate-400 text-xs">{selected.client.nomEntreprise}</p>}
-                {selected.client.ice && <p className="text-slate-500 dark:text-slate-400 text-xs">ICE: {selected.client.ice}</p>}
+            {/* Dates */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <p className="text-xs text-slate-400 mb-1">{t('pages.bonsLivraison.col.date')}</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">{fmtDate(selected.createdAt)}</p>
               </div>
-              <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Dates</p>
-                <p className="text-slate-700 dark:text-slate-300">Créé : {fmtDate(selected.createdAt)}</p>
-                {selected.dateLivraison && <p className="text-slate-700 dark:text-slate-300">Livraison : {fmtDate(selected.dateLivraison)}</p>}
+              <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <p className="text-xs text-slate-400 mb-1">{t('pages.bonsLivraison.col.livraison')}</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">{fmtDate(selected.dateLivraison)}</p>
               </div>
             </div>
+
+            {selected.devis && (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t('pages.bonsLivraison.col.devis')}: <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">{selected.devis.reference}</span>
+              </p>
+            )}
 
             {/* Lines */}
             <div>
@@ -695,16 +798,16 @@ export default function BonsLivraisonPage() {
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 dark:bg-slate-800">
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs text-slate-500 dark:text-slate-400">Désignation</th>
-                      <th className="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">Qté</th>
-                      <th className="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">Unité</th>
+                      <th className="px-3 py-2 text-left text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.description')}</th>
+                      <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.quantite')}</th>
+                      <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.unite')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {selected.lignes.map((l, i) => (
                       <tr key={i}>
                         <td className="px-3 py-2 text-slate-900 dark:text-white">{l.description}</td>
-                        <td className="px-3 py-2 text-right text-slate-700 dark:text-slate-300">{Number(l.quantite)}</td>
+                        <td className="px-3 py-2 text-right font-semibold text-slate-700 dark:text-slate-300">{Number(l.quantite)}</td>
                         <td className="px-3 py-2 text-right text-slate-500 dark:text-slate-400">{l.unite || '—'}</td>
                       </tr>
                     ))}
@@ -714,8 +817,9 @@ export default function BonsLivraisonPage() {
             </div>
 
             {selected.notes && (
-              <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 text-sm text-slate-600 dark:text-slate-400">
-                {selected.notes}
+              <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <p className="text-xs text-slate-400 mb-1">{t('pages.bonsLivraison.form.notes')}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">{selected.notes}</p>
               </div>
             )}
 
@@ -724,46 +828,96 @@ export default function BonsLivraisonPage() {
               {selected.lignes.length > 0 && entreprise && (
                 <BonLivraisonDownloadButton data={buildPDFData(selected)} label={t('pages.bonsLivraison.actions.telecharger')} />
               )}
+
               {canDo('bons-livraison.manage', role, removed) && selected.statut !== 'LIVRE' && (
                 <button
                   onClick={() => { setSelected(null); openEdit(selected) }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                 >
-                  <Pencil className="w-3.5 h-3.5" /> Modifier
+                  <Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
                 </button>
               )}
+
               {canDo('bons-livraison.manage', role, removed) && selected.statut === 'BROUILLON' && (
                 <button
                   onClick={() => handleEnvoyer(selected)}
                   disabled={!!actionLoading}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all disabled:opacity-60"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all disabled:opacity-60"
                 >
                   <Send className="w-3.5 h-3.5" /> {t('pages.bonsLivraison.actions.envoyer')}
                 </button>
               )}
+
               {canDo('bons-livraison.manage', role, removed) && selected.statut === 'ENVOYE' && (
                 <button
                   onClick={() => handleMarquerLivre(selected)}
                   disabled={!!actionLoading}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-all disabled:opacity-60"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-all disabled:opacity-60"
                 >
                   <CheckCircle className="w-3.5 h-3.5" /> {t('pages.bonsLivraison.actions.marquerLivre')}
                 </button>
               )}
+
               {canDo('factures.create', role, removed) && selected.statut === 'LIVRE' && (
                 <button
                   onClick={() => { setSelected(null); setConvertTarget(selected) }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary-600 hover:bg-primary-700 text-white transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary-600 hover:bg-primary-700 text-white transition-all"
                 >
                   <FileText className="w-3.5 h-3.5" /> {t('pages.bonsLivraison.actions.convertir')}
                 </button>
               )}
+
               <button
                 onClick={() => handleCopyLink(selected)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
               >
                 <Link className="w-3.5 h-3.5" /> {t('pages.bonsLivraison.actions.voirPublic')}
               </button>
+
+              {canDo('bons-livraison.manage', role, removed) && (
+                <button
+                  onClick={() => handleWhatsApp(selected)}
+                  disabled={actionLoading === `wa_${selected.id}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 transition-all"
+                >
+                  {actionLoading === `wa_${selected.id}`
+                    ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    : <MessageCircle className="w-3.5 h-3.5" />}
+                  WhatsApp
+                </button>
+              )}
+
+              {canDo('bons-livraison.manage', role, removed) && (
+                <button
+                  onClick={() => handleEmail(selected)}
+                  disabled={actionLoading === `email_${selected.id}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all"
+                >
+                  {actionLoading === `email_${selected.id}`
+                    ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    : <Mail className="w-3.5 h-3.5" />}
+                  Email
+                </button>
+              )}
+
+              {canDo('bons-livraison.manage', role, removed) && selected.statut !== 'LIVRE' && (
+                <button
+                  onClick={() => { setSelected(null); handleDupliquer(selected) }}
+                  disabled={!!actionLoading}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-60 transition-all"
+                >
+                  <Copy className="w-3.5 h-3.5" /> {t('pages.bonsLivraison.actions.dupliquer')}
+                </button>
+              )}
+
+              {canDo('bons-livraison.manage', role, removed) && selected.statut !== 'LIVRE' && (
+                <button
+                  onClick={() => { setDeleteTarget(selected); setSelected(null) }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 border border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
+                >
+                  <Trash2 className="w-3.5 h-3.5" /> {t('common.delete')}
+                </button>
+              )}
             </div>
           </div>
         </Modal>
@@ -773,20 +927,38 @@ export default function BonsLivraisonPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingId ? 'Modifier le bon de livraison' : t('pages.bonsLivraison.add')}
+        title={editingId ? t('pages.bonsLivraison.editTitle') : t('pages.bonsLivraison.add')}
         size="lg"
+        footer={
+          <>
+            <button
+              onClick={() => setModalOpen(false)}
+              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+            >
+              {saving && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+              {t('common.save')}
+            </button>
+          </>
+        }
       >
         <div className="space-y-5">
           {/* Client */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
               {t('pages.bonsLivraison.form.client')} <span className="text-red-500">*</span>
             </label>
             <select
               value={form.clientId}
               onChange={e => setForm(f => ({ ...f, clientId: e.target.value }))}
               className={cn(
-                'w-full px-3 py-2.5 rounded-xl border bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500',
+                'w-full px-3 py-2 rounded-xl border bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all',
                 formErrors.clientId ? 'border-red-400' : 'border-slate-200 dark:border-slate-700',
               )}
             >
@@ -800,13 +972,13 @@ export default function BonsLivraisonPage() {
 
           {/* Devis lié */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
               {t('pages.bonsLivraison.form.devis')}
             </label>
             <select
               value={form.devisId}
               onChange={e => setForm(f => ({ ...f, devisId: e.target.value }))}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
             >
               <option value="">{t('pages.bonsLivraison.form.devisPlaceholder')}</option>
               {devisList.map(d => (
@@ -818,18 +990,18 @@ export default function BonsLivraisonPage() {
           {/* Date livraison + Notes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
                 {t('pages.bonsLivraison.form.dateLivraison')}
               </label>
               <input
                 type="date"
                 value={form.dateLivraison}
                 onChange={e => setForm(f => ({ ...f, dateLivraison: e.target.value }))}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block">
                 {t('pages.bonsLivraison.form.notes')}
               </label>
               <input
@@ -837,26 +1009,36 @@ export default function BonsLivraisonPage() {
                 value={form.notes}
                 onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder={t('pages.bonsLivraison.form.notesPlaceholder')}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
               />
             </div>
           </div>
 
           {/* Lines */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              {t('pages.bonsLivraison.form.lignes')} <span className="text-red-500">*</span>
-            </label>
-            {formErrors.lignes && <p className="text-xs text-red-500 mb-2">{formErrors.lignes}</p>}
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                {t('pages.bonsLivraison.form.lignes')} <span className="text-red-500">*</span>
+              </label>
+              {formErrors.lignes && <p className="text-xs text-red-500">{formErrors.lignes}</p>}
+            </div>
+
+            {/* Header row */}
+            <div className="hidden sm:grid grid-cols-[1fr_70px_80px_28px] gap-2 mb-1 px-1">
+              {[t('pages.bonsLivraison.form.description'), t('pages.bonsLivraison.form.quantite'), t('pages.bonsLivraison.form.unite'), ''].map((h, i) => (
+                <span key={i} className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{h}</span>
+              ))}
+            </div>
+
             <div className="space-y-2">
               {form.lignes.map((ligne, i) => (
-                <div key={i} className="flex gap-2 items-start">
+                <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_70px_80px_28px] gap-2 items-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60">
                   <input
                     type="text"
                     value={ligne.description}
                     onChange={e => handleLigneChange(i, 'description', e.target.value)}
                     placeholder={t('pages.bonsLivraison.form.descPlaceholder')}
-                    className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
                   />
                   <input
                     type="number"
@@ -864,7 +1046,7 @@ export default function BonsLivraisonPage() {
                     step="0.001"
                     value={ligne.quantite}
                     onChange={e => handleLigneChange(i, 'quantite', e.target.value)}
-                    className="w-20 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white text-center outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
                     placeholder="Qté"
                   />
                   <input
@@ -872,39 +1054,25 @@ export default function BonsLivraisonPage() {
                     value={ligne.unite}
                     onChange={e => handleLigneChange(i, 'unite', e.target.value)}
                     placeholder={t('pages.bonsLivraison.form.unite')}
-                    className="w-24 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
                   />
-                  {form.lignes.length > 1 && (
-                    <button onClick={() => removeLigne(i)} className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-all flex-shrink-0">
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => removeLigne(i)}
+                    disabled={form.lignes.length === 1}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               ))}
             </div>
+
             <button
               onClick={addLigne}
-              className="mt-2 text-sm text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1"
+              className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
             >
-              <Plus className="w-3.5 h-3.5" /> {t('pages.bonsLivraison.form.addLigne')}
-            </button>
-          </div>
-
-          {/* Footer */}
-          <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-            <button
-              onClick={() => setModalOpen(false)}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-            >
-              Annuler
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold disabled:opacity-60 transition-all inline-flex items-center gap-2"
-            >
-              {saving && <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-              {editingId ? 'Enregistrer' : t('pages.bonsLivraison.add')}
+              <Plus className="w-3.5 h-3.5" />
+              {t('pages.bonsLivraison.form.addLigne')}
             </button>
           </div>
         </div>
@@ -917,7 +1085,7 @@ export default function BonsLivraisonPage() {
         onConfirm={handleDelete}
         title={t('pages.bonsLivraison.deleteTitle')}
         message={t('pages.bonsLivraison.deleteMessage').replace('{reference}', deleteTarget?.reference ?? '')}
-        confirmLabel="Supprimer"
+        confirmLabel={t('common.delete')}
         danger
       />
 
@@ -928,7 +1096,7 @@ export default function BonsLivraisonPage() {
         onConfirm={handleConvertir}
         title={t('pages.bonsLivraison.actions.convertir')}
         message={t('pages.bonsLivraison.convertirConfirm').replace('{reference}', convertTarget?.reference ?? '')}
-        confirmLabel="Convertir"
+        confirmLabel={t('pages.bonsLivraison.actions.convertir')}
       />
 
       {/* ── Grouper confirm modal ── */}
@@ -948,10 +1116,11 @@ export default function BonsLivraisonPage() {
             <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 space-y-1">
               {selectedBLs.map(bl => (
                 <div key={bl.id} className="flex items-center justify-between text-sm">
-                  <span className="font-medium text-slate-900 dark:text-white">{bl.reference}</span>
+                  <span className="font-mono font-semibold text-slate-900 dark:text-white">{bl.reference}</span>
                   <StatusBadge
                     variant={STATUT_CONFIG[bl.statut]?.variant ?? 'brouillon'}
                     label={STATUT_CONFIG[bl.statut]?.label ?? bl.statut}
+                    dot
                   />
                 </div>
               ))}
@@ -959,9 +1128,9 @@ export default function BonsLivraisonPage() {
             <div className="flex justify-end gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
               <button
                 onClick={() => setGrouperOpen(false)}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
               >
-                Annuler
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleGrouper}

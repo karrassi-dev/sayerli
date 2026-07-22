@@ -878,7 +878,9 @@
         "supprimer": "Delete",
         "telecharger": "Download PDF",
         "voirPublic": "Client link",
-        "creerDepuisDevis": "Create DN"
+        "creerDepuisDevis": "Create DN",
+        "whatsapp": "WhatsApp",
+        "email": "Email"
       },
       "form": {
         "title": "Delivery Note",
@@ -917,6 +919,11 @@
       "deleteMessage": "Are you sure you want to delete delivery note {reference}?",
       "convertirConfirm": "Convert {reference} to an invoice? Lines will be copied without prices — you can complete them afterwards.",
       "blFromDevisSuccess": "Delivery note created from quote.",
+      "editTitle": "Edit delivery note",
+      "linkCopied": "Link copied to clipboard.",
+      "noPhone": "No phone number for this client.",
+      "noEmail": "No email address for this client.",
+      "blSelected": "DN selected",
       "publicPage": {
         "title": "Delivery Note",
         "confirmerBtn": "I received the items",

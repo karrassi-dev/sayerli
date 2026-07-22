@@ -878,7 +878,9 @@
         "supprimer": "حذف",
         "telecharger": "تحميل PDF",
         "voirPublic": "رابط العميل",
-        "creerDepuisDevis": "إنشاء وصل تسليم"
+        "creerDepuisDevis": "إنشاء وصل تسليم",
+        "whatsapp": "واتساب",
+        "email": "البريد الإلكتروني"
       },
       "form": {
         "title": "وصل التسليم",
@@ -917,6 +919,11 @@
       "deleteMessage": "هل أنت متأكد من حذف وصل التسليم {reference}؟",
       "convertirConfirm": "تحويل {reference} إلى فاتورة؟ سيتم نسخ البنود بدون أسعار — يمكنك إكمالها لاحقاً.",
       "blFromDevisSuccess": "تم إنشاء وصل التسليم من عرض السعر.",
+      "editTitle": "تعديل وصل التسليم",
+      "linkCopied": "تم نسخ الرابط.",
+      "noPhone": "لا يوجد رقم هاتف لهذا العميل.",
+      "noEmail": "لا يوجد بريد إلكتروني لهذا العميل.",
+      "blSelected": "وصل تسليم محدد",
       "publicPage": {
         "title": "وصل التسليم",
         "confirmerBtn": "استلمت البضائع",

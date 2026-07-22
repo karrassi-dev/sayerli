@@ -879,7 +879,9 @@
         "supprimer": "Supprimer",
         "telecharger": "Télécharger PDF",
         "voirPublic": "Lien client",
-        "creerDepuisDevis": "Créer un BL"
+        "creerDepuisDevis": "Créer un BL",
+        "whatsapp": "WhatsApp",
+        "email": "Email"
       },
       "form": {
         "title": "Bon de livraison",
@@ -918,6 +920,11 @@
       "deleteMessage": "Êtes-vous sûr de vouloir supprimer le bon de livraison {reference} ?",
       "convertirConfirm": "Convertir {reference} en facture ? Les lignes seront copiées sans prix — vous pourrez les compléter ensuite.",
       "blFromDevisSuccess": "Bon de livraison créé depuis le devis.",
+      "editTitle": "Modifier le bon de livraison",
+      "linkCopied": "Lien copié dans le presse-papier.",
+      "noPhone": "Aucun numéro de téléphone pour ce client.",
+      "noEmail": "Aucune adresse e-mail pour ce client.",
+      "blSelected": "BL sélectionnés",
       "publicPage": {
         "title": "Bon de livraison",
         "confirmerBtn": "J'ai reçu les articles",
