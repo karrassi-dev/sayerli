@@ -730,6 +730,625 @@ export const ARTICLES: Record<string, ArticleData> = {
     },
   },
 
+  // ── ARTICLE 3 ────────────────────────────────────────────────────────────────
+  'inscription-auto-entrepreneur-maroc': {
+    slug: 'inscription-auto-entrepreneur-maroc',
+    image: '/blog/inscription-auto-entrepreneur-maroc.webp',
+    readingTime: 7,
+    content: {
+
+      // ── FRENCH ──────────────────────────────────────────────────────────────
+      fr: {
+        title: 'Comment s\'inscrire comme auto-entrepreneur au Maroc : démarches, documents, RC et patente',
+        description: 'Guide complet pour s\'inscrire comme auto-entrepreneur au Maroc : documents à fournir, inscription sur le portail officiel, RC, patente (taxe professionnelle) et identifiant fiscal.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Vous avez décidé de vous lancer comme auto-entrepreneur au Maroc. Maintenant, la vraie question : comment faire concrètement ? Quel portail ? Quels documents ? Et qu\'en est-il du Registre de Commerce et de la patente dont tout le monde parle ? Ces questions reviennent constamment, et pour cause — la confusion entre les démarches des différents statuts juridiques est réelle.',
+          },
+          {
+            type: 'p',
+            text: 'La bonne nouvelle : le régime auto-entrepreneur a été conçu précisément pour simplifier tout ça. Dans ce guide, on couvre les démarches étape par étape, les documents exacts à préparer, et on clarifie définitivement les questions sur le RC et la patente — deux notions souvent mal comprises pour ce statut.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Les documents à préparer avant de commencer',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'un des atouts majeurs du régime auto-entrepreneur est la légèreté du dossier. Contrairement à la création d\'une SARL qui nécessite statuts, capital social et acte notarié, l\'inscription auto-entrepreneur ne demande que quelques informations de base. Voici ce dont vous aurez besoin :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Carte Nationale d\'Identité (CIN) — le numéro est saisi en ligne, aucun scan n\'est envoyé pour la plupart des activités',
+                  'Adresse email valide — c\'est là que vous recevrez votre attestation d\'inscription et votre identifiant fiscal',
+                  'Numéro de téléphone marocain — pour la vérification du compte',
+                  'Adresse postale complète — votre adresse personnelle fait office d\'adresse professionnelle au départ',
+                  'Description de votre activité — préparez 2 à 3 lignes décrivant précisément ce que vous faites',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Activités nécessitant des pièces supplémentaires',
+                body: 'Certaines activités réglementées (transport, vente de médicaments, activités nécessitant une autorisation de la commune) peuvent demander des documents complémentaires. Le portail vous en informe au moment de choisir votre activité. Pour les services intellectuels — développement, design, conseil, formation — aucune pièce supplémentaire n\'est requise.',
+              },
+            ],
+          },
+          {
+            h2: 'L\'inscription pas à pas sur le portail officiel',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'inscription se fait exclusivement en ligne sur portail.auto-entrepreneur.ma — le portail officiel géré conjointement par la CNSS et la Direction Générale des Impôts (DGI). Voici les étapes dans l\'ordre exact :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Accédez à portail.auto-entrepreneur.ma et cliquez sur "S\'inscrire"',
+                  'Créez votre compte : email, mot de passe, et vérification par SMS',
+                  'Renseignez vos informations personnelles : numéro de CIN, prénom, nom, date et lieu de naissance',
+                  'Saisissez votre adresse complète (elle servira d\'adresse d\'activité)',
+                  'Sélectionnez votre secteur d\'activité dans la liste déroulante, puis votre activité précise',
+                  'Décrivez votre activité en quelques lignes dans le champ libre prévu à cet effet',
+                  'Relisez et validez votre dossier — vous pouvez sauvegarder et revenir plus tard',
+                  'Soumettez votre demande : un numéro de dossier vous est attribué immédiatement',
+                  'Attendez la confirmation par email : vous recevrez votre attestation d\'inscription et votre IF (Identifiant Fiscal)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Délai réel de traitement',
+                body: 'La grande majorité des dossiers complets sont traités en 24 à 48 heures ouvrables. Certains retours ont été constatés le jour même. Si votre activité nécessite une vérification supplémentaire, le délai peut aller jusqu\'à 5 jours ouvrables. Aucun passage en agence n\'est requis pour les activités de services classiques.',
+              },
+            ],
+          },
+          {
+            h2: 'RC (Registre de Commerce) : l\'auto-entrepreneur en est-il dispensé ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'C\'est l\'une des questions les plus fréquentes — et la réponse est claire : les auto-entrepreneurs ne sont pas tenus de s\'inscrire au Registre de Commerce (RC). Le RC est une obligation réservée aux sociétés commerciales (SARL, SA, SARLAU) et aux commerçants personnes physiques relevant du régime de droit commun.',
+              },
+              {
+                type: 'p',
+                text: 'Le régime auto-entrepreneur dispose de son propre système d\'enregistrement via le portail national. L\'attestation d\'inscription délivrée à l\'issue de la procédure remplace le RC pour toutes vos démarches administratives et commerciales courantes.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Attention aux demandes de certains clients',
+                body: 'Certains donneurs d\'ordre — notamment les grandes entreprises ou les administrations publiques — demandent parfois un numéro RC dans leurs formulaires de référencement fournisseur. Dans ce cas, vous pouvez fournir votre attestation d\'inscription auto-entrepreneur et votre Identifiant Fiscal. Si un client exige impérativement un RC, il faudra envisager la création d\'une SARL pour travailler avec lui.',
+              },
+              {
+                type: 'table',
+                headers: ['Démarche', 'Auto-entrepreneur', 'SARL / Commerçant'],
+                rows: [
+                  ['Registre de Commerce (RC)', 'Non requis', 'Obligatoire'],
+                  ['Portail auto-entrepreneur.ma', 'Obligatoire', 'Non applicable'],
+                  ['Identifiant Fiscal (IF)', 'Attribué automatiquement', 'Obtenu à la DGI'],
+                  ['Acte notarié / Statuts', 'Non requis', 'Obligatoires'],
+                  ['Capital social minimum', 'Aucun', '1 MAD (SARL)'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'Patente et taxe professionnelle : ce qu\'il faut savoir',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La "patente" — officiellement rebaptisée "taxe professionnelle" depuis la réforme fiscale — est souvent source de confusion pour les auto-entrepreneurs. Voici la règle exacte :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Exonération totale pendant les 5 premières années d\'activité à compter de la date d\'inscription',
+                  'Après 5 ans : assujettissement à la taxe professionnelle aux taux normaux applicables à votre activité',
+                  'La déclaration et le paiement se font auprès de votre centre régional des impôts (CRI)',
+                  'En pratique : pour la grande majorité des auto-entrepreneurs en début d\'activité, la taxe professionnelle ne s\'applique tout simplement pas encore',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Triple exonération les premières années',
+                body: 'En cumulant l\'exonération d\'IR (3 ans), l\'exonération de taxe professionnelle / patente (5 ans) et l\'exonération de TVA (permanente pour ce régime), un auto-entrepreneur en début d\'activité ne paie pratiquement aucune charge fiscale directe — uniquement les cotisations CNSS proportionnelles à son CA déclaré.',
+              },
+            ],
+          },
+          {
+            h2: 'Votre identifiant fiscal (IF) : à quoi sert-il et où le mettre ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'À l\'issue de votre inscription, vous recevez par email votre Identifiant Fiscal (IF) — un numéro unique attribué par la Direction Générale des Impôts. C\'est votre numéro d\'identification fiscale officiel en tant qu\'auto-entrepreneur. Il est indispensable sur chacune de vos factures.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Sur toutes vos factures : mention obligatoire "IF n° XXXXXXXX" dans l\'en-tête',
+                  'Pour vos déclarations trimestrielles de CA auprès de la DGI',
+                  'Pour vos cotisations CNSS trimestrielles',
+                  'Pour ouvrir un compte professionnel auprès de certaines banques',
+                  'Pour tout justificatif de statut légal demandé par un partenaire ou client',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Vos factures conformes avec votre IF, en 2 minutes',
+                body: 'Sayerli génère automatiquement des factures avec toutes les mentions légales obligatoires : votre IF, votre adresse, la mention d\'exonération TVA, et la numérotation séquentielle. Aucun risque d\'oubli, aucune erreur. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer mon compte gratuit',
+              },
+            ],
+          },
+          {
+            h2: 'Après l\'inscription : ce que vous pouvez faire immédiatement',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Dès réception de votre attestation d\'inscription et de votre IF, vous pouvez légalement commencer votre activité. Voici ce que vous pouvez — et devez — mettre en place dès le premier jour :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Émettre des factures conformes avec votre IF et la mention d\'exonération TVA',
+                  'Ouvrir un compte bancaire dédié à votre activité (fortement recommandé — pas obligatoire légalement, mais indispensable en pratique)',
+                  'Commencer à enregistrer vos encaissements pour votre déclaration trimestrielle',
+                  'Vous affilier à la CNSS si ce n\'est pas fait automatiquement (certaines inscriptions en ligne le font d\'office)',
+                  'Préparer votre première déclaration trimestrielle pour la période en cours',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Ne manquez pas votre première déclaration',
+                body: 'Les déclarations trimestrielles sont obligatoires même si votre CA est nul. Les dates limites sont : 31 janvier (T4 N-1), 30 avril (T1), 31 juillet (T2), 31 octobre (T3). Une déclaration tardive ou oubliée peut entraîner des pénalités. Notez ces dates dans votre agenda dès maintenant.',
+              },
+            ],
+          },
+          {
+            h2: 'Les erreurs fréquentes à éviter lors de l\'inscription',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Après avoir accompagné de nombreux indépendants marocains dans leurs démarches, voici les erreurs les plus courantes à éviter absolument :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Choisir une activité trop vague ou trop large — soyez précis, ça facilite le traitement et protège en cas de contrôle',
+                  'Utiliser une adresse email temporaire ou peu consultée — tous vos documents officiels y seront envoyés',
+                  'Ne pas conserver votre attestation d\'inscription — téléchargez-la et gardez-la en lieu sûr',
+                  'Oublier de noter les dates de déclaration trimestrielle dès le départ',
+                  'Facturer avant d\'avoir reçu votre IF — attendez la confirmation officielle',
+                  'Confondre votre IF auto-entrepreneur avec un numéro RC — ce sont deux choses différentes',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli : l\'outil pensé pour les auto-entrepreneurs marocains',
+                body: 'Devis professionnels, factures conformes avec IF et mentions légales, suivi des paiements, tableau de bord CA — tout ce dont vous avez besoin pour gérer votre activité sans erreur dès le premier jour. Gratuit au démarrage, sans carte bancaire.',
+                href: '/fonctionnalites',
+                cta: 'Voir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ─────────────────────────────────────────────────────────────
+      en: {
+        title: 'How to Register as an Auto-Entrepreneur in Morocco: Steps, Documents, RC and Patente',
+        description: 'Complete guide to registering as an auto-entrepreneur in Morocco: required documents, step-by-step registration on the official portal, the RC (trade register), and the patente (professional tax).',
+        intro: [
+          {
+            type: 'p',
+            text: 'You have decided to start as an auto-entrepreneur in Morocco. Now the real question: what do you actually do? Which portal? What documents? And what about the Registre de Commerce and the patente that everyone mentions? These questions come up constantly — and for good reason. Confusion between the requirements for different legal statuses is widespread.',
+          },
+          {
+            type: 'p',
+            text: 'The good news: the auto-entrepreneur regime was designed specifically to cut through all that complexity. In this guide we cover the process step by step, the exact documents to prepare, and we clarify once and for all the questions around the RC and the patente — two concepts that are frequently misunderstood for this status.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Documents to prepare before you start',
+            blocks: [
+              {
+                type: 'p',
+                text: 'One of the biggest advantages of the auto-entrepreneur regime is how light the application is. Unlike creating an SARL — which requires articles of association, share capital, and a notarial deed — auto-entrepreneur registration only needs a few basic pieces of information:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'National Identity Card (CIN) — the number is entered online; no scan is required for most activities',
+                  'Valid email address — this is where you will receive your registration certificate and tax identifier',
+                  'Moroccan phone number — for account verification',
+                  'Full postal address — your personal address serves as your professional address initially',
+                  'Description of your activity — prepare 2–3 lines describing precisely what you do',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Activities requiring extra documents',
+                body: 'Some regulated activities (transport, pharmaceutical sales, activities requiring a municipal permit) may require additional documents. The portal notifies you when you select your activity type. For intellectual services — development, design, consulting, training — no additional documents are needed.',
+              },
+            ],
+          },
+          {
+            h2: 'Step-by-step registration on the official portal',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Registration is done exclusively online at portail.auto-entrepreneur.ma — the official portal managed jointly by the CNSS and the Direction Générale des Impôts (DGI). Here are the exact steps in order:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Go to portail.auto-entrepreneur.ma and click "S\'inscrire" (Register)',
+                  'Create your account: email, password, and SMS verification',
+                  'Enter your personal details: CIN number, first name, last name, date and place of birth',
+                  'Enter your full address (it will serve as your business address)',
+                  'Select your activity sector from the dropdown, then your specific activity',
+                  'Describe your activity in a few lines in the free-text field provided',
+                  'Review and confirm your application — you can save and return later',
+                  'Submit your application: a file number is assigned to you immediately',
+                  'Wait for email confirmation: you will receive your registration certificate and your Tax Identifier (IF)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Real processing time',
+                body: 'The vast majority of complete applications are processed within 24 to 48 business hours. Some responses have been received the same day. If your activity requires additional verification, processing can take up to 5 business days. No visit to an office is required for standard service activities.',
+              },
+            ],
+          },
+          {
+            h2: 'RC (Registre de Commerce): are auto-entrepreneurs exempt?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'This is one of the most common questions — and the answer is clear: auto-entrepreneurs are not required to register with the Registre de Commerce (RC). The RC is an obligation reserved for commercial companies (SARL, SA, SARLAU) and individual traders operating under the standard legal regime.',
+              },
+              {
+                type: 'p',
+                text: 'The auto-entrepreneur regime has its own registration system via the national portal. The registration certificate issued at the end of the process replaces the RC for all your standard administrative and commercial dealings.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Watch out for client requests',
+                body: 'Some clients — especially large companies or public administrations — may ask for an RC number in their supplier registration forms. In that case, you can provide your auto-entrepreneur registration certificate and your Tax Identifier (IF). If a client strictly requires an RC, you will need to consider creating an SARL to work with them.',
+              },
+              {
+                type: 'table',
+                headers: ['Requirement', 'Auto-entrepreneur', 'SARL / Trader'],
+                rows: [
+                  ['Registre de Commerce (RC)', 'Not required', 'Mandatory'],
+                  ['portail.auto-entrepreneur.ma', 'Mandatory', 'Not applicable'],
+                  ['Tax Identifier (IF)', 'Assigned automatically', 'Obtained from DGI'],
+                  ['Articles of association', 'Not required', 'Mandatory'],
+                  ['Minimum share capital', 'None', '1 MAD (SARL)'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'Patente and professional tax: what you need to know',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The "patente" — officially renamed "taxe professionnelle" (professional tax) — is often a source of confusion for auto-entrepreneurs. Here is the exact rule:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Full exemption for the first 5 years of activity from the registration date',
+                  'After 5 years: subject to professional tax at the standard rates applicable to your activity',
+                  'Declaration and payment are made at your regional tax centre (CRI)',
+                  'In practice: for the vast majority of auto-entrepreneurs just starting out, the professional tax simply does not apply yet',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Triple exemption in the early years',
+                body: 'Combining the IR exemption (3 years), the patente/professional tax exemption (5 years), and the permanent VAT exemption, an auto-entrepreneur starting out pays virtually no direct tax — only the CNSS contributions proportional to their declared revenue.',
+              },
+            ],
+          },
+          {
+            h2: 'Your Tax Identifier (IF): what it is and where to use it',
+            blocks: [
+              {
+                type: 'p',
+                text: 'At the end of your registration, you receive your Tax Identifier (IF) by email — a unique number assigned by the Direction Générale des Impôts. This is your official tax identification number as an auto-entrepreneur. It is mandatory on every invoice you issue.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'On all your invoices: mandatory mention "IF No. XXXXXXXX" in the header',
+                  'For your quarterly revenue declarations to the DGI',
+                  'For your quarterly CNSS contributions',
+                  'To open a professional bank account with some banks',
+                  'For any proof of legal status requested by a partner or client',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Compliant invoices with your IF, in 2 minutes',
+                body: 'Sayerli automatically generates invoices with all mandatory legal mentions: your IF, your address, the VAT exemption notice, and sequential numbering. No risk of forgetting anything, no errors. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'Create my free account',
+              },
+            ],
+          },
+          {
+            h2: 'After registration: what you can do immediately',
+            blocks: [
+              {
+                type: 'p',
+                text: 'As soon as you receive your registration certificate and your IF, you can legally begin your activity. Here is what you can — and should — put in place from day one:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Issue compliant invoices with your IF and the VAT exemption notice',
+                  'Open a dedicated bank account for your activity (strongly recommended — not legally required, but essential in practice)',
+                  'Start recording your collected payments for your quarterly declaration',
+                  'Register with the CNSS if not done automatically during the online registration',
+                  'Prepare your first quarterly declaration for the current period',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Do not miss your first declaration',
+                body: 'Quarterly declarations are mandatory even if your revenue is zero. Deadlines are: January 31 (Q4 prior year), April 30 (Q1), July 31 (Q2), October 31 (Q3). A late or missed declaration can result in penalties. Add these dates to your calendar now.',
+              },
+            ],
+          },
+          {
+            h2: 'Common mistakes to avoid during registration',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Choosing an activity description that is too vague — be specific; it speeds up processing and protects you in case of a tax audit',
+                  'Using a temporary or rarely-checked email address — all your official documents will be sent there',
+                  'Not keeping a copy of your registration certificate — download it and store it safely',
+                  'Forgetting to note quarterly declaration dates from the start',
+                  'Invoicing before receiving your IF — wait for official confirmation',
+                  'Confusing your auto-entrepreneur IF with an RC number — they are two different things',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli: built for Moroccan auto-entrepreneurs',
+                body: 'Professional quotes, compliant invoices with IF and legal mentions, payment tracking, revenue dashboard — everything you need to run your activity without errors from day one. Free to start, no credit card required.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ──────────────────────────────────────────────────────────────
+      ar: {
+        title: 'كيف تسجّل كمقاول ذاتي بالمغرب: الإجراءات والوثائق والسجل التجاري والبطاقة المهنية',
+        description: 'دليل شامل للتسجيل كمقاول ذاتي بالمغرب: الوثائق المطلوبة، التسجيل على البوابة الرسمية خطوة بخطوة، السجل التجاري، الضريبة المهنية (البطاقة المهنية) والمعرّف الضريبي.',
+        intro: [
+          {
+            type: 'p',
+            text: 'لقد اتخذت قرارك بالانطلاق كمقاول ذاتي بالمغرب. الآن يأتي السؤال الحقيقي: ماذا تفعل بالضبط؟ أي بوابة؟ ما الوثائق؟ وماذا عن السجل التجاري والبطاقة المهنية التي يتحدث عنها الجميع؟ هذه الأسئلة تتكرر دائماً — وبحق، لأن الخلط بين متطلبات الأوضاع القانونية المختلفة أمر شائع فعلاً.',
+          },
+          {
+            type: 'p',
+            text: 'البشرى السارة: صُمِّم نظام المقاول الذاتي تحديداً لاختصار كل هذا التعقيد. في هذا الدليل نغطي الإجراءات خطوة بخطوة، والوثائق الدقيقة المطلوبة، ونوضح نهائياً مسألتَي السجل التجاري والبطاقة المهنية — مفهومان كثيراً ما يُساء فهمهما في هذا الوضع.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'الوثائق التي تحتاج إعدادها قبل البدء',
+            blocks: [
+              {
+                type: 'p',
+                text: 'من أبرز مزايا نظام المقاول الذاتي خفة ملف التسجيل. خلافاً لتأسيس شركة ذات مسؤولية محدودة التي تستلزم نظاماً أساسياً ورأس مال واتفاقية موثقة، لا يتطلب التسجيل كمقاول ذاتي سوى معلومات أساسية بسيطة:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'بطاقة التعريف الوطنية (CIN) — يُدخَل الرقم إلكترونياً، ولا يُرسَل أي مسح ضوئي في معظم الأنشطة',
+                  'بريد إلكتروني فعّال — هنا ستتلقى شهادة تسجيلك ومعرّفك الضريبي',
+                  'رقم هاتف مغربي — للتحقق من الحساب',
+                  'العنوان البريدي الكامل — عنوانك الشخصي يُعتمد عنواناً مهنياً في البداية',
+                  'وصف لنشاطك — جهّز سطرين أو ثلاثة يصفان بدقة ما تقدمه',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الأنشطة التي تستلزم وثائق إضافية',
+                body: 'بعض الأنشطة المنظمة (النقل، بيع الأدوية، الأنشطة التي تستوجب ترخيصاً بلدياً) قد تستدعي وثائق إضافية. تُعلمك البوابة بذلك عند اختيار نوع نشاطك. أما الخدمات الذهنية — التطوير والتصميم والاستشارة والتكوين — فلا تستلزم أي وثيقة إضافية.',
+              },
+            ],
+          },
+          {
+            h2: 'التسجيل خطوة بخطوة على البوابة الرسمية',
+            blocks: [
+              {
+                type: 'p',
+                text: 'يتم التسجيل حصرياً عبر الإنترنت على portail.auto-entrepreneur.ma — البوابة الرسمية التي تشرف عليها مشتركةً الصندوقُ الوطني للضمان الاجتماعي والمديريةُ العامة للضرائب. إليك الخطوات بالترتيب الدقيق:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'توجّه إلى portail.auto-entrepreneur.ma وانقر على "التسجيل"',
+                  'أنشئ حسابك: البريد الإلكتروني، كلمة المرور، والتحقق برسالة SMS',
+                  'أدخل معلوماتك الشخصية: رقم بطاقة التعريف الوطنية، الاسم الشخصي، العائلي، تاريخ ومكان الازدياد',
+                  'أدخل عنوانك الكامل (سيُعتمد عنواناً لنشاطك)',
+                  'اختر قطاع نشاطك من القائمة المنسدلة ثم نشاطك المحدد',
+                  'صِف نشاطك في بضعة أسطر في خانة النص الحر المخصصة لذلك',
+                  'راجع ملفك وصادق عليه — يمكنك الحفظ والعودة لاحقاً',
+                  'أرسل طلبك: يُسنَد إليك رقم الملف فوراً',
+                  'انتظر تأكيد البريد الإلكتروني: ستتلقى شهادة تسجيلك ومعرّفك الضريبي (IF)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'مدة المعالجة الفعلية',
+                body: 'تُعالَج الغالبية العظمى من الملفات الكاملة خلال 24 إلى 48 ساعة عمل. بعض الردود تصل في نفس اليوم. إذا استدعى نشاطك تحققاً إضافياً، قد تمتد المدة إلى 5 أيام عمل. لا حاجة للتنقل إلى أي مكتب بالنسبة لأنشطة الخدمات العادية.',
+              },
+            ],
+          },
+          {
+            h2: 'السجل التجاري: هل يُعفى منه المقاول الذاتي؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'هذا من أكثر الأسئلة شيوعاً — والجواب واضح: لا يُلزَم المقاولون الذاتيون بالتسجيل في السجل التجاري. السجل التجاري التزام مخصص للشركات التجارية (ش.م.م، ش.أ، ش.م.م.أ) والتجار الأشخاص الطبيعيين الخاضعين للنظام العام.',
+              },
+              {
+                type: 'p',
+                text: 'يمتلك نظام المقاول الذاتي منظومة تسجيل خاصة به عبر البوابة الوطنية. وشهادة التسجيل الصادرة في ختام الإجراء تحل محل السجل التجاري في جميع تعاملاتك الإدارية والتجارية الاعتيادية.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'انتبه لطلبات بعض العملاء',
+                body: 'بعض الجهات — ولا سيما الشركات الكبرى أو الإدارات العمومية — قد تطلب رقم سجل تجاري في استمارات تسجيل الموردين. في هذه الحالة، يمكنك تقديم شهادة تسجيلك كمقاول ذاتي ومعرّفك الضريبي. إذا اشترط عميل حتماً سجلاً تجارياً، فقد تستوجب الحالة تأسيس شركة ذات مسؤولية محدودة للتعامل معه.',
+              },
+              {
+                type: 'table',
+                headers: ['المتطلب', 'المقاول الذاتي', 'ش.م.م / تاجر'],
+                rows: [
+                  ['السجل التجاري', 'غير مطلوب', 'إلزامي'],
+                  ['بوابة auto-entrepreneur.ma', 'إلزامية', 'غير مطبقة'],
+                  ['المعرّف الضريبي (IF)', 'يُسنَد تلقائياً', 'يُستخرج من المديرية العامة للضرائب'],
+                  ['النظام الأساسي للشركة', 'غير مطلوب', 'إلزامي'],
+                  ['رأس المال الأدنى', 'لا شيء', 'درهم واحد (ش.م.م)'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'البطاقة المهنية والضريبة المهنية: ما يجب معرفته',
+            blocks: [
+              {
+                type: 'p',
+                text: 'البطاقة المهنية — المعروفة رسمياً بـ "الضريبة المهنية" بعد إصلاح الضريبة المسماة "البطانة" سابقاً — مصدر لبس كثير للمقاولين الذاتيين. إليك القاعدة الدقيقة:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'إعفاء تام خلال السنوات الخمس الأولى من النشاط تحتسب من تاريخ التسجيل',
+                  'بعد 5 سنوات: تصبح خاضعاً للضريبة المهنية بالأسعار المعتادة المطبقة على نشاطك',
+                  'تُنجز التصريحات والأداءات لدى مركزك الجهوي للضرائب (CRI)',
+                  'من الناحية العملية: على معظم المقاولين الذاتيين في بداية نشاطهم، لا تسري الضريبة المهنية بعد',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'ثلاثة إعفاءات مجتمعة في السنوات الأولى',
+                body: 'بالجمع بين إعفاء الضريبة على الدخل (3 سنوات)، وإعفاء البطاقة المهنية/الضريبة المهنية (5 سنوات)، والإعفاء الدائم من الضريبة على القيمة المضافة، لا يدفع المقاول الذاتي في بداية نشاطه أي ضريبة مباشرة تقريباً — سوى اشتراكات الصندوق الوطني للضمان الاجتماعي المتناسبة مع رقم أعماله المصرَّح به.',
+              },
+            ],
+          },
+          {
+            h2: 'معرّفك الضريبي (IF): ما دوره وأين تستخدمه؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'عند انتهاء تسجيلك، تتلقى بريداً إلكترونياً يتضمن معرّفك الضريبي (IF) — رقم فريد تُسنده المديرية العامة للضرائب. هذا هو رقم تعريفك الضريبي الرسمي بوصفك مقاولاً ذاتياً. وهو إلزامي على كل فاتورة تصدرها.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'على جميع فواتيرك: ذكر إلزامي "IF رقم XXXXXXXX" في الترويسة',
+                  'لتصريحاتك الفصلية برقم الأعمال لدى المديرية العامة للضرائب',
+                  'لاشتراكاتك الفصلية في الصندوق الوطني للضمان الاجتماعي',
+                  'لفتح حساب بنكي مهني لدى بعض البنوك',
+                  'لأي إثبات وضع قانوني يطلبه شريك أو عميل',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'فواتير مطابقة مع معرّفك الضريبي في دقيقتين',
+                body: 'يولّد Sayerli تلقائياً فواتير بجميع البيانات القانونية الإلزامية: معرّفك الضريبي، عنوانك، إشعار الإعفاء من الضريبة على القيمة المضافة، والترقيم التسلسلي. لا خطر نسيان أي شيء، لا أخطاء. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء حسابي المجاني',
+              },
+            ],
+          },
+          {
+            h2: 'بعد التسجيل: ما يمكنك البدء به فوراً',
+            blocks: [
+              {
+                type: 'p',
+                text: 'بمجرد استلام شهادة تسجيلك ومعرّفك الضريبي، يمكنك قانونياً البدء في نشاطك. إليك ما يجب وضعه موضع التنفيذ منذ اليوم الأول:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'إصدار فواتير مطابقة تتضمن معرّفك الضريبي وإشعار الإعفاء من الضريبة على القيمة المضافة',
+                  'فتح حساب بنكي مخصص لنشاطك (مستحسن بشدة — ليس إلزامياً قانوناً، لكنه ضروري عملياً)',
+                  'البدء في تسجيل مداخيلك المحصّلة لإعداد تصريحك الفصلي',
+                  'الانخراط في الصندوق الوطني للضمان الاجتماعي إن لم يتم تلقائياً خلال التسجيل الإلكتروني',
+                  'إعداد أول تصريح فصلي للفترة الجارية',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'لا تفوّت أول تصريح فصلي',
+                body: 'التصريحات الفصلية إلزامية حتى لو كان رقم أعمالك صفراً. المواعيد النهائية: 31 يناير (الربع الرابع من السنة السابقة)، 30 أبريل (الربع الأول)، 31 يوليوز (الربع الثاني)، 31 أكتوبر (الربع الثالث). قد يُفضي التأخر في التصريح أو إغفاله إلى غرامات. سجّل هذه المواعيد في مفكرتك الآن.',
+              },
+            ],
+          },
+          {
+            h2: 'الأخطاء الشائعة التي يجب تجنبها عند التسجيل',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'اختيار وصف نشاط مبهم جداً أو واسع — كن دقيقاً، فذلك يُسرّع المعالجة ويحميك عند أي مراجعة جبائية',
+                  'استخدام بريد إلكتروني مؤقت أو نادر الاستخدام — جميع وثائقك الرسمية ستُرسَل إليه',
+                  'عدم الاحتفاظ بنسخة من شهادة التسجيل — حمّلها واحفظها في مكان آمن',
+                  'إهمال تسجيل مواعيد التصريحات الفصلية منذ البداية',
+                  'الفوترة قبل استلام معرّفك الضريبي — انتظر التأكيد الرسمي',
+                  'الخلط بين المعرّف الضريبي للمقاول الذاتي ورقم السجل التجاري — إنهما شيئان مختلفان',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli: مصمَّم للمقاولين الذاتيين المغاربة',
+                body: 'عروض أسعار احترافية، فواتير مطابقة مع المعرّف الضريبي والبيانات القانونية، تتبع المدفوعات، لوحة قيادة رقم الأعمال — كل ما تحتاجه لتسيير نشاطك بلا أخطاء منذ اليوم الأول. مجاني للبدء، بدون بطاقة بنكية.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
   // ── ARTICLE 2 ────────────────────────────────────────────────────────────────
   'plafond-ca-auto-entrepreneur-maroc': {
     slug: 'plafond-ca-auto-entrepreneur-maroc',
