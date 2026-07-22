@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Receipt, Plus, Eye, Pencil, Trash2, Send, CreditCard,
   TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle, ChevronRight, Mail, Bell,
+  Lock, FileText, Truck,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -17,7 +18,7 @@ import { ToastContainer } from '@/components/dashboard/ui/Toast'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useToast } from '@/hooks/useToast'
 import { useAuth } from '@/hooks/useAuth'
-import { facturesApi, clientsApi, paiementsApi } from '@/lib/api'
+import { facturesApi, clientsApi, paiementsApi, devisApi, bonsLivraisonApi } from '@/lib/api'
 import { PlanLimitModal } from '@/components/billing/PlanLimitModal'
 import { cn, toWhatsAppNumber, formatCurrency } from '@/lib/utils'
 import { useCurrency } from '@/hooks/useCurrency'
@@ -72,6 +73,8 @@ interface LigneForm {
 
 interface FactureForm {
   clientId: string
+  devisId: string
+  bonLivraisonId: string
   dateEcheance: string
   taxe: string
   devise: string
@@ -91,7 +94,7 @@ interface PaiementForm {
 
 const EMPTY_LIGNE: LigneForm = { description: '', quantite: '1', prixUnitaire: '' }
 const EMPTY_FORM: FactureForm = {
-  clientId: '', dateEcheance: '', taxe: '20', devise: 'MAD', notes: '', lignes: [{ ...EMPTY_LIGNE }],
+  clientId: '', devisId: '', bonLivraisonId: '', dateEcheance: '', taxe: '20', devise: 'MAD', notes: '', lignes: [{ ...EMPTY_LIGNE }],
 }
 const EMPTY_PAIEMENT: PaiementForm = {
   montant: '', methode: 'VIREMENT', reference: '', datePaiement: new Date().toISOString().split('T')[0], notes: '',
@@ -122,8 +125,11 @@ function calcTotaux(lignes: LigneForm[], taxePct: number) {
 
 // ── Form component ─────────────────────────────────────────────────────────────
 
+interface DevisOption  { id: string; reference: string; devise: string }
+interface BLOption     { id: string; reference: string; devisId: string | null }
+
 function FactureFormFields({
-  form, errors, clients, onChange, onLigneChange, addLigne, removeLigne,
+  form, errors, clients, onChange, onLigneChange, addLigne, removeLigne, isEdit,
 }: {
   form: FactureForm
   errors: Record<string, string>
@@ -132,6 +138,7 @@ function FactureFormFields({
   onLigneChange: (i: number, field: keyof LigneForm, val: string) => void
   addLigne: () => void
   removeLigne: (i: number) => void
+  isEdit?: boolean
 }) {
   const { t } = useTranslation()
   const formDevise = form.devise || 'MAD'
@@ -142,23 +149,136 @@ function FactureFormFields({
   const taxePct = parseFloat(form.taxe) || 0
   const { sousTotal, totalTTC } = calcTotaux(form.lignes, taxePct)
 
+  // ── Devis / BL options (loaded per client) ──────────────────────────────
+  const [devisOptions, setDevisOptions] = useState<DevisOption[]>([])
+  const [blOptions, setBLOptions]       = useState<BLOption[]>([])
+
+  useEffect(() => {
+    if (!form.clientId) { setDevisOptions([]); setBLOptions([]); return }
+    Promise.all([
+      devisApi.list({ statut: 'ACCEPTE' }),
+      bonsLivraisonApi.list(),
+    ]).then(([dr, blr]) => {
+      const allDevis = (dr.data?.data ?? dr.data ?? []) as any[]
+      const allBLs   = (blr.data?.data ?? blr.data ?? []) as any[]
+      setDevisOptions(
+        allDevis
+          .filter((d: any) => d.client?.id === form.clientId)
+          .map((d: any) => ({ id: d.id, reference: d.reference, devise: d.devise ?? 'MAD' }))
+      )
+      setBLOptions(
+        allBLs
+          .filter((b: any) =>
+            b.clientId === form.clientId &&
+            !b.factureId &&
+            ['ENVOYE', 'LIVRE'].includes(b.statut)
+          )
+          .map((b: any) => ({ id: b.id, reference: b.reference, devisId: b.devisId ?? null }))
+      )
+    }).catch(() => {})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.clientId])
+
+  // ── Currency lock (computed) ─────────────────────────────────────────────
+  const lockedDevise: string | null = (() => {
+    if (form.devisId) {
+      return devisOptions.find(d => d.id === form.devisId)?.devise ?? null
+    }
+    if (form.bonLivraisonId) {
+      const bl = blOptions.find(b => b.id === form.bonLivraisonId)
+      if (bl?.devisId) return devisOptions.find(d => d.id === bl.devisId)?.devise ?? null
+    }
+    return null
+  })()
+
+  const handleDevisChange = (val: string) => {
+    onChange('devisId', val)
+    onChange('bonLivraisonId', '')
+    if (val) {
+      const d = devisOptions.find(d => d.id === val)
+      if (d?.devise) onChange('devise', d.devise)
+    }
+  }
+
+  const handleBLChange = (val: string) => {
+    onChange('bonLivraisonId', val)
+    onChange('devisId', '')
+    if (val) {
+      const bl = blOptions.find(b => b.id === val)
+      if (bl?.devisId) {
+        const d = devisOptions.find(d => d.id === bl.devisId)
+        if (d?.devise) onChange('devise', d.devise)
+      }
+    }
+  }
+
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="sm:col-span-2">
-          <label className={labelClass}>
-            {t('pages.factures.form.client')} <span className="text-red-500">*</span>
-          </label>
-          <select value={form.clientId} onChange={e => onChange('clientId', e.target.value)} className={inputClass}>
-            <option value="">{t('pages.factures.form.clientPlaceholder')}</option>
-            {clients.map(c => (
-              <option key={c.id} value={c.id}>
-                {c.nom}{c.nomEntreprise ? ` — ${c.nomEntreprise}` : ''}
-              </option>
-            ))}
-          </select>
-          {errors.clientId && <p className="flex items-center gap-1 text-xs text-red-500 mt-1"><AlertCircle className="w-3 h-3" />{errors.clientId}</p>}
+      {/* Client */}
+      <div>
+        <label className={labelClass}>
+          {t('pages.factures.form.client')} <span className="text-red-500">*</span>
+        </label>
+        <select value={form.clientId} onChange={e => onChange('clientId', e.target.value)} className={inputClass}>
+          <option value="">{t('pages.factures.form.clientPlaceholder')}</option>
+          {clients.map(c => (
+            <option key={c.id} value={c.id}>
+              {c.nom}{c.nomEntreprise ? ` — ${c.nomEntreprise}` : ''}
+            </option>
+          ))}
+        </select>
+        {errors.clientId && <p className="flex items-center gap-1 text-xs text-red-500 mt-1"><AlertCircle className="w-3 h-3" />{errors.clientId}</p>}
+      </div>
+
+      {/* Devis + BL (optional links, only in create mode or when data exists) */}
+      {!isEdit && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Devis lié */}
+          <div>
+            <label className={labelClass}>
+              <span className="flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-slate-400" />
+                {t('pages.factures.form.devisLie')}
+              </span>
+            </label>
+            <select
+              value={form.devisId}
+              onChange={e => handleDevisChange(e.target.value)}
+              disabled={!form.clientId}
+              className={cn(inputClass, !form.clientId && 'opacity-50 cursor-not-allowed')}
+            >
+              <option value="">{t('pages.factures.form.devisLiePlaceholder')}</option>
+              {devisOptions.map(d => (
+                <option key={d.id} value={d.id}>{d.reference}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* BL lié */}
+          <div>
+            <label className={labelClass}>
+              <span className="flex items-center gap-1.5">
+                <Truck className="w-3.5 h-3.5 text-slate-400" />
+                {t('pages.factures.form.blLie')}
+              </span>
+            </label>
+            <select
+              value={form.bonLivraisonId}
+              onChange={e => handleBLChange(e.target.value)}
+              disabled={!form.clientId}
+              className={cn(inputClass, !form.clientId && 'opacity-50 cursor-not-allowed')}
+            >
+              <option value="">{t('pages.factures.form.blLiePlaceholder')}</option>
+              {blOptions.map(b => (
+                <option key={b.id} value={b.id}>{b.reference}</option>
+              ))}
+            </select>
+          </div>
         </div>
+      )}
+
+      {/* Échéance + Taxe + Devise */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <label className={labelClass}>{t('pages.factures.form.dateEcheance')}</label>
           <input type="date" value={form.dateEcheance} onChange={e => onChange('dateEcheance', e.target.value)} className={inputClass} />
@@ -168,12 +288,20 @@ function FactureFormFields({
           <input type="number" min="0" max="100" step="1" value={form.taxe} onChange={e => onChange('taxe', e.target.value)} className={inputClass} />
         </div>
         <div>
-          <label className={labelClass}>{t('pages.devis.form.devise') || 'Devise'}</label>
-          <select value={form.devise} onChange={e => onChange('devise' as keyof Omit<FactureForm, 'lignes'>, e.target.value)} className={inputClass}>
-            <option value="MAD">MAD — Dirham</option>
-            <option value="EUR">EUR — Euro</option>
-            <option value="USD">USD — Dollar</option>
-          </select>
+          <label className={labelClass}>{t('pages.factures.form.devise')}</label>
+          {lockedDevise ? (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-950/30 text-sm">
+              <Lock className="w-3.5 h-3.5 text-primary-500 dark:text-primary-400 flex-shrink-0" />
+              <span className="font-semibold text-primary-700 dark:text-primary-300">{lockedDevise}</span>
+              <span className="text-xs text-primary-500 dark:text-primary-400 flex-1 truncate">— {t('pages.factures.form.deviseAuto')}</span>
+            </div>
+          ) : (
+            <select value={form.devise} onChange={e => onChange('devise', e.target.value)} className={inputClass}>
+              <option value="MAD">MAD — Dirham</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="USD">USD — Dollar</option>
+            </select>
+          )}
         </div>
       </div>
 
@@ -390,8 +518,10 @@ export default function FacturesPage() {
     return Object.keys(errors).length === 0
   }
 
-  const toApiPayload = () => ({
+  const toApiPayload = (isCreate = false) => ({
     clientId: form.clientId,
+    ...(isCreate && form.devisId        ? { devisId: form.devisId }               : {}),
+    ...(isCreate && form.bonLivraisonId ? { bonLivraisonId: form.bonLivraisonId } : {}),
     dateEcheance: form.dateEcheance || undefined,
     taxe: parseFloat(form.taxe) || 0,
     devise: form.devise || 'MAD',
@@ -426,7 +556,7 @@ export default function FacturesPage() {
     if (!validateForm()) return
     setSaving(true)
     try {
-      await facturesApi.create(toApiPayload())
+      await facturesApi.create(toApiPayload(true))
       setCreateOpen(false)
       success(t('pages.factures.createSuccess'))
       fetchFactures(search.trim() || undefined, filters.statut)
@@ -455,6 +585,8 @@ export default function FacturesPage() {
     }
     setForm({
       clientId: full.client.id,
+      devisId: full.devisId ?? '',
+      bonLivraisonId: '',
       dateEcheance: full.dateEcheance ? full.dateEcheance.split('T')[0] : '',
       taxe: String(n(full.taxe)),
       devise: full.devise ?? entreprise?.devise ?? 'MAD',
@@ -1312,6 +1444,7 @@ export default function FacturesPage() {
           form={form} errors={formErrors} clients={clients}
           onChange={handleFormChange} onLigneChange={handleLigneChange}
           addLigne={addLigne} removeLigne={removeLigne}
+          isEdit={false}
         />
       </Modal>
 
@@ -1327,6 +1460,7 @@ export default function FacturesPage() {
           form={form} errors={formErrors} clients={clients}
           onChange={handleFormChange} onLigneChange={handleLigneChange}
           addLigne={addLigne} removeLigne={removeLigne}
+          isEdit={true}
         />
       </Modal>
 

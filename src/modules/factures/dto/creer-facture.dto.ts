@@ -33,6 +33,10 @@ export class CreerFactureDto {
   devisId?: string;
 
   @IsOptional()
+  @IsUUID('4')
+  bonLivraisonId?: string;
+
+  @IsOptional()
   @IsDateString({}, { message: 'Date d\'échéance invalide.' })
   dateEcheance?: string;
 

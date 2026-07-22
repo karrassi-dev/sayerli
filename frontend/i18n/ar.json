@@ -1161,7 +1161,12 @@
         "clientRequired": "يرجى اختيار عميل.",
         "lignesRequired": "أضف سطراً واحداً على الأقل.",
         "designationRequired": "التسمية مطلوبة.",
-        "devise": "العملة"
+        "devise": "العملة",
+        "devisLie": "عرض سعر مرتبط (اختياري)",
+        "devisLiePlaceholder": "اختر عرض سعر مقبول",
+        "blLie": "وصل تسليم مرتبط (اختياري)",
+        "blLiePlaceholder": "اختر وصل تسليم",
+        "deviseAuto": "اكتُشفت تلقائياً"
       },
       "payment": {
         "title": "تسجيل دفعة",

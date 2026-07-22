@@ -1161,7 +1161,12 @@
         "clientRequired": "Please select a client.",
         "lignesRequired": "Add at least one line.",
         "designationRequired": "Designation is required.",
-        "devise": "Currency"
+        "devise": "Currency",
+        "devisLie": "Linked quote (optional)",
+        "devisLiePlaceholder": "Select an accepted quote",
+        "blLie": "Linked delivery note (optional)",
+        "blLiePlaceholder": "Select a DN",
+        "deviseAuto": "auto-detected"
       },
       "payment": {
         "title": "Record Payment",

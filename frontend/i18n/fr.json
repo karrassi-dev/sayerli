@@ -1162,7 +1162,12 @@
         "clientRequired": "Veuillez sélectionner un client.",
         "lignesRequired": "Ajoutez au moins une ligne.",
         "designationRequired": "La désignation est requise.",
-        "devise": "Devise"
+        "devise": "Devise",
+        "devisLie": "Devis lié (optionnel)",
+        "devisLiePlaceholder": "Sélectionner un devis accepté",
+        "blLie": "Bon de livraison lié (optionnel)",
+        "blLiePlaceholder": "Sélectionner un BL",
+        "deviseAuto": "auto-détectée"
       },
       "payment": {
         "title": "Enregistrer un paiement",

@@ -153,6 +153,12 @@ export class FacturesService {
         });
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }),
     );
+    if (dto.bonLivraisonId) {
+      await this.prisma.bonLivraison.updateMany({
+        where: { id: dto.bonLivraisonId, entrepriseId },
+        data: { factureId: facture.id },
+      });
+    }
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_CREEE', entityType: 'FACTURE', entityId: facture.id, entityRef: facture.numeroFacture });
     this.bustDashboard(entrepriseId);
     return facture;
