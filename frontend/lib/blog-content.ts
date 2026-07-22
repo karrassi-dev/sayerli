@@ -730,6 +730,702 @@ export const ARTICLES: Record<string, ArticleData> = {
     },
   },
 
+  // ── ARTICLE 8 ────────────────────────────────────────────────────────────────
+  'comment-faire-facture-maroc': {
+    slug: 'comment-faire-facture-maroc',
+    image: '/blog/comment-faire-facture-maroc.webp',
+    readingTime: 7,
+    content: {
+
+      // ── FRENCH ──────────────────────────────────────────────────────────────
+      fr: {
+        title: 'Comment faire une facture professionnelle au Maroc : guide étape par étape',
+        description: 'Comment créer une facture professionnelle au Maroc : les étapes, les informations à inclure, les outils disponibles et comment envoyer et suivre vos factures efficacement.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Créer une facture peut sembler simple — jusqu\'au moment où vous vous retrouvez devant une page blanche à vous demander par où commencer. Quelles informations mettre en premier ? Comment structurer les lignes de prestation ? Quelle mention pour la TVA ? Est-ce que mon logo est obligatoire ?',
+          },
+          {
+            type: 'p',
+            text: 'Ce guide vous accompagne pas à pas dans la création d\'une facture professionnelle conforme au droit marocain — de la collecte des informations jusqu\'à l\'envoi et le suivi du paiement. Que vous soyez auto-entrepreneur, freelance ou dirigeant d\'une PME, vous aurez à la fin une méthode claire et reproductible.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Étape 1 — Rassemblez toutes les informations avant de commencer',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Avant d\'ouvrir un outil ou un fichier, rassemblez tout ce dont vous avez besoin. Partir avec des informations incomplètes vous fera perdre du temps et risque d\'entraîner des erreurs sur le document final.',
+              },
+              {
+                type: 'table',
+                headers: ['Informations sur vous', 'Informations sur votre client'],
+                rows: [
+                  ['Votre nom complet ou raison sociale', 'Nom complet ou raison sociale du client'],
+                  ['Votre adresse professionnelle', 'Adresse complète du client'],
+                  ['Votre Identifiant Fiscal (IF)', 'ICE du client (si entreprise)'],
+                  ['Votre ICE (si vous êtes une société)', 'Email et téléphone du client'],
+                  ['Votre RC et numéro de patente (si société)', '—'],
+                  ['Vos coordonnées bancaires (RIB)', '—'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Où trouver l\'ICE de votre client ?',
+                body: 'L\'ICE (Identifiant Commun de l\'Entreprise) figure sur toutes les factures que votre client vous envoie, sur son RC, ou sur son site web dans les mentions légales. Si vous ne l\'avez pas, demandez-le directement à votre contact — les entreprises sérieuses le communiquent sans problème.',
+              },
+            ],
+          },
+          {
+            h2: 'Étape 2 — Choisissez votre outil de facturation',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Vous avez plusieurs options pour créer votre facture. Chaque approche a ses avantages et ses limites :',
+              },
+              {
+                type: 'table',
+                headers: ['Outil', 'Avantages', 'Limites'],
+                rows: [
+                  ['Word / Google Docs', 'Gratuit, flexible', 'Numérotation manuelle, pas de suivi, risque d\'erreurs'],
+                  ['Excel / Google Sheets', 'Calculs automatiques', 'Pas de PDF propre, pas de suivi des paiements'],
+                  ['PDF modèle téléchargé', 'Rapide à démarrer', 'Non modifiable facilement, pas de base client'],
+                  ['Logiciel de facturation (Sayerli…)', 'Mentions automatiques, numérotation, suivi paiements, envoi direct', 'Abonnement selon les fonctionnalités'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Le vrai coût de Word et Excel',
+                body: 'Beaucoup de freelancers et d\'auto-entrepreneurs démarrent sur Word ou Excel. Ça fonctionne pour les toutes premières factures, mais rapidement les problèmes apparaissent : numérotation à gérer manuellement, aucun suivi des impayés, aucune relance automatique, perte de temps à chaque nouvelle facture. Dès le 5e client, un outil dédié devient rentable.',
+              },
+            ],
+          },
+          {
+            h2: 'Étape 3 — Structurez votre facture en 5 zones',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Une facture professionnelle marocaine se divise en 5 zones distinctes. Respecter cette structure rend le document immédiatement lisible et professionnel :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'En-tête : vos coordonnées complètes (nom, adresse, IF, ICE si société) à gauche — le titre "FACTURE" et le numéro + date à droite',
+                  'Coordonnées client : nom/raison sociale, adresse, ICE — clairement identifié comme "Facturé à :"',
+                  'Corps — tableau des prestations : description détaillée | quantité | prix unitaire HT | total HT pour chaque ligne',
+                  'Récapitulatif financier : sous-total HT, TVA (taux + montant) ou mention d\'exonération, total TTC en évidence',
+                  'Pied de facture : modalités de paiement (délai, RIB, mode accepté), mentions légales (exonération TVA si applicable, forme juridique si société)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Le titre "FACTURE" est-il obligatoire ?',
+                body: 'Non, la loi marocaine n\'impose pas le mot "FACTURE" en en-tête. Mais c\'est une pratique universelle qui évite toute ambiguïté. Sans ce titre, le document peut être confondu avec un devis ou un bon de commande. Mettez-le toujours, en majuscules, bien visible.',
+              },
+            ],
+          },
+          {
+            h2: 'Étape 4 — Remplissez le tableau des prestations avec précision',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le corps de la facture — le tableau des prestations — est la partie la plus importante. C\'est là que vous détaillez exactement ce que vous avez fourni et à quel prix. Voici comment bien le remplir :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Description : soyez précis et spécifique. "Développement frontend React — intégration maquettes — sprint 2 — juin 2025" vaut mieux que "Développement web"',
+                  'Quantité : indiquez des unités claires (jours, heures, forfait, unités). "5 jours" est plus lisible que "5"',
+                  'Prix unitaire HT : le prix d\'une unité hors taxe',
+                  'Total HT : quantité × prix unitaire — vérifiez toujours le calcul',
+                  'Remise éventuelle : si vous accordez une remise, indiquez le montant original, le pourcentage ou montant de remise, et le total après remise',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Description', 'Quantité', 'Prix unitaire HT', 'Total HT'],
+                rows: [
+                  ['Développement frontend React — sprint 2', '5 jours', '2 000 MAD', '10 000 MAD'],
+                  ['Intégration API paiement — CMI', '1 forfait', '3 500 MAD', '3 500 MAD'],
+                  ['Recette et déploiement', '1 forfait', '1 500 MAD', '1 500 MAD'],
+                  ['', '', 'Total HT', '15 000 MAD'],
+                  ['', '', 'TVA (Exonéré — Auto-entrepreneur IF n° 12345678)', '0 MAD'],
+                  ['', '', 'Total TTC', '15 000 MAD'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'Étape 5 — Ajoutez les informations de paiement',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Une facture sans informations de paiement claires crée de la confusion et retarde les règlements. Voici ce que vous devez toujours préciser :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Délai de paiement : "Paiement à 30 jours" ou "Paiement à réception de facture" — soyez explicite',
+                  'Mode de paiement accepté : virement bancaire (le plus courant), chèque, espèces pour les petits montants',
+                  'RIB complet si virement : banque, agence, numéro de compte, clé RIB — certains clients ajoutent aussi le code SWIFT pour les virements internationaux',
+                  'Pénalités de retard (optionnel mais recommandé en B2B) : "Tout retard de paiement entraîne des pénalités de X% par mois"',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Délai légal de paiement au Maroc',
+                body: 'La loi marocaine (loi 49-15 sur les délais de paiement) fixe un délai maximum de 60 jours à compter de la date d\'émission de la facture pour les transactions B2B. Au-delà, des pénalités de retard sont dues de plein droit. Précisez toujours votre délai sur la facture pour éviter les ambiguïtés.',
+              },
+            ],
+          },
+          {
+            h2: 'Étape 6 — Relisez, numérotez et exportez en PDF',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Avant d\'envoyer, prenez 2 minutes pour vérifier ces points critiques :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Le numéro de facture est dans la bonne séquence (vérifiez votre dernière facture émise)',
+                  'La date est correcte — jamais antidatée',
+                  'Les calculs sont exacts — totaux HT, TVA, TTC',
+                  'L\'IF et l\'ICE client sont présents et corrects',
+                  'La mention TVA est correcte selon votre statut (taux ou exonération)',
+                  'Les coordonnées bancaires sont complètes et sans faute',
+                  'Exportez en PDF — c\'est le format standard attendu, non modifiable par le destinataire',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'N\'envoyez jamais un fichier Word ou Excel comme facture',
+                body: 'Un fichier Word ou Excel peut être modifié par le destinataire. En cas de litige, vous ne pourrez pas prouver que le contenu original était différent. Le PDF est le seul format qui garantit l\'intégrité du document. Exportez toujours en PDF avant l\'envoi.',
+              },
+            ],
+          },
+          {
+            h2: 'Étape 7 — Envoyez et suivez le paiement',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La facture est prête. Il reste à l\'envoyer de la bonne façon et à en assurer le suivi :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Par email : envoyez le PDF en pièce jointe avec un objet clair — "Facture FA-2025-012 — [Nom de la prestation] — [Votre nom]"',
+                  'Par WhatsApp : courant au Maroc, surtout avec les clients PME. Le PDF s\'affiche directement dans la conversation',
+                  'Confirmez la réception : un simple message "Pouvez-vous confirmer la bonne réception de ma facture ?" évite les oublis',
+                  'Notez la date d\'échéance dans votre agenda et lancez une relance douce 3 à 5 jours avant si le paiement n\'est pas arrivé',
+                  'En cas de retard : relancez poliment par email, puis par téléphone si pas de réponse sous 48h',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli : de la création à l\'encaissement en quelques clics',
+                body: 'Avec Sayerli, créez votre facture en 2 minutes avec toutes les mentions légales, envoyez-la directement par email ou lien partageable, et suivez son statut en temps réel (envoyée, vue, payée, en retard). Les relances automatiques s\'occupent des impayés à votre place. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer ma première facture',
+              },
+            ],
+          },
+          {
+            h2: 'Récapitulatif : les 7 étapes pour faire une facture professionnelle au Maroc',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'Rassemblez vos informations et celles de votre client (IF, ICE, adresses, RIB)',
+                  'Choisissez votre outil : logiciel dédié recommandé dès le 1er client sérieux',
+                  'Structurez la facture en 5 zones : en-tête vous, en-tête client, tableau prestations, récapitulatif, pied',
+                  'Détaillez précisément chaque ligne de prestation avec description, quantité, prix unitaire et total',
+                  'Ajoutez les informations de paiement : délai, mode, RIB complet',
+                  'Relisez, vérifiez la séquence de numérotation et exportez en PDF',
+                  'Envoyez et assurez le suivi jusqu\'à l\'encaissement',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'La méthode la plus rapide : Sayerli',
+                body: 'Sayerli centralise toutes ces étapes en un seul outil pensé pour le Maroc. Vos informations sont sauvegardées, vos clients dans votre base, la numérotation automatique, et les mentions légales toujours correctes. Passez de 30 minutes à 2 minutes par facture. Gratuit pour démarrer.',
+                href: '/fonctionnalites',
+                cta: 'Voir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ─────────────────────────────────────────────────────────────
+      en: {
+        title: 'How to Create a Professional Invoice in Morocco: Step-by-Step Guide',
+        description: 'How to create a professional invoice in Morocco: the steps, information to include, available tools, and how to send and track your invoices effectively.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Creating an invoice can seem simple — until you find yourself staring at a blank page wondering where to start. What information goes first? How do you structure the service lines? What about the VAT mention? Is a logo required?',
+          },
+          {
+            type: 'p',
+            text: 'This guide walks you through creating a professional invoice that complies with Moroccan law — from gathering information to sending and tracking payment. Whether you are an auto-entrepreneur, freelancer or SME owner, you will finish with a clear and repeatable method.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Step 1 — Gather all information before you start',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Before opening any tool or file, collect everything you need. Starting with incomplete information wastes time and risks errors in the final document.',
+              },
+              {
+                type: 'table',
+                headers: ['Your information', 'Your client\'s information'],
+                rows: [
+                  ['Your full name or company name', 'Client\'s full name or company name'],
+                  ['Your professional address', 'Client\'s full address'],
+                  ['Your Tax Identifier (IF)', 'Client\'s ICE number (if a company)'],
+                  ['Your ICE (if you are a company)', 'Client\'s email and phone'],
+                  ['Your RC and patente number (if company)', '—'],
+                  ['Your bank details (RIB)', '—'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Where to find your client\'s ICE?',
+                body: 'The ICE (Identifiant Commun de l\'Entreprise) appears on any invoice your client sends you, on their trade register certificate, or in the legal mentions on their website. If you do not have it, ask your contact directly — serious companies share it without hesitation.',
+              },
+            ],
+          },
+          {
+            h2: 'Step 2 — Choose your invoicing tool',
+            blocks: [
+              {
+                type: 'p',
+                text: 'You have several options for creating your invoice. Each approach has its advantages and limitations:',
+              },
+              {
+                type: 'table',
+                headers: ['Tool', 'Advantages', 'Limitations'],
+                rows: [
+                  ['Word / Google Docs', 'Free, flexible', 'Manual numbering, no tracking, risk of errors'],
+                  ['Excel / Google Sheets', 'Automatic calculations', 'No clean PDF output, no payment tracking'],
+                  ['Downloaded PDF template', 'Quick to start', 'Not easily editable, no client database'],
+                  ['Invoicing software (Sayerli…)', 'Auto mentions, numbering, payment tracking, direct sending', 'Subscription depending on features'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'The real cost of Word and Excel',
+                body: 'Many freelancers and auto-entrepreneurs start with Word or Excel. It works for the very first invoices, but problems appear quickly: numbering to manage manually, no late payment tracking, no automatic reminders, time wasted on every new invoice. From the 5th client onwards, a dedicated tool pays for itself.',
+              },
+            ],
+          },
+          {
+            h2: 'Step 3 — Structure your invoice across 5 zones',
+            blocks: [
+              {
+                type: 'p',
+                text: 'A professional Moroccan invoice is divided into 5 distinct zones. Following this structure makes the document immediately readable and professional:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Header: your full details (name, address, IF, ICE if company) on the left — the title "INVOICE" with the number and date on the right',
+                  'Client details: name/company name, address, ICE — clearly identified as "Billed to:"',
+                  'Body — service table: detailed description | quantity | unit price excl. VAT | total excl. VAT for each line',
+                  'Financial summary: subtotal excl. VAT, VAT (rate + amount) or exemption notice, total incl. VAT prominently displayed',
+                  'Footer: payment terms (deadline, bank details, accepted methods), legal mentions (VAT exemption if applicable, legal form if company)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Is the title "INVOICE" legally required?',
+                body: 'No, Moroccan law does not require the word "INVOICE" in the header. But it is a universal practice that avoids any ambiguity. Without it, the document could be confused with a quote or purchase order. Always include it, in capitals, clearly visible.',
+              },
+            ],
+          },
+          {
+            h2: 'Step 4 — Fill in the service table accurately',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The body of the invoice — the service table — is the most important part. It is where you detail exactly what you provided and at what price. Here is how to fill it in correctly:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Description: be precise and specific. "React frontend development — mockup integration — sprint 2 — June 2025" is better than "Web development"',
+                  'Quantity: use clear units (days, hours, flat rate, units). "5 days" is more readable than "5"',
+                  'Unit price excl. VAT: the price of one unit before tax',
+                  'Total excl. VAT: quantity × unit price — always double-check the calculation',
+                  'Discount if applicable: show the original amount, the discount percentage or amount, and the total after discount',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Description', 'Qty', 'Unit price (excl. VAT)', 'Total (excl. VAT)'],
+                rows: [
+                  ['React frontend development — sprint 2', '5 days', '2,000 MAD', '10,000 MAD'],
+                  ['CMI payment API integration', '1 flat rate', '3,500 MAD', '3,500 MAD'],
+                  ['Testing and deployment', '1 flat rate', '1,500 MAD', '1,500 MAD'],
+                  ['', '', 'Total excl. VAT', '15,000 MAD'],
+                  ['', '', 'VAT (Exempt — Auto-entrepreneur IF No. 12345678)', '0 MAD'],
+                  ['', '', 'Total incl. VAT', '15,000 MAD'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'Step 5 — Add payment information',
+            blocks: [
+              {
+                type: 'p',
+                text: 'An invoice without clear payment information creates confusion and delays settlement. Always specify:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Payment deadline: "Payment within 30 days" or "Payment upon receipt" — be explicit',
+                  'Accepted payment methods: bank transfer (most common), cheque, cash for small amounts',
+                  'Full bank details for transfers: bank, branch, account number, RIB key — add SWIFT code for international transfers',
+                  'Late payment penalties (optional but recommended in B2B): "Any late payment will incur penalties of X% per month"',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Legal payment deadline in Morocco',
+                body: 'Moroccan law (Law 49-15 on payment deadlines) sets a maximum of 60 days from the invoice date for B2B transactions. Beyond that, late payment penalties are due automatically. Always state your deadline on the invoice to avoid ambiguity.',
+              },
+            ],
+          },
+          {
+            h2: 'Step 6 — Review, number and export as PDF',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Before sending, take 2 minutes to check these critical points:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'The invoice number is in the correct sequence (check your last issued invoice)',
+                  'The date is correct — never backdated',
+                  'Calculations are accurate — totals excl. VAT, VAT amount, total incl. VAT',
+                  'Your IF and the client\'s ICE are present and correct',
+                  'The VAT mention matches your status (rate or exemption)',
+                  'Bank details are complete and error-free',
+                  'Export as PDF — the standard expected format, uneditable by the recipient',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Never send a Word or Excel file as an invoice',
+                body: 'A Word or Excel file can be modified by the recipient. In case of a dispute, you will not be able to prove the original content was different. PDF is the only format that guarantees document integrity. Always export to PDF before sending.',
+              },
+            ],
+          },
+          {
+            h2: 'Step 7 — Send and track payment',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The invoice is ready. Now send it properly and follow up until you are paid:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'By email: attach the PDF with a clear subject — "Invoice INV-2025-012 — [Service name] — [Your name]"',
+                  'By WhatsApp: common in Morocco, especially with SME clients. The PDF displays directly in the conversation',
+                  'Confirm receipt: a simple "Could you confirm you received my invoice?" prevents it from being overlooked',
+                  'Note the due date in your calendar and send a gentle reminder 3 to 5 days before if payment has not arrived',
+                  'If payment is late: follow up politely by email, then by phone if no response within 48 hours',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli: from creation to payment in a few clicks',
+                body: 'With Sayerli, create your invoice in 2 minutes with all legal mentions, send it directly by email or shareable link, and track its status in real time (sent, viewed, paid, overdue). Automatic reminders handle late payments for you. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'Create my first invoice',
+              },
+            ],
+          },
+          {
+            h2: 'Summary: the 7 steps to create a professional invoice in Morocco',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'Gather your information and your client\'s (IF, ICE, addresses, bank details)',
+                  'Choose your tool: dedicated software recommended from your first serious client',
+                  'Structure the invoice across 5 zones: your header, client header, service table, financial summary, footer',
+                  'Detail each service line precisely with description, quantity, unit price and total',
+                  'Add payment information: deadline, method, complete bank details',
+                  'Review, check the numbering sequence and export as PDF',
+                  'Send and follow up until payment is received',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'The fastest method: Sayerli',
+                body: 'Sayerli brings all these steps into one tool built for Morocco. Your details are saved, your clients in a database, numbering automatic, and legal mentions always correct. Go from 30 minutes to 2 minutes per invoice. Free to start.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ──────────────────────────────────────────────────────────────
+      ar: {
+        title: 'كيف تُنشئ فاتورة احترافية بالمغرب: دليل خطوة بخطوة',
+        description: 'كيفية إنشاء فاتورة احترافية بالمغرب: الخطوات، المعلومات الواجب إدراجها، الأدوات المتاحة، وكيفية إرسال فواتيرك وتتبعها بفعالية.',
+        intro: [
+          {
+            type: 'p',
+            text: 'إنشاء فاتورة قد يبدو بسيطاً — حتى تجد نفسك أمام صفحة بيضاء تتساءل من أين تبدأ. ما المعلومات التي تُدرجها أولاً؟ كيف تُنظّم سطور الخدمات؟ وماذا عن بيان الضريبة على القيمة المضافة؟ هل الشعار إلزامي؟',
+          },
+          {
+            type: 'p',
+            text: 'يأخذك هذا الدليل خطوةً بخطوة في إنشاء فاتورة احترافية مطابقة للقانون المغربي — من جمع المعلومات إلى الإرسال وتتبع الدفع. سواء كنت مقاولاً ذاتياً أو مستقلاً أو مدير مقاولة صغيرة، ستمتلك في النهاية منهجاً واضحاً وقابلاً للتكرار.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'الخطوة 1 — اجمع جميع المعلومات قبل البدء',
+            blocks: [
+              {
+                type: 'p',
+                text: 'قبل فتح أي أداة أو ملف، اجمع كل ما تحتاجه. البدء بمعلومات ناقصة يُضيّع الوقت ويُعرّض الوثيقة النهائية للأخطاء.',
+              },
+              {
+                type: 'table',
+                headers: ['معلوماتك أنت', 'معلومات عميلك'],
+                rows: [
+                  ['اسمك الكامل أو الاسم التجاري', 'الاسم الكامل أو الشركة للعميل'],
+                  ['عنوانك المهني', 'العنوان الكامل للعميل'],
+                  ['معرّفك الضريبي (IF)', 'رقم ICE للعميل (إن كان شركة)'],
+                  ['رقم ICE الخاص بك (إن كنت شركة)', 'البريد الإلكتروني والهاتف للعميل'],
+                  ['رقم RC والضريبة المهنية (إن كنت شركة)', '—'],
+                  ['بياناتك البنكية (RIB)', '—'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'أين تجد رقم ICE لعميلك؟',
+                body: 'يظهر رقم ICE (المعرّف المشترك للمقاولة) في أي فاتورة يُرسلها عميلك إليك، وعلى شهادة تسجيله التجاري، أو في بيانات الاتصال القانونية في موقعه الإلكتروني. إذا لم يكن لديك الرقم، اطلبه مباشرةً من جهة الاتصال — الشركات الجادة تشاركه دون تردد.',
+              },
+            ],
+          },
+          {
+            h2: 'الخطوة 2 — اختر أداة الفوترة المناسبة',
+            blocks: [
+              {
+                type: 'p',
+                text: 'لديك عدة خيارات لإنشاء فاتورتك. لكل نهج مزاياه وقيوده:',
+              },
+              {
+                type: 'table',
+                headers: ['الأداة', 'المزايا', 'القيود'],
+                rows: [
+                  ['Word / Google Docs', 'مجاني، مرن', 'ترقيم يدوي، لا تتبع، خطر الأخطاء'],
+                  ['Excel / Google Sheets', 'حسابات تلقائية', 'لا PDF نظيف، لا تتبع للمدفوعات'],
+                  ['قالب PDF محمَّل', 'سريع للبدء', 'يصعب تعديله، لا قاعدة عملاء'],
+                  ['برنامج فوترة (Sayerli…)', 'بيانات تلقائية، ترقيم، تتبع مدفوعات، إرسال مباشر', 'اشتراك حسب المزايا'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'التكلفة الحقيقية لـ Word وExcel',
+                body: 'كثير من المستقلين والمقاولين الذاتيين يبدؤون بـ Word أو Excel. يصلح ذلك لأولى الفواتير، لكن المشاكل تظهر سريعاً: ترقيم يدوي، لا تتبع للمتأخرات، لا تذكيرات تلقائية، وضياع وقت في كل فاتورة جديدة. من العميل الخامس فصاعداً، أداة متخصصة تُعوّض تكلفتها.',
+              },
+            ],
+          },
+          {
+            h2: 'الخطوة 3 — هيكل فاتورتك في 5 أقسام',
+            blocks: [
+              {
+                type: 'p',
+                text: 'تنقسم الفاتورة الاحترافية المغربية إلى 5 أقسام متمايزة. احترام هذا الهيكل يجعل الوثيقة مقروءة واحترافية على الفور:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'الترويسة: بياناتك الكاملة (الاسم، العنوان، IF، ICE إن كنت شركة) على اليسار — عنوان "فاتورة" مع الرقم والتاريخ على اليمين',
+                  'بيانات العميل: الاسم/الشركة، العنوان، ICE — محددة بوضوح تحت "فاتورة إلى:"',
+                  'الجسم — جدول الخدمات: وصف مفصَّل | الكمية | السعر الوحدوي (دون الضريبة) | الإجمالي (دون الضريبة) لكل سطر',
+                  'الملخص المالي: المجموع الفرعي (دون الضريبة)، الضريبة على القيمة المضافة (النسبة + المبلغ) أو إشعار الإعفاء، المجموع الإجمالي بارزاً',
+                  'ذيل الفاتورة: شروط الدفع (الأجل، RIB، الطرق المقبولة)، البيانات القانونية (إعفاء الضريبة على القيمة المضافة إن انطبق، الشكل القانوني إن كانت شركة)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'هل عنوان "فاتورة" إلزامي قانوناً؟',
+                body: 'لا، لا يشترط القانون المغربي كلمة "فاتورة" في الترويسة. لكنها ممارسة عالمية تُزيل أي التباس. بدونها قد تُخلَط الوثيقة مع عرض أسعار أو أمر شراء. اذكرها دائماً، بأحرف بارزة وواضحة.',
+              },
+            ],
+          },
+          {
+            h2: 'الخطوة 4 — املأ جدول الخدمات بدقة',
+            blocks: [
+              {
+                type: 'p',
+                text: 'جسم الفاتورة — جدول الخدمات — هو الجزء الأهم. هنا تُفصّل بالضبط ما قدّمته وبأي سعر. إليك كيفية ملئه بشكل صحيح:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'الوصف: كن دقيقاً ومحدداً. "تطوير واجهة React — دمج التصاميم — sprint 2 — يونيو 2025" أفضل من "تطوير ويب"',
+                  'الكمية: استخدم وحدات واضحة (أيام، ساعات، جزافي، وحدات). "5 أيام" أوضح من "5"',
+                  'السعر الوحدوي (دون الضريبة): سعر الوحدة الواحدة قبل الضريبة',
+                  'الإجمالي (دون الضريبة): الكمية × السعر الوحدوي — تحقق دائماً من الحساب',
+                  'الخصم إن وُجد: اعرض المبلغ الأصلي ونسبة أو مبلغ الخصم والمجموع بعد الخصم',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['الوصف', 'الكمية', 'السعر الوحدوي (دون الضريبة)', 'الإجمالي (دون الضريبة)'],
+                rows: [
+                  ['تطوير واجهة React — sprint 2', '5 أيام', '2,000 درهم', '10,000 درهم'],
+                  ['دمج API الدفع — CMI', 'جزافي', '3,500 درهم', '3,500 درهم'],
+                  ['اختبار ونشر', 'جزافي', '1,500 درهم', '1,500 درهم'],
+                  ['', '', 'المجموع (دون الضريبة)', '15,000 درهم'],
+                  ['', '', 'الضريبة (معفى — مقاول ذاتي IF رقم 12345678)', '0 درهم'],
+                  ['', '', 'المجموع الإجمالي', '15,000 درهم'],
+                ],
+              },
+            ],
+          },
+          {
+            h2: 'الخطوة 5 — أضف معلومات الدفع',
+            blocks: [
+              {
+                type: 'p',
+                text: 'فاتورة بلا معلومات دفع واضحة تُسبّب لبساً وتُأخّر التسوية. احرص دائماً على تحديد:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'أجل الدفع: "الدفع في أجل 30 يوماً" أو "الدفع عند الاستلام" — كن صريحاً',
+                  'طرق الدفع المقبولة: التحويل البنكي (الأشيع)، الشيك، النقد للمبالغ الصغيرة',
+                  'بيانات بنكية كاملة للتحويل: البنك، الوكالة، رقم الحساب، مفتاح RIB — وأضف رمز SWIFT للتحويلات الدولية',
+                  'غرامات التأخير (اختياري لكن موصى به في B2B): "أي تأخر في الدفع يُرتّب غرامات بنسبة X% شهرياً"',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الأجل القانوني للدفع بالمغرب',
+                body: 'يُحدّد القانون المغربي (قانون 49-15 المتعلق بآجال الأداء) أجلاً أقصاه 60 يوماً من تاريخ إصدار الفاتورة للمعاملات بين المهنيين. بعد ذلك تُستحق غرامات التأخير بحكم القانون. حدد دائماً أجلك في الفاتورة لتجنب أي غموض.',
+              },
+            ],
+          },
+          {
+            h2: 'الخطوة 6 — راجع وأرقّم وصدّر بصيغة PDF',
+            blocks: [
+              {
+                type: 'p',
+                text: 'قبل الإرسال، خذ دقيقتين للتحقق من هذه النقاط الحاسمة:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'رقم الفاتورة في التسلسل الصحيح (راجع آخر فاتورة أصدرتها)',
+                  'التاريخ صحيح — لا تأريخ بتاريخ سابق أبداً',
+                  'الحسابات دقيقة — مجاميع قبل الضريبة، ومبلغ الضريبة، والمجموع الإجمالي',
+                  'معرّفك الضريبي ورقم ICE العميل موجودان وصحيحان',
+                  'بيان الضريبة مطابق لوضعيتك (نسبة أو إعفاء)',
+                  'البيانات البنكية كاملة وبلا أخطاء',
+                  'صدِّر بصيغة PDF — الصيغة المعيارية المتوقعة، غير قابلة للتعديل من قِبَل المستلم',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'لا ترسل ملف Word أو Excel كفاتورة',
+                body: 'ملف Word أو Excel قابل للتعديل من قِبَل المستلم. في حالة نزاع، لن تستطيع إثبات أن المحتوى الأصلي كان مختلفاً. PDF هو الصيغة الوحيدة التي تضمن سلامة الوثيقة. صدّر دائماً بصيغة PDF قبل الإرسال.',
+              },
+            ],
+          },
+          {
+            h2: 'الخطوة 7 — أرسل وتتبّع الدفع',
+            blocks: [
+              {
+                type: 'p',
+                text: 'الفاتورة جاهزة. أرسلها بالطريقة الصحيحة وتابع حتى التحصيل:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'بالبريد الإلكتروني: أرفق PDF بموضوع واضح — "فاتورة FA-2025-012 — [اسم الخدمة] — [اسمك]"',
+                  'بواتساب: شائع بالمغرب، ولا سيما مع عملاء المقاولات الصغيرة. يظهر PDF مباشرةً في المحادثة',
+                  'تأكّد من الاستلام: رسالة بسيطة "هل يمكنك تأكيد استلام فاتورتي؟" تمنع النسيان',
+                  'سجّل تاريخ الاستحقاق في مفكرتك وأرسل تذكيراً لطيفاً قبل 3 إلى 5 أيام إن لم يصل الدفع',
+                  'في حالة التأخر: ذكّر بلطف عبر البريد الإلكتروني، ثم بالهاتف إن لم يكن ثمة رد خلال 48 ساعة',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli: من الإنشاء إلى التحصيل بنقرات قليلة',
+                body: 'مع Sayerli، أنشئ فاتورتك في دقيقتين بجميع البيانات القانونية، وأرسلها مباشرةً بالبريد الإلكتروني أو برابط قابل للمشاركة، وتتبّع حالتها في الوقت الفعلي (مُرسَلة، مُطّلَع عليها، مدفوعة، متأخرة). التذكيرات التلقائية تُعالج المتأخرات نيابةً عنك. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء أول فاتورة',
+              },
+            ],
+          },
+          {
+            h2: 'ملخص: الخطوات السبع لإنشاء فاتورة احترافية بالمغرب',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'اجمع معلوماتك ومعلومات عميلك (IF، ICE، العناوين، RIB)',
+                  'اختر أداتك: برنامج متخصص مُوصى به من أول عميل جاد',
+                  'هيكل الفاتورة في 5 أقسام: ترويستك، بيانات العميل، جدول الخدمات، الملخص المالي، الذيل',
+                  'فصّل كل سطر خدمة بدقة: وصف، كمية، سعر وحدوي، إجمالي',
+                  'أضف معلومات الدفع: الأجل، الطريقة، البيانات البنكية الكاملة',
+                  'راجع، تحقق من تسلسل الترقيم، وصدّر بصيغة PDF',
+                  'أرسل وتابع حتى استلام الدفع',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'الطريقة الأسرع: Sayerli',
+                body: 'يجمع Sayerli كل هذه الخطوات في أداة واحدة مُصمَّمة للمغرب. بياناتك محفوظة، عملاؤك في قاعدة بيانات، الترقيم تلقائي، والبيانات القانونية دائماً صحيحة. انتقل من 30 دقيقة إلى دقيقتين لكل فاتورة. مجاني للبدء.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
   // ── ARTICLE 7 ────────────────────────────────────────────────────────────────
   'mentions-obligatoires-facture-maroc': {
     slug: 'mentions-obligatoires-facture-maroc',
