@@ -813,7 +813,7 @@ export default function DevisPage() {
                           ...(canDo('devis.send', role, removed) ? [{ label: 'WhatsApp', icon: MessageCircle, onClick: () => handleWhatsApp(devis) }] : []),
                           ...(canDo('devis.send', role, removed) ? [{ label: 'Email', icon: Mail, onClick: () => handleEmail(devis) }] : []),
                           ...(canDo('bons-livraison.manage', role, removed) && devis.statut === 'ACCEPTE' ? [{ label: t('pages.bonsLivraison.actions.creerDepuisDevis'), icon: Truck, onClick: () => handleCreerBL(devis) }] : []),
-                          ...(canDo('factures.create', role, removed) && devis.statut === 'ACCEPTE' && (devis._count?.factures ?? 0) === 0 ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
+                          ...(canDo('factures.create', role, removed) && devis.statut === 'ACCEPTE' ? [{ label: t('pages.devis.actions.convert'), icon: CheckCircle, onClick: () => handleConvert(devis) }] : []),
                           ...(canDo('devis.delete', role, removed) && devis.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(devis), variant: 'danger' as const, separator: true }] : []),
                         ]} />
                       </td>
@@ -1032,7 +1032,7 @@ export default function DevisPage() {
                   {t('pages.bonsLivraison.actions.creerDepuisDevis')}
                 </button>
               )}
-              {canDo('factures.create', role, removed) && selected.statut === 'ACCEPTE' && (selected._count?.factures ?? 0) === 0 && (
+              {canDo('factures.create', role, removed) && selected.statut === 'ACCEPTE' && (
                 <button
                   onClick={() => handleConvert(selected)}
                   disabled={actionLoading === `convert_${selected.id}`}

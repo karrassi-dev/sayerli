@@ -344,11 +344,6 @@ export class DevisService {
     if (devis.statut !== StatutDevis.ACCEPTE) {
       throw new BadRequestException('Seuls les devis acceptés peuvent être convertis en facture.');
     }
-    const factureExistante = await this.prisma.facture.findFirst({ where: { devisId: id } });
-    if (factureExistante) {
-      throw new BadRequestException('Ce devis a déjà été converti en facture.');
-    }
-
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const ent = await tx.entreprise.update({
