@@ -730,6 +730,651 @@ export const ARTICLES: Record<string, ArticleData> = {
     },
   },
 
+  // ── ARTICLE 5 ────────────────────────────────────────────────────────────────
+  'ir-liberatoire-auto-entrepreneur-maroc': {
+    slug: 'ir-liberatoire-auto-entrepreneur-maroc',
+    image: '/blog/ir-liberatoire-auto-entrepreneur-maroc.webp',
+    readingTime: 6,
+    content: {
+
+      // ── FRENCH ──────────────────────────────────────────────────────────────
+      fr: {
+        title: 'IR libératoire auto-entrepreneur au Maroc : taux, calcul et exonérations',
+        description: 'Comprendre l\'impôt sur le revenu libératoire pour les auto-entrepreneurs au Maroc : taux de 1% et 2% selon l\'activité, exonération des 3 premières années, calcul et déclaration trimestrielle.',
+        intro: [
+          {
+            type: 'p',
+            text: 'L\'une des questions qui revient le plus souvent chez les auto-entrepreneurs marocains : combien je paie vraiment comme impôts ? La réponse est simple — et c\'est là l\'un des avantages majeurs du statut. L\'impôt sur le revenu dans ce régime s\'appelle l\'IR libératoire. Il est calculé directement sur votre chiffre d\'affaires, sans comptabilité complexe, sans détermination de bénéfice net.',
+          },
+          {
+            type: 'p',
+            text: 'Ce guide explique tout ce qu\'il faut savoir : ce que signifie "libératoire", les taux exacts selon votre activité, l\'exonération des 3 premières années, comment calculer ce que vous devez, et comment déclarer. En moins de 10 minutes de lecture, vous aurez une vision claire et complète de votre situation fiscale.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Qu\'est-ce que l\'IR libératoire ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'IR libératoire est un impôt sur le revenu à taux fixe, calculé directement sur le chiffre d\'affaires brut encaissé. Le terme "libératoire" signifie que cet impôt vous libère de toute autre obligation déclarative au titre de l\'IR — vous n\'avez pas à déposer une déclaration annuelle de revenu global, ni à déterminer votre bénéfice net, ni à appliquer le barème progressif classique de l\'IR.',
+              },
+              {
+                type: 'p',
+                text: 'Concrètement, cela signifie que votre charge fiscale est entièrement transparente et prévisible : vous savez à l\'avance exactement combien vous paierez pour chaque dirham encaissé. Pas de surprise en fin d\'année, pas de calcul complexe.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'IR libératoire vs IR classique',
+                body: 'Dans le régime de droit commun, l\'IR est calculé sur le bénéfice net (revenus moins charges) selon un barème progressif allant de 0% à 38%. Dans le régime auto-entrepreneur, l\'IR libératoire se calcule sur le CA brut à un taux fixe — sans tenir compte des charges. C\'est plus simple, mais pas toujours plus avantageux si vous avez beaucoup de charges.',
+              },
+            ],
+          },
+          {
+            h2: 'Les taux d\'IR libératoire selon votre activité',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Les taux d\'IR libératoire varient selon la nature de votre activité. Le législateur a fait le choix de taux très bas pour encourager la formalisation des activités indépendantes au Maroc :',
+              },
+              {
+                type: 'table',
+                headers: ['Type d\'activité', 'Taux IR libératoire', 'Exemples'],
+                rows: [
+                  ['Prestations de services', '2% du CA HT encaissé', 'Développeur, designer, consultant, coach, formateur, traducteur'],
+                  ['Activités commerciales', '1% du CA HT encaissé', 'Revente de produits, commerce de détail'],
+                  ['Activités artisanales', '1% du CA HT encaissé', 'Menuisier, électricien, plombier, couturier'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Ces taux s\'appliquent sur le chiffre d\'affaires encaissé dans le trimestre — pas sur le bénéfice, pas sur les factures émises. Un prestataire de services qui encaisse 50 000 MAD au deuxième trimestre paie 50 000 × 2% = 1 000 MAD d\'IR libératoire pour ce trimestre.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Ces taux sont parmi les plus bas au monde',
+                body: '2% sur le CA pour les services, c\'est une fiscalité extrêmement légère. À titre de comparaison, un salarié marocain imposé au barème progressif peut payer de 10% à 38% de son revenu imposable. Le régime auto-entrepreneur est fiscalement très attractif, notamment en début d\'activité.',
+              },
+            ],
+          },
+          {
+            h2: 'L\'exonération totale les 3 premières années',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Si vous venez de vous inscrire — ou si vous envisagez de le faire — voici l\'information qui change tout : les auto-entrepreneurs marocains bénéficient d\'une exonération totale d\'IR pendant les 36 premiers mois d\'activité, à compter de la date d\'inscription sur le portail.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Durée : 36 mois (3 ans) à compter de la date d\'enregistrement officielle',
+                  'Portée : exonération totale — vous déclarez votre CA mais vous ne payez aucun IR libératoire',
+                  'Automatique : aucune démarche supplémentaire à effectuer, le portail applique l\'exonération de lui-même',
+                  'Non cumulable avec d\'autres régimes d\'exonération IR',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Ce que ça représente concrètement',
+                body: 'Un prestataire de services qui génère 200 000 MAD de CA sur ses 3 premières années économise 200 000 × 2% = 4 000 MAD d\'IR. Un commerçant qui génère 500 000 MAD économise 500 000 × 1% = 5 000 MAD. Une vraie aide au démarrage.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment calculer votre IR libératoire',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le calcul est volontairement simple. Voici la formule :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Déterminez votre CA encaissé sur le trimestre (total des paiements reçus, hors remboursements de frais)',
+                  'Multipliez par votre taux : 1% si commerce/artisanat, 2% si services',
+                  'Le résultat est votre IR libératoire dû pour ce trimestre',
+                  'Si vous êtes encore dans les 3 premières années : résultat = 0 MAD (exonération)',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Activité', 'CA trimestriel', 'Taux', 'IR libératoire dû'],
+                rows: [
+                  ['Développeur freelance (services)', '40 000 MAD', '2%', '800 MAD'],
+                  ['Graphiste (services)', '25 000 MAD', '2%', '500 MAD'],
+                  ['Revendeur (commerce)', '80 000 MAD', '1%', '800 MAD'],
+                  ['Électricien (artisanat)', '30 000 MAD', '1%', '300 MAD'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Activité mixte : quelle règle ?',
+                body: 'Si vous exercez à la fois des activités de services et des activités commerciales, vous devez calculer l\'IR libératoire séparément pour chaque partie : 2% sur le CA services et 1% sur le CA commercial, puis additionner les deux montants.',
+              },
+            ],
+          },
+          {
+            h2: 'Déclaration et paiement : le calendrier à respecter',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'IR libératoire se déclare et se paie en même temps que les cotisations CNSS, chaque trimestre, sur portail.auto-entrepreneur.ma. Un seul formulaire, un seul paiement groupé. Voici le calendrier :',
+              },
+              {
+                type: 'table',
+                headers: ['Trimestre', 'Période', 'Date limite'],
+                rows: [
+                  ['T1', 'Janvier — Mars', '30 avril'],
+                  ['T2', 'Avril — Juin', '31 juillet'],
+                  ['T3', 'Juillet — Septembre', '31 octobre'],
+                  ['T4', 'Octobre — Décembre', '31 janvier (N+1)'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Même si votre CA est nul sur un trimestre, la déclaration reste obligatoire. Vous soumettez une déclaration à zéro — l\'IR dû est alors zéro, mais l\'obligation déclarative est remplie. Négliger cette étape peut entraîner des pénalités et des complications lors des déclarations suivantes.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Pénalités de retard',
+                body: 'Une déclaration soumise après la date limite entraîne des majorations sur l\'IR dû. Ces pénalités s\'accumulent par mois de retard. Plus tôt vous régularisez, moins la note est salée. En cas de difficulté, contactez votre centre régional des impôts avant l\'échéance.',
+              },
+            ],
+          },
+          {
+            h2: 'Combien mettre de côté à chaque encaissement ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La meilleure pratique est de provisionner votre IR libératoire à chaque paiement reçu, avant de dépenser quoi que ce soit. Voici les taux de provision recommandés qui incluent à la fois l\'IR et les cotisations CNSS :',
+              },
+              {
+                type: 'table',
+                headers: ['Activité', 'CNSS', 'IR libératoire', 'Total à provisionner'],
+                rows: [
+                  ['Prestations de services', '10,4%', '2%', '12,4% du CA encaissé'],
+                  ['Commerce', '6%', '1%', '7% du CA encaissé'],
+                  ['Artisanat', '6%', '1%', '7% du CA encaissé'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Concrètement : pour chaque 10 000 MAD encaissés en tant que prestataire de services, mettez 1 240 MAD de côté dans un compte séparé. Ces fonds ne touchent plus jusqu\'à la déclaration trimestrielle. Ce réflexe simple évite les mauvaises surprises quand l\'échéance arrive.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli calcule votre CA trimestriel automatiquement',
+                body: 'Plus besoin d\'additionner vos encaissements manuellement avant chaque déclaration. Sayerli suit vos paiements en temps réel et vous donne le total exact par trimestre pour remplir votre déclaration IR et CNSS en quelques secondes. Essai gratuit, sans carte bancaire.',
+                href: '/register',
+                cta: 'Essayer Sayerli gratuitement',
+              },
+            ],
+          },
+          {
+            h2: 'IR libératoire : avantage ou inconvénient par rapport au régime classique ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La question mérite d\'être posée honnêtement. L\'IR libératoire est avantageux dans la majorité des situations pour un auto-entrepreneur, mais il a ses limites :',
+              },
+              {
+                type: 'table',
+                headers: ['Situation', 'IR libératoire', 'IR classique (résultat net)'],
+                rows: [
+                  ['CA de 150 000 MAD, charges de 20 000 MAD', '150 000 × 2% = 3 000 MAD', 'IR sur 130 000 MAD selon barème — probablement plus élevé'],
+                  ['CA de 150 000 MAD, charges de 120 000 MAD', '150 000 × 2% = 3 000 MAD', 'IR sur 30 000 MAD — probablement moins élevé'],
+                  ['Activité débutante (< 3 ans)', '0 MAD (exonération totale)', 'Abattement possible mais barème applicable'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'La règle générale : si vos charges représentent moins de 80-85% de votre CA, l\'IR libératoire est presque toujours plus avantageux. Si vous avez des charges très élevées (location bureau, matériel coûteux, sous-traitance massive), le régime classique pourrait être plus intéressant — mais il implique une comptabilité complète et une SARL.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Gérez votre activité auto-entrepreneur avec Sayerli',
+                body: 'Factures conformes, suivi des paiements, tableau de bord trimestriel, export pour vos déclarations — Sayerli est l\'outil de référence des auto-entrepreneurs et freelancers marocains. Démarrez gratuitement, sans carte bancaire.',
+                href: '/fonctionnalites',
+                cta: 'Voir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ENGLISH ─────────────────────────────────────────────────────────────
+      en: {
+        title: 'IR Libératoire for Auto-Entrepreneurs in Morocco: Rates, Calculation and Exemptions',
+        description: 'Everything you need to know about the IR libératoire income tax for auto-entrepreneurs in Morocco: 1% and 2% rates by activity, 3-year exemption, quarterly calculation and declaration.',
+        intro: [
+          {
+            type: 'p',
+            text: 'One of the most common questions from Moroccan auto-entrepreneurs: how much do I actually pay in taxes? The answer is simple — and that simplicity is one of the major advantages of the status. Income tax in this regime is called the IR libératoire. It is calculated directly on your revenue, with no complex accounting and no need to determine a net profit.',
+          },
+          {
+            type: 'p',
+            text: 'This guide covers everything you need to know: what "libératoire" means, the exact rates by activity, the 3-year exemption, how to calculate what you owe, and how to file your declaration. In under 10 minutes of reading, you will have a clear and complete picture of your tax situation.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'What is the IR libératoire?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The IR libératoire is a flat-rate income tax calculated directly on gross revenue collected. The word "libératoire" means this tax releases you from any other income tax filing obligation — you do not need to file an annual global income declaration, determine a net profit, or apply the standard progressive income tax scale.',
+              },
+              {
+                type: 'p',
+                text: 'In practice, this means your tax burden is entirely transparent and predictable: you know in advance exactly how much you will pay for every dirham collected. No year-end surprises, no complex calculations.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'IR libératoire vs standard income tax',
+                body: 'Under the standard regime, income tax is calculated on net profit (revenue minus expenses) using a progressive scale from 0% to 38%. Under the auto-entrepreneur regime, the IR libératoire is calculated on gross revenue at a flat rate — without accounting for expenses. It is simpler, but not always more favorable if you have high business costs.',
+              },
+            ],
+          },
+          {
+            h2: 'IR libératoire rates by activity type',
+            blocks: [
+              {
+                type: 'p',
+                text: 'IR libératoire rates vary based on the nature of your activity. The legislature chose very low rates to encourage formalization of independent activities in Morocco:',
+              },
+              {
+                type: 'table',
+                headers: ['Activity type', 'IR libératoire rate', 'Examples'],
+                rows: [
+                  ['Service activities', '2% of collected revenue', 'Developer, designer, consultant, coach, trainer, translator'],
+                  ['Commercial activities', '1% of collected revenue', 'Product resale, retail commerce'],
+                  ['Craft activities', '1% of collected revenue', 'Carpenter, electrician, plumber, tailor'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'These rates apply to revenue collected in the quarter — not profit, not invoices issued. A service provider who collects 50,000 MAD in Q2 pays 50,000 × 2% = 1,000 MAD in IR libératoire for that quarter.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Among the lowest rates in the world',
+                body: '2% on revenue for services is an extremely light tax burden. By comparison, a Moroccan salaried employee on the progressive scale can pay 10% to 38% of their taxable income. The auto-entrepreneur regime is fiscally very attractive, especially when starting out.',
+              },
+            ],
+          },
+          {
+            h2: 'Full exemption for the first 3 years',
+            blocks: [
+              {
+                type: 'p',
+                text: 'If you have just registered — or are considering it — here is the information that changes everything: Moroccan auto-entrepreneurs benefit from a full IR exemption for the first 36 months of activity, from the date of registration on the portal.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Duration: 36 months (3 years) from the official registration date',
+                  'Scope: total exemption — you declare your revenue but owe zero IR libératoire',
+                  'Automatic: no additional steps required, the portal applies the exemption automatically',
+                  'Not combinable with other IR exemption schemes',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'What this means in concrete terms',
+                body: 'A service provider generating 200,000 MAD in revenue over their first 3 years saves 200,000 × 2% = 4,000 MAD in IR. A trader generating 500,000 MAD saves 500,000 × 1% = 5,000 MAD. A real head-start advantage.',
+              },
+            ],
+          },
+          {
+            h2: 'How to calculate your IR libératoire',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The calculation is deliberately simple. Here is the formula:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Determine your revenue collected during the quarter (total payments received, excluding expense reimbursements)',
+                  'Multiply by your rate: 1% for commerce/crafts, 2% for services',
+                  'The result is your IR libératoire due for that quarter',
+                  'If you are still within the first 3 years: result = 0 MAD (exemption applies)',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Activity', 'Quarterly revenue', 'Rate', 'IR libératoire due'],
+                rows: [
+                  ['Freelance developer (services)', '40,000 MAD', '2%', '800 MAD'],
+                  ['Graphic designer (services)', '25,000 MAD', '2%', '500 MAD'],
+                  ['Reseller (commerce)', '80,000 MAD', '1%', '800 MAD'],
+                  ['Electrician (craft)', '30,000 MAD', '1%', '300 MAD'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Mixed activity: which rule applies?',
+                body: 'If you carry out both service and commercial activities, calculate the IR libératoire separately for each part: 2% on service revenue and 1% on commercial revenue, then add the two amounts together.',
+              },
+            ],
+          },
+          {
+            h2: 'Declaration and payment: the calendar to follow',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The IR libératoire is declared and paid at the same time as your CNSS contributions, quarterly, on portail.auto-entrepreneur.ma. One form, one grouped payment. Here is the calendar:',
+              },
+              {
+                type: 'table',
+                headers: ['Quarter', 'Period', 'Deadline'],
+                rows: [
+                  ['Q1', 'January — March', 'April 30'],
+                  ['Q2', 'April — June', 'July 31'],
+                  ['Q3', 'July — September', 'October 31'],
+                  ['Q4', 'October — December', 'January 31 (following year)'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Even if your revenue is zero for a quarter, the declaration is still mandatory. You submit a zero declaration — IR owed is zero, but the filing obligation is met. Neglecting this step can result in penalties and complications with subsequent declarations.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Late penalties',
+                body: 'A declaration submitted after the deadline triggers surcharges on the IR owed. These penalties accumulate per month of delay. The sooner you regularize, the lower the cost. If you are facing difficulties, contact your regional tax centre before the deadline.',
+              },
+            ],
+          },
+          {
+            h2: 'How much to set aside with each payment received',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Best practice is to provision your IR libératoire with every client payment received, before spending anything. Here are the recommended provision rates including both IR and CNSS contributions:',
+              },
+              {
+                type: 'table',
+                headers: ['Activity', 'CNSS', 'IR libératoire', 'Total to set aside'],
+                rows: [
+                  ['Service activities', '10.4%', '2%', '12.4% of revenue collected'],
+                  ['Commerce', '6%', '1%', '7% of revenue collected'],
+                  ['Crafts', '6%', '1%', '7% of revenue collected'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'In practice: for every 10,000 MAD collected as a service provider, set aside 1,240 MAD in a separate account. Do not touch those funds until the quarterly declaration. This simple habit eliminates unpleasant surprises when the deadline arrives.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli calculates your quarterly revenue automatically',
+                body: 'No more manual addition of payments before each declaration. Sayerli tracks your payments in real time and gives you the exact quarterly total to fill in your IR and CNSS declaration in seconds. Free trial, no credit card required.',
+                href: '/register',
+                cta: 'Try Sayerli for free',
+              },
+            ],
+          },
+          {
+            h2: 'IR libératoire: advantage or drawback vs. the standard regime?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The question deserves an honest answer. The IR libératoire is advantageous in most auto-entrepreneur situations, but it has its limits:',
+              },
+              {
+                type: 'table',
+                headers: ['Situation', 'IR libératoire', 'Standard IR (net result)'],
+                rows: [
+                  ['Revenue 150,000 MAD, expenses 20,000 MAD', '150,000 × 2% = 3,000 MAD', 'IR on 130,000 MAD on progressive scale — likely higher'],
+                  ['Revenue 150,000 MAD, expenses 120,000 MAD', '150,000 × 2% = 3,000 MAD', 'IR on 30,000 MAD — likely lower'],
+                  ['New activity (< 3 years)', '0 MAD (full exemption)', 'Deductions possible but scale still applies'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'General rule: if your expenses represent less than 80–85% of your revenue, the IR libératoire is almost always more favorable. If you have very high costs (office rental, expensive equipment, heavy subcontracting), the standard regime could be more interesting — but it requires full accounting and an SARL structure.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Manage your auto-entrepreneur activity with Sayerli',
+                body: 'Compliant invoices, payment tracking, quarterly dashboard, export for your declarations — Sayerli is the reference tool for Moroccan auto-entrepreneurs and freelancers. Start free, no credit card required.',
+                href: '/fonctionnalites',
+                cta: 'See all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      // ── ARABIC ──────────────────────────────────────────────────────────────
+      ar: {
+        title: 'الضريبة على الدخل الجزافية للمقاول الذاتي بالمغرب: النسب والحساب والإعفاءات',
+        description: 'كل ما تحتاج معرفته عن الضريبة على الدخل الجزافية للمقاولين الذاتيين بالمغرب: نسبتا 1% و2% حسب النشاط، إعفاء السنوات الثلاث الأولى، الحساب والتصريح الفصلي.',
+        intro: [
+          {
+            type: 'p',
+            text: 'من أكثر الأسئلة شيوعاً لدى المقاولين الذاتيين المغاربة: كم أدفع فعلاً من الضرائب؟ الجواب بسيط — وهذه البساطة تُعدّ من أبرز مزايا هذا الوضع. الضريبة على الدخل في هذا النظام تُسمى الضريبة على الدخل الجزافية. تُحسب مباشرةً على رقم أعمالك، دون محاسبة معقدة، ودون الحاجة إلى تحديد الربح الصافي.',
+          },
+          {
+            type: 'p',
+            text: 'يشرح هذا الدليل كل ما تحتاج معرفته: معنى "جزافية"، النسب الدقيقة حسب نشاطك، إعفاء السنوات الثلاث الأولى، كيفية حساب ما تدين به، وكيفية التصريح. في أقل من 10 دقائق من القراءة ستمتلك رؤية واضحة وشاملة لوضعيتك الجبائية.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'ما هي الضريبة على الدخل الجزافية؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'الضريبة على الدخل الجزافية هي ضريبة دخل بنسبة ثابتة تُحسب مباشرةً على رقم الأعمال الإجمالي المحصَّل. وصف "جزافية" يعني أن هذه الضريبة تُعفيك من أي التزام تصريحي آخر يتعلق بضريبة الدخل — فلا حاجة إلى تقديم تصريح سنوي بمجموع الدخل، ولا إلى تحديد الربح الصافي، ولا إلى تطبيق الجدول التصاعدي الكلاسيكي لضريبة الدخل.',
+              },
+              {
+                type: 'p',
+                text: 'ذلك يعني عملياً أن عبءك الضريبي شفاف وقابل للتوقع تماماً: تعرف سلفاً بالضبط كم ستدفع عن كل درهم محصَّل. لا مفاجآت في نهاية السنة، لا حسابات معقدة.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الضريبة الجزافية مقابل ضريبة الدخل الكلاسيكية',
+                body: 'في النظام العام، تُحسب ضريبة الدخل على الربح الصافي (المداخيل ناقص المصاريف) وفق جدول تصاعدي يتراوح بين 0% و38%. في نظام المقاول الذاتي، تُحسب الضريبة الجزافية على رقم الأعمال الإجمالي بنسبة ثابتة — دون اعتبار المصاريف. أبسط، لكن ليس دائماً أفضل إذا كانت مصاريفك مرتفعة.',
+              },
+            ],
+          },
+          {
+            h2: 'نسب الضريبة على الدخل الجزافية حسب نوع النشاط',
+            blocks: [
+              {
+                type: 'p',
+                text: 'تتفاوت نسب الضريبة الجزافية تبعاً لطبيعة نشاطك. اختار المشرّع نسباً منخفضة جداً لتشجيع تسوية الأوضاع القانونية للأنشطة المستقلة بالمغرب:',
+              },
+              {
+                type: 'table',
+                headers: ['نوع النشاط', 'نسبة الضريبة الجزافية', 'أمثلة'],
+                rows: [
+                  ['تقديم الخدمات', '2% من رقم الأعمال المحصَّل', 'مطور، مصمم، مستشار، مدرب، مترجم'],
+                  ['الأنشطة التجارية', '1% من رقم الأعمال المحصَّل', 'إعادة بيع المنتجات، تجارة التجزئة'],
+                  ['الأنشطة الحرفية', '1% من رقم الأعمال المحصَّل', 'نجار، كهربائي، سباك، خياط'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'تُطبَّق هذه النسب على رقم الأعمال المحصَّل في الربع — لا على الربح، ولا على الفواتير المُصدَرة. مقدّم خدمات يحصّل 50,000 درهم في الربع الثاني يدفع 50,000 × 2% = 1,000 درهم كضريبة جزافية عن ذلك الربع.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'من بين أدنى النسب في العالم',
+                body: '2% على رقم الأعمال للخدمات هو عبء ضريبي خفيف للغاية. للمقارنة، يمكن أن يدفع الأجير المغربي وفق الجدول التصاعدي ما بين 10% و38% من دخله الخاضع للضريبة. نظام المقاول الذاتي جذاب ضريبياً جداً، ولا سيما في بداية النشاط.',
+              },
+            ],
+          },
+          {
+            h2: 'الإعفاء التام خلال السنوات الثلاث الأولى',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إذا كنت قد سجّلت حديثاً — أو تفكر في ذلك — فهذه المعلومة تُغيّر كل شيء: يستفيد المقاولون الذاتيون المغاربة من إعفاء تام من ضريبة الدخل الجزافية خلال الـ 36 شهراً الأولى من النشاط، تُحتسب من تاريخ التسجيل على البوابة.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'المدة: 36 شهراً (3 سنوات) من تاريخ التسجيل الرسمي',
+                  'النطاق: إعفاء تام — تُصرّح برقم أعمالك لكنك لا تدفع أي ضريبة جزافية',
+                  'تلقائي: لا إجراءات إضافية، تُطبّق البوابة الإعفاء من تلقاء نفسها',
+                  'غير قابل للجمع مع أنظمة إعفاء أخرى من ضريبة الدخل',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'ما يمثله ذلك فعلياً',
+                body: 'مقدّم خدمات يحقق 200,000 درهم من رقم الأعمال خلال سنواته الثلاث الأولى يوفّر 200,000 × 2% = 4,000 درهم من الضريبة. تاجر يحقق 500,000 درهم يوفّر 500,000 × 1% = 5,000 درهم. دعم حقيقي للانطلاق.',
+              },
+            ],
+          },
+          {
+            h2: 'كيف تحسب ضريبتك الجزافية',
+            blocks: [
+              {
+                type: 'p',
+                text: 'الحساب بسيط بشكل مقصود. إليك الصيغة:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'حدّد رقم أعمالك المحصَّل خلال الربع (مجموع المدفوعات المستلمة، باستثناء استرداد المصاريف)',
+                  'اضربه في نسبتك: 1% للتجارة والحرف، 2% للخدمات',
+                  'الناتج هو الضريبة الجزافية المستحقة عن ذلك الربع',
+                  'إذا كنت لا تزال في السنوات الثلاث الأولى: الناتج = 0 درهم (الإعفاء سارٍ)',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['النشاط', 'رقم الأعمال الفصلي', 'النسبة', 'الضريبة الجزافية المستحقة'],
+                rows: [
+                  ['مطور مستقل (خدمات)', '40,000 درهم', '2%', '800 درهم'],
+                  ['مصمم جرافيك (خدمات)', '25,000 درهم', '2%', '500 درهم'],
+                  ['بائع بالتجزئة (تجارة)', '80,000 درهم', '1%', '800 درهم'],
+                  ['كهربائي (حرفة)', '30,000 درهم', '1%', '300 درهم'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'نشاط مختلط: أي قاعدة تُطبَّق؟',
+                body: 'إذا كنت تمارس أنشطة خدمات وتجارة في آنٍ واحد، احسب الضريبة الجزافية منفصلةً لكل جزء: 2% على رقم أعمال الخدمات و1% على رقم الأعمال التجاري، ثم اجمع المبلغَين.',
+              },
+            ],
+          },
+          {
+            h2: 'التصريح والأداء: التقويم الواجب احترامه',
+            blocks: [
+              {
+                type: 'p',
+                text: 'تُصرَّح الضريبة الجزافية وتُؤدَّى في نفس وقت اشتراكات الصندوق الوطني للضمان الاجتماعي، فصلياً، على بوابة portail.auto-entrepreneur.ma. استمارة واحدة، أداء مجمَّع واحد. إليك التقويم:',
+              },
+              {
+                type: 'table',
+                headers: ['الربع', 'الفترة', 'الموعد الأقصى'],
+                rows: [
+                  ['الربع الأول', 'يناير — مارس', '30 أبريل'],
+                  ['الربع الثاني', 'أبريل — يونيو', '31 يوليوز'],
+                  ['الربع الثالث', 'يوليوز — شتنبر', '31 أكتوبر'],
+                  ['الربع الرابع', 'أكتوبر — دجنبر', '31 يناير (السنة التالية)'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'حتى لو كان رقم أعمالك صفراً في ربع ما، يبقى التصريح إلزامياً. تُقدّم تصريحاً بصفر — الضريبة المستحقة تكون صفراً، لكن الالتزام التصريحي يكون قد أُنجز. إهمال هذه الخطوة قد يُفضي إلى غرامات وتعقيدات في التصريحات اللاحقة.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'غرامات التأخير',
+                body: 'تصريح مُقدَّم بعد الموعد الأقصى يُرتّب زيادات على الضريبة المستحقة. تتراكم هذه الغرامات شهراً بشهر. كلما أسرعت في التسوية، كانت الفاتورة أخف. إذا واجهت صعوبة، تواصل مع مركزك الجهوي للضرائب قبل حلول الأجل.',
+              },
+            ],
+          },
+          {
+            h2: 'كم تخصّص من كل مبلغ تحصّله؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'أفضل الممارسات هي تخصيص مبلغ ضريبتك الجزافية عند كل مدفوعات العملاء، قبل إنفاق أي شيء. إليك نسب التخصيص الموصى بها شاملةً الضريبة واشتراكات الصندوق معاً:',
+              },
+              {
+                type: 'table',
+                headers: ['النشاط', 'الصندوق الوطني للضمان الاجتماعي', 'الضريبة الجزافية', 'الإجمالي الواجب تخصيصه'],
+                rows: [
+                  ['تقديم الخدمات', '10.4%', '2%', '12.4% من رقم الأعمال المحصَّل'],
+                  ['التجارة', '6%', '1%', '7% من رقم الأعمال المحصَّل'],
+                  ['الحرف اليدوية', '6%', '1%', '7% من رقم الأعمال المحصَّل'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'عملياً: مقابل كل 10,000 درهم تحصّلها كمقدّم خدمات، خصّص 1,240 درهم في حساب منفصل. لا تمسّ هذا المبلغ حتى موعد التصريح الفصلي. هذه العادة البسيطة تجنّبك المفاجآت غير السارة عند حلول الأجل.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli يحسب رقم أعمالك الفصلي تلقائياً',
+                body: 'لا حاجة بعد الآن لجمع مدفوعاتك يدوياً قبل كل تصريح. يتتبع Sayerli مدفوعاتك في الوقت الفعلي ويمنحك الإجمالي الدقيق لكل ربع لتملأ تصريح الضريبة والصندوق في ثوانٍ. تجربة مجانية، بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'جرّب Sayerli مجاناً',
+              },
+            ],
+          },
+          {
+            h2: 'الضريبة الجزافية: ميزة أم عيب مقارنةً بالنظام الكلاسيكي؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'يستحق السؤال إجابةً صريحة. الضريبة الجزافية مفيدة في غالبية حالات المقاول الذاتي، لكنها ليست مثالية في جميع الحالات:',
+              },
+              {
+                type: 'table',
+                headers: ['الوضعية', 'الضريبة الجزافية', 'ضريبة الدخل الكلاسيكية (الصافي الحقيقي)'],
+                rows: [
+                  ['رقم أعمال 150,000 درهم، مصاريف 20,000 درهم', '150,000 × 2% = 3,000 درهم', 'ضريبة على 130,000 درهم وفق الجدول التصاعدي — غالباً أعلى'],
+                  ['رقم أعمال 150,000 درهم، مصاريف 120,000 درهم', '150,000 × 2% = 3,000 درهم', 'ضريبة على 30,000 درهم — غالباً أقل'],
+                  ['نشاط ناشئ (أقل من 3 سنوات)', '0 درهم (إعفاء تام)', 'تخفيضات ممكنة لكن الجدول التصاعدي يسري'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'القاعدة العامة: إذا كانت مصاريفك تمثّل أقل من 80 إلى 85% من رقم أعمالك، فالضريبة الجزافية أفضل في الغالب. إذا كانت لديك مصاريف مرتفعة جداً (إيجار مكتب، معدات باهظة، مناولة مكثّفة)، فقد يكون النظام الكلاسيكي أجدى — لكنه يستلزم محاسبة كاملة وتأسيس شركة ذات مسؤولية محدودة.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'أدِر نشاطك كمقاول ذاتي مع Sayerli',
+                body: 'فواتير مطابقة، تتبع المدفوعات، لوحة قيادة فصلية، تصدير لتصريحاتك — Sayerli هو الأداة المرجعية للمقاولين الذاتيين والمستقلين المغاربة. ابدأ مجاناً، بدون بطاقة بنكية.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
   // ── ARTICLE 4 ────────────────────────────────────────────────────────────────
   'cnss-auto-entrepreneur-maroc': {
     slug: 'cnss-auto-entrepreneur-maroc',
