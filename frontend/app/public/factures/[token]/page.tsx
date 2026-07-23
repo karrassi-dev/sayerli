@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { usePublicLocale } from '@/hooks/usePublicLocale'
 import {
   CheckCircle, Clock, Building2, Mail, Phone, MapPin,
-  AlertCircle, CreditCard, Copy, X, ShieldCheck, Download, FileCode, XCircle,
+  AlertCircle, CreditCard, Copy, X, ShieldCheck, Download, XCircle,
 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { publicFacturesApi } from '@/lib/api'
@@ -283,7 +283,6 @@ function DeclarationSuccessScreen({
 function DGIBanner({ facture, token }: { facture: PublicFacture; token: string }) {
   const { t } = usePublicLocale()
   const [downloading, setDownloading] = useState(false)
-  const [xmlLoading, setXmlLoading] = useState(false)
 
   const handleDownloadPDF = async () => {
     setDownloading(true)
@@ -351,25 +350,6 @@ function DGIBanner({ facture, token }: { facture: PublicFacture; token: string }
             ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             : <Download className="w-4 h-4" />}
           {t('dgi.downloadPDF')}
-        </button>
-        <button
-          onClick={async () => {
-            setXmlLoading(true)
-            try {
-              const res = await publicFacturesApi.xmlUrl(token)
-              const url = res.data?.data?.url ?? res.data?.url
-              if (url) window.open(url, '_blank')
-            } finally {
-              setXmlLoading(false)
-            }
-          }}
-          disabled={xmlLoading}
-          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded text-sm font-semibold text-gray-700 border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-60 transition-all"
-        >
-          {xmlLoading
-            ? <span className="w-3.5 h-3.5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-            : <FileCode className="w-4 h-4" />}
-          {t('dgi.downloadXML')}
         </button>
       </div>
     </div>
