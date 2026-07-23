@@ -367,9 +367,8 @@ export class BonsLivraisonService {
     const actuel = await this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
     verifierLimite('factures', actuel, limite);
 
-    const blClient = bl.client as { rasActif?: boolean; rasTaux?: number | null } | null;
-    const rasActif  = blClient?.rasActif ?? false;
-    const rasTaux   = Number(blClient?.rasTaux ?? 30);
+    const rasActif  = bl.client?.rasActif ?? false;
+    const rasTaux   = Number(bl.client?.rasTaux ?? 30);
 
     const taxe = 20;
     const lignesData = bl.lignes.map(l => ({
