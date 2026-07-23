@@ -60,7 +60,7 @@ export class FacturesService {
         }),
       },
       include: {
-        client: { select: { id: true, nom: true, email: true, nomEntreprise: true, telephone: true } },
+        client: { select: { id: true, nom: true, email: true, nomEntreprise: true, telephone: true, rasActif: true, rasTaux: true } },
         _count: { select: { lignes: true, paiements: true, declarationsPaiement: true } },
       },
       // rasActif, rasTaux, rasMontant are returned via the full Facture model

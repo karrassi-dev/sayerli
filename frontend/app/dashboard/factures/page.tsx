@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Receipt, Plus, Eye, Pencil, Trash2, Send, CreditCard,
   TrendingUp, Clock, AlertTriangle, X, AlertCircle, Link, Ban, MessageCircle, ChevronRight, Mail, Bell,
-  Lock, FileText, Truck,
+  Lock, FileText, Truck, Percent, RefreshCw,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -61,7 +61,7 @@ interface ApiFacture {
   publicToken: string
   createdAt: string
   lastReminderSentAt?: string | null
-  client: { id: string; nom: string; email: string | null; nomEntreprise: string | null; telephone: string | null }
+  client: { id: string; nom: string; email: string | null; nomEntreprise: string | null; telephone: string | null; rasActif?: boolean; rasTaux?: number | string }
   lignes?: FactureLigne[]
   devis?: { id: string; reference: string } | null
   paiements?: { id: string; montant: number | string; methode: string; reference: string | null; datePaiement: string }[]
@@ -437,6 +437,7 @@ export default function FacturesPage() {
   const [paiementForm, setPaiementForm] = useState<PaiementForm>(EMPTY_PAIEMENT)
   const [paiementErrors, setPaiementErrors] = useState<Record<string, string>>({})
   const [savingPaiement, setSavingPaiement] = useState(false)
+  const [syncingRas, setSyncingRas] = useState(false)
   const [limitModal, setLimitModal] = useState<{ resource: 'factures'; limite: number; actuel: number } | null>(null)
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -813,9 +814,12 @@ export default function FacturesPage() {
         full = res.data?.data ?? res.data
       } catch { /* use what we have */ }
     }
+    const netAP2 = full.rasActif
+      ? n(full.totalTTC) - n(full.rasMontant)
+      : n(full.totalTTC)
     setPaiementForm({
       ...EMPTY_PAIEMENT,
-      montant: String(Math.max(0, n(full.totalTTC) - n(full.montantPaye))),
+      montant: String(Math.max(0, netAP2 - n(full.montantPaye))),
     })
     setPaiementErrors({})
     setSelected(null)
@@ -858,6 +862,37 @@ export default function FacturesPage() {
       toastError('Erreur', Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Impossible d\'enregistrer le paiement.'))
     } finally {
       setSavingPaiement(false)
+    }
+  }
+
+  const handleSyncRas = async () => {
+    if (!selected || !selected.lignes) return
+    const clientRasTaux = n(selected.client.rasTaux ?? 30)
+    setSyncingRas(true)
+    try {
+      await facturesApi.update(selected.id, {
+        clientId: selected.client.id,
+        taxe: n(selected.taxe),
+        remise: n(selected.remise),
+        devise: selected.devise ?? 'MAD',
+        notes: selected.notes ?? undefined,
+        dateEcheance: selected.dateEcheance ?? undefined,
+        rasActif: true,
+        rasTaux: clientRasTaux,
+        lignes: selected.lignes.map(l => ({
+          description: l.description,
+          quantite: n(l.quantite),
+          prixUnitaire: n(l.prixUnitaire),
+        })),
+      })
+      const res = await facturesApi.get(selected.id)
+      setSelected(res.data?.data ?? res.data)
+      fetchFactures(search.trim() || undefined, filters.statut)
+      success('RAS appliquée avec succès.')
+    } catch {
+      toastError('Erreur', 'Impossible d\'appliquer la RAS.')
+    } finally {
+      setSyncingRas(false)
     }
   }
 
@@ -1002,8 +1037,11 @@ export default function FacturesPage() {
                 <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
                   {paginated.map(facture => {
                     const isOverdue = facture.statut === 'EN_RETARD'
-                    const pctPaid = n(facture.totalTTC) > 0
-                      ? Math.min(100, (n(facture.montantPaye) / n(facture.totalTTC)) * 100)
+                    const rowNetAPayer = facture.rasActif
+                      ? n(facture.totalTTC) - n(facture.rasMontant)
+                      : n(facture.totalTTC)
+                    const pctPaid = rowNetAPayer > 0
+                      ? Math.min(100, (n(facture.montantPaye) / rowNetAPayer) * 100)
                       : 0
                     return (
                       <tr
@@ -1022,7 +1060,19 @@ export default function FacturesPage() {
                           <p className="text-xs text-slate-400">{facture.client.nomEntreprise || '—'}</p>
                         </td>
                         <td className="px-4 py-3.5">
-                          <span className="text-sm font-bold text-slate-900 dark:text-white">{formatCurrency(facture.totalTTC, facture.devise)}</span>
+                          {facture.rasActif ? (
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-sm font-bold text-slate-900 dark:text-white">{formatCurrency(rowNetAPayer, facture.devise)}</span>
+                                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300">
+                                  <Percent className="w-2.5 h-2.5" />RAS {n(facture.rasTaux)}%
+                                </span>
+                              </div>
+                              <p className="text-xs text-slate-400 mt-0.5">TTC: {formatCurrency(facture.totalTTC, facture.devise)}</p>
+                            </div>
+                          ) : (
+                            <span className="text-sm font-bold text-slate-900 dark:text-white">{formatCurrency(facture.totalTTC, facture.devise)}</span>
+                          )}
                         </td>
                         <td className="px-4 py-3.5">
                           <div>
@@ -1082,7 +1132,18 @@ export default function FacturesPage() {
                   </div>
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{facture.client.nom}</p>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white flex-shrink-0">{formatCurrency(facture.totalTTC, facture.devise)}</span>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {facture.rasActif && (
+                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300">
+                          <Percent className="w-2.5 h-2.5" />RAS
+                        </span>
+                      )}
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">
+                        {facture.rasActif
+                          ? formatCurrency(n(facture.totalTTC) - n(facture.rasMontant), facture.devise)
+                          : formatCurrency(facture.totalTTC, facture.devise)}
+                      </span>
+                    </div>
                   </div>
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-xs text-slate-400">{t('pages.factures.col.dueDate')}: {formatDate(facture.dateEcheance)}</p>
@@ -1188,12 +1249,41 @@ export default function FacturesPage() {
                 </div>
               )}
 
+              {/* RAS mismatch warning — client has RAS but this facture doesn't */}
+              {!selected.rasActif && selected.client.rasActif && (
+                <div className="rounded-xl border border-orange-200 dark:border-orange-700 bg-orange-50 dark:bg-orange-950/20 p-3">
+                  <div className="flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-orange-800 dark:text-orange-200">
+                        RAS non appliquée à cette facture
+                      </p>
+                      <p className="text-xs text-orange-700 dark:text-orange-300 mt-0.5">
+                        Ce client applique une RAS de {n(selected.client.rasTaux ?? 30)}%. Cette facture a été créée avant que la RAS soit configurée.
+                      </p>
+                    </div>
+                    {selected.statut !== 'PAYEE' && selected.statut !== 'ANNULEE' && selected.lignes && (
+                      <button
+                        onClick={handleSyncRas}
+                        disabled={syncingRas}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-orange-500 hover:bg-orange-600 disabled:opacity-60 transition-all flex-shrink-0"
+                      >
+                        {syncingRas
+                          ? <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                          : <RefreshCw className="w-3 h-3" />}
+                        Appliquer RAS
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Payment progress */}
               <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-500">{t('pages.factures.stats.paid')}</span>
                   <span className="font-bold text-slate-900 dark:text-white">
-                    {formatCurrency(selected.montantPaye, selected.devise)} / {formatCurrency(selected.totalTTC, selected.devise)}
+                    {formatCurrency(selected.montantPaye, selected.devise)} / {selected.rasActif ? formatCurrency(netAPayer, selected.devise) : formatCurrency(selected.totalTTC, selected.devise)}
                   </span>
                 </div>
                 <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
