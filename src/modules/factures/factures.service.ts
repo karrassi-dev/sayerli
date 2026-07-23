@@ -335,6 +335,17 @@ export class FacturesService {
     return this.dgiService.getDocumentUrl(facture.pdfStorageKey);
   }
 
+  async getPublicXmlUrl(token: string) {
+    const facture = await this.prisma.facture.findUnique({
+      where: { publicToken: token },
+      select: { xmlStorageKey: true, dgiMode: true },
+    });
+    if (!facture || !facture.dgiMode || !facture.xmlStorageKey) {
+      throw new NotFoundException('Document UBL DGI introuvable.');
+    }
+    return this.dgiService.getXmlUrl(facture.xmlStorageKey);
+  }
+
   async supprimerFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');

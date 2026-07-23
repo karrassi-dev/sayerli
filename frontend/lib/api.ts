@@ -129,6 +129,7 @@ export const publicFacturesApi = {
   declarer: (token: string, data: unknown) =>
     publicApi.post(`/public/factures/${token}/declarer-paiement`, data),
   documentUrl: (token: string) => publicApi.get(`/public/factures/${token}/document-url`),
+  xmlUrl: (token: string) => publicApi.get(`/public/factures/${token}/xml-url`),
 }
 
 // Paiements

@@ -204,4 +204,11 @@ export class FacturesPublicController {
     const url = await this.facturesService.getPublicDocumentUrl(token);
     return { url };
   }
+
+  @Public()
+  @Get(':token/xml-url')
+  async xmlUrl(@Param('token') token: string) {
+    const url = await this.facturesService.getPublicXmlUrl(token);
+    return { url };
+  }
 }
