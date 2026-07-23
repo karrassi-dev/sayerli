@@ -167,6 +167,16 @@ export class FacturesController {
   ) {
     return this.facturesService.supprimerFacture(id, entrepriseId, userId, userNom);
   }
+
+  @Get(':id/dgi-documents')
+  @Roles(RoleType.ADMIN, RoleType.MANAGER, RoleType.COMPTABLE, RoleType.PROPRIETAIRE, RoleType.DAF, RoleType.COMPTABLE_EXTERNE)
+  @Permission('factures.read')
+  async dgiDocuments(
+    @Param('id') id: string,
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+  ) {
+    return this.facturesService.getDGIDocumentUrls(id, entrepriseId);
+  }
 }
 
 @Controller('public/factures')
@@ -186,5 +196,12 @@ export class FacturesPublicController {
     @Body() dto: DeclarerPaiementDto,
   ) {
     return this.facturesService.declarerPaiement(token, dto);
+  }
+
+  @Public()
+  @Get(':token/document-url')
+  async documentUrl(@Param('token') token: string) {
+    const url = await this.facturesService.getPublicDocumentUrl(token);
+    return { url };
   }
 }

@@ -785,7 +785,29 @@
     "enRetard": "متأخر",
     "envoyee": "مُرسَلة",
     "vue": "تمت مشاهدتها",
-    "annulee": "ملغاة"
+    "annulee": "ملغاة",
+    "clearanceEnCours": "انتظار الموافقة DGI…",
+    "rejeteeDGI": "مرفوضة من DGI"
+  },
+  "dgi": {
+    "title": "الفوترة الإلكترونية DGI",
+    "subtitle": "الامتثال لـ Simpl-TVA (إلزامي تدريجياً من 2026)",
+    "modeLabel": "وضع الفاتورة الإلكترونية DGI",
+    "modeDesc": "عند التفعيل، يتم إرسال كل فاتورة إلى منصة Simpl-TVA للمديرية العامة للضرائب للمصادقة قبل إرسالها للعميل. يتطلب ICE الخاص بمؤسستك.",
+    "enableBtn": "تفعيل",
+    "disableBtn": "تعطيل",
+    "active": "مفعّل",
+    "inactive": "معطّل",
+    "clearanceId": "مرجع DGI",
+    "downloadPDF": "تحميل الفاتورة المعتمدة (PDF)",
+    "downloadXML": "تحميل ملف UBL 2.1 (XML)",
+    "certifiedBadge": "فاتورة إلكترونية معتمدة من DGI",
+    "stubWarning": "وضع تجريبي — التحقق من DGI محاكى. سيتم تفعيل التكامل الحقيقي عند نشر واجهة Simpl-TVA.",
+    "iceRequired": "ICE مطلوب لتفعيل وضع DGI. أدخله في الإعدادات › الشركة.",
+    "statusPending": "في انتظار موافقة DGI…",
+    "statusRejected": "مرفوضة من DGI",
+    "rejectionReason": "سبب الرفض",
+    "resubmit": "تصحيح وإعادة الإرسال"
   },
   "roles": {
     "PROPRIETAIRE": "المالك",

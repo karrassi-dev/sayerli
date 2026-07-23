@@ -45,6 +45,7 @@ model Entreprise {
   prochainNumeroDevis   Int                   @default(1)
   prochainNumeroBL      Int                   @default(1)
   storageUsedBytes      Int                   @default(0)
+  dgiMode               Boolean               @default(false)
   clients               Client[]
   produitsServices     ProduitService[]
   declarationsPaiement DeclarationPaiement[]
@@ -232,6 +233,15 @@ model Facture {
   dateDerniereConsultation DateTime?
   nombreConsultations      Int                   @default(0)
   lastReminderSentAt       DateTime?
+  dgiMode                  Boolean               @default(false)
+  dgiStatut                DGIStatut?
+  dgiClearanceId           String?
+  dgiSoumisAt              DateTime?
+  dgiValideAt              DateTime?
+  dgiRaisonRejet           String?
+  xmlStorageKey            String?
+  pdfStorageKey            String?
+  documentHash             String?
   declarationsPaiement     DeclarationPaiement[]
   lignes                   FactureLigne[]
   client                   Client                @relation(fields: [clientId], references: [id])
@@ -344,12 +354,20 @@ enum StatutDevis {
 
 enum StatutFacture {
   BROUILLON
+  CLEARANCE_EN_COURS
   ENVOYEE
+  REJETEE_DGI
   PAYEE
   PARTIELLE
   EN_RETARD
   VUE
   ANNULEE
+}
+
+enum DGIStatut {
+  EN_ATTENTE
+  VALIDEE
+  REJETEE
 }
 
 enum MethodePaiement {

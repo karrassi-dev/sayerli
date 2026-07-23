@@ -135,4 +135,15 @@ export class SettingsController {
   getBilling(@UtilisateurCourant('entrepriseId') entrepriseId: string) {
     return this.settingsService.getBilling(entrepriseId);
   }
+
+  // ─── DGI E-FACTURATION (admin only) ──────────────────────────────────────
+
+  @Patch('dgi-mode')
+  @Roles(RoleType.ADMIN, RoleType.PROPRIETAIRE)
+  toggleDGIMode(
+    @UtilisateurCourant('entrepriseId') entrepriseId: string,
+    @Body('activer') activer: boolean,
+  ) {
+    return this.settingsService.toggleDGIMode(entrepriseId, activer);
+  }
 }

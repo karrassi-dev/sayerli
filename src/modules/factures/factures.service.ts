@@ -15,6 +15,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { LogsService } from '../logs/logs.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { EmailService } from '../email/email.service';
+import { DGIService } from '../dgi/dgi.service';
 import { CreerFactureDto } from './dto/creer-facture.dto';
 import { ModifierStatutFactureDto } from './dto/modifier-statut-facture.dto';
 import { DeclarerPaiementDto } from './dto/declarer-paiement.dto';
@@ -27,6 +28,7 @@ export class FacturesService {
     private logs: LogsService,
     private notificationsService: NotificationsService,
     private emailService: EmailService,
+    private dgiService: DGIService,
     @Inject(CACHE_MANAGER) private cache: Cache,
   ) {}
 
@@ -257,6 +259,35 @@ export class FacturesService {
     if (!facture) throw new NotFoundException('Facture introuvable.');
 
     if (facture.statut === StatutFacture.BROUILLON) {
+      const entreprise = await this.prisma.entreprise.findUnique({
+        where: { id: entrepriseId },
+        select: { dgiMode: true },
+      });
+
+      if (entreprise?.dgiMode) {
+        // ── DGI pipeline ────────────────────────────────────────────────────
+        const factureFull = await this.prisma.facture.findFirst({
+          where: { id, entrepriseId },
+          include: {
+            client: true,
+            lignes: { orderBy: { ordre: 'asc' } },
+            entreprise: true,
+          },
+        });
+        if (!factureFull) throw new NotFoundException('Facture introuvable.');
+
+        const result = await this.dgiService.envoyerAvecDGI(factureFull);
+        this.notificationsService.creerEtEnvoyer({
+          entrepriseId,
+          type: 'FACTURE_ENVOYEE',
+          message: `La facture ${facture.numeroFacture} a été validée DGI (${result.dgiClearanceId}) et envoyée au client.`,
+          lien: `/dashboard/factures`,
+        });
+        if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_ENVOYEE_DGI', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });
+        return result;
+      }
+
+      // ── Standard pipeline ──────────────────────────────────────────────
       await this.prisma.facture.update({
         where: { id },
         data: { statut: StatutFacture.ENVOYEE, dateEnvoi: new Date() },
@@ -277,11 +308,38 @@ export class FacturesService {
     };
   }
 
+  async getDGIDocumentUrls(id: string, entrepriseId: string) {
+    const facture = await this.prisma.facture.findFirst({
+      where: { id, entrepriseId },
+      select: { xmlStorageKey: true, pdfStorageKey: true, dgiClearanceId: true, dgiStatut: true, dgiMode: true },
+    });
+    if (!facture) throw new NotFoundException('Facture introuvable.');
+    if (!facture.dgiMode || !facture.pdfStorageKey) {
+      throw new BadRequestException('Cette facture ne possède pas de document DGI.');
+    }
+    const [pdfUrl, xmlUrl] = await Promise.all([
+      this.dgiService.getDocumentUrl(facture.pdfStorageKey),
+      facture.xmlStorageKey ? this.dgiService.getXmlUrl(facture.xmlStorageKey) : Promise.resolve(null),
+    ]);
+    return { pdfUrl, xmlUrl, dgiClearanceId: facture.dgiClearanceId };
+  }
+
+  async getPublicDocumentUrl(token: string) {
+    const facture = await this.prisma.facture.findUnique({
+      where: { publicToken: token },
+      select: { pdfStorageKey: true, dgiMode: true },
+    });
+    if (!facture || !facture.dgiMode || !facture.pdfStorageKey) {
+      throw new NotFoundException('Document DGI introuvable.');
+    }
+    return this.dgiService.getDocumentUrl(facture.pdfStorageKey);
+  }
+
   async supprimerFacture(id: string, entrepriseId: string, userId = '', userNom = '') {
     const facture = await this.prisma.facture.findFirst({ where: { id, entrepriseId } });
     if (!facture) throw new NotFoundException('Facture introuvable.');
-    if (facture.statut !== StatutFacture.BROUILLON) {
-      throw new BadRequestException('Seules les factures en brouillon peuvent être supprimées.');
+    if (facture.statut !== StatutFacture.BROUILLON && facture.statut !== StatutFacture.REJETEE_DGI) {
+      throw new BadRequestException('Seules les factures en brouillon ou rejetées par la DGI peuvent être supprimées.');
     }
     await this.prisma.facture.delete({ where: { id } });
     if (userId) this.logs.log({ entrepriseId, userId, userNom, action: 'FACTURE_SUPPRIMEE', entityType: 'FACTURE', entityId: id, entityRef: facture.numeroFacture });

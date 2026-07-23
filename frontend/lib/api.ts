@@ -113,6 +113,7 @@ export const facturesApi = {
   annuler: (id: string) => api.patch(`/factures/${id}/annuler`),
   dashboard: () => api.get('/factures/tableau-de-bord'),
   delete: (id: string) => api.delete(`/factures/${id}`),
+  dgiDocuments: (id: string) => api.get(`/factures/${id}/dgi-documents`),
   // Declarations
   declarations: (statut?: string) =>
     api.get('/factures/declarations', { params: statut ? { statut } : {} }),
@@ -127,6 +128,7 @@ export const publicFacturesApi = {
   get: (token: string) => publicApi.get(`/public/factures/${token}`),
   declarer: (token: string, data: unknown) =>
     publicApi.post(`/public/factures/${token}/declarer-paiement`, data),
+  documentUrl: (token: string) => publicApi.get(`/public/factures/${token}/document-url`),
 }
 
 // Paiements
@@ -257,6 +259,9 @@ export const settingsApi = {
 
   // Billing
   getBilling: () => api.get('/settings/billing'),
+
+  // DGI e-Facturation
+  toggleDGIMode: (activer: boolean) => api.patch('/settings/dgi-mode', { activer }),
 }
 
 // Export

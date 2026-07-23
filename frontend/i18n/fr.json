@@ -785,7 +785,29 @@
     "enRetard": "En retard",
     "envoyee": "Envoyée",
     "vue": "Consultée",
-    "annulee": "Annulée"
+    "annulee": "Annulée",
+    "clearanceEnCours": "Validation DGI…",
+    "rejeteeDGI": "Rejetée DGI"
+  },
+  "dgi": {
+    "title": "Facturation Électronique DGI",
+    "subtitle": "Conformité Simpl-TVA (obligation progressive dès 2026)",
+    "modeLabel": "Mode e-Facture DGI",
+    "modeDesc": "Lorsqu'activé, chaque facture envoyée est soumise à la plateforme Simpl-TVA de la DGI pour validation avant d'être transmise au client. Requiert votre ICE.",
+    "enableBtn": "Activer",
+    "disableBtn": "Désactiver",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "clearanceId": "Référence DGI",
+    "downloadPDF": "Télécharger la facture certifiée (PDF)",
+    "downloadXML": "Télécharger le fichier UBL 2.1 (XML)",
+    "certifiedBadge": "Facture électronique certifiée DGI",
+    "stubWarning": "Mode stub — la validation DGI est simulée. L'intégration réelle sera activée à la publication de l'API Simpl-TVA.",
+    "iceRequired": "ICE requis pour activer le mode DGI. Renseignez-le dans Paramètres › Entreprise.",
+    "statusPending": "En attente de validation DGI…",
+    "statusRejected": "Rejetée par la DGI",
+    "rejectionReason": "Motif de rejet",
+    "resubmit": "Corriger et resoumettre"
   },
   "roles": {
     "PROPRIETAIRE": "Propriétaire",

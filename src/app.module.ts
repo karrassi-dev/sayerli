@@ -30,6 +30,7 @@ import { DeclarationsTVAModule } from './modules/declarations-tva/declarations-t
 import { BonsLivraisonModule } from './modules/bons-livraison/bons-livraison.module';
 import { GraphModule } from './modules/graph/graph.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
+import { DGIModule } from './modules/dgi/dgi.module';
 
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -69,6 +70,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     BonsLivraisonModule,
     GraphModule,
     ExpensesModule,
+    DGIModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

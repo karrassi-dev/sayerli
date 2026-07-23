@@ -934,10 +934,12 @@ export default function FacturesPage() {
 
   const statusFilters = [
     { value: 'BROUILLON', label: t('statuses.brouillon') },
+    { value: 'CLEARANCE_EN_COURS', label: t('statuses.clearanceEnCours') },
     { value: 'ENVOYEE', label: t('statuses.envoyee') },
     { value: 'PAYEE', label: t('statuses.payee') },
     { value: 'PARTIELLE', label: t('statuses.partielle') },
     { value: 'EN_RETARD', label: t('statuses.enRetard') },
+    { value: 'REJETEE_DGI', label: t('statuses.rejeteeDGI') },
   ]
 
   const inputClass = 'w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
@@ -1107,7 +1109,7 @@ export default function FacturesPage() {
                             ...(canDo('factures.relance', role, removed) && facture.statut === 'EN_RETARD' ? [{ label: t('pages.factures.actions.relancerWhatsApp'), icon: Bell, onClick: () => handleRelanceWhatsApp(facture) }] : []),
                             ...(canDo('factures.edit', role, removed) && (facture.statut === 'BROUILLON' || facture.statut === 'ENVOYEE') ? [{ label: t('common.edit'), icon: Pencil, onClick: () => openEdit(facture) }] : []),
                             ...(canDo('paiements.create', role, removed) && facture.statut !== 'PAYEE' && facture.statut !== 'BROUILLON' ? [{ label: t('pages.factures.actions.recordPayment'), icon: CreditCard, onClick: () => openPaiement(facture) }] : []),
-                            ...(canDo('factures.delete', role, removed) && facture.statut === 'BROUILLON' ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(facture), variant: 'danger' as const, separator: true }] : []),
+                            ...(canDo('factures.delete', role, removed) && ['BROUILLON', 'REJETEE_DGI'].includes(facture.statut) ? [{ label: t('common.delete'), icon: Trash2, onClick: () => setDeleteTarget(facture), variant: 'danger' as const, separator: true }] : []),
                             ...(canDo('factures.annuler', role, removed) && ['ENVOYEE', 'VUE', 'EN_RETARD'].includes(facture.statut) ? [{ label: t('pages.factures.actions.cancel'), icon: Ban, onClick: () => setAnnulerTarget(facture), variant: 'danger' as const, separator: true }] : []),
                           ]} />
                         </td>

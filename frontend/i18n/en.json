@@ -785,7 +785,29 @@
     "enRetard": "Overdue",
     "envoyee": "Sent",
     "vue": "Viewed",
-    "annulee": "Cancelled"
+    "annulee": "Cancelled",
+    "clearanceEnCours": "DGI Validation…",
+    "rejeteeDGI": "Rejected by DGI"
+  },
+  "dgi": {
+    "title": "DGI Electronic Invoicing",
+    "subtitle": "Simpl-TVA compliance (mandatory rollout from 2026)",
+    "modeLabel": "DGI e-Invoice Mode",
+    "modeDesc": "When enabled, every invoice sent is submitted to the DGI Simpl-TVA platform for clearance before reaching the client. Requires your ICE.",
+    "enableBtn": "Enable",
+    "disableBtn": "Disable",
+    "active": "Active",
+    "inactive": "Inactive",
+    "clearanceId": "DGI Reference",
+    "downloadPDF": "Download certified invoice (PDF)",
+    "downloadXML": "Download UBL 2.1 file (XML)",
+    "certifiedBadge": "DGI-certified electronic invoice",
+    "stubWarning": "Stub mode — DGI validation is simulated. Real integration will be enabled once the Simpl-TVA API is published.",
+    "iceRequired": "ICE required to enable DGI mode. Set it in Settings › Company.",
+    "statusPending": "Awaiting DGI clearance…",
+    "statusRejected": "Rejected by DGI",
+    "rejectionReason": "Rejection reason",
+    "resubmit": "Correct and resubmit"
   },
   "roles": {
     "PROPRIETAIRE": "Owner",

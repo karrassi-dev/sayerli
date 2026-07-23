@@ -99,10 +99,29 @@ export class SettingsService {
         prochainNumeroFacture: true,
         prochainNumeroDevis: true,
         prochainNumeroBL: true,
+        dgiMode: true,
       },
     });
     if (!company) throw new NotFoundException('Entreprise introuvable.');
     return company;
+  }
+
+  async toggleDGIMode(entrepriseId: string, activer: boolean) {
+    const company = await this.prisma.entreprise.findUnique({
+      where: { id: entrepriseId },
+      select: { ice: true },
+    });
+    if (!company) throw new NotFoundException('Entreprise introuvable.');
+    if (activer && !company.ice) {
+      throw new BadRequestException(
+        "L'ICE de votre entreprise est requis pour activer la facturation électronique DGI. Renseignez-le dans l'onglet Entreprise.",
+      );
+    }
+    await this.prisma.entreprise.update({
+      where: { id: entrepriseId },
+      data: { dgiMode: activer },
+    });
+    return { dgiMode: activer };
   }
 
   async updateCompany(entrepriseId: string, dto: UpdateCompanyDto) {

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { usePublicLocale } from '@/hooks/usePublicLocale'
 import {
   CheckCircle, Clock, Building2, Mail, Phone, MapPin,
-  AlertCircle, CreditCard, Copy, X,
+  AlertCircle, CreditCard, Copy, X, ShieldCheck, Download, FileCode, XCircle,
 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { publicFacturesApi } from '@/lib/api'
@@ -62,6 +62,10 @@ interface PublicFacture {
   dateEnvoi: string | null
   notes: string | null
   createdAt: string
+  dgiMode: boolean
+  dgiStatut: string | null
+  dgiClearanceId: string | null
+  dgiRaisonRejet: string | null
   devis: { reference: string } | null
   client: { nom: string; email: string | null; telephone: string | null; nomEntreprise: string | null }
   lignes: Ligne[]
@@ -269,6 +273,85 @@ function DeclarationSuccessScreen({
         <p className="text-xs text-gray-400 text-center">
           {t('public.generatedBy')} — {t('public.generatedBySub')}
         </p>
+      </div>
+    </div>
+  )
+}
+
+// ── DGI Download Banner ───────────────────────────────────────────────────────
+
+function DGIBanner({ facture, token }: { facture: PublicFacture; token: string }) {
+  const { t } = usePublicLocale()
+  const [downloading, setDownloading] = useState(false)
+  const [xmlLoading, setXmlLoading] = useState(false)
+
+  const handleDownloadPDF = async () => {
+    setDownloading(true)
+    try {
+      const res = await publicFacturesApi.documentUrl(token)
+      const url = res.data?.data?.url ?? res.data?.url
+      if (url) window.open(url, '_blank')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  if (facture.statut === 'CLEARANCE_EN_COURS') {
+    return (
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center gap-3">
+        <Clock className="w-5 h-5 text-yellow-600 flex-shrink-0 animate-pulse" />
+        <p className="text-sm text-yellow-700 font-medium">{t('dgi.statusPending')}</p>
+      </div>
+    )
+  }
+
+  if (facture.statut === 'REJETEE_DGI') {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-2">
+        <div className="flex items-center gap-3">
+          <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+          <p className="text-sm text-red-700 font-bold">{t('dgi.statusRejected')}</p>
+        </div>
+        {facture.dgiRaisonRejet && (
+          <p className="text-xs text-red-600 ml-8">{t('dgi.rejectionReason')} : {facture.dgiRaisonRejet}</p>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      {/* Certified badge */}
+      <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+        <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-bold text-emerald-700">{t('dgi.certifiedBadge')}</p>
+          {facture.dgiClearanceId && (
+            <p className="text-xs text-emerald-600 font-mono mt-0.5 truncate">
+              {t('dgi.clearanceId')} : {facture.dgiClearanceId}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Stub warning */}
+      <div className="flex items-start gap-2 p-2 bg-amber-50 border border-amber-100 rounded text-xs text-amber-700">
+        <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+        <span>{t('dgi.stubWarning')}</span>
+      </div>
+
+      {/* Download buttons */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        <button
+          onClick={handleDownloadPDF}
+          disabled={downloading}
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 transition-all"
+        >
+          {downloading
+            ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            : <Download className="w-4 h-4" />}
+          {t('dgi.downloadPDF')}
+        </button>
       </div>
     </div>
   )
@@ -921,7 +1004,12 @@ export default function PublicFacturePage() {
             </div>
           )}
 
+          {facture.dgiMode ? (
+            <DGIBanner facture={facture} token={token} />
+          ) : null}
+
           <div className="flex flex-col sm:flex-row gap-3">
+            {!facture.dgiMode && (
             <FactureSimpleDownloadButton
               data={simplePdfData}
               template={template}
@@ -929,6 +1017,7 @@ export default function PublicFacturePage() {
               loadingLabel="Génération..."
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded text-sm font-semibold text-gray-700 border border-gray-200 bg-white hover:bg-gray-50 transition-all"
             />
+            )}
             {facture.paiements && facture.paiements.length > 0 && (
               <RecuDownloadButton
                 data={{
