@@ -22,6 +22,7 @@ export const ROUTE_ROLE_MAP: Record<string, string[]> = {
   '/dashboard/activite':         ['admin', 'proprietaire'],
   '/dashboard/bons-livraison':   ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant', 'comptable', 'comptable_externe', 'daf', 'associe'],
   '/dashboard/graphe':           ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'comptable_externe', 'responsable_recouvrement', 'caissier', 'commercial', 'commercial_propre', 'assistant', 'associe'],
+  '/dashboard/depenses':         ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf', 'assistant'],
 }
 
 export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
@@ -40,6 +41,7 @@ export const NAV_ALLOWED_ROLES: Record<string, string[]> = {
   catalogue:     ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant'],
   activite:         ['admin', 'proprietaire'],
   bonsLivraison:    ['admin', 'proprietaire', 'manager', 'commercial', 'commercial_propre', 'assistant', 'comptable', 'comptable_externe', 'daf', 'associe'],
+  depenses:         ['admin', 'proprietaire', 'manager', 'comptable', 'comptable_externe', 'daf', 'assistant'],
 }
 
 export function canAccess(role: string, routeKey: string): boolean {

@@ -329,7 +329,8 @@
       "catalogue": "الكتالوج",
       "bonsLivraison": "وصولات التسليم",
       "activite": "النشاط",
-      "graphe": "الرسم البياني"
+      "graphe": "الرسم البياني",
+      "depenses": "المصاريف"
     },
     "payments": "المدفوعات",
     "thisMonth": "هذا الشهر",
@@ -1708,6 +1709,72 @@
       "paymentsRegistered": "دفعة(دفعات) مسجلة",
       "invoiceSettled": "الفاتورة مسددة",
       "confirmMsg": "نؤكد استلام دفعتك. يمكنك تنزيل إيصالك الرسمي من هنا."
+    },
+    "depenses": {
+      "title": "المصاريف",
+      "subtitle": "تتبع وإدارة جميع مصاريفك",
+      "add": "مصروف جديد",
+      "edit": "تعديل المصروف",
+      "delete": "حذف المصروف",
+      "deleteConfirm": "هل أنت متأكد من حذف هذا المصروف؟ لا يمكن التراجع عن هذا الإجراء.",
+      "empty": {
+        "title": "لا توجد مصاريف مسجلة",
+        "sub": "ابدأ بإضافة أول مصروف لك."
+      },
+      "stats": {
+        "total": "إجمالي المصاريف",
+        "thisMonth": "هذا الشهر",
+        "withReceipts": "مع وصل",
+        "storage": "التخزين المستخدم"
+      },
+      "table": {
+        "date": "التاريخ",
+        "categorie": "الفئة",
+        "fournisseur": "المورد",
+        "montant": "المبلغ",
+        "recu": "الوصل",
+        "actions": "الإجراءات"
+      },
+      "form": {
+        "date": "التاريخ *",
+        "montant": "المبلغ *",
+        "devise": "العملة",
+        "categorie": "الفئة *",
+        "fournisseur": "المورد",
+        "fournisseurPlaceholder": "اسم المورد",
+        "description": "الوصف",
+        "descriptionPlaceholder": "تفاصيل المصروف",
+        "recu": "الوصل / الإثبات",
+        "recuDrag": "اسحب صورة هنا أو",
+        "recuClick": "انقر للاختيار",
+        "recuHint": "JPG، PNG فقط — الحد الأقصى 10 MB",
+        "recuCompress": "جارٍ الضغط…",
+        "recuUploading": "جارٍ الرفع…",
+        "recuTooLarge": "الصورة كبيرة جداً بعد الضغط. يرجى المحاولة مرة أخرى.",
+        "recuWrongType": "تنسيق غير مدعوم. JPG أو PNG فقط.",
+        "recuRemove": "إزالة الوصل"
+      },
+      "categories": {
+        "LOYER": "الإيجار",
+        "EQUIPEMENT": "المعدات",
+        "TRANSPORT": "النقل",
+        "ABONNEMENTS": "الاشتراكات",
+        "MATIERES_PREMIERES": "المواد الأولية",
+        "SALAIRES": "الرواتب",
+        "MARKETING": "التسويق",
+        "FOURNITURES": "اللوازم",
+        "SOUS_TRAITANCE": "المقاولة من الباطن",
+        "AUTRE": "أخرى"
+      },
+      "filters": {
+        "allCategories": "جميع الفئات",
+        "search": "بحث..."
+      },
+      "export": "تصدير Excel",
+      "viewReceipt": "عرض الوصل",
+      "storageUsed": "مستخدم",
+      "storageOf": "من",
+      "unlimited": "غير محدود"
     }
   },
   "contact": {

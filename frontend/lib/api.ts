@@ -270,6 +270,20 @@ export const declarationsTvaApi = {
     api.get('/declarations-tva/calculer', { params }),
 }
 
+// Dépenses
+export const depensesApi = {
+  list: (params?: { categorie?: string; dateDebut?: string; dateFin?: string; recherche?: string }) =>
+    api.get('/expenses', { params }),
+  get: (id: string) => api.get(`/expenses/${id}`),
+  create: (data: unknown) => api.post('/expenses', data),
+  update: (id: string, data: unknown) => api.put(`/expenses/${id}`, data),
+  delete: (id: string) => api.delete(`/expenses/${id}`),
+  getUploadUrl: () => api.post('/expenses/upload-url'),
+  stockage: () => api.get('/expenses/stockage'),
+  export: (params?: { categorie?: string; dateDebut?: string; dateFin?: string }) =>
+    api.get('/expenses/export', { params, responseType: 'blob' }),
+}
+
 // Graph
 export const graphApi = {
   getData: () => api.get('/graph'),

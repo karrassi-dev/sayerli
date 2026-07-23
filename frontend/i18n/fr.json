@@ -329,7 +329,8 @@
       "catalogue": "Catalogue",
       "bonsLivraison": "Bons de livraison",
       "activite": "Activité",
-      "graphe": "Graphe relationnel"
+      "graphe": "Graphe relationnel",
+      "depenses": "Dépenses"
     },
     "payments": "Paiements",
     "thisMonth": "ce mois",
@@ -1709,6 +1710,72 @@
       "paymentsRegistered": "paiement(s) enregistré(s)",
       "invoiceSettled": "Facture réglée",
       "confirmMsg": "Nous confirmons la réception de votre paiement. Vous pouvez télécharger votre reçu officiel ici."
+    },
+    "depenses": {
+      "title": "Dépenses",
+      "subtitle": "Suivez et gérez toutes vos dépenses",
+      "add": "Nouvelle dépense",
+      "edit": "Modifier la dépense",
+      "delete": "Supprimer la dépense",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette dépense ? Cette action est irréversible.",
+      "empty": {
+        "title": "Aucune dépense enregistrée",
+        "sub": "Commencez par ajouter votre première dépense."
+      },
+      "stats": {
+        "total": "Total dépensé",
+        "thisMonth": "Ce mois-ci",
+        "withReceipts": "Avec reçu",
+        "storage": "Stockage utilisé"
+      },
+      "table": {
+        "date": "Date",
+        "categorie": "Catégorie",
+        "fournisseur": "Fournisseur",
+        "montant": "Montant",
+        "recu": "Reçu",
+        "actions": "Actions"
+      },
+      "form": {
+        "date": "Date *",
+        "montant": "Montant *",
+        "devise": "Devise",
+        "categorie": "Catégorie *",
+        "fournisseur": "Fournisseur",
+        "fournisseurPlaceholder": "Nom du fournisseur",
+        "description": "Description",
+        "descriptionPlaceholder": "Détails de la dépense",
+        "recu": "Reçu / Justificatif",
+        "recuDrag": "Glissez une image ici ou",
+        "recuClick": "cliquez pour sélectionner",
+        "recuHint": "JPG, PNG uniquement — max 10 MB",
+        "recuCompress": "Compression en cours…",
+        "recuUploading": "Upload en cours…",
+        "recuTooLarge": "Image trop volumineuse après compression. Veuillez réessayer.",
+        "recuWrongType": "Format non autorisé. JPG ou PNG uniquement.",
+        "recuRemove": "Supprimer le reçu"
+      },
+      "categories": {
+        "LOYER": "Loyer",
+        "EQUIPEMENT": "Équipement",
+        "TRANSPORT": "Transport",
+        "ABONNEMENTS": "Abonnements",
+        "MATIERES_PREMIERES": "Matières premières",
+        "SALAIRES": "Salaires",
+        "MARKETING": "Marketing",
+        "FOURNITURES": "Fournitures",
+        "SOUS_TRAITANCE": "Sous-traitance",
+        "AUTRE": "Autre"
+      },
+      "filters": {
+        "allCategories": "Toutes les catégories",
+        "search": "Rechercher..."
+      },
+      "export": "Exporter Excel",
+      "viewReceipt": "Voir le reçu",
+      "storageUsed": "utilisé",
+      "storageOf": "sur",
+      "unlimited": "illimité"
     }
   },
   "contact": {

@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, FileText, Receipt, CreditCard,
   UserCog, Bell, Settings, LogOut, Menu, X,
   ChevronLeft, ChevronRight, ClipboardCheck, Download, Package,
-  Building2, ChevronsUpDown, Check, Activity, Calculator, Truck, Share2,
+  Building2, ChevronsUpDown, Check, Activity, Calculator, Truck, Share2, Wallet,
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -23,6 +23,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/factures',     iconC: Receipt,         key: 'factures',      permission: 'factures.read' },
   { href: '/dashboard/catalogue',    iconC: Package,         key: 'catalogue',     permission: 'catalogue.read' },
   { href: '/dashboard/bons-livraison', iconC: Truck,         key: 'bonsLivraison', permission: 'bons-livraison.read' },
+  { href: '/dashboard/depenses',      iconC: Wallet,          key: 'depenses',      permission: null },
   { href: '/dashboard/declarations', iconC: ClipboardCheck,  key: 'declarations',  permission: 'paiements.declarations' },
   { href: '/dashboard/paiements',    iconC: CreditCard,      key: 'paiements',     permission: 'paiements.read' },
   { href: '/dashboard/equipe',       iconC: UserCog,         key: 'equipe',        permission: 'equipe.read' },

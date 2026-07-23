@@ -44,6 +44,7 @@ model Entreprise {
   prochainNumeroFacture Int                   @default(1)
   prochainNumeroDevis   Int                   @default(1)
   prochainNumeroBL      Int                   @default(1)
+  storageUsedBytes      Int                   @default(0)
   clients               Client[]
   produitsServices     ProduitService[]
   declarationsPaiement DeclarationPaiement[]
@@ -53,6 +54,7 @@ model Entreprise {
   paiements            Paiement[]
   utilisateurs         Utilisateur[]
   bonsLivraison        BonLivraison[]
+  depenses             Depense[]
 
   @@map("entreprises")
 }
@@ -468,6 +470,40 @@ model BonLivraisonLigne {
   bonLivraison   BonLivraison @relation(fields: [bonLivraisonId], references: [id], onDelete: Cascade)
 
   @@map("bon_livraison_lignes")
+}
+
+enum CategorieDepense {
+  LOYER
+  EQUIPEMENT
+  TRANSPORT
+  ABONNEMENTS
+  MATIERES_PREMIERES
+  SALAIRES
+  MARKETING
+  FOURNITURES
+  SOUS_TRAITANCE
+  AUTRE
+}
+
+model Depense {
+  id               String           @id @default(uuid())
+  entrepriseId     String
+  userId           String
+  montant          Decimal          @db.Decimal(12, 2)
+  devise           String           @default("MAD")
+  categorie        CategorieDepense
+  fournisseur      String?
+  description      String?
+  date             DateTime
+  receiptKey       String?
+  receiptUrl       String?
+  receiptSizeBytes Int?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  entreprise       Entreprise       @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+
+  @@index([entrepriseId])
+  @@map("depenses")
 }
 
 model ContactSubmission {
