@@ -302,8 +302,11 @@ function DeclarationModal({
   facture: PublicFacture
   loading: boolean
 }) {
+  const rasMonModal = facture.rasActif
+    ? (n(facture.rasMontant) > 0 ? n(facture.rasMontant) : Math.round(n(facture.totalTTC) * n(facture.rasTaux ?? 30)) / 100)
+    : 0
   const netAPayerModal = facture.rasActif
-    ? n(facture.totalTTC) - n(facture.rasMontant)
+    ? n(facture.totalTTC) - rasMonModal
     : n(facture.totalTTC)
   const [form, setForm] = useState<DeclarationForm>({
     ...EMPTY_FORM,
@@ -501,8 +504,14 @@ export default function PublicFacturePage() {
 
   const brand = facture.entreprise.couleurPrimaire || '#2563eb'
   const template = facture.entreprise.templateDocument ?? 'classic'
+  // If rasActif but rasMontant is 0 (edge case), recompute from rasTaux
+  const effectiveRasMontant = facture.rasActif
+    ? (n(facture.rasMontant) > 0
+        ? n(facture.rasMontant)
+        : Math.round(n(facture.totalTTC) * n(facture.rasTaux ?? 30)) / 100)
+    : 0
   const netAPayer = facture.rasActif
-    ? n(facture.totalTTC) - n(facture.rasMontant)
+    ? n(facture.totalTTC) - effectiveRasMontant
     : n(facture.totalTTC)
   const montantRestant = Math.max(0, netAPayer - n(facture.montantPaye))
   const isPayee = facture.statut === 'PAYEE'
@@ -540,7 +549,7 @@ export default function PublicFacturePage() {
     remise: n(facture.remise ?? 0),
     rasActif: facture.rasActif ?? false,
     rasTaux: n(facture.rasTaux ?? 30),
-    rasMontant: n(facture.rasMontant ?? 0),
+    rasMontant: effectiveRasMontant,
     devisReference: facture.devis?.reference ?? null,
     template,
     lignes: facture.lignes.map(l => ({
@@ -775,7 +784,7 @@ export default function PublicFacturePage() {
                 <>
                   <div className="flex justify-between text-sm py-2 px-4 border-t border-orange-100 bg-orange-50 text-orange-700">
                     <span>Retenue à la source ({n(facture.rasTaux)}%)</span>
-                    <span>−{formatMAD(facture.rasMontant)}</span>
+                    <span>−{formatMAD(effectiveRasMontant)}</span>
                   </div>
                   <div className="flex justify-between font-bold px-4 py-3 bg-orange-500 text-white">
                     <span className="text-sm tracking-wide">NET À PAYER</span>

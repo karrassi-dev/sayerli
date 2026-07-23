@@ -116,7 +116,7 @@ export class FacturesService {
 
     const rasActif = dto.rasActif ?? client.rasActif;
     const rasTaux  = dto.rasTaux  ?? Number(client.rasTaux ?? 30);
-    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux) / 100 : 0;
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux * 100) / 10000 : 0;
 
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
@@ -189,7 +189,7 @@ export class FacturesService {
 
     const rasActif   = dto.rasActif  ?? facture.rasActif;
     const rasTaux    = dto.rasTaux   ?? Number(facture.rasTaux ?? 30);
-    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux) / 100 : 0;
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux * 100) / 10000 : 0;
 
     await this.prisma.factureLigne.deleteMany({ where: { factureId: id } });
 
