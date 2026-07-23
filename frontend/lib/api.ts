@@ -222,11 +222,12 @@ export const settingsApi = {
 
   // Company
   getCompany: () => api.get('/settings/company'),
-  updateCompany: (data: {
-    nom?: string; ice?: string; rc?: string; telephone?: string;
-    email?: string; website?: string; adresse?: string; ville?: string; pays?: string;
-    titulaireCompte?: string; banque?: string; rib?: string; iban?: string; swift?: string;
-  }) => api.patch('/settings/company', data),
+  updateCompany: (data: Record<string, unknown>) => {
+    const cleaned = Object.fromEntries(
+      Object.entries(data).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+    )
+    return api.patch('/settings/company', cleaned)
+  },
 
   // Branding
   getBranding: () => api.get('/settings/branding'),
