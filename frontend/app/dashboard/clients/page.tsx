@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Users, UserPlus, Eye, Pencil, Trash2, Phone, Mail, Building2, TrendingUp, AlertCircle, User, Briefcase, Link2 } from 'lucide-react'
+import { Users, UserPlus, Eye, Pencil, Trash2, Phone, Mail, Building2, TrendingUp, AlertCircle, User, Briefcase, Link2, Percent } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
 import { StatusBadge } from '@/components/dashboard/ui/StatusBadge'
@@ -29,6 +29,8 @@ interface ApiClient {
   nomEntreprise: string | null
   ice: string | null
   ifFiscal: string | null
+  rasActif: boolean
+  rasTaux: number | string
   notes: string | null
   actif: boolean
   typeClient: TypeClient
@@ -45,11 +47,13 @@ interface ClientForm {
   nomEntreprise: string
   ice: string
   ifFiscal: string
+  rasActif: boolean
+  rasTaux: string
   notes: string
   typeClient: TypeClient
 }
 
-const EMPTY_FORM: ClientForm = { nom: '', email: '', telephone: '', nomEntreprise: '', ice: '', ifFiscal: '', notes: '', typeClient: 'PARTICULIER' }
+const EMPTY_FORM: ClientForm = { nom: '', email: '', telephone: '', nomEntreprise: '', ice: '', ifFiscal: '', rasActif: false, rasTaux: '30', notes: '', typeClient: 'PARTICULIER' }
 const PER_PAGE = 6
 
 function formatDate(d: string) {
@@ -67,11 +71,12 @@ const TYPE_OPTIONS: { value: TypeClient; icon: React.ElementType; labelKey: stri
 ]
 
 function ClientFormFields({
-  form, formErrors, onChange,
+  form, formErrors, onChange, onToggleRas,
 }: {
   form: ClientForm
   formErrors: Record<string, string>
   onChange: (field: keyof ClientForm, value: string) => void
+  onToggleRas: (val: boolean) => void
 }) {
   const { t } = useTranslation()
   const inputClass = 'w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
@@ -213,6 +218,66 @@ function ClientFormFields({
         </>
       )}
 
+      {/* RAS — only for ENTREPRISE and FREELANCE */}
+      {form.typeClient !== 'PARTICULIER' && (
+        <div className={cn(
+          'rounded-xl border p-4 transition-all',
+          form.rasActif
+            ? 'border-orange-200 bg-orange-50 dark:border-orange-800/50 dark:bg-orange-950/20'
+            : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30'
+        )}>
+          {/* Toggle row */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1">
+              <p className={cn('text-sm font-semibold', form.rasActif ? 'text-orange-800 dark:text-orange-200' : 'text-slate-700 dark:text-slate-300')}>
+                <Percent className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
+                {t('pages.clients.form.rasActif')}
+              </p>
+              <p className={cn('text-xs mt-0.5', form.rasActif ? 'text-orange-600 dark:text-orange-400' : 'text-slate-500 dark:text-slate-400')}>
+                {t('pages.clients.form.rasActifDesc')}
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={form.rasActif}
+              onClick={() => onToggleRas(!form.rasActif)}
+              className={cn(
+                'relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40',
+                form.rasActif ? 'bg-orange-500' : 'bg-slate-200 dark:bg-slate-600'
+              )}
+            >
+              <span className={cn(
+                'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform duration-200',
+                form.rasActif ? 'translate-x-5' : 'translate-x-0'
+              )} />
+            </button>
+          </div>
+
+          {/* Taux input — visible only when RAS is active */}
+          {form.rasActif && (
+            <div className="mt-3 pt-3 border-t border-orange-200 dark:border-orange-800/40">
+              <label className="text-xs font-semibold text-orange-700 dark:text-orange-300 mb-1.5 block">
+                {t('pages.clients.form.rasTaux')}
+              </label>
+              <div className="relative w-40">
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.5"
+                  value={form.rasTaux}
+                  onChange={e => onChange('rasTaux', e.target.value)}
+                  placeholder={t('pages.clients.form.rasTauxPlaceholder')}
+                  className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-orange-300 dark:border-orange-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-400 transition-all"
+                />
+                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-orange-500 font-bold select-none">%</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Notes */}
       <div>
         <label className={labelClass}>{t('pages.clients.form.notes')}</label>
@@ -329,6 +394,10 @@ export default function ClientsPage() {
     if (formErrors[field]) setFormErrors(e => { const n = { ...e }; delete n[field]; return n })
   }
 
+  const handleRasToggle = (val: boolean) => {
+    setForm(f => ({ ...f, rasActif: val, rasTaux: f.rasTaux || '30' }))
+  }
+
   const planLimite = CLIENTS_LIMIT[entreprise?.plan ?? 'STARTER'] ?? 5
   const activeClientsCount = clients.filter(c => c.actif !== false).length
 
@@ -347,13 +416,17 @@ export default function ClientsPage() {
     if (!validateForm()) return
     setSaving(true)
     try {
-      const payload: Record<string, string> = { nom: form.nom.trim(), typeClient: form.typeClient }
+      const payload: Record<string, string | boolean | number> = { nom: form.nom.trim(), typeClient: form.typeClient }
       if (form.email.trim()) payload.email = form.email.trim()
       if (form.telephone.trim()) payload.telephone = form.telephone.trim()
       if (form.nomEntreprise.trim() && form.typeClient !== 'PARTICULIER') payload.nomEntreprise = form.nomEntreprise.trim()
       if (form.ice.trim() && form.typeClient === 'ENTREPRISE') payload.ice = form.ice.trim()
       if (form.ifFiscal.trim() && form.typeClient !== 'PARTICULIER') payload.ifFiscal = form.ifFiscal.trim()
       if (form.notes.trim()) payload.notes = form.notes.trim()
+      if (form.typeClient !== 'PARTICULIER') {
+        payload.rasActif = form.rasActif
+        if (form.rasActif) payload.rasTaux = parseFloat(form.rasTaux) || 30
+      }
       await clientsApi.create(payload)
       setCreateOpen(false)
       success(t('pages.clients.createSuccess'))
@@ -381,6 +454,8 @@ export default function ClientsPage() {
       nomEntreprise: c.nomEntreprise ?? '',
       ice: c.ice ?? '',
       ifFiscal: c.ifFiscal ?? '',
+      rasActif: c.rasActif ?? false,
+      rasTaux: c.rasTaux != null ? String(c.rasTaux) : '30',
       notes: c.notes ?? '',
       typeClient: c.typeClient ?? 'PARTICULIER',
     })
@@ -393,7 +468,7 @@ export default function ClientsPage() {
     if (!editTarget || !validateForm()) return
     setSaving(true)
     try {
-      const payload: Record<string, string | undefined> = {
+      const payload: Record<string, string | boolean | number | undefined> = {
         nom: form.nom.trim(),
         typeClient: form.typeClient,
         email: form.email.trim() || undefined,
@@ -402,6 +477,8 @@ export default function ClientsPage() {
         ice: (form.typeClient === 'ENTREPRISE' && form.ice.trim()) ? form.ice.trim() : undefined,
         ifFiscal: (form.typeClient !== 'PARTICULIER' && form.ifFiscal.trim()) ? form.ifFiscal.trim() : undefined,
         notes: form.notes.trim() || undefined,
+        rasActif: form.typeClient !== 'PARTICULIER' ? form.rasActif : false,
+        rasTaux: (form.typeClient !== 'PARTICULIER' && form.rasActif) ? (parseFloat(form.rasTaux) || 30) : 30,
       }
       await clientsApi.update(editTarget.id, payload)
       setEditTarget(null)
@@ -578,17 +655,24 @@ export default function ClientsPage() {
                       </td>
                       <td className="px-4 py-3.5">
                         <div className="flex flex-col gap-1">
-                          <span className={cn(
-                            'inline-flex items-center gap-1 self-start px-2 py-0.5 rounded-full text-xs font-semibold',
-                            client.typeClient === 'ENTREPRISE'  ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300' :
-                            client.typeClient === 'FREELANCE'   ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300' :
-                                                                   'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
-                          )}>
-                            {client.typeClient === 'ENTREPRISE' ? <Building2 className="w-3 h-3" /> :
-                             client.typeClient === 'FREELANCE'  ? <Briefcase className="w-3 h-3" /> :
-                                                                  <User className="w-3 h-3" />}
-                            {t(`pages.clients.types.${client.typeClient}`)}
-                          </span>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className={cn(
+                              'inline-flex items-center gap-1 self-start px-2 py-0.5 rounded-full text-xs font-semibold',
+                              client.typeClient === 'ENTREPRISE'  ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300' :
+                              client.typeClient === 'FREELANCE'   ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300' :
+                                                                     'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                            )}>
+                              {client.typeClient === 'ENTREPRISE' ? <Building2 className="w-3 h-3" /> :
+                               client.typeClient === 'FREELANCE'  ? <Briefcase className="w-3 h-3" /> :
+                                                                    <User className="w-3 h-3" />}
+                              {t(`pages.clients.types.${client.typeClient}`)}
+                            </span>
+                            {client.rasActif && (
+                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300">
+                                <Percent className="w-2.5 h-2.5" />RAS {client.rasTaux}%
+                              </span>
+                            )}
+                          </div>
                           {client.nomEntreprise && (
                             <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[140px]">{client.nomEntreprise}</span>
                           )}
@@ -654,6 +738,11 @@ export default function ClientsPage() {
                                                                   <User className="w-2.5 h-2.5" />}
                             {t(`pages.clients.types.${client.typeClient}`)}
                           </span>
+                          {client.rasActif && (
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300">
+                              <Percent className="w-2.5 h-2.5" />RAS
+                            </span>
+                          )}
                           {client.nomEntreprise && <span className="text-xs text-slate-500 truncate">{client.nomEntreprise}</span>}
                         </div>
                       </div>
@@ -728,6 +817,21 @@ export default function ClientsPage() {
               ))}
             </div>
 
+            {/* RAS badge */}
+            {selectedClient.rasActif && selectedClient.typeClient !== 'PARTICULIER' && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800/50">
+                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center flex-shrink-0">
+                  <Percent className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-orange-700 dark:text-orange-300">
+                    {t('pages.clients.ras.badge').replace('{taux}', String(selectedClient.rasTaux ?? 30))}
+                  </p>
+                  <p className="text-xs text-orange-600 dark:text-orange-400 mt-0.5">{t('pages.clients.form.rasActifDesc')}</p>
+                </div>
+              </div>
+            )}
+
             {selectedClient.notes && (
               <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
                 <p className="text-xs text-slate-400 mb-1">{t('pages.clients.form.notes')}</p>
@@ -761,7 +865,7 @@ export default function ClientsPage() {
         title={t('pages.clients.create')}
         footer={formFooter(handleCreate)}
       >
-        <ClientFormFields form={form} formErrors={formErrors} onChange={handleFormChange} />
+        <ClientFormFields form={form} formErrors={formErrors} onChange={handleFormChange} onToggleRas={handleRasToggle} />
       </Modal>
 
       {/* Edit modal */}
@@ -771,7 +875,7 @@ export default function ClientsPage() {
         title={t('pages.clients.edit')}
         footer={formFooter(handleEdit)}
       >
-        <ClientFormFields form={form} formErrors={formErrors} onChange={handleFormChange} />
+        <ClientFormFields form={form} formErrors={formErrors} onChange={handleFormChange} onToggleRas={handleRasToggle} />
       </Modal>
 
       {/* Delete confirmation */}

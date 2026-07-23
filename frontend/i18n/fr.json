@@ -1032,12 +1032,22 @@
         "ice": "ICE (Identifiant Commun de l'Entreprise)",
         "icePlaceholder": "ex : 001234567000012",
         "ifFiscal": "IF (Identifiant Fiscal)",
-        "ifFiscalPlaceholder": "ex : 12345678"
+        "ifFiscalPlaceholder": "ex : 12345678",
+        "rasActif": "Retenue à la Source (RAS)",
+        "rasActifDesc": "Ce client applique une retenue à la source sur vos factures",
+        "rasTaux": "Taux de retenue (%)",
+        "rasTauxPlaceholder": "ex : 30"
       },
       "types": {
         "PARTICULIER": "Particulier",
         "ENTREPRISE": "Entreprise",
         "FREELANCE": "Freelance"
+      },
+      "ras": {
+        "badge": "RAS {taux}%",
+        "netAPayer": "Net à payer",
+        "montantRAS": "Retenue à la source ({taux}%)",
+        "info": "Ce client applique une RAS de {taux}% — le montant net à percevoir est de {net}."
       }
     },
     "devis": {

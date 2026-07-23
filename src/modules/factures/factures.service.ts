@@ -63,6 +63,7 @@ export class FacturesService {
         client: { select: { id: true, nom: true, email: true, nomEntreprise: true, telephone: true } },
         _count: { select: { lignes: true, paiements: true, declarationsPaiement: true } },
       },
+      // rasActif, rasTaux, rasMontant are returned via the full Facture model
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -98,6 +99,7 @@ export class FacturesService {
 
     const client = await this.prisma.client.findFirst({
       where: { id: dto.clientId, entrepriseId },
+      select: { id: true, nom: true, email: true, rasActif: true, rasTaux: true },
     });
     if (!client) throw new NotFoundException('Client introuvable.');
 
@@ -111,6 +113,10 @@ export class FacturesService {
     const taxe = dto.taxe ?? 20;
     const remise = dto.remise ?? 0;
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
+
+    const rasActif = dto.rasActif ?? client.rasActif;
+    const rasTaux  = dto.rasTaux  ?? Number(client.rasTaux ?? 30);
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux) / 100 : 0;
 
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
@@ -132,6 +138,9 @@ export class FacturesService {
             devise: dto.devise ?? 'MAD',
             taxe,
             remise,
+            rasActif,
+            rasTaux,
+            rasMontant,
             totalHT,
             totalTTC,
             dateEcheance: dto.dateEcheance ? new Date(dto.dateEcheance) : null,
@@ -178,6 +187,10 @@ export class FacturesService {
     const remise = dto.remise ?? Number(facture.remise);
     const { totalHT, totalTTC } = this.calculerTotaux(dto.lignes, taxe, remise);
 
+    const rasActif   = dto.rasActif  ?? facture.rasActif;
+    const rasTaux    = dto.rasTaux   ?? Number(facture.rasTaux ?? 30);
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux) / 100 : 0;
+
     await this.prisma.factureLigne.deleteMany({ where: { factureId: id } });
 
     const updated = await this.prisma.facture.update({
@@ -187,6 +200,9 @@ export class FacturesService {
         devise: dto.devise ?? undefined,
         taxe,
         remise,
+        rasActif,
+        rasTaux,
+        rasMontant,
         totalHT,
         totalTTC,
         dateEcheance: dto.dateEcheance ? new Date(dto.dateEcheance) : null,
@@ -368,7 +384,10 @@ export class FacturesService {
       throw new BadRequestException('Cette facture ne peut pas recevoir de déclaration de paiement.');
     }
 
-    const montantRestant = Number(facture.totalTTC) - Number(facture.montantPaye);
+    const netAPayer = facture.rasActif
+      ? Number(facture.totalTTC) - Number(facture.rasMontant)
+      : Number(facture.totalTTC);
+    const montantRestant = netAPayer - Number(facture.montantPaye);
     if (dto.montant > montantRestant + 0.01) {
       throw new BadRequestException('Le montant déclaré dépasse le reste à payer.');
     }
@@ -440,6 +459,7 @@ export class FacturesService {
             client: { select: { nom: true, email: true } },
             entreprise: { select: { nom: true } },
           },
+          // rasActif and rasMontant are included via the full model
         },
       },
     });
@@ -450,7 +470,10 @@ export class FacturesService {
 
     const facture = declaration.facture;
     const montantPaye = Number(facture.montantPaye) + Number(declaration.montant);
-    const montantRestant = Math.max(0, Number(facture.totalTTC) - montantPaye);
+    const netAPayer = facture.rasActif
+      ? Number(facture.totalTTC) - Number(facture.rasMontant)
+      : Number(facture.totalTTC);
+    const montantRestant = Math.max(0, netAPayer - montantPaye);
     const nouveauStatut = montantRestant <= 0.01
       ? StatutFacture.PAYEE
       : StatutFacture.PARTIELLE;

@@ -129,6 +129,8 @@ model Client {
   nomEntreprise String?
   ice           String?
   ifFiscal      String?
+  rasActif      Boolean     @default(false)
+  rasTaux       Decimal     @default(30) @db.Decimal(5, 2)
   notes         String?
   actif         Boolean     @default(true)
   createdAt     DateTime    @default(now())
@@ -213,6 +215,9 @@ model Facture {
   taxe                     Decimal               @default(20) @db.Decimal(5, 2)
   totalTTC                 Decimal               @default(0) @db.Decimal(12, 2)
   remise                   Decimal               @default(0) @db.Decimal(12, 2)
+  rasActif                 Boolean               @default(false)
+  rasTaux                  Decimal               @default(30) @db.Decimal(5, 2)
+  rasMontant               Decimal               @default(0) @db.Decimal(12, 2)
   devise                   String                @default("MAD")
   montantPaye              Decimal               @default(0) @db.Decimal(12, 2)
   dateEcheance             DateTime?

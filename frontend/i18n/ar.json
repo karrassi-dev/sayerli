@@ -1031,12 +1031,22 @@
         "ice": "ICE (المعرف المشترك للمقاولة)",
         "icePlaceholder": "مثال: 001234567000012",
         "ifFiscal": "IF (المعرف الجبائي)",
-        "ifFiscalPlaceholder": "مثال: 12345678"
+        "ifFiscalPlaceholder": "مثال: 12345678",
+        "rasActif": "الاقتطاع من المنبع (RAS)",
+        "rasActifDesc": "يطبق هذا العميل اقتطاعاً من المنبع على فواتيرك",
+        "rasTaux": "نسبة الاقتطاع (%)",
+        "rasTauxPlaceholder": "مثال: 30"
       },
       "types": {
         "PARTICULIER": "فرد",
         "ENTREPRISE": "شركة",
         "FREELANCE": "مستقل"
+      },
+      "ras": {
+        "badge": "RAS {taux}%",
+        "netAPayer": "الصافي المستحق",
+        "montantRAS": "الاقتطاع من المنبع ({taux}%)",
+        "info": "يطبق هذا العميل اقتطاعاً بنسبة {taux}% — المبلغ الصافي المستحق هو {net}."
       }
     },
     "devis": {

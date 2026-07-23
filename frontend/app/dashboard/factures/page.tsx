@@ -51,6 +51,9 @@ interface ApiFacture {
   taxe: number | string
   totalTTC: number | string
   remise: number | string
+  rasActif: boolean
+  rasTaux: number | string
+  rasMontant: number | string
   montantPaye: number | string
   dateEcheance: string | null
   notes: string | null
@@ -831,7 +834,10 @@ export default function FacturesPage() {
 
   const handlePaiement = async () => {
     if (!paymentTarget) return
-    const restant = Math.max(0, n(paymentTarget.totalTTC) - n(paymentTarget.montantPaye))
+    const netAP = paymentTarget.rasActif
+      ? n(paymentTarget.totalTTC) - n(paymentTarget.rasMontant)
+      : n(paymentTarget.totalTTC)
+    const restant = Math.max(0, netAP - n(paymentTarget.montantPaye))
     if (!validatePaiement(restant)) return
     setSavingPaiement(true)
     try {
@@ -1131,9 +1137,12 @@ export default function FacturesPage() {
       {/* Detail modal */}
       <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.numeroFacture ?? ''} size="lg">
         {selected && (() => {
-          const restant = Math.max(0, n(selected.totalTTC) - n(selected.montantPaye))
-          const pctPaid = n(selected.totalTTC) > 0
-            ? Math.min(100, (n(selected.montantPaye) / n(selected.totalTTC)) * 100)
+          const netAPayer = selected.rasActif
+            ? n(selected.totalTTC) - n(selected.rasMontant)
+            : n(selected.totalTTC)
+          const restant = Math.max(0, netAPayer - n(selected.montantPaye))
+          const pctPaid = netAPayer > 0
+            ? Math.min(100, (n(selected.montantPaye) / netAPayer) * 100)
             : 0
           return (
             <div className="space-y-4">
@@ -1164,6 +1173,18 @@ export default function FacturesPage() {
                 <div className="flex items-center justify-between px-3 py-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl text-sm">
                   <span className="text-amber-700 dark:text-amber-400 font-medium">Remise appliquée</span>
                   <span className="font-bold text-amber-700 dark:text-amber-400">−{formatCurrency(selected.remise, selected.devise)}</span>
+                </div>
+              )}
+              {selected.rasActif && (
+                <div className="rounded-xl border border-orange-200 dark:border-orange-800/50 bg-orange-50 dark:bg-orange-950/20 overflow-hidden">
+                  <div className="flex items-center justify-between px-3 py-2 border-b border-orange-100 dark:border-orange-800/30">
+                    <span className="text-xs font-semibold text-orange-700 dark:text-orange-300">Retenue à la source ({n(selected.rasTaux)}%)</span>
+                    <span className="text-xs font-bold text-orange-700 dark:text-orange-300">−{formatCurrency(selected.rasMontant, selected.devise)}</span>
+                  </div>
+                  <div className="flex items-center justify-between px-3 py-2">
+                    <span className="text-sm font-bold text-orange-800 dark:text-orange-200">Net à payer</span>
+                    <span className="text-sm font-black text-orange-800 dark:text-orange-200">{formatCurrency(netAPayer, selected.devise)}</span>
+                  </div>
                 </div>
               )}
 
@@ -1354,7 +1375,10 @@ export default function FacturesPage() {
         }
       >
         {paymentTarget && (() => {
-          const restant = Math.max(0, n(paymentTarget.totalTTC) - n(paymentTarget.montantPaye))
+          const netAP = paymentTarget.rasActif
+            ? n(paymentTarget.totalTTC) - n(paymentTarget.rasMontant)
+            : n(paymentTarget.totalTTC)
+          const restant = Math.max(0, netAP - n(paymentTarget.montantPaye))
           return (
             <div className="space-y-4">
               <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex justify-between items-center">

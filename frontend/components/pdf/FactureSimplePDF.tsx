@@ -19,6 +19,9 @@ export interface FactureSimplePDFProps {
   taxe: number
   totalTTC: number
   remise?: number
+  rasActif?: boolean
+  rasTaux?: number
+  rasMontant?: number
   devise?: string
   devisReference: string | null
   template?: string
@@ -150,12 +153,15 @@ function tplConfig(template: string, brand: string) {
 
 export default function FactureSimplePDF({
   numeroFacture, createdAt, dateEcheance, notes, totalHT, taxe, totalTTC,
-  remise = 0, devise = 'MAD', devisReference, template = 'classic', lignes, client, entreprise,
+  remise = 0, rasActif = false, rasTaux = 30, rasMontant = 0,
+  devise = 'MAD', devisReference, template = 'classic', lignes, client, entreprise,
 }: FactureSimplePDFProps) {
   const f = (v: number) => fmt(v, devise)
   const brand = entreprise.couleurPrimaire || '#2563eb'
   const sousTotal = lignes.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0)
   const tva = totalTTC - totalHT
+  const netAPayer = rasActif ? totalTTC - rasMontant : null
+  const ORANGE = '#ea580c'
   const hasBankInfo = entreprise.titulaireCompte || entreprise.rib || entreprise.iban || entreprise.banque
   const cfg = tplConfig(template, brand)
 
@@ -362,6 +368,18 @@ export default function FactureSimplePDF({
             <Text style={s.totTTCLbl}>TOTAL TTC</Text>
             <Text style={s.totTTCVal}>{f(totalTTC)}</Text>
           </View>
+          {rasActif && netAPayer !== null && (
+            <>
+              <View style={[s.totRow, { backgroundColor: '#fff7ed' }]}>
+                <Text style={[s.totLbl, { color: ORANGE }]}>Retenue à la source ({rasTaux}%)</Text>
+                <Text style={[s.totVal, { color: ORANGE }]}>−{f(rasMontant)}</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 9, paddingHorizontal: 12, backgroundColor: ORANGE }}>
+                <Text style={{ fontSize: 11, fontFamily: 'Helvetica-Bold', color: '#ffffff' }}>NET À PAYER</Text>
+                <Text style={{ fontSize: 11, fontFamily: 'Helvetica-Bold', color: '#ffffff' }}>{f(netAPayer)}</Text>
+              </View>
+            </>
+          )}
         </View>
       </View>
 

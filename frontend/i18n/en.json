@@ -1031,12 +1031,22 @@
         "ice": "ICE (Business Common Identifier)",
         "icePlaceholder": "e.g. 001234567000012",
         "ifFiscal": "IF (Tax Identifier)",
-        "ifFiscalPlaceholder": "e.g. 12345678"
+        "ifFiscalPlaceholder": "e.g. 12345678",
+        "rasActif": "Withholding Tax (RAS)",
+        "rasActifDesc": "This client applies withholding tax to your invoices",
+        "rasTaux": "Withholding rate (%)",
+        "rasTauxPlaceholder": "e.g. 30"
       },
       "types": {
         "PARTICULIER": "Individual",
         "ENTREPRISE": "Company",
         "FREELANCE": "Freelance"
+      },
+      "ras": {
+        "badge": "RAS {taux}%",
+        "netAPayer": "Net payable",
+        "montantRAS": "Withholding tax ({taux}%)",
+        "info": "This client applies {taux}% withholding — the net amount receivable is {net}."
       }
     },
     "devis": {

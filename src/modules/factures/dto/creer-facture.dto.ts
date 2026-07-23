@@ -1,11 +1,13 @@
 import {
   IsArray,
+  IsBoolean,
   IsDateString,
   IsIn,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
+  Max,
   Min,
   ValidateNested,
 } from 'class-validator';
@@ -57,6 +59,16 @@ export class CreerFactureDto {
   @IsOptional()
   @IsIn(['MAD', 'EUR', 'USD'])
   devise?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  rasActif?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  rasTaux?: number;
 
   @IsArray()
   @ValidateNested({ each: true })

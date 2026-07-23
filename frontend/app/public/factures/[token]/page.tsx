@@ -54,6 +54,9 @@ interface PublicFacture {
   taxe: number | string
   totalTTC: number | string
   remise: number | string
+  rasActif: boolean
+  rasTaux: number | string
+  rasMontant: number | string
   montantPaye: number | string
   dateEcheance: string | null
   dateEnvoi: string | null
@@ -299,12 +302,15 @@ function DeclarationModal({
   facture: PublicFacture
   loading: boolean
 }) {
+  const netAPayerModal = facture.rasActif
+    ? n(facture.totalTTC) - n(facture.rasMontant)
+    : n(facture.totalTTC)
   const [form, setForm] = useState<DeclarationForm>({
     ...EMPTY_FORM,
-    montant: String(Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))),
+    montant: String(Math.max(0, netAPayerModal - n(facture.montantPaye))),
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const restant = Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))
+  const restant = Math.max(0, netAPayerModal - n(facture.montantPaye))
 
   const validate = () => {
     const e: Record<string, string> = {}
@@ -433,7 +439,10 @@ export default function PublicFacturePage() {
   const handleDeclare = async (form: DeclarationForm) => {
     setSubmitting(true)
     try {
-      const restantAvant = facture ? Math.max(0, n(facture.totalTTC) - n(facture.montantPaye)) : 0
+      const netAP = facture
+        ? (facture.rasActif ? n(facture.totalTTC) - n(facture.rasMontant) : n(facture.totalTTC))
+        : 0
+      const restantAvant = facture ? Math.max(0, netAP - n(facture.montantPaye)) : 0
       await publicFacturesApi.declarer(token, {
         montant: parseFloat(form.montant),
         methode: form.methode,
@@ -492,7 +501,10 @@ export default function PublicFacturePage() {
 
   const brand = facture.entreprise.couleurPrimaire || '#2563eb'
   const template = facture.entreprise.templateDocument ?? 'classic'
-  const montantRestant = Math.max(0, n(facture.totalTTC) - n(facture.montantPaye))
+  const netAPayer = facture.rasActif
+    ? n(facture.totalTTC) - n(facture.rasMontant)
+    : n(facture.totalTTC)
+  const montantRestant = Math.max(0, netAPayer - n(facture.montantPaye))
   const isPayee = facture.statut === 'PAYEE'
   const canDeclare = ['ENVOYEE', 'VUE', 'PARTIELLE', 'EN_RETARD'].includes(facture.statut) && montantRestant > 0.01
   const hasBankInfo = facture.entreprise.titulaireCompte || facture.entreprise.rib || facture.entreprise.iban || facture.entreprise.banque
@@ -526,6 +538,9 @@ export default function PublicFacturePage() {
     taxe: n(facture.taxe),
     totalTTC: n(facture.totalTTC),
     remise: n(facture.remise ?? 0),
+    rasActif: facture.rasActif ?? false,
+    rasTaux: n(facture.rasTaux ?? 30),
+    rasMontant: n(facture.rasMontant ?? 0),
     devisReference: facture.devis?.reference ?? null,
     template,
     lignes: facture.lignes.map(l => ({
@@ -737,19 +752,37 @@ export default function PublicFacturePage() {
 
           {/* Totals */}
           <div className="px-8 sm:px-12 pb-8 flex justify-end">
-            <div className="w-64">
-              <div className="flex justify-between text-sm text-gray-600 py-2 border-b border-gray-100">
+            <div className="w-64 border border-gray-200 rounded overflow-hidden">
+              <div className="flex justify-between text-sm text-gray-600 py-2 px-4 border-b border-gray-100">
                 <span>Sous-total HT</span>
                 <span>{formatMAD(facture.totalHT)}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-600 py-2 border-b border-gray-100">
+              {n(facture.remise ?? 0) > 0 && (
+                <div className="flex justify-between text-sm text-red-600 py-2 px-4 border-b border-gray-100">
+                  <span>Remise</span>
+                  <span>−{formatMAD(facture.remise)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm text-gray-600 py-2 px-4 border-b border-gray-100">
                 <span>TVA {n(facture.taxe)}%</span>
                 <span>{formatMAD(n(facture.totalTTC) - n(facture.totalHT))}</span>
               </div>
-              <div className="flex justify-between font-bold px-4 py-3 mt-2" style={{ ...totalBgStyle, color: totalTextColor }}>
+              <div className="flex justify-between font-bold px-4 py-3" style={{ ...totalBgStyle, color: totalTextColor }}>
                 <span className="text-sm tracking-wide">TOTAL TTC</span>
                 <span className="text-base">{formatMAD(facture.totalTTC)}</span>
               </div>
+              {facture.rasActif && (
+                <>
+                  <div className="flex justify-between text-sm py-2 px-4 border-t border-orange-100 bg-orange-50 text-orange-700">
+                    <span>Retenue à la source ({n(facture.rasTaux)}%)</span>
+                    <span>−{formatMAD(facture.rasMontant)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold px-4 py-3 bg-orange-500 text-white">
+                    <span className="text-sm tracking-wide">NET À PAYER</span>
+                    <span className="text-base">{formatMAD(netAPayer, facture.devise)}</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -854,8 +887,11 @@ export default function PublicFacturePage() {
           ) : (
             <div className="flex items-center justify-between gap-4 mb-5 pb-5 border-b border-gray-100">
               <div>
-                <p className="text-xs text-gray-400 mb-1">Total facture</p>
-                <p className="text-sm font-semibold text-gray-900">{formatMAD(facture.totalTTC)}</p>
+                <p className="text-xs text-gray-400 mb-1">{facture.rasActif ? 'Net à payer' : 'Total facture'}</p>
+                <p className="text-sm font-semibold text-gray-900">{formatMAD(netAPayer, facture.devise)}</p>
+                {facture.rasActif && (
+                  <p className="text-xs text-orange-500 mt-0.5">TTC: {formatMAD(facture.totalTTC)} − RAS {n(facture.rasTaux)}%</p>
+                )}
               </div>
               {n(facture.montantPaye) > 0 && (
                 <div className="text-center">
