@@ -324,8 +324,10 @@ export default function SettingsPage() {
     setFieldErrors({})
     if (!company.nom.trim()) { setFieldErrors({ companyNom: 'Le nom de l\'entreprise est requis.' }); return }
     setSaving(true)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { plan: _plan, ...companyPayload } = company
     try {
-      await settingsApi.updateCompany(company)
+      await settingsApi.updateCompany(companyPayload)
       success('Entreprise mise à jour', 'Les informations de votre entreprise ont été enregistrées.')
       triggerSaved()
     } catch (err) { handleApiError(err) }
