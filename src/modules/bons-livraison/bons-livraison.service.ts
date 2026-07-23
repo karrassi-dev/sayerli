@@ -247,6 +247,13 @@ export class BonsLivraisonService {
 
     const notes = bls.map(bl => `Réf. BL: ${bl.reference}`).join(' | ');
 
+    const clientRas = await this.prisma.client.findFirst({
+      where: { id: clientId, entrepriseId },
+      select: { rasActif: true, rasTaux: true },
+    });
+    const rasActif  = clientRas?.rasActif ?? false;
+    const rasTaux   = Number(clientRas?.rasTaux ?? 30);
+
     const taxe = 20;
     const lignesMerged = bls.flatMap((bl, blIdx) =>
       bl.lignes.map(l => ({
@@ -257,8 +264,9 @@ export class BonsLivraisonService {
         ordre: blIdx * 1000 + l.ordre,
       })),
     );
-    const totalHT = lignesMerged.reduce((sum, l) => sum + l.total, 0);
+    const totalHT  = lignesMerged.reduce((sum, l) => sum + l.total, 0);
     const totalTTC = totalHT + totalHT * (taxe / 100);
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux * 100) / 10000 : 0;
 
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
@@ -278,6 +286,9 @@ export class BonsLivraisonService {
             statut: 'BROUILLON',
             devise: 'MAD',
             taxe,
+            rasActif,
+            rasTaux,
+            rasMontant,
             totalHT,
             totalTTC,
             notes,
@@ -356,6 +367,10 @@ export class BonsLivraisonService {
     const actuel = await this.prisma.facture.count({ where: { entrepriseId, createdAt: { gte: debutMois } } });
     verifierLimite('factures', actuel, limite);
 
+    const blClient = bl.client as { rasActif?: boolean; rasTaux?: number | null } | null;
+    const rasActif  = blClient?.rasActif ?? false;
+    const rasTaux   = Number(blClient?.rasTaux ?? 30);
+
     const taxe = 20;
     const lignesData = bl.lignes.map(l => ({
       description: l.description,
@@ -364,8 +379,9 @@ export class BonsLivraisonService {
       total: Number(l.quantite) * Number(l.prixUnitaire),
       ordre: l.ordre,
     }));
-    const totalHT = lignesData.reduce((sum, l) => sum + l.total, 0);
+    const totalHT  = lignesData.reduce((sum, l) => sum + l.total, 0);
     const totalTTC = totalHT + totalHT * (taxe / 100);
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux * 100) / 10000 : 0;
 
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
@@ -386,6 +402,9 @@ export class BonsLivraisonService {
             statut: 'BROUILLON',
             devise: 'MAD',
             taxe,
+            rasActif,
+            rasTaux,
+            rasMontant,
             totalHT,
             totalTTC,
             notes: bl.notes ? `Ref. BL: ${bl.reference}\n${bl.notes}` : `Ref. BL: ${bl.reference}`,

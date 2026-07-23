@@ -344,6 +344,16 @@ export class DevisService {
     if (devis.statut !== StatutDevis.ACCEPTE) {
       throw new BadRequestException('Seuls les devis acceptés peuvent être convertis en facture.');
     }
+
+    const client = await this.prisma.client.findFirst({
+      where: { id: devis.clientId, entrepriseId },
+      select: { rasActif: true, rasTaux: true },
+    });
+    const rasActif = client?.rasActif ?? false;
+    const rasTaux  = Number(client?.rasTaux ?? 30);
+    const totalTTC = Number(devis.totalTTC);
+    const rasMontant = rasActif ? Math.round(totalTTC * rasTaux * 100) / 10000 : 0;
+
     const facture = await retryOnConflict(() =>
       this.prisma.$transaction(async (tx) => {
         const ent = await tx.entreprise.update({
@@ -365,6 +375,9 @@ export class DevisService {
             dateEcheance: devis.dateExpiration ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             taxe: devis.taxe,
             remise: devis.remise,
+            rasActif,
+            rasTaux,
+            rasMontant,
             totalHT: devis.totalHT,
             totalTTC: devis.totalTTC,
             lignes: {
