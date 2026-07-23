@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Wallet, Plus, Pencil, Trash2, Search, Download,
-  Image, X, Upload, Eye, AlertCircle, HardDrive,
+  Image, X, Upload, Eye, AlertCircle, Receipt,
 } from 'lucide-react'
 import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 import { StatsCard } from '@/components/dashboard/ui/StatsCard'
@@ -79,13 +79,6 @@ const EMPTY_FORM: DepenseForm = {
 }
 
 const PAGE_SIZE = 10
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-  return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`
-}
 
 // ── Receipt Upload Component ──────────────────────────────────────────────────
 
@@ -302,9 +295,8 @@ export default function DepensesPage() {
   const [limitModal, setLimitModal] = useState<{ limite: number; actuel: number } | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  // Storage usage
-  const [storageUsed, setStorageUsed] = useState(0)
-  const [storageLimit, setStorageLimit] = useState(-1)
+  // Receipts this month count (for stats)
+  const [receiptsThisMonth, setReceiptsThisMonth] = useState(0)
 
   const canEdit = canDo('depenses.create' as any, role, removed) ||
     ['admin', 'proprietaire', 'manager', 'daf', 'comptable', 'assistant'].includes(role)
@@ -312,19 +304,22 @@ export default function DepensesPage() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const [res, storageRes] = await Promise.all([
-        depensesApi.list({
-          ...(filterCategorie ? { categorie: filterCategorie } : {}),
-          ...(filterDateDebut ? { dateDebut: filterDateDebut } : {}),
-          ...(filterDateFin ? { dateFin: filterDateFin } : {}),
-          ...(search ? { recherche: search } : {}),
-        }),
-        depensesApi.stockage(),
-      ])
-      setItems(res.data?.data ?? res.data ?? [])
-      const s = storageRes.data?.data ?? storageRes.data
-      setStorageUsed(s?.usedBytes ?? 0)
-      setStorageLimit(s?.limitBytes ?? -1)
+      const res = await depensesApi.list({
+        ...(filterCategorie ? { categorie: filterCategorie } : {}),
+        ...(filterDateDebut ? { dateDebut: filterDateDebut } : {}),
+        ...(filterDateFin ? { dateFin: filterDateFin } : {}),
+        ...(search ? { recherche: search } : {}),
+      })
+      const list: Depense[] = res.data?.data ?? res.data ?? []
+      setItems(list)
+      // Count receipts uploaded this month
+      const thisMonth = new Date()
+      setReceiptsThisMonth(list.filter(d => {
+        const created = new Date(d.createdAt)
+        return d.receiptKey &&
+          created.getMonth() === thisMonth.getMonth() &&
+          created.getFullYear() === thisMonth.getFullYear()
+      }).length)
     } catch {
       toastError('Erreur lors du chargement des dépenses.')
     } finally {
@@ -345,6 +340,7 @@ export default function DepensesPage() {
     })
     .reduce((s, d) => s + Number(d.montant), 0)
   const withReceipts = items.filter(d => d.receiptKey).length
+  const categoriesCount = new Set(items.map(d => d.categorie)).size
 
   // ── Pagination ─────────────────────────────────────────────────────────────
 
@@ -455,12 +451,6 @@ export default function DepensesPage() {
     }
   }
 
-  // ── Storage bar ────────────────────────────────────────────────────────────
-
-  const storagePercent = storageLimit > 0
-    ? Math.min(100, Math.round((storageUsed / storageLimit) * 100))
-    : 0
-
   const inp = 'w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
   const lbl = 'text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block'
 
@@ -513,37 +503,12 @@ export default function DepensesPage() {
           color="purple"
         />
         <StatsCard
-          label={t('pages.depenses.stats.storage')}
-          value={storageLimit < 0 ? formatBytes(storageUsed) : `${formatBytes(storageUsed)} / ${formatBytes(storageLimit)}`}
-          icon={HardDrive}
+          label={t('pages.depenses.stats.receiptsThisMonth')}
+          value={String(receiptsThisMonth)}
+          icon={Receipt}
           color="orange"
         />
       </div>
-
-      {/* Storage progress bar */}
-      {storageLimit > 0 && (
-        <div className="mb-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-              <HardDrive className="w-4 h-4" />
-              <span>{t('pages.depenses.stats.storage')}</span>
-            </div>
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              {formatBytes(storageUsed)} {t('pages.depenses.storageOf')} {formatBytes(storageLimit)}
-            </span>
-          </div>
-          <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-            <div
-              className={cn(
-                'h-full rounded-full transition-all',
-                storagePercent > 90 ? 'bg-red-500' : storagePercent > 70 ? 'bg-amber-500' : 'bg-primary-500'
-              )}
-              style={{ width: `${storagePercent}%` }}
-            />
-          </div>
-          <p className="text-xs text-slate-400 mt-1">{storagePercent}% {t('pages.depenses.storageUsed')}</p>
-        </div>
-      )}
 
       {/* Filters */}
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 mb-5">

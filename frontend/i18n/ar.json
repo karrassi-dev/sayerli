@@ -1551,9 +1551,34 @@
       },
       "billing": {
         "title": "الاشتراك",
+        "subtitle": "إدارة اشتراكك في Sayerli",
         "currentPlan": "الخطة الحالية",
-        "upgrade": "الترقية",
-        "cancelPlan": "إلغاء الاشتراك"
+        "upgrade": "الترقية إلى خطة أعلى",
+        "cancelPlan": "إلغاء الاشتراك",
+        "planUsage": "استخدام الخطة",
+        "free": "مجاني",
+        "perMonth": "شهر",
+        "since": "منذ",
+        "renewal": "التجديد",
+        "expiration": "الانتهاء",
+        "expiresToday": "ينتهي اليوم",
+        "daysLeft": "يوم متبقي",
+        "none": "لا شيء",
+        "current": "الحالية",
+        "upgradeTo": "الانتقال إلى",
+        "downgradeTo": "التخفيض إلى",
+        "limitReached": "تم الوصول إلى الحد — قم بترقية خطتك",
+        "waNote": "الترقية عبر واتساب · التفعيل خلال 24 ساعة",
+        "usage": {
+          "clients": "العملاء",
+          "devis": "العروض هذا الشهر",
+          "factures": "الفواتير هذا الشهر",
+          "bonsLivraison": "وصولات التسليم هذا الشهر",
+          "utilisateurs": "أعضاء الفريق",
+          "relances": "التذكيرات هذا الشهر",
+          "receipts": "رسائل الإيصالات هذا الشهر",
+          "depenses": "إيصالات المصاريف هذا الشهر"
+        }
       },
       "numerotation": {
         "title": "ترقيم المستندات",
@@ -1635,7 +1660,8 @@
         "total": "إجمالي المصاريف",
         "thisMonth": "هذا الشهر",
         "withReceipts": "مع وصل",
-        "storage": "التخزين المستخدم"
+        "storage": "التخزين المستخدم",
+        "receiptsThisMonth": "إيصالات هذا الشهر"
       },
       "table": {
         "date": "التاريخ",

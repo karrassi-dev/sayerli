@@ -62,10 +62,10 @@ const PLAN_LABELS: Record<string, { label: string; prix: string; features: strin
 const PLAN_ORDER: Record<string, number> = { STARTER: 0, PRO: 1, BUSINESS: 2 }
 const WA_OWNER = '447476607473'
 
-const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; bonsLivraisonParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number }> = {
-  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5  },
-  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1 },
-  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1 },
+const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; bonsLivraisonParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number; depensesParMois: number }> = {
+  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5,   depensesParMois: 20  },
+  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1,  depensesParMois: 150 },
+  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1,  depensesParMois: -1  },
 }
 
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
@@ -204,6 +204,7 @@ export default function SettingsPage() {
       bonsLivraisonCeMois: UsageField
       relancesCeMois: UsageField
       receiptsCeMois: UsageField
+      depensesCeMois: UsageField
     }
   } | null>(null)
   const [billingLoading, setBillingLoading] = useState(true)
@@ -284,6 +285,7 @@ export default function SettingsPage() {
           bonsLivraisonCeMois: normalise(d.usage?.bonsLivraisonCeMois, planLimits.bonsLivraisonParMois),
           relancesCeMois:      normalise(d.usage?.relancesCeMois,      planLimits.relancesParMois),
           receiptsCeMois:      normalise(d.usage?.receiptsCeMois,      planLimits.receiptsParMois),
+          depensesCeMois:      normalise(d.usage?.depensesCeMois,      planLimits.depensesParMois),
         },
       })
     }).catch(() => {}).finally(() => setBillingLoading(false))
@@ -1167,20 +1169,21 @@ export default function SettingsPage() {
         }
 
         const usageRows = billing ? [
-          { key: 'clients',             label: 'Clients',                    field: billing.usage.clients },
-          { key: 'devisCeMois',         label: 'Devis ce mois',              field: billing.usage.devisCeMois },
-          { key: 'facturesCeMois',      label: 'Factures ce mois',           field: billing.usage.facturesCeMois },
-          { key: 'bonsLivraisonCeMois', label: 'Bons de livraison ce mois',  field: billing.usage.bonsLivraisonCeMois },
-          { key: 'utilisateurs',        label: "Membres d'équipe",           field: billing.usage.utilisateurs },
-          { key: 'relancesCeMois',      label: 'Relances ce mois',           field: billing.usage.relancesCeMois },
-          { key: 'receiptsCeMois',      label: 'Emails reçu ce mois',        field: billing.usage.receiptsCeMois },
+          { key: 'clients',             label: t('pages.settings.billing.usage.clients'),             field: billing.usage.clients },
+          { key: 'devisCeMois',         label: t('pages.settings.billing.usage.devis'),               field: billing.usage.devisCeMois },
+          { key: 'facturesCeMois',      label: t('pages.settings.billing.usage.factures'),            field: billing.usage.facturesCeMois },
+          { key: 'bonsLivraisonCeMois', label: t('pages.settings.billing.usage.bonsLivraison'),       field: billing.usage.bonsLivraisonCeMois },
+          { key: 'utilisateurs',        label: t('pages.settings.billing.usage.utilisateurs'),        field: billing.usage.utilisateurs },
+          { key: 'relancesCeMois',      label: t('pages.settings.billing.usage.relances'),            field: billing.usage.relancesCeMois },
+          { key: 'receiptsCeMois',      label: t('pages.settings.billing.usage.receipts'),            field: billing.usage.receiptsCeMois },
+          { key: 'depensesCeMois',      label: t('pages.settings.billing.usage.depenses'),            field: billing.usage.depensesCeMois },
         ] : []
 
         return (
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.billing.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Gérez votre abonnement Sayerli</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.billing.subtitle')}</p>
             </div>
 
             {billingLoading ? (
@@ -1193,34 +1196,34 @@ export default function SettingsPage() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Zap className="w-4 h-4" />
-                        <span className="text-xs font-bold uppercase tracking-wider opacity-80">Plan actuel</span>
+                        <span className="text-xs font-bold uppercase tracking-wider opacity-80">{t('pages.settings.billing.currentPlan')}</span>
                       </div>
                       <p className="text-2xl font-black">{PLAN_LABELS[billing.plan]?.label ?? billing.plan}</p>
                       <p className="text-sm opacity-80 mt-1">
-                        {PLAN_LABELS[billing.plan]?.prix === '0' ? 'Gratuit' : `${PLAN_LABELS[billing.plan]?.prix} MAD / mois`}
+                        {PLAN_LABELS[billing.plan]?.prix === '0' ? t('pages.settings.billing.free') : `${PLAN_LABELS[billing.plan]?.prix} MAD / ${t('pages.settings.billing.perMonth')}`}
                       </p>
                     </div>
                     <div className="text-right text-sm shrink-0">
                       {billing.planDebut && (
                         <div className="mb-2">
-                          <p className="text-xs opacity-70">Depuis</p>
+                          <p className="text-xs opacity-70">{t('pages.settings.billing.since')}</p>
                           <p className="font-bold">{new Date(billing.planDebut).toLocaleDateString('fr-MA')}</p>
                         </div>
                       )}
                       {billing.planExpiration ? (
                         <div>
-                          <p className="text-xs opacity-70">Renouvellement</p>
+                          <p className="text-xs opacity-70">{t('pages.settings.billing.renewal')}</p>
                           <p className="font-bold">{new Date(billing.planExpiration).toLocaleDateString('fr-MA')}</p>
                           {billing.joursRestants !== null && (
                             <p className="text-xs opacity-80 mt-0.5">
-                              {billing.joursRestants === 0 ? "Expire aujourd'hui" : `${billing.joursRestants} j restants`}
+                              {billing.joursRestants === 0 ? t('pages.settings.billing.expiresToday') : `${billing.joursRestants} ${t('pages.settings.billing.daysLeft')}`}
                             </p>
                           )}
                         </div>
                       ) : (
                         <div>
-                          <p className="text-xs opacity-70">Expiration</p>
-                          <p className="font-bold text-sm">Aucune</p>
+                          <p className="text-xs opacity-70">{t('pages.settings.billing.expiration')}</p>
+                          <p className="font-bold text-sm">{t('pages.settings.billing.none')}</p>
                         </div>
                       )}
                     </div>
@@ -1246,7 +1249,7 @@ export default function SettingsPage() {
 
                 {/* ── Usage section ── */}
                 <div className="card rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4">Utilisation du plan</h4>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4">{t('pages.settings.billing.planUsage')}</h4>
                   <div className="space-y-4">
                     {usageRows.map(({ key, label, field }) => {
                       const unlimited = field.limite === -1
@@ -1274,7 +1277,7 @@ export default function SettingsPage() {
                           {atLimit && (
                             <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
                               <AlertTriangle className="w-3 h-3 flex-shrink-0" />
-                              Limite atteinte — contactez-nous pour passer au plan supérieur
+                              {t('pages.settings.billing.limitReached')}
                             </p>
                           )}
                         </div>
@@ -1297,11 +1300,11 @@ export default function SettingsPage() {
                       )}>
                         <div className="flex items-center justify-between mb-3">
                           <p className="font-bold text-slate-900 dark:text-white">{info.label}</p>
-                          {isCurrent && <span className="text-xs px-2 py-0.5 rounded-full bg-primary-600 text-white font-semibold">Actuel</span>}
+                          {isCurrent && <span className="text-xs px-2 py-0.5 rounded-full bg-primary-600 text-white font-semibold">{t('pages.settings.billing.current')}</span>}
                         </div>
                         <p className="text-xl font-black text-slate-900 dark:text-white mb-3">
-                          {info.prix === '0' ? 'Gratuit' : `${info.prix} MAD`}
-                          {info.prix !== '0' && <span className="text-xs font-normal text-slate-400 ml-1">/mois</span>}
+                          {info.prix === '0' ? t('pages.settings.billing.free') : `${info.prix} MAD`}
+                          {info.prix !== '0' && <span className="text-xs font-normal text-slate-400 ml-1">/{t('pages.settings.billing.perMonth')}</span>}
                         </p>
                         <ul className="space-y-1.5 mb-4 flex-1">
                           {info.features.map(f => (
@@ -1324,10 +1327,10 @@ export default function SettingsPage() {
                             {isUpgrade ? (
                               <>
                                 <Zap className="w-3 h-3" />
-                                Passer au plan {info.label}
+                                {t('pages.settings.billing.upgradeTo')} {info.label}
                               </>
                             ) : isDowngrade ? (
-                              'Rétrograder vers ' + info.label
+                              `${t('pages.settings.billing.downgradeTo')} ${info.label}`
                             ) : null}
                           </button>
                         )}
@@ -1347,7 +1350,7 @@ export default function SettingsPage() {
                     {t('pages.settings.billing.cancelPlan')}
                   </button>
                   <p className="text-xs text-slate-400 dark:text-slate-500">
-                    Mise à niveau via WhatsApp · Activation manuelle sous 24h
+                    {t('pages.settings.billing.waNote')}
                   </p>
                 </div>
               </>

@@ -1552,9 +1552,34 @@
       },
       "billing": {
         "title": "Abonnement",
+        "subtitle": "Gérez votre abonnement Sayerli",
         "currentPlan": "Plan actuel",
         "upgrade": "Passer au plan supérieur",
-        "cancelPlan": "Annuler l'abonnement"
+        "cancelPlan": "Annuler l'abonnement",
+        "planUsage": "Utilisation du plan",
+        "free": "Gratuit",
+        "perMonth": "mois",
+        "since": "Depuis",
+        "renewal": "Renouvellement",
+        "expiration": "Expiration",
+        "expiresToday": "Expire aujourd'hui",
+        "daysLeft": "j restants",
+        "none": "Aucune",
+        "current": "Actuel",
+        "upgradeTo": "Passer au plan",
+        "downgradeTo": "Rétrograder vers",
+        "limitReached": "Limite atteinte — passez au plan supérieur",
+        "waNote": "Mise à niveau via WhatsApp · Activation sous 24h",
+        "usage": {
+          "clients": "Clients",
+          "devis": "Devis ce mois",
+          "factures": "Factures ce mois",
+          "bonsLivraison": "Bons de livraison ce mois",
+          "utilisateurs": "Membres d'équipe",
+          "relances": "Relances ce mois",
+          "receipts": "Emails reçu ce mois",
+          "depenses": "Reçus dépenses ce mois"
+        }
       },
       "numerotation": {
         "title": "Numérotation des documents",
@@ -1636,7 +1661,8 @@
         "total": "Total dépensé",
         "thisMonth": "Ce mois-ci",
         "withReceipts": "Avec reçu",
-        "storage": "Stockage utilisé"
+        "storage": "Stockage utilisé",
+        "receiptsThisMonth": "Reçus ce mois"
       },
       "table": {
         "date": "Date",

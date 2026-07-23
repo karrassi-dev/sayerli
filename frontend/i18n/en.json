@@ -1551,9 +1551,34 @@
       },
       "billing": {
         "title": "Subscription",
-        "currentPlan": "Current Plan",
-        "upgrade": "Upgrade Plan",
-        "cancelPlan": "Cancel Subscription"
+        "subtitle": "Manage your Sayerli subscription",
+        "currentPlan": "Current plan",
+        "upgrade": "Upgrade plan",
+        "cancelPlan": "Cancel subscription",
+        "planUsage": "Plan usage",
+        "free": "Free",
+        "perMonth": "month",
+        "since": "Since",
+        "renewal": "Renewal",
+        "expiration": "Expiration",
+        "expiresToday": "Expires today",
+        "daysLeft": "days left",
+        "none": "None",
+        "current": "Current",
+        "upgradeTo": "Switch to",
+        "downgradeTo": "Downgrade to",
+        "limitReached": "Limit reached — upgrade your plan",
+        "waNote": "Upgrade via WhatsApp · Manual activation within 24h",
+        "usage": {
+          "clients": "Clients",
+          "devis": "Quotes this month",
+          "factures": "Invoices this month",
+          "bonsLivraison": "Delivery notes this month",
+          "utilisateurs": "Team members",
+          "relances": "Reminders this month",
+          "receipts": "Receipt emails this month",
+          "depenses": "Expense receipts this month"
+        }
       },
       "numerotation": {
         "title": "Document numbering",
@@ -1635,7 +1660,8 @@
         "total": "Total spent",
         "thisMonth": "This month",
         "withReceipts": "With receipt",
-        "storage": "Storage used"
+        "storage": "Storage used",
+        "receiptsThisMonth": "Receipts this month"
       },
       "table": {
         "date": "Date",
