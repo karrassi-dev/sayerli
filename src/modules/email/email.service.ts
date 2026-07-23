@@ -381,6 +381,7 @@ export class EmailService {
     montantCePaiement: number
     montantTotalPaye: number
     montantTotal: number
+    netAPayer?: number
     montantRestant: number
     methodePaiement: string
     datePaiement: Date
@@ -388,6 +389,9 @@ export class EmailService {
     paiementId: string
     isFullyPaid: boolean
     devise?: string
+    rasActif?: boolean
+    rasTaux?: number
+    rasMontant?: number
   }) {
     const url = `${this.frontendUrl}/public/factures/${opts.publicToken}/recu?p=${opts.paiementId}`
     const devise = opts.devise ?? 'MAD'
@@ -505,6 +509,32 @@ export class EmailService {
                   </tr>
                 </table>
               </div>
+
+              ${opts.rasActif ? `
+              <!-- RAS breakdown -->
+              <div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+                <p style="margin:0 0 10px;font-size:11px;color:#ea580c;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Retenue à la Source (RAS)</p>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding-bottom:6px;border-bottom:1px solid #fed7aa;">
+                      <span style="font-size:12px;color:#78350f;">Total TTC facture</span>
+                      <span style="float:right;font-size:12px;font-weight:600;color:#78350f;">${fmt(opts.montantTotal)}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;border-bottom:1px solid #fed7aa;">
+                      <span style="font-size:12px;color:#ea580c;">RAS ${opts.rasTaux}% (versée à la DGI par votre client)</span>
+                      <span style="float:right;font-size:12px;font-weight:600;color:#ea580c;">−${fmt(opts.rasMontant ?? 0)}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top:8px;">
+                      <span style="font-size:13px;font-weight:800;color:#9a3412;">Net à vous verser</span>
+                      <span style="float:right;font-size:13px;font-weight:800;color:#9a3412;">${fmt(opts.netAPayer ?? (opts.montantTotal - (opts.rasMontant ?? 0)))}</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>` : ''}
 
               ${opts.isFullyPaid ? `
               <!-- Fully paid badge -->

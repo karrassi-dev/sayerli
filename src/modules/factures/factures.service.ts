@@ -456,10 +456,9 @@ export class FacturesService {
       include: {
         facture: {
           include: {
-            client: { select: { nom: true, email: true } },
+            client: { select: { nom: true, email: true, rasActif: true, rasTaux: true } },
             entreprise: { select: { nom: true } },
           },
-          // rasActif and rasMontant are included via the full model
         },
       },
     });
@@ -469,14 +468,29 @@ export class FacturesService {
     }
 
     const facture = declaration.facture;
-    const montantPaye = Number(facture.montantPaye) + Number(declaration.montant);
-    const netAPayer = facture.rasActif
-      ? Number(facture.totalTTC) - Number(facture.rasMontant)
-      : Number(facture.totalTTC);
+
+    // Use facture's own RAS if set; otherwise fall back to the client's current RAS.
+    // This handles factures created before the RAS feature or before it was set on the client.
+    const effRasActif   = facture.rasActif || (facture.client.rasActif ?? false);
+    const effRasTaux    = facture.rasActif ? Number(facture.rasTaux) : Number(facture.client.rasTaux ?? 30);
+    const effRasMontant = effRasActif
+      ? (facture.rasActif && Number(facture.rasMontant) > 0
+          ? Number(facture.rasMontant)
+          : Math.round(Number(facture.totalTTC) * effRasTaux * 100) / 10000)
+      : 0;
+
+    const montantPaye   = Number(facture.montantPaye) + Number(declaration.montant);
+    const netAPayer     = effRasActif ? Number(facture.totalTTC) - effRasMontant : Number(facture.totalTTC);
     const montantRestant = Math.max(0, netAPayer - montantPaye);
-    const nouveauStatut = montantRestant <= 0.01
-      ? StatutFacture.PAYEE
-      : StatutFacture.PARTIELLE;
+    const nouveauStatut  = montantRestant <= 0.01 ? StatutFacture.PAYEE : StatutFacture.PARTIELLE;
+
+    const factureUpdate: Record<string, unknown> = { montantPaye, statut: nouveauStatut };
+    // Auto-sync RAS to the facture if it was missing
+    if (!facture.rasActif && effRasActif) {
+      factureUpdate.rasActif   = true;
+      factureUpdate.rasTaux    = effRasTaux;
+      factureUpdate.rasMontant = effRasMontant;
+    }
 
     const [createdPaiement] = await this.prisma.$transaction([
       this.prisma.paiement.create({
@@ -492,7 +506,7 @@ export class FacturesService {
       }),
       this.prisma.facture.update({
         where: { id: facture.id },
-        data: { montantPaye, statut: nouveauStatut },
+        data: factureUpdate,
       }),
       this.prisma.declarationPaiement.update({
         where: { id },
@@ -516,6 +530,7 @@ export class FacturesService {
         montantCePaiement: Number(declaration.montant),
         montantTotalPaye: montantPaye,
         montantTotal: Number(facture.totalTTC),
+        netAPayer,
         montantRestant,
         methodePaiement: declaration.methode,
         datePaiement: declaration.datePaiement,
@@ -523,6 +538,9 @@ export class FacturesService {
         paiementId: createdPaiement.id,
         isFullyPaid: nouveauStatut === StatutFacture.PAYEE,
         devise: facture.devise ?? 'MAD',
+        rasActif: effRasActif,
+        rasTaux: effRasTaux,
+        rasMontant: effRasMontant,
       });
     }
 
