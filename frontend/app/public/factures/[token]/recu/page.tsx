@@ -27,6 +27,9 @@ interface PublicFacture {
   statut: string
   totalTTC: number | string
   montantPaye: number | string
+  rasActif?: boolean
+  rasTaux?: number | string
+  rasMontant?: number | string
   devise: string
   client: { nom: string; email: string | null; telephone: string | null; nomEntreprise: string | null }
   paiements: PublicPaiement[]
@@ -138,7 +141,13 @@ function RecuContent() {
   const cumulPaye = sorted.slice(0, targetIdx + 1).reduce((s, p) => s + n(p.montant), 0)
 
   const totalTTC = n(facture.totalTTC)
-  const restant = Math.max(0, totalTTC - cumulPaye)
+  const effRasMontant = facture.rasActif
+    ? (n(facture.rasMontant ?? 0) > 0
+        ? n(facture.rasMontant ?? 0)
+        : Math.round(totalTTC * n(facture.rasTaux ?? 30) * 100) / 10000)
+    : 0
+  const netAPayer = facture.rasActif ? totalTTC - effRasMontant : totalTTC
+  const restant = Math.max(0, netAPayer - cumulPaye)
   const isFullyPaid = restant < 0.01
   const devise = facture.devise ?? 'MAD'
   const fmt = makeFmt(devise)
@@ -169,6 +178,9 @@ function RecuContent() {
     paiements: [{ ...paiement, montant: n(paiement.montant) }],
     totalTTC,
     montantPaye: cumulPaye,
+    rasActif: facture.rasActif ?? false,
+    rasTaux: n(facture.rasTaux ?? 30),
+    rasMontant: effRasMontant,
     generatedAt,
     devise,
   }
@@ -277,6 +289,38 @@ function RecuContent() {
                     {fmtDate(paiement.datePaiement)}
                   </td>
                 </tr>
+                {/* RAS breakdown rows */}
+                {facture.rasActif && (
+                  <>
+                    <tr className="bg-orange-50 border-b border-orange-100">
+                      <td className="px-3 py-2 text-orange-700 text-[11px]" colSpan={2}>
+                        Total TTC facture
+                      </td>
+                      <td className="px-3 py-2 text-right text-orange-700 text-[11px] font-semibold">
+                        {fmt(totalTTC)}
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr className="bg-orange-50 border-b border-orange-100">
+                      <td className="px-3 py-2 text-orange-600 text-[11px]" colSpan={2}>
+                        Retenue à la source (RAS {n(facture.rasTaux ?? 30)}%) — versée à la DGI par le client
+                      </td>
+                      <td className="px-3 py-2 text-right text-orange-600 text-[11px] font-semibold">
+                        −{fmt(effRasMontant)}
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr className="bg-orange-100 border-b border-orange-200">
+                      <td className="px-3 py-2 text-[11px] font-bold text-orange-800" colSpan={2}>
+                        Net à payer (hors RAS)
+                      </td>
+                      <td className="px-3 py-2 text-right font-bold text-[11px] text-orange-800">
+                        {fmt(netAPayer)}
+                      </td>
+                      <td></td>
+                    </tr>
+                  </>
+                )}
                 {/* Cumul row */}
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <td className="px-3 py-2 text-gray-500 text-[11px]" colSpan={2}>
@@ -287,21 +331,44 @@ function RecuContent() {
                   </td>
                   <td></td>
                 </tr>
-                {/* Remaining row */}
-                <tr className={isFullyPaid ? 'bg-green-50' : 'bg-amber-50'}>
-                  <td
-                    className={`px-3 py-2 text-[11px] font-semibold ${isFullyPaid ? 'text-green-700' : 'text-amber-700'}`}
-                    colSpan={2}
-                  >
-                    {isFullyPaid ? '✓ Facture entièrement réglée' : 'Reste à payer'}
-                  </td>
-                  <td
-                    className={`px-3 py-2 text-right font-bold text-[11px] ${isFullyPaid ? 'text-green-700' : 'text-amber-700'}`}
-                  >
-                    {isFullyPaid ? `0,00 ${devise}` : fmt(restant)}
-                  </td>
-                  <td></td>
-                </tr>
+                {/* Status row */}
+                {facture.rasActif && isFullyPaid ? (
+                  <>
+                    <tr className="bg-green-50">
+                      <td className="px-3 py-2 text-[11px] font-semibold text-green-700" colSpan={2}>
+                        ✓ Net réglé intégralement
+                      </td>
+                      <td className="px-3 py-2 text-right font-bold text-[11px] text-green-700">
+                        0,00 {devise}
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr className="bg-orange-50">
+                      <td className="px-3 py-2 text-[11px] text-orange-600" colSpan={2}>
+                        RAS {n(facture.rasTaux ?? 30)}% versée à la DGI par le client
+                      </td>
+                      <td className="px-3 py-2 text-right text-[11px] font-semibold text-orange-600">
+                        {fmt(effRasMontant)}
+                      </td>
+                      <td></td>
+                    </tr>
+                  </>
+                ) : (
+                  <tr className={isFullyPaid ? 'bg-green-50' : 'bg-amber-50'}>
+                    <td
+                      className={`px-3 py-2 text-[11px] font-semibold ${isFullyPaid ? 'text-green-700' : 'text-amber-700'}`}
+                      colSpan={2}
+                    >
+                      {isFullyPaid ? '✓ Facture entièrement réglée' : 'Reste à payer'}
+                    </td>
+                    <td
+                      className={`px-3 py-2 text-right font-bold text-[11px] ${isFullyPaid ? 'text-green-700' : 'text-amber-700'}`}
+                    >
+                      {isFullyPaid ? `0,00 ${devise}` : fmt(restant)}
+                    </td>
+                    <td></td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

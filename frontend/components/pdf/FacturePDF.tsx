@@ -38,6 +38,9 @@ export interface FacturePDFProps {
   taxe: number
   totalTTC: number
   remise?: number
+  rasActif?: boolean
+  rasTaux?: number
+  rasMontant?: number
   devise?: string
   montantDejaPayeAvant: number
   lignes: { description: string; quantite: number; prixUnitaire: number }[]
@@ -74,17 +77,23 @@ function fmtDateTime(d: string) {
 
 export default function FacturePDF({
   numeroFacture, createdAt, dateEcheance, notes, totalHT, taxe, totalTTC,
-  remise = 0, devise = 'MAD', montantDejaPayeAvant, lignes, devisReference, client, entreprise, declaration,
+  remise = 0, rasActif = false, rasTaux = 30, rasMontant = 0,
+  devise = 'MAD', montantDejaPayeAvant, lignes, devisReference, client, entreprise, declaration,
 }: FacturePDFProps) {
   const f = (v: number) => fmt(v, devise)
   const brand = entreprise.couleurPrimaire || '#2563eb'
+  const ORANGE = '#ea580c'
   const sousTotal = lignes.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0)
   const tva = totalTTC - totalHT
+  const effRasMontant = rasActif
+    ? (rasMontant > 0 ? rasMontant : Math.round(totalTTC * rasTaux * 100) / 10000)
+    : 0
+  const netAPayer = rasActif ? totalTTC - effRasMontant : totalTTC
   const totalPaidAfter = montantDejaPayeAvant + declaration.montant
-  const resteApres = Math.max(0, totalTTC - totalPaidAfter)
+  const resteApres = Math.max(0, netAPayer - totalPaidAfter)
   const isFullyPaid = resteApres < 0.01
-  const pctPaid = totalTTC > 0 ? Math.min(100, (totalPaidAfter / totalTTC) * 100) : 0
-  const pctBefore = totalTTC > 0 ? Math.min(100, (montantDejaPayeAvant / totalTTC) * 100) : 0
+  const pctPaid = netAPayer > 0 ? Math.min(100, (totalPaidAfter / netAPayer) * 100) : 0
+  const pctBefore = netAPayer > 0 ? Math.min(100, (montantDejaPayeAvant / netAPayer) * 100) : 0
   const methodeLabel = METHODE_LABELS[declaration.methode] ?? declaration.methode
 
   const s = StyleSheet.create({
@@ -344,8 +353,8 @@ export default function FacturePDF({
             {/* Stats row */}
             <View style={s.progressStats}>
               <View style={s.pStat}>
-                <Text style={s.pStatLbl}>Total TTC</Text>
-                <Text style={[s.pStatVal, { color: G700 }]}>{f(totalTTC)}</Text>
+                <Text style={s.pStatLbl}>{rasActif ? 'Net a payer' : 'Total TTC'}</Text>
+                <Text style={[s.pStatVal, { color: G700 }]}>{f(rasActif ? netAPayer : totalTTC)}</Text>
               </View>
               <View style={s.pStatSep} />
               {montantDejaPayeAvant > 0 && (
@@ -363,9 +372,11 @@ export default function FacturePDF({
               </View>
               <View style={s.pStatSep} />
               <View style={s.pStat}>
-                <Text style={s.pStatLbl}>Reste du</Text>
-                <Text style={[s.pStatVal, { color: isFullyPaid ? GREEN : AMBER_TX }]}>
-                  {isFullyPaid ? 'Regle' : fmt(resteApres)}
+                <Text style={s.pStatLbl}>
+                  {rasActif && isFullyPaid ? `RAS ${rasTaux}% (DGI)` : isFullyPaid ? 'Regle' : 'Reste du'}
+                </Text>
+                <Text style={[s.pStatVal, { color: rasActif && isFullyPaid ? ORANGE : isFullyPaid ? GREEN : AMBER_TX }]}>
+                  {rasActif && isFullyPaid ? f(effRasMontant) : isFullyPaid ? 'Regle' : f(resteApres)}
                 </Text>
               </View>
             </View>
@@ -418,7 +429,11 @@ export default function FacturePDF({
           {/* ── Status notice ── */}
           <View style={s.pendingBox}>
             <Text style={s.pendingTitle}>
-              {isFullyPaid ? 'Facture entierement reglee (en attente de confirmation)' : 'En cours de verification'}
+              {isFullyPaid
+                ? (rasActif
+                    ? `Net regle — RAS ${rasTaux}% (${f(effRasMontant)}) versee a la DGI par le client`
+                    : 'Facture entierement reglee (en attente de confirmation)')
+                : 'En cours de verification'}
             </Text>
             <Text style={s.pendingTxt}>
               {isFullyPaid
