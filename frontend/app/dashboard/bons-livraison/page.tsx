@@ -48,6 +48,7 @@ interface BLLigne {
   id?: string
   description: string
   quantite: number
+  prixUnitaire: number
   unite: string | null
   ordre: number
 }
@@ -76,7 +77,7 @@ interface BLForm {
   devisId: string
   notes: string
   dateLivraison: string
-  lignes: { description: string; quantite: number; unite: string; ordre: number }[]
+  lignes: { description: string; quantite: number; prixUnitaire: number; unite: string; ordre: number }[]
 }
 
 const EMPTY_FORM: BLForm = {
@@ -84,7 +85,7 @@ const EMPTY_FORM: BLForm = {
   devisId: '',
   notes: '',
   dateLivraison: '',
-  lignes: [{ description: '', quantite: 1, unite: '', ordre: 0 }],
+  lignes: [{ description: '', quantite: 1, prixUnitaire: 0, unite: '', ordre: 0 }],
 }
 
 type BLStatut = 'brouillon' | 'envoye' | 'accepte'
@@ -187,8 +188,8 @@ export default function BonsLivraisonPage() {
       notes: bl.notes ?? '',
       dateLivraison: bl.dateLivraison ? bl.dateLivraison.slice(0, 10) : '',
       lignes: bl.lignes.length > 0
-        ? bl.lignes.map(l => ({ description: l.description, quantite: Number(l.quantite), unite: l.unite ?? '', ordre: l.ordre }))
-        : [{ description: '', quantite: 1, unite: '', ordre: 0 }],
+        ? bl.lignes.map(l => ({ description: l.description, quantite: Number(l.quantite), prixUnitaire: Number(l.prixUnitaire ?? 0), unite: l.unite ?? '', ordre: l.ordre }))
+        : [{ description: '', quantite: 1, prixUnitaire: 0, unite: '', ordre: 0 }],
     })
     setFormErrors({})
     setModalOpen(true)
@@ -197,7 +198,7 @@ export default function BonsLivraisonPage() {
   const handleLigneChange = (i: number, field: string, val: string | number) => {
     setForm(f => {
       const lignes = [...f.lignes]
-      lignes[i] = { ...lignes[i], [field]: field === 'quantite' ? Number(val) : val }
+      lignes[i] = { ...lignes[i], [field]: (field === 'quantite' || field === 'prixUnitaire') ? Number(val) : val }
       return { ...f, lignes }
     })
   }
@@ -205,7 +206,7 @@ export default function BonsLivraisonPage() {
   const addLigne = () => {
     setForm(f => ({
       ...f,
-      lignes: [...f.lignes, { description: '', quantite: 1, unite: '', ordre: f.lignes.length }],
+      lignes: [...f.lignes, { description: '', quantite: 1, prixUnitaire: 0, unite: '', ordre: f.lignes.length }],
     }))
   }
 
@@ -234,7 +235,7 @@ export default function BonsLivraisonPage() {
         dateLivraison: form.dateLivraison || undefined,
         lignes: form.lignes
           .filter(l => l.description.trim())
-          .map((l, i) => ({ description: l.description, quantite: l.quantite, unite: l.unite || undefined, ordre: i })),
+          .map((l, i) => ({ description: l.description, quantite: l.quantite, prixUnitaire: l.prixUnitaire, unite: l.unite || undefined, ordre: i })),
       }
       if (editingId) {
         await bonsLivraisonApi.update(editingId, payload)
@@ -466,7 +467,7 @@ export default function BonsLivraisonPage() {
       ice: ent?.ice ?? null,
       rc: ent?.rc ?? null,
     },
-    lignes: bl.lignes.map(l => ({ description: l.description, quantite: Number(l.quantite), unite: l.unite, ordre: l.ordre })),
+    lignes: bl.lignes.map(l => ({ description: l.description, quantite: Number(l.quantite), prixUnitaire: Number(l.prixUnitaire ?? 0), unite: l.unite, ordre: l.ordre })),
     devisRef: bl.devis?.reference ?? null,
   })
 
@@ -489,6 +490,12 @@ export default function BonsLivraisonPage() {
     if (!d) return '—'
     return new Date(d).toLocaleDateString('fr-MA', { day: '2-digit', month: '2-digit', year: 'numeric' })
   }
+
+  const fmtMAD = (v: number) =>
+    v.toLocaleString('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' MAD'
+
+  const blTotalHT = (bl: ApiBL) =>
+    bl.lignes.reduce((s, l) => s + Number(l.quantite) * Number(l.prixUnitaire ?? 0), 0)
 
   const statusFilters = [
     { value: 'BROUILLON', label: t('pages.bonsLivraison.statuts.BROUILLON') },
@@ -588,7 +595,7 @@ export default function BonsLivraisonPage() {
                 <thead>
                   <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
                     <th className="px-4 py-3 w-10" />
-                    {['reference', 'client', 'devis', 'date', 'livraison', 'statut', 'actions'].map(col => (
+                    {['reference', 'client', 'devis', 'montant', 'date', 'livraison', 'statut', 'actions'].map(col => (
                       <th key={col} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                         {t(`pages.bonsLivraison.col.${col}`)}
                       </th>
@@ -631,6 +638,9 @@ export default function BonsLivraisonPage() {
                         </td>
                         <td className="px-4 py-3.5 text-sm text-slate-500 dark:text-slate-400">
                           {bl.devis?.reference ?? '—'}
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">{fmtMAD(blTotalHT(bl))}</span>
                         </td>
                         <td className="px-4 py-3.5 text-xs text-slate-500 dark:text-slate-400">
                           {fmtDate(bl.createdAt)}
@@ -695,7 +705,10 @@ export default function BonsLivraisonPage() {
                       <StatusBadge variant={cfg.variant} dot size="sm" />
                     </div>
 
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{bl.client.nom}</p>
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">{bl.client.nom}</p>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{fmtMAD(blTotalHT(bl))}</span>
+                    </div>
 
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex flex-col min-w-0">
@@ -810,7 +823,9 @@ export default function BonsLivraisonPage() {
                     <tr>
                       <th className="px-3 py-2 text-left text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.description')}</th>
                       <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.quantite')}</th>
-                      <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.unite')}</th>
+                      <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 hidden sm:table-cell">{t('pages.bonsLivraison.form.unite')}</th>
+                      <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.prixUnitaire')}</th>
+                      <th className="px-3 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400">{t('pages.bonsLivraison.form.total')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -818,11 +833,34 @@ export default function BonsLivraisonPage() {
                       <tr key={i}>
                         <td className="px-3 py-2 text-slate-900 dark:text-white">{l.description}</td>
                         <td className="px-3 py-2 text-right font-semibold text-slate-700 dark:text-slate-300">{Number(l.quantite)}</td>
-                        <td className="px-3 py-2 text-right text-slate-500 dark:text-slate-400">{l.unite || '—'}</td>
+                        <td className="px-3 py-2 text-right text-slate-500 dark:text-slate-400 hidden sm:table-cell">{l.unite || '—'}</td>
+                        <td className="px-3 py-2 text-right text-slate-700 dark:text-slate-300">{fmtMAD(Number(l.prixUnitaire ?? 0))}</td>
+                        <td className="px-3 py-2 text-right font-semibold text-slate-900 dark:text-white">{fmtMAD(Number(l.quantite) * Number(l.prixUnitaire ?? 0))}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                {(() => {
+                  const ht  = selected.lignes.reduce((s, l) => s + Number(l.quantite) * Number(l.prixUnitaire ?? 0), 0)
+                  const tva = Math.round(ht * 20) / 100
+                  const ttc = ht + tva
+                  return (
+                    <div className="border-t border-slate-200 dark:border-slate-700 px-3 py-2 space-y-1 bg-slate-50/60 dark:bg-slate-800/40">
+                      <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                        <span>{t('pages.bonsLivraison.form.sousTotal')}</span>
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">{fmtMAD(ht)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                        <span>{t('pages.bonsLivraison.form.tva')}</span>
+                        <span>{fmtMAD(tva)}</span>
+                      </div>
+                      <div className="flex justify-between text-sm font-bold text-slate-900 dark:text-white pt-1 border-t border-slate-200 dark:border-slate-700">
+                        <span>{t('pages.bonsLivraison.form.totalTTC')}</span>
+                        <span>{fmtMAD(ttc)}</span>
+                      </div>
+                    </div>
+                  )
+                })()}
               </div>
             </div>
 
@@ -1033,49 +1071,147 @@ export default function BonsLivraisonPage() {
               {formErrors.lignes && <p className="text-xs text-red-500">{formErrors.lignes}</p>}
             </div>
 
-            {/* Header row */}
-            <div className="hidden sm:grid grid-cols-[1fr_70px_80px_28px] gap-2 mb-1 px-1">
-              {[t('pages.bonsLivraison.form.description'), t('pages.bonsLivraison.form.quantite'), t('pages.bonsLivraison.form.unite'), ''].map((h, i) => (
+            {/* Header row — desktop only */}
+            <div className="hidden sm:grid sm:grid-cols-[2fr_55px_70px_95px_28px] gap-2 mb-1 px-1">
+              {[
+                t('pages.bonsLivraison.form.description'),
+                t('pages.bonsLivraison.form.quantite'),
+                t('pages.bonsLivraison.form.unite'),
+                t('pages.bonsLivraison.form.prixUnitaire'),
+                '',
+              ].map((h, i) => (
                 <span key={i} className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{h}</span>
               ))}
             </div>
 
             <div className="space-y-2">
               {form.lignes.map((ligne, i) => (
-                <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_70px_80px_28px] gap-2 items-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60">
-                  <input
-                    type="text"
-                    value={ligne.description}
-                    onChange={e => handleLigneChange(i, 'description', e.target.value)}
-                    placeholder={t('pages.bonsLivraison.form.descPlaceholder')}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.001"
-                    value={ligne.quantite}
-                    onChange={e => handleLigneChange(i, 'quantite', e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white text-center outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
-                    placeholder="Qté"
-                  />
-                  <input
-                    type="text"
-                    value={ligne.unite}
-                    onChange={e => handleLigneChange(i, 'unite', e.target.value)}
-                    placeholder={t('pages.bonsLivraison.form.unite')}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
-                  />
-                  <button
-                    onClick={() => removeLigne(i)}
-                    disabled={form.lignes.length === 1}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                <div key={i} className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-2">
+                  {/* Desktop: single-row grid */}
+                  <div className="hidden sm:grid sm:grid-cols-[2fr_55px_70px_95px_28px] gap-2 items-center">
+                    <input
+                      type="text"
+                      value={ligne.description}
+                      onChange={e => handleLigneChange(i, 'description', e.target.value)}
+                      placeholder={t('pages.bonsLivraison.form.descPlaceholder')}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.001"
+                      value={ligne.quantite}
+                      onChange={e => handleLigneChange(i, 'quantite', e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white text-center outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                      placeholder="Qté"
+                    />
+                    <input
+                      type="text"
+                      value={ligne.unite}
+                      onChange={e => handleLigneChange(i, 'unite', e.target.value)}
+                      placeholder={t('pages.bonsLivraison.form.unite')}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={ligne.prixUnitaire}
+                      onChange={e => handleLigneChange(i, 'prixUnitaire', e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white text-right outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                      placeholder="0.00"
+                    />
+                    <button
+                      onClick={() => removeLigne(i)}
+                      disabled={form.lignes.length === 1}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  {/* Mobile: stacked layout */}
+                  <div className="sm:hidden space-y-2">
+                    <input
+                      type="text"
+                      value={ligne.description}
+                      onChange={e => handleLigneChange(i, 'description', e.target.value)}
+                      placeholder={t('pages.bonsLivraison.form.descPlaceholder')}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                    />
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <p className="text-xs text-slate-400 mb-1">{t('pages.bonsLivraison.form.quantite')}</p>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.001"
+                          value={ligne.quantite}
+                          onChange={e => handleLigneChange(i, 'quantite', e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white text-center outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-400 mb-1">{t('pages.bonsLivraison.form.unite')}</p>
+                        <input
+                          type="text"
+                          value={ligne.unite}
+                          onChange={e => handleLigneChange(i, 'unite', e.target.value)}
+                          placeholder="—"
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-400 mb-1">{t('pages.bonsLivraison.form.prixUnitaire')}</p>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={ligne.prixUnitaire}
+                          onChange={e => handleLigneChange(i, 'prixUnitaire', e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white text-right outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all"
+                          placeholder="0.00"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        = {fmtMAD(ligne.quantite * ligne.prixUnitaire)}
+                      </span>
+                      <button
+                        onClick={() => removeLigne(i)}
+                        disabled={form.lignes.length === 1}
+                        className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
+
+            {/* Totals */}
+            {(() => {
+              const ht  = form.lignes.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0)
+              const tva = Math.round(ht * 20) / 100
+              const ttc = ht + tva
+              return (
+                <div className="mt-3 rounded-xl bg-slate-100 dark:bg-slate-800 px-4 py-3 space-y-1.5">
+                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <span>{t('pages.bonsLivraison.form.sousTotal')}</span>
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">{fmtMAD(ht)}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <span>{t('pages.bonsLivraison.form.tva')}</span>
+                    <span>{fmtMAD(tva)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm font-bold text-slate-900 dark:text-white pt-1.5 border-t border-slate-200 dark:border-slate-700">
+                    <span>{t('pages.bonsLivraison.form.totalTTC')}</span>
+                    <span>{fmtMAD(ttc)}</span>
+                  </div>
+                </div>
+              )
+            })()}
 
             <button
               onClick={addLigne}
