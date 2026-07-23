@@ -1577,7 +1577,8 @@
           "utilisateurs": "Team members",
           "relances": "Reminders this month",
           "receipts": "Receipt emails this month",
-          "depenses": "Expense receipts this month"
+          "depenses": "Expense receipts this month",
+          "stockage": "Receipt storage"
         }
       },
       "numerotation": {

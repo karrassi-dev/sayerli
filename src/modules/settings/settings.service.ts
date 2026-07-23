@@ -364,7 +364,7 @@ export class SettingsService {
     const [company, clientsActifs, utilisateursCount, devisCeMois, facturesCeMois, blCeMois, relancesCeMois, receiptsCeMois, depensesCeMois] = await Promise.all([
       this.prisma.entreprise.findUnique({
         where: { id: entrepriseId },
-        select: { plan: true, planDebut: true, planExpiration: true, createdAt: true },
+        select: { plan: true, planDebut: true, planExpiration: true, createdAt: true, storageUsedBytes: true },
       }),
       this.prisma.client.count({ where: { entrepriseId, actif: true } }),
       this.prisma.utilisateur.count({ where: { entrepriseId } }),
@@ -401,6 +401,7 @@ export class SettingsService {
         relancesCeMois:       { actuel: relancesCeMois,    limite: limits.relancesParMois },
         receiptsCeMois:       { actuel: receiptsCeMois,    limite: limits.receiptsEmailsParMois },
         depensesCeMois:       { actuel: depensesCeMois,    limite: limits.depensesParMois },
+        stockage:             { actuel: company.storageUsedBytes ?? 0, limite: limits.depensesStorageBytes },
       },
     };
   }

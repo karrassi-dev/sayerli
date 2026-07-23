@@ -62,10 +62,12 @@ const PLAN_LABELS: Record<string, { label: string; prix: string; features: strin
 const PLAN_ORDER: Record<string, number> = { STARTER: 0, PRO: 1, BUSINESS: 2 }
 const WA_OWNER = '447476607473'
 
-const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; bonsLivraisonParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number; depensesParMois: number }> = {
-  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5,   depensesParMois: 20  },
-  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1,  depensesParMois: 150 },
-  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1,  depensesParMois: -1  },
+const MB = 1024 * 1024
+const GB = 1024 * 1024 * 1024
+const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: number; facturesParMois: number; bonsLivraisonParMois: number; utilisateurs: number; relancesParMois: number; receiptsParMois: number; depensesParMois: number; storageBytes: number }> = {
+  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsParMois: 5,   depensesParMois: 20,  storageBytes: 200 * MB },
+  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsParMois: -1,  depensesParMois: 150, storageBytes: 5 * GB   },
+  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsParMois: -1,  depensesParMois: -1,  storageBytes: 20 * GB  },
 }
 
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
@@ -205,8 +207,15 @@ export default function SettingsPage() {
       relancesCeMois: UsageField
       receiptsCeMois: UsageField
       depensesCeMois: UsageField
+      stockage: UsageField
     }
   } | null>(null)
+
+  const formatBytes = (bytes: number): string => {
+    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`
+  }
   const [billingLoading, setBillingLoading] = useState(true)
 
   // ─── Data loading ─────────────────────────────────────────────────────────
@@ -286,6 +295,7 @@ export default function SettingsPage() {
           relancesCeMois:      normalise(d.usage?.relancesCeMois,      planLimits.relancesParMois),
           receiptsCeMois:      normalise(d.usage?.receiptsCeMois,      planLimits.receiptsParMois),
           depensesCeMois:      normalise(d.usage?.depensesCeMois,      planLimits.depensesParMois),
+          stockage:            normalise(d.usage?.stockage,            planLimits.storageBytes),
         },
       })
     }).catch(() => {}).finally(() => setBillingLoading(false))
@@ -1177,6 +1187,7 @@ export default function SettingsPage() {
           { key: 'relancesCeMois',      label: t('pages.settings.billing.usage.relances'),            field: billing.usage.relancesCeMois },
           { key: 'receiptsCeMois',      label: t('pages.settings.billing.usage.receipts'),            field: billing.usage.receiptsCeMois },
           { key: 'depensesCeMois',      label: t('pages.settings.billing.usage.depenses'),            field: billing.usage.depensesCeMois },
+          { key: 'stockage',            label: t('pages.settings.billing.usage.stockage'),            field: billing.usage.stockage, formatValue: formatBytes },
         ] : []
 
         return (
@@ -1251,18 +1262,20 @@ export default function SettingsPage() {
                 <div className="card rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4">{t('pages.settings.billing.planUsage')}</h4>
                   <div className="space-y-4">
-                    {usageRows.map(({ key, label, field }) => {
+                    {usageRows.map(({ key, label, field, formatValue }) => {
                       const unlimited = field.limite === -1
                       const pct = unlimited ? 0 : Math.min(100, Math.round((field.actuel / field.limite) * 100))
                       const atLimit = !unlimited && field.actuel >= field.limite
                       const nearLimit = !unlimited && !atLimit && pct >= 80
                       const barColor = atLimit ? 'bg-red-500' : nearLimit ? 'bg-amber-500' : 'bg-primary-500'
+                      const displayActuel = formatValue ? formatValue(field.actuel) : String(field.actuel)
+                      const displayLimite = unlimited ? '∞' : (formatValue ? formatValue(field.limite) : String(field.limite))
                       return (
                         <div key={key}>
                           <div className="flex items-center justify-between text-xs mb-1.5">
                             <span className="font-medium text-slate-700 dark:text-slate-300">{label}</span>
                             <span className={cn('font-semibold', atLimit ? 'text-red-500' : nearLimit ? 'text-amber-500' : 'text-slate-500 dark:text-slate-400')}>
-                              {unlimited ? `${field.actuel} / ∞` : `${field.actuel} / ${field.limite}`}
+                              {`${displayActuel} / ${displayLimite}`}
                             </span>
                           </div>
                           {unlimited ? (

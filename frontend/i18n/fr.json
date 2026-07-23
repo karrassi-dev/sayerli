@@ -1578,7 +1578,8 @@
           "utilisateurs": "Membres d'équipe",
           "relances": "Relances ce mois",
           "receipts": "Emails reçu ce mois",
-          "depenses": "Reçus dépenses ce mois"
+          "depenses": "Reçus dépenses ce mois",
+          "stockage": "Stockage reçus"
         }
       },
       "numerotation": {
