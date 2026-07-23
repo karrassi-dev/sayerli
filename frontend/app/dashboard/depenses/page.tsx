@@ -141,33 +141,48 @@ function ReceiptUpload({ onUploaded, onError, currentUrl, onRemove, t }: Receipt
     setProgress(40)
     setStatus('uploading')
 
+    // Step 1: get presigned URL from backend
+    let uploadUrl: string
+    let key: string
     try {
-      const { data } = await depensesApi.getUploadUrl()
-      const { url, key } = data.data ?? data
+      const res = await depensesApi.getUploadUrl()
+      const payload = res.data?.data ?? res.data
+      uploadUrl = payload.url
+      key = payload.key
+    } catch (e: any) {
+      if (e?.response?.status === 402) {
+        onError('Limite de plan atteinte.')
+      } else {
+        onError("Impossible d'obtenir l'URL d'upload. Vérifiez votre connexion.")
+      }
+      setStatus('idle')
+      setProgress(0)
+      return
+    }
 
-      setProgress(60)
+    setProgress(60)
 
-      await axios.put(url, compressed, {
-        headers: { 'Content-Type': 'image/webp' },
+    // Step 2: PUT directly to R2 — no extra headers to avoid CORS preflight issues
+    try {
+      await axios.put(uploadUrl, compressed, {
         onUploadProgress: (e) => {
           if (e.total) setProgress(60 + Math.round((e.loaded / e.total) * 35))
         },
+        transformRequest: [(data) => data], // prevent axios from modifying content-type
       })
-
-      setProgress(100)
-      const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${key}`
-      onUploaded(key, publicUrl, compressed.size)
-    } catch (e: any) {
-      const code = e?.response?.status
-      if (code === 402) {
-        onError('Limite de plan atteinte.')
-      } else {
-        onError("Erreur lors de l'upload. Veuillez réessayer.")
-      }
-    } finally {
+    } catch {
+      onError("Erreur lors de l'upload vers le stockage. Vérifiez la configuration R2 CORS.")
       setStatus('idle')
       setProgress(0)
+      return
     }
+
+    setProgress(100)
+    const r2Base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? ''
+    const publicUrl = `${r2Base}/${key}`
+    onUploaded(key, publicUrl, compressed.size)
+    setStatus('idle')
+    setProgress(0)
   }, [onError, onUploaded, t])
 
   const handleDrop = useCallback((e: React.DragEvent) => {

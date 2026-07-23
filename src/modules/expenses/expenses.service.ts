@@ -84,8 +84,6 @@ export class ExpensesService {
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: key,
-      ContentType: 'image/webp',
-      ContentLength: undefined,
     });
 
     const url = await getSignedUrl(this.s3, command, { expiresIn: PRESIGNED_EXPIRY_SECONDS });
