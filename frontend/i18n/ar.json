@@ -1688,7 +1688,9 @@
         "recuUploading": "جارٍ الرفع…",
         "recuTooLarge": "الصورة كبيرة جداً بعد الضغط. يرجى المحاولة مرة أخرى.",
         "recuWrongType": "تنسيق غير مدعوم. JPG أو PNG فقط.",
-        "recuRemove": "إزالة الوصل"
+        "recuRemove": "إزالة الوصل",
+        "categorieAutrePlaceholder": "حدد الفئة…",
+        "categorieAutreRequired": "يرجى تحديد الفئة."
       },
       "categories": {
         "LOYER": "الإيجار",

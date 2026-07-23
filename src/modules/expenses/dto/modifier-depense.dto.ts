@@ -17,6 +17,10 @@ export class ModifierDepenseDto {
 
   @IsString()
   @IsOptional()
+  categoriePersonnalisee?: string;
+
+  @IsString()
+  @IsOptional()
   fournisseur?: string;
 
   @IsString()

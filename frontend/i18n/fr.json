@@ -1689,7 +1689,9 @@
         "recuUploading": "Upload en cours…",
         "recuTooLarge": "Image trop volumineuse après compression. Veuillez réessayer.",
         "recuWrongType": "Format non autorisé. JPG ou PNG uniquement.",
-        "recuRemove": "Supprimer le reçu"
+        "recuRemove": "Supprimer le reçu",
+        "categorieAutrePlaceholder": "Précisez la catégorie…",
+        "categorieAutreRequired": "Veuillez préciser la catégorie."
       },
       "categories": {
         "LOYER": "Loyer",

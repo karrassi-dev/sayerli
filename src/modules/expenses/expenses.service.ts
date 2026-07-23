@@ -145,6 +145,7 @@ export class ExpensesService {
         montant: dto.montant,
         devise: dto.devise ?? 'MAD',
         categorie: dto.categorie,
+        categoriePersonnalisee: dto.categorie === 'AUTRE' ? (dto.categoriePersonnalisee ?? null) : null,
         fournisseur: dto.fournisseur,
         description: dto.description,
         date: new Date(dto.date),
@@ -216,6 +217,11 @@ export class ExpensesService {
         ...(dto.montant !== undefined ? { montant: dto.montant } : {}),
         ...(dto.devise !== undefined ? { devise: dto.devise } : {}),
         ...(dto.categorie !== undefined ? { categorie: dto.categorie } : {}),
+        ...(dto.categorie !== undefined
+          ? { categoriePersonnalisee: dto.categorie === 'AUTRE' ? (dto.categoriePersonnalisee ?? null) : null }
+          : dto.categoriePersonnalisee !== undefined
+            ? { categoriePersonnalisee: dto.categoriePersonnalisee }
+            : {}),
         ...(dto.fournisseur !== undefined ? { fournisseur: dto.fournisseur } : {}),
         ...(dto.description !== undefined ? { description: dto.description } : {}),
         ...(dto.date !== undefined ? { date: new Date(dto.date) } : {}),
@@ -288,7 +294,7 @@ export class ExpensesService {
     for (const d of depenses) {
       sheet.addRow({
         date: new Date(d.date).toLocaleDateString('fr-MA'),
-        categorie: d.categorie,
+        categorie: d.categorie === 'AUTRE' && d.categoriePersonnalisee ? d.categoriePersonnalisee : d.categorie,
         fournisseur: d.fournisseur ?? '',
         description: d.description ?? '',
         montant: Number(d.montant),

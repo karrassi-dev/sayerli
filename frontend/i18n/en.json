@@ -1688,7 +1688,9 @@
         "recuUploading": "Uploading…",
         "recuTooLarge": "Image too large after compression. Please try again.",
         "recuWrongType": "Invalid format. JPG or PNG only.",
-        "recuRemove": "Remove receipt"
+        "recuRemove": "Remove receipt",
+        "categorieAutrePlaceholder": "Specify the category…",
+        "categorieAutreRequired": "Please specify the category."
       },
       "categories": {
         "LOYER": "Rent",

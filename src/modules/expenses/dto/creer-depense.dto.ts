@@ -15,6 +15,10 @@ export class CreerDepenseDto {
 
   @IsString()
   @IsOptional()
+  categoriePersonnalisee?: string;
+
+  @IsString()
+  @IsOptional()
   fournisseur?: string;
 
   @IsString()

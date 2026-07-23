@@ -51,6 +51,7 @@ interface Depense {
   montant: number
   devise: string
   categorie: CategorieDepense
+  categoriePersonnalisee: string | null
   fournisseur: string | null
   description: string | null
   date: string
@@ -64,6 +65,7 @@ interface DepenseForm {
   montant: string
   devise: string
   categorie: CategorieDepense
+  categoriePersonnalisee: string
   fournisseur: string
   description: string
   date: string
@@ -73,6 +75,7 @@ const EMPTY_FORM: DepenseForm = {
   montant: '',
   devise: 'MAD',
   categorie: 'AUTRE',
+  categoriePersonnalisee: '',
   fournisseur: '',
   description: '',
   date: new Date().toISOString().slice(0, 10),
@@ -366,6 +369,7 @@ export default function DepensesPage() {
       montant: String(dep.montant),
       devise: dep.devise,
       categorie: dep.categorie,
+      categoriePersonnalisee: dep.categoriePersonnalisee ?? '',
       fournisseur: dep.fournisseur ?? '',
       description: dep.description ?? '',
       date: dep.date.slice(0, 10),
@@ -382,6 +386,8 @@ export default function DepensesPage() {
     if (!form.montant || isNaN(Number(form.montant)) || Number(form.montant) <= 0)
       errs.montant = 'Le montant est requis et doit être positif.'
     if (!form.categorie) errs.categorie = 'La catégorie est requise.'
+    if (form.categorie === 'AUTRE' && !form.categoriePersonnalisee.trim())
+      errs.categoriePersonnalisee = t('pages.depenses.form.categorieAutreRequired')
     if (!form.date) errs.date = 'La date est requise.'
     setFormErrors(errs)
     return Object.keys(errs).length === 0
@@ -395,6 +401,7 @@ export default function DepensesPage() {
         montant: Number(form.montant),
         devise: form.devise,
         categorie: form.categorie,
+        ...(form.categorie === 'AUTRE' ? { categoriePersonnalisee: form.categoriePersonnalisee.trim() } : {}),
         fournisseur: form.fournisseur || undefined,
         description: form.description || undefined,
         date: form.date,
@@ -453,6 +460,11 @@ export default function DepensesPage() {
 
   const inp = 'w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-400 transition-all'
   const lbl = 'text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 block'
+
+  const getCategorieLabel = (dep: Depense) =>
+    dep.categorie === 'AUTRE' && dep.categoriePersonnalisee
+      ? dep.categoriePersonnalisee
+      : t(`pages.depenses.categories.${dep.categorie}`)
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-6 lg:p-8">
@@ -583,7 +595,7 @@ export default function DepensesPage() {
                       </td>
                       <td className="px-4 py-3">
                         <span className={cn('inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold', CATEGORIE_COLORS[dep.categorie])}>
-                          {t(`pages.depenses.categories.${dep.categorie}`)}
+                          {getCategorieLabel(dep)}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">
@@ -642,7 +654,7 @@ export default function DepensesPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={cn('inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold', CATEGORIE_COLORS[dep.categorie])}>
-                          {t(`pages.depenses.categories.${dep.categorie}`)}
+                          {getCategorieLabel(dep)}
                         </span>
                         <span className="text-xs text-slate-400">
                           {new Date(dep.date).toLocaleDateString('fr-MA')}
@@ -759,7 +771,7 @@ export default function DepensesPage() {
                 <button
                   key={c}
                   type="button"
-                  onClick={() => setForm(f => ({ ...f, categorie: c }))}
+                  onClick={() => setForm(f => ({ ...f, categorie: c, categoriePersonnalisee: c !== 'AUTRE' ? '' : f.categoriePersonnalisee }))}
                   className={cn(
                     'px-3 py-2 rounded-xl border text-xs font-semibold text-left transition-all',
                     form.categorie === c
@@ -771,6 +783,23 @@ export default function DepensesPage() {
                 </button>
               ))}
             </div>
+            {form.categorie === 'AUTRE' && (
+              <div className="mt-2">
+                <input
+                  type="text"
+                  value={form.categoriePersonnalisee}
+                  onChange={e => setForm(f => ({ ...f, categoriePersonnalisee: e.target.value }))}
+                  placeholder={t('pages.depenses.form.categorieAutrePlaceholder')}
+                  className={cn(inp, formErrors.categoriePersonnalisee && 'border-red-400')}
+                  autoFocus
+                />
+                {formErrors.categoriePersonnalisee && (
+                  <p className="flex items-center gap-1 text-xs text-red-500 mt-1">
+                    <AlertCircle className="w-3 h-3" />{formErrors.categoriePersonnalisee}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Fournisseur */}

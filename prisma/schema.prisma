@@ -486,21 +486,22 @@ enum CategorieDepense {
 }
 
 model Depense {
-  id               String           @id @default(uuid())
-  entrepriseId     String
-  userId           String
-  montant          Decimal          @db.Decimal(12, 2)
-  devise           String           @default("MAD")
-  categorie        CategorieDepense
-  fournisseur      String?
-  description      String?
-  date             DateTime
-  receiptKey       String?
-  receiptUrl       String?
-  receiptSizeBytes Int?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  entreprise       Entreprise       @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  id                      String           @id @default(uuid())
+  entrepriseId            String
+  userId                  String
+  montant                 Decimal          @db.Decimal(12, 2)
+  devise                  String           @default("MAD")
+  categorie               CategorieDepense
+  categoriePersonnalisee  String?
+  fournisseur             String?
+  description             String?
+  date                    DateTime
+  receiptKey              String?
+  receiptUrl              String?
+  receiptSizeBytes        Int?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  entreprise              Entreprise       @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
 
   @@index([entrepriseId])
   @@map("depenses")
