@@ -946,6 +946,9 @@ export default function PublicFacturePage() {
                   })),
                   totalTTC: n(facture.totalTTC),
                   montantPaye: n(facture.montantPaye),
+                  rasActif: facture.rasActif ?? false,
+                  rasTaux: n(facture.rasTaux ?? 30),
+                  rasMontant: effectiveRasMontant,
                   generatedAt: new Date().toLocaleDateString('fr-MA', { day: '2-digit', month: 'long', year: 'numeric' }),
                 }}
                 label="Télécharger le reçu (PDF)"

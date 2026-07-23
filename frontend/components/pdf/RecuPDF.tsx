@@ -38,6 +38,9 @@ export interface RecuPDFProps {
   paiements: { id?: string; montant: number | string; methode: string; datePaiement: string; reference?: string | null }[]
   totalTTC: number | string
   montantPaye: number | string
+  rasActif?: boolean
+  rasTaux?: number | string
+  rasMontant?: number | string
   generatedAt: string
   devise?: string
 }
@@ -58,14 +61,22 @@ function fmtDate(d: string) {
   return new Date(d).toLocaleDateString('fr-MA', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+const ORANGE = '#ea580c'
+
 export default function RecuPDF({
-  numeroFacture, client, entreprise, paiements, totalTTC, montantPaye, generatedAt, devise = 'MAD',
+  numeroFacture, client, entreprise, paiements, totalTTC, montantPaye,
+  rasActif = false, rasTaux = 30, rasMontant = 0,
+  generatedAt, devise = 'MAD',
 }: RecuPDFProps) {
   const fmt = makeFmt(devise)
   const brand     = entreprise.couleurPrimaire || '#16a34a'
   const total     = n(totalTTC)
   const cumul     = n(montantPaye)
-  const restant   = Math.max(0, total - cumul)
+  const effRasMontant = rasActif
+    ? (n(rasMontant) > 0 ? n(rasMontant) : Math.round(total * n(rasTaux) * 100) / 10000)
+    : 0
+  const netAPayer   = rasActif ? total - effRasMontant : total
+  const restant     = Math.max(0, netAPayer - cumul)
   const isFullyPaid = restant < 0.01
 
   // Single payment (we always receive one payment per receipt)
@@ -357,6 +368,27 @@ export default function RecuPDF({
             <Text style={styles.tdAmt}>{fmt(p.montant)}</Text>
             <Text style={styles.tdDate}>{fmtDate(p.datePaiement)}</Text>
           </View>
+        )}
+
+        {/* ── RAS breakdown (when applicable) ── */}
+        {rasActif && (
+          <>
+            <View style={[styles.summaryRow, { backgroundColor: '#fff7ed' }]}>
+              <Text style={[styles.summaryLabel, { flex: 1, color: ORANGE }]}>Total TTC facture</Text>
+              <Text style={[styles.summaryAmt, { color: ORANGE }]}>{fmt(total)}</Text>
+              <Text style={styles.summaryPlaceholder}></Text>
+            </View>
+            <View style={[styles.summaryRow, { backgroundColor: '#fff7ed' }]}>
+              <Text style={[styles.summaryLabel, { flex: 1, color: ORANGE }]}>Retenue à la source (RAS {n(rasTaux)}%)</Text>
+              <Text style={[styles.summaryAmt, { color: ORANGE }]}>−{fmt(effRasMontant)}</Text>
+              <Text style={styles.summaryPlaceholder}></Text>
+            </View>
+            <View style={[styles.summaryRow, { backgroundColor: '#ffedd5', borderTopWidth: 1, borderTopColor: '#fed7aa' }]}>
+              <Text style={[styles.summaryLabel, { flex: 1, fontFamily: 'Helvetica-Bold', color: '#9a3412' }]}>Net à payer (hors RAS)</Text>
+              <Text style={[styles.summaryAmt, { color: '#9a3412' }]}>{fmt(netAPayer)}</Text>
+              <Text style={styles.summaryPlaceholder}></Text>
+            </View>
+          </>
         )}
 
         {/* ── SUMMARY: cumul payé ── */}
