@@ -5114,4 +5114,776 @@ export const ARTICLES: Record<string, ArticleData> = {
       },
     },
   },
+
+  'calcul-tva-maroc': {
+    slug: 'calcul-tva-maroc',
+    image: '/blog/calcul-tva-maroc.webp',
+    readingTime: 9,
+    content: {
+
+      fr: {
+        title: 'TVA au Maroc : taux, calcul et déclaration — guide complet 2025',
+        description: 'Tout savoir sur la TVA au Maroc : taux de 7%, 10%, 14% et 20%, comment calculer la TVA, bien facturer et déclarer en ligne via Simpl-TVA. Guide complet pour PME, freelancers et auto-entrepreneurs.',
+        intro: [
+          {
+            type: 'p',
+            text: 'La TVA — Taxe sur la Valeur Ajoutée — est l\'un des impôts les plus collectés au Maroc, et pourtant l\'un des plus mal compris. Quel taux appliquer sur votre facture ? Comment calculer le montant HT à partir d\'un prix TTC ? Qu\'est-ce que la TVA déductible, et comment la récupérer ? Quand et comment faire sa déclaration ?',
+          },
+          {
+            type: 'p',
+            text: 'Que vous soyez gérant de SARL, freelance assujetti ou comptable d\'une PME marocaine, ce guide couvre tout ce qu\'il faut savoir sur la TVA au Maroc en 2025 : mécanisme, taux, formules de calcul, facturation conforme, TVA déductible, et procédure de déclaration via le portail DGI.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Qu\'est-ce que la TVA au Maroc ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La Taxe sur la Valeur Ajoutée (TVA) est un impôt indirect régi par la loi n° 30-85. Elle frappe la consommation de biens et services. Contrairement à l\'IR ou à l\'IS, la TVA n\'est pas un impôt sur vos bénéfices — c\'est un impôt que vous collectez pour le compte de l\'État auprès de vos clients, puis reversez à la DGI après déduction de la TVA que vous avez payée sur vos propres achats.',
+              },
+              {
+                type: 'p',
+                text: 'En pratique, la TVA fonctionne comme une chaîne : chaque opérateur collecte la TVA sur ses ventes, déduit la TVA sur ses achats, et verse la différence à l\'État. Au final, c\'est toujours le consommateur final qui supporte la charge économique de la taxe.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'TVA ≠ impôt sur votre bénéfice',
+                body: 'La TVA que vous facturez à vos clients ne vous appartient pas — c\'est de l\'argent que vous détenez temporairement pour le compte de l\'État. Votre revenu réel, c\'est le montant hors taxes (HT), pas le TTC.',
+              },
+            ],
+          },
+          {
+            h2: 'Les taux de TVA en vigueur au Maroc en 2025',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le Maroc applique plusieurs taux de TVA selon la nature du bien ou du service :',
+              },
+              {
+                type: 'table',
+                headers: ['Taux', 'Domaine d\'application'],
+                rows: [
+                  ['20%', 'Taux normal — tous les biens et services sans taux réduit ni exonération'],
+                  ['14%', 'Énergie électrique, eau, transport de voyageurs et de marchandises, téléphonie mobile'],
+                  ['10%', 'Opérations bancaires et de crédit, restauration, hôtellerie, leasing'],
+                  ['7%', 'Médicaments, produits alimentaires de base (huile, sucre, farine...), eau en réseau'],
+                  ['0% (exonéré)', 'Exportations, certains produits agricoles, livraisons en zones franches'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Le 20% est le taux par défaut',
+                body: 'En cas de doute sur le taux applicable, appliquez 20%. Les taux réduits (7%, 10%, 14%) ne s\'appliquent qu\'aux opérations expressément listées dans le Code Général des Impôts. Consultez un expert-comptable si votre activité couvre plusieurs taux.',
+              },
+            ],
+          },
+          {
+            h2: 'Qui est assujetti à la TVA au Maroc ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'assujettissement dépend du statut juridique et du chiffre d\'affaires :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Sociétés (SARL, SA, SAS) : assujetties de plein droit, quel que soit leur CA',
+                  'Personnes physiques professionnelles (patentées) : assujetties si CA > 500 000 MAD, ou sur option',
+                  'Professions libérales (médecins, avocats, architectes...) : assujetties de plein droit',
+                  'Importateurs : assujettis sur les marchandises importées',
+                  'Auto-entrepreneurs : exonérés de TVA — ils ne la facturent pas et ne la récupèrent pas',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Auto-entrepreneur et TVA : exonération totale',
+                body: 'Si vous êtes auto-entrepreneur, vous ne devez pas appliquer la TVA sur vos factures. Mentionnez : "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". Appliquer une TVA en tant qu\'auto-entrepreneur est une erreur qui peut poser problème lors d\'un contrôle fiscal.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment calculer la TVA au Maroc : formules et exemples pratiques',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Deux formules couvrent 95% des cas au quotidien :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'De HT à TTC : TTC = HT × (1 + taux TVA)',
+                  'De TTC à HT : HT = TTC ÷ (1 + taux TVA)',
+                  'Montant TVA seul : TVA = HT × taux TVA',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Base HT', 'Taux TVA', 'Montant TVA', 'Total TTC'],
+                rows: [
+                  ['500 MAD', '20%', '100 MAD', '600 MAD'],
+                  ['1 000 MAD', '20%', '200 MAD', '1 200 MAD'],
+                  ['5 000 MAD', '20%', '1 000 MAD', '6 000 MAD'],
+                  ['10 000 MAD', '20%', '2 000 MAD', '12 000 MAD'],
+                  ['1 000 MAD', '14%', '140 MAD', '1 140 MAD'],
+                  ['1 000 MAD', '10%', '100 MAD', '1 100 MAD'],
+                  ['1 000 MAD', '7%', '70 MAD', '1 070 MAD'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Exemple : retrouver le HT à partir d\'un TTC',
+                body: 'Vous recevez une facture de 14 400 MAD TTC au taux de 20%. HT = 14 400 ÷ 1,20 = 12 000 MAD. TVA déductible = 2 400 MAD. Attention : ne divisez pas par 0,20 — c\'est une erreur fréquente.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment facturer correctement avec la TVA',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Une facture conforme avec TVA doit obligatoirement mentionner les éléments suivants, sous peine de rejet de la TVA déductible par votre client :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Votre numéro ICE et votre IF (Identifiant Fiscal)',
+                  'Le numéro ICE de votre client (pour les transactions B2B)',
+                  'La désignation précise du bien ou service',
+                  'Le prix unitaire hors taxe (HT)',
+                  'Le taux de TVA applicable (7%, 10%, 14% ou 20%)',
+                  'Le montant de TVA calculé',
+                  'Le total toutes taxes comprises (TTC)',
+                  'Si plusieurs taux sur une même facture, détaillez chaque ligne séparément',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Facture sans TVA correcte = TVA non récupérable pour votre client',
+                body: 'Si votre facture ne mentionne pas clairement le taux et le montant de TVA, votre client ne pourra pas la déduire sur sa déclaration. C\'est une source de friction fréquente avec les PME et grands comptes.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Factures avec TVA automatique sur Sayerli',
+                body: 'Sayerli calcule automatiquement la TVA sur chaque ligne de votre facture. Choisissez votre taux (7%, 10%, 14%, 20% ou personnalisé) et le HT/TTC sont calculés en temps réel. Vos factures incluent ICE, IF, montant TVA et total TTC — conformes dès la première émission.',
+                href: '/fonctionnalites',
+                cta: 'Voir les fonctionnalités',
+              },
+            ],
+          },
+          {
+            h2: 'TVA collectée vs TVA déductible : le mécanisme clé',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le principe fondamental de la TVA repose sur la différence entre deux flux :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'TVA collectée : la TVA que vous facturez à vos clients sur vos ventes ou prestations',
+                  'TVA déductible : la TVA que vous avez payée sur vos achats et charges professionnelles',
+                  'TVA nette à payer = TVA collectée − TVA déductible',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Exemple : en juin vous avez facturé 50 000 MAD HT à 20% → 10 000 MAD de TVA collectée. Vous avez payé 20 000 MAD HT d\'achats professionnels avec 4 000 MAD de TVA. TVA nette à payer : 10 000 − 4 000 = 6 000 MAD.',
+              },
+              {
+                type: 'table',
+                headers: ['Opération', 'Base HT', 'TVA (20%)', 'Sens'],
+                rows: [
+                  ['Ventes clients (juin)', '50 000 MAD', '10 000 MAD', 'Collectée → à reverser'],
+                  ['Achats fournisseurs (juin)', '20 000 MAD', '4 000 MAD', 'Déductible → à récupérer'],
+                  ['TVA nette à payer', '—', '6 000 MAD', 'Versé à la DGI'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Crédit de TVA : quand l\'État vous doit de l\'argent',
+                body: 'Si votre TVA déductible dépasse votre TVA collectée (ex : investissement lourd), vous êtes en crédit de TVA. Ce crédit est reportable sur les déclarations suivantes ou peut faire l\'objet d\'une demande de remboursement à la DGI.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment déclarer la TVA au Maroc via Simpl-TVA',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La déclaration de TVA est obligatoirement télédéclarée via le portail DGI. Voici les étapes :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Connectez-vous sur simpl.tax.gov.ma avec vos identifiants fiscaux',
+                  'Sélectionnez l\'espace "Simpl-TVA" depuis votre tableau de bord',
+                  'Choisissez la période concernée (mois ou trimestre selon votre régime)',
+                  'Renseignez le CA imposable HT et la TVA collectée par taux',
+                  'Renseignez les montants de TVA déductible justifiés par des factures fournisseurs conformes',
+                  'Le système calcule la TVA nette à payer ou le crédit reportable',
+                  'Procédez au paiement en ligne ou en agence avant la date limite',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Délais et pénalités',
+                body: 'Dépôt avant le 20 du mois suivant la période. Retard : majoration de 10% + 5% par mois supplémentaire. La régularisation spontanée avant tout contrôle peut atténuer les pénalités.',
+              },
+            ],
+          },
+          {
+            h2: 'Régime mensuel vs régime trimestriel',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Régime', 'CA annuel', 'Périodicité', 'Date limite'],
+                rows: [
+                  ['Mensuel', 'CA > 1 000 000 MAD', 'Chaque mois', 'Avant le 20 du mois suivant'],
+                  ['Trimestriel', 'CA ≤ 1 000 000 MAD', 'Chaque trimestre', 'Avant le 20 du mois suivant le trimestre'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Les trimestres civils se terminent le 31 mars, 30 juin, 30 septembre et 31 décembre. La déclaration du T1 est à déposer avant le 20 avril, T2 avant le 20 juillet, T3 avant le 20 octobre, T4 avant le 20 janvier.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Option pour le régime mensuel',
+                body: 'Même si votre CA ne dépasse pas 1 000 000 MAD, vous pouvez opter volontairement pour le régime mensuel — avantageux si vous avez régulièrement des crédits de TVA importants à récupérer plus vite.',
+              },
+            ],
+          },
+          {
+            h2: 'Les 5 erreurs les plus fréquentes à éviter',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Appliquer le mauvais taux : facturer à 20% un service à 10% génère un surcoût client ou un risque fiscal',
+                  'Confondre HT et TTC dans votre CA déclaré : votre chiffre d\'affaires est le HT, pas le TTC encaissé',
+                  'Oublier de déduire la TVA sur vos achats : vous payez plus que nécessaire',
+                  'Accepter des factures fournisseurs incomplètes : sans ICE, taux ni montant TVA, elles ne sont pas déductibles',
+                  'Déclarer en retard : 10% de majoration dès le premier jour — mettez un rappel dans votre agenda',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Gérez votre TVA automatiquement avec Sayerli',
+                body: 'Sayerli génère votre Déclaration TVA automatiquement à partir de vos factures et dépenses — TVA collectée, TVA déductible, TVA nette à payer. Exportez un PDF prêt à soumettre à votre comptable ou à la DGI. Fini les calculs manuels et les oublis de délais.',
+                href: '/register',
+                cta: 'Essayer Sayerli gratuitement',
+              },
+            ],
+          },
+        ],
+      },
+
+      en: {
+        title: 'VAT in Morocco: Rates, Calculation and Declaration — Complete Guide 2025',
+        description: 'Everything about VAT (TVA) in Morocco: 7%, 10%, 14% and 20% rates, how to calculate VAT, invoice correctly and file your declaration via Simpl-TVA. Complete guide for SMEs, freelancers and businesses.',
+        intro: [
+          {
+            type: 'p',
+            text: 'VAT — Value Added Tax (known as TVA in Morocco) — is one of the most collected taxes in the country, yet one of the most misunderstood. Which rate applies to your invoice? How do you calculate the pre-tax amount from a TTC price? What is deductible VAT, and how do you recover it? When and how do you file your declaration?',
+          },
+          {
+            type: 'p',
+            text: 'Whether you are a company manager, a self-employed professional subject to VAT, or an SME accountant, this guide covers everything you need to know about VAT in Morocco in 2025: mechanism, rates, calculation formulas, compliant invoicing, deductible VAT, and the filing process via the DGI portal.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'What is VAT in Morocco?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Value Added Tax (TVA) is an indirect tax governed by Law No. 30-85. It taxes the consumption of goods and services. Unlike income tax (IR) or corporate tax (IS), VAT is not a tax on profits — it is a tax you collect on behalf of the State from your clients, then remit to the DGI after deducting the VAT you paid on your own purchases.',
+              },
+              {
+                type: 'p',
+                text: 'In practice, VAT works as a chain: each economic operator collects VAT on sales, deducts VAT on purchases, and pays the difference to the State. The end consumer always bears the economic burden of the tax.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'VAT ≠ tax on your profit',
+                body: 'The VAT you charge clients does not belong to you — it is money you temporarily hold on behalf of the State. Your actual income is the pre-tax amount (HT), not the total including tax (TTC).',
+              },
+            ],
+          },
+          {
+            h2: 'VAT Rates in Morocco in 2025',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Morocco applies several VAT rates depending on the nature of the goods or service:',
+              },
+              {
+                type: 'table',
+                headers: ['Rate', 'Scope of Application'],
+                rows: [
+                  ['20%', 'Standard rate — all goods and services not benefiting from a reduced rate or exemption'],
+                  ['14%', 'Electricity, water, passenger and freight transport, mobile phone services'],
+                  ['10%', 'Banking and credit operations, restaurants, hotels, leasing'],
+                  ['7%', 'Medicines, basic food products (oil, sugar, flour...), network-delivered water'],
+                  ['0% (exempt)', 'Exports, certain agricultural products, deliveries to free zones'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: '20% is the default rate',
+                body: 'When in doubt about the applicable rate, apply 20%. Reduced rates only apply to operations expressly listed in the General Tax Code. Consult an accountant if your activity spans multiple rates.',
+              },
+            ],
+          },
+          {
+            h2: 'Who is Subject to VAT in Morocco?',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Companies (SARL, SA, SAS): subject to VAT by right, regardless of turnover',
+                  'Self-employed professionals: subject to VAT if annual turnover exceeds 500,000 MAD, or by voluntary option',
+                  'Liberal professions (doctors, lawyers, architects...): subject to VAT by right',
+                  'Importers: subject to VAT on imported goods',
+                  'Auto-entrepreneurs (micro-business): exempt from VAT — they do not charge or recover it',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Auto-entrepreneur and VAT: full exemption',
+                body: 'If you are a registered auto-entrepreneur, do not apply VAT on your invoices. Write: "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". Charging VAT as an auto-entrepreneur is an error that can cause issues during a tax audit.',
+              },
+            ],
+          },
+          {
+            h2: 'How to Calculate VAT in Morocco: Formulas and Examples',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Pre-tax to total: TTC = HT × (1 + VAT rate)',
+                  'Total to pre-tax: HT = TTC ÷ (1 + VAT rate)',
+                  'VAT amount only: VAT = HT × VAT rate',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Pre-tax (HT)', 'VAT Rate', 'VAT Amount', 'Total (TTC)'],
+                rows: [
+                  ['500 MAD', '20%', '100 MAD', '600 MAD'],
+                  ['1,000 MAD', '20%', '200 MAD', '1,200 MAD'],
+                  ['5,000 MAD', '20%', '1,000 MAD', '6,000 MAD'],
+                  ['10,000 MAD', '20%', '2,000 MAD', '12,000 MAD'],
+                  ['1,000 MAD', '14%', '140 MAD', '1,140 MAD'],
+                  ['1,000 MAD', '10%', '100 MAD', '1,100 MAD'],
+                  ['1,000 MAD', '7%', '70 MAD', '1,070 MAD'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Example: finding pre-tax from a TTC amount',
+                body: 'You receive a supplier invoice for 14,400 MAD TTC at 20%. HT = 14,400 ÷ 1.20 = 12,000 MAD. Deductible VAT = 2,400 MAD. Do not divide by 0.20 — that is a common mistake.',
+              },
+            ],
+          },
+          {
+            h2: 'How to Invoice Correctly with VAT',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Your ICE number and IF (Tax Identifier)',
+                  'Your client\'s ICE number (for B2B transactions)',
+                  'Precise description of the goods or service',
+                  'Unit price excluding tax (HT)',
+                  'Applicable VAT rate (7%, 10%, 14% or 20%)',
+                  'Calculated VAT amount',
+                  'Total including tax (TTC)',
+                  'If multiple rates on one invoice, detail each line separately',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Invoice without correct VAT = non-recoverable VAT for your client',
+                body: 'If your invoice does not clearly state the VAT rate and amount, your client cannot deduct it on their declaration. This is a frequent source of friction with SME and large-account clients.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Automatic VAT invoices on Sayerli',
+                body: 'Sayerli automatically calculates VAT on each invoice line. Select your rate (7%, 10%, 14%, 20% or custom) and HT/TTC are computed in real time. Your invoices include ICE, IF, VAT amount and TTC total — compliant from day one.',
+                href: '/fonctionnalites',
+                cta: 'See features',
+              },
+            ],
+          },
+          {
+            h2: 'Collected VAT vs Deductible VAT: the Key Mechanism',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Collected VAT: the VAT you charge clients on your sales or services',
+                  'Deductible VAT: the VAT you paid on professional purchases (suppliers, equipment, software...)',
+                  'Net VAT payable = Collected VAT − Deductible VAT',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Example: in June you invoiced 50,000 MAD HT at 20% = 10,000 MAD collected VAT. You paid 20,000 MAD HT in professional purchases with 4,000 MAD VAT. Net VAT payable: 10,000 − 4,000 = 6,000 MAD.',
+              },
+              {
+                type: 'table',
+                headers: ['Operation', 'Pre-tax (HT)', 'VAT (20%)', 'Direction'],
+                rows: [
+                  ['Client sales (June)', '50,000 MAD', '10,000 MAD', 'Collected → to remit'],
+                  ['Supplier purchases (June)', '20,000 MAD', '4,000 MAD', 'Deductible → to recover'],
+                  ['Net VAT payable', '—', '6,000 MAD', 'Paid to DGI'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'VAT credit: when the State owes you money',
+                body: 'If deductible VAT exceeds collected VAT (e.g. a major equipment investment), you are in a VAT credit position. This credit can be carried forward or you can apply for a refund from the DGI.',
+              },
+            ],
+          },
+          {
+            h2: 'How to File Your VAT Declaration via Simpl-TVA',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'Log in to simpl.tax.gov.ma with your tax credentials',
+                  'Select the "Simpl-TVA" section from your tax dashboard',
+                  'Choose the relevant period (month or quarter)',
+                  'Enter your taxable turnover (HT) and collected VAT broken down by rate',
+                  'Enter deductible VAT amounts backed by compliant supplier invoices',
+                  'The system calculates net VAT payable or carryover credit automatically',
+                  'Pay online or at an agency before the deadline',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Filing deadlines and penalties',
+                body: 'File before the 20th of the month following the period. Late filing: 10% surcharge + 5% per additional month. Spontaneous regularisation before any tax audit can reduce penalties.',
+              },
+            ],
+          },
+          {
+            h2: 'Monthly vs Quarterly Regime',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Regime', 'Annual Turnover', 'Frequency', 'Deadline'],
+                rows: [
+                  ['Monthly', 'Turnover > 1,000,000 MAD', 'Each month', 'Before the 20th of the following month'],
+                  ['Quarterly', 'Turnover ≤ 1,000,000 MAD', 'Each quarter', 'Before the 20th of the month after the quarter'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Q1 declaration is due before April 20, Q2 before July 20, Q3 before October 20, Q4 before January 20.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Option for monthly regime',
+                body: 'Even below 1,000,000 MAD turnover, you can voluntarily opt for the monthly regime — useful if you regularly have significant VAT credits to recover faster.',
+              },
+            ],
+          },
+          {
+            h2: 'The 5 Most Common Mistakes to Avoid',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Wrong rate: charging 20% on a 10% service creates a client overcharge or tax risk',
+                  'Confusing HT and TTC in your declared turnover: revenue is the pre-tax (HT) amount, not the TTC collected',
+                  'Not deducting VAT on purchases: you overpay the State unnecessarily',
+                  'Accepting incomplete supplier invoices: without ICE, rate or VAT amount, they are not tax-deductible',
+                  'Filing late: 10% surcharge from day one — set a calendar reminder',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Manage your VAT effortlessly with Sayerli',
+                body: 'Sayerli automatically generates your VAT Declaration from your invoices and expenses — collected VAT, deductible VAT, net VAT payable. Export a PDF ready to submit to your accountant or the DGI. No manual calculations, no missed deadlines.',
+                href: '/register',
+                cta: 'Try Sayerli for free',
+              },
+            ],
+          },
+        ],
+      },
+
+      ar: {
+        title: 'الضريبة على القيمة المضافة في المغرب: المعدلات والحساب والتصريح — دليل شامل 2025',
+        description: 'كل ما تحتاج معرفته عن TVA في المغرب: معدلات 7% و10% و14% و20%، وكيفية حساب الضريبة، والفوترة الصحيحة، والتصريح عبر Simpl-TVA. دليل شامل للمقاولات الصغيرة والمتوسطة والمقاولين الذاتيين.',
+        intro: [
+          {
+            type: 'p',
+            text: 'الضريبة على القيمة المضافة (TVA) من أكثر الضرائب تحصيلاً في المغرب، ومع ذلك تبقى الأكثر سوء فهماً. أي معدل تطبّقه على فاتورتك؟ كيف تحسب المبلغ خارج الضريبة (HT) من سعر شامل (TTC)؟ ما هي TVA القابلة للخصم وكيف تستردها؟ متى وكيف تقدّم تصريحك؟',
+          },
+          {
+            type: 'p',
+            text: 'سواء كنت مسيّر شركة ذات مسؤولية محدودة أو مهنياً مستقلاً خاضعاً لـ TVA أو محاسب مقاولة، يغطي هذا الدليل كل ما تحتاج معرفته عن TVA في المغرب 2025: الآلية، المعدلات، صيغ الحساب، الفوترة المطابقة، TVA القابلة للخصم، وإجراءات التصريح عبر بوابة المديرية العامة للضرائب.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'ما هي الضريبة على القيمة المضافة في المغرب؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'TVA ضريبة غير مباشرة تحكمها القانون رقم 30-85. تفرض على استهلاك السلع والخدمات. على خلاف الضريبة على الدخل (IR) أو الضريبة على الشركات (IS)، فإن TVA ليست ضريبة على الأرباح — بل تحصّلها من عملائك نيابةً عن الدولة، ثم تؤدّيها للمديرية العامة للضرائب بعد خصم TVA التي دفعتها على مشترياتك.',
+              },
+              {
+                type: 'p',
+                text: 'من الناحية العملية، TVA تعمل كسلسلة: كل متعامل يحصّل TVA على مبيعاته، يخصم TVA على مشترياته، ويسلّم الفارق للدولة. المستهلك النهائي هو دائماً من يتحمّل العبء الاقتصادي للضريبة.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'TVA ≠ ضريبة على ربحك',
+                body: 'الـ TVA التي تفاتر بها عملاءك لا تخصّك — إنها مبلغ تحتفظ به مؤقتاً لصالح الدولة. دخلك الحقيقي هو المبلغ خارج الضريبة (HT)، وليس الإجمالي الشامل (TTC).',
+              },
+            ],
+          },
+          {
+            h2: 'معدلات TVA السارية في المغرب 2025',
+            blocks: [
+              {
+                type: 'p',
+                text: 'يُطبَّق في المغرب عدة معدلات لـ TVA حسب طبيعة السلعة أو الخدمة:',
+              },
+              {
+                type: 'table',
+                headers: ['المعدل', 'مجال التطبيق'],
+                rows: [
+                  ['20%', 'المعدل العادي — جميع السلع والخدمات غير المستفيدة من معدل مخفَّض أو إعفاء'],
+                  ['14%', 'الطاقة الكهربائية، الماء، نقل المسافرين والبضائع، خدمات الهاتف المحمول'],
+                  ['10%', 'العمليات البنكية والائتمانية، المطاعم، الفنادق، الائتمان الإيجاري'],
+                  ['7%', 'الأدوية، المواد الغذائية الأساسية (الزيت، السكر، الدقيق...)، الماء الموزَّع عبر الشبكات'],
+                  ['0% (معفاة)', 'الصادرات، بعض المنتجات الفلاحية، التسليمات للمناطق الحرة'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: '20% هو المعدل الافتراضي',
+                body: 'عند الشك في المعدل المطبَّق على نشاطك، طبِّق 20%. المعدلات المخفَّضة لا تنطبق إلا على العمليات المذكورة صراحةً في المدونة العامة للضرائب. استشر مستشاراً جبائياً إذا تداخل نشاطك مع عدة معدلات.',
+              },
+            ],
+          },
+          {
+            h2: 'من هو خاضع لـ TVA في المغرب؟',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'الشركات (SARL، SA، SAS): خاضعة بقوة القانون بصرف النظر عن رقم الأعمال',
+                  'الأشخاص الطبيعيون المهنيون: خاضعون إذا تجاوز رقم أعمالهم 500,000 درهم أو بالاختيار',
+                  'أصحاب المهن الحرة (أطباء، محامون، مهندسون معماريون...): خاضعون بقوة القانون',
+                  'المستوردون: خاضعون على البضائع المستوردة',
+                  'المقاولون الذاتيون: معفَوْن من TVA — لا يفاترون بها ولا يخصمونها',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'المقاول الذاتي وTVA: إعفاء كامل',
+                body: 'إذا كنت مسجَّلاً كمقاول ذاتي، لا تضِف TVA على فواتيرك. أدرج: "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". تطبيق TVA بوصفك مقاولاً ذاتياً خطأ قد يُسبِّب مشكلات عند مراقبة جبائية.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية حساب TVA في المغرب: الصيغ والأمثلة',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'من HT إلى TTC: TTC = HT × (1 + معدل TVA)',
+                  'من TTC إلى HT: HT = TTC ÷ (1 + معدل TVA)',
+                  'مبلغ TVA وحده: TVA = HT × معدل TVA',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['خارج الضريبة (HT)', 'معدل TVA', 'مبلغ TVA', 'الإجمالي الشامل (TTC)'],
+                rows: [
+                  ['500 درهم', '20%', '100 درهم', '600 درهم'],
+                  ['1,000 درهم', '20%', '200 درهم', '1,200 درهم'],
+                  ['5,000 درهم', '20%', '1,000 درهم', '6,000 درهم'],
+                  ['10,000 درهم', '20%', '2,000 درهم', '12,000 درهم'],
+                  ['1,000 درهم', '14%', '140 درهم', '1,140 درهم'],
+                  ['1,000 درهم', '10%', '100 درهم', '1,100 درهم'],
+                  ['1,000 درهم', '7%', '70 درهم', '1,070 درهم'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'مثال عملي: إيجاد HT انطلاقاً من TTC',
+                body: 'تلقيت فاتورة مورِّد بمبلغ 14,400 درهم TTC بمعدل 20%. HT = 14,400 ÷ 1.20 = 12,000 درهم. TVA القابلة للخصم = 2,400 درهم. لا تقسم على 0.20 — هذا خطأ شائع.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية الفوترة الصحيحة مع TVA',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'رقم ICE ورقم IF (المعرِّف الجبائي) الخاصَّين بك',
+                  'رقم ICE الخاص بعميلك (للمعاملات B2B)',
+                  'وصف دقيق للسلعة أو الخدمة',
+                  'سعر الوحدة خارج الضريبة (HT)',
+                  'معدل TVA المطبَّق (7%، 10%، 14%، أو 20%)',
+                  'مبلغ TVA المحسوب',
+                  'الإجمالي شامل الضريبة (TTC)',
+                  'في حال عدة معدلات على نفس الفاتورة، فصِّل كل سطر على حدة',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'فاتورة بدون TVA صحيحة = ضريبة غير قابلة للخصم',
+                body: 'إذا لم تُبيَّن في فاتورتك المعدل ومبلغ TVA بشكل صريح، لن يستطيع عميلك خصم هذه الضريبة في تصريحه. هذا مصدر احتكاك متكرر مع العملاء من المقاولات.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'فواتير مع TVA تلقائية على Sayerli',
+                body: 'يحسب Sayerli تلقائياً TVA على كل سطر من فاتورتك. اختر معدلك (7%، 10%، 14%، 20% أو مخصَّص) ويتم حساب HT وTTC فورياً. تتضمن فواتيرك ICE وIF ومبلغ TVA والإجمالي TTC — مطابقة منذ أول إصدار.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف المزايا',
+              },
+            ],
+          },
+          {
+            h2: 'TVA المحصَّلة مقابل TVA القابلة للخصم',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'TVA المحصَّلة: الضريبة التي تفاتر بها عملاءك على مبيعاتك أو خدماتك',
+                  'TVA القابلة للخصم: الضريبة التي دفعتها على مشترياتك وأعبائك المهنية',
+                  'TVA الصافية المستحقة = TVA المحصَّلة − TVA القابلة للخصم',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'مثال: في يونيو فاتَرت 50,000 درهم HT بمعدل 20% → 10,000 درهم TVA محصَّلة. دفعت 20,000 درهم HT مشتريات مهنية مع 4,000 درهم TVA. TVA الصافية: 10,000 − 4,000 = 6,000 درهم.',
+              },
+              {
+                type: 'table',
+                headers: ['العملية', 'خارج الضريبة (HT)', 'TVA (20%)', 'الاتجاه'],
+                rows: [
+                  ['مبيعات العملاء (يونيو)', '50,000 درهم', '10,000 درهم', 'محصَّلة → للتحويل للدولة'],
+                  ['مشتريات الموردين (يونيو)', '20,000 درهم', '4,000 درهم', 'قابلة للخصم → للاسترداد'],
+                  ['TVA الصافية المستحقة', '—', '6,000 درهم', 'تُؤدَّى للمديرية العامة للضرائب'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'رصيد TVA: حين تكون الدولة مدينة لك',
+                body: 'إذا تجاوزت TVA القابلة للخصم TVA المحصَّلة (مثل استثمار ضخم في معدات)، تكون في وضعية رصيد TVA قابل للترحيل أو طلب استرداده من المديرية العامة للضرائب.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية تقديم تصريح TVA عبر Simpl-TVA',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'سجِّل الدخول على simpl.tax.gov.ma بمعرِّفاتك الجبائية',
+                  'اختر قسم "Simpl-TVA" من لوحة القيادة الجبائية',
+                  'حدِّد الفترة المعنية (الشهر أو الربع حسب نظامك)',
+                  'أدخل رقم أعمالك الخاضع للضريبة (HT) وTVA المحصَّلة حسب المعدل',
+                  'أدخل مبالغ TVA القابلة للخصم المُثبَتة بفواتير موردين مطابقة',
+                  'يحسب النظام تلقائياً TVA الصافية المستحقة أو الرصيد المُرحَّل',
+                  'أؤدِّ المبلغ إلكترونياً أو في الوكالة قبل الموعد النهائي',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'آجال التصريح والغرامات',
+                body: 'يجب إيداع التصريح قبل الـ 20 من الشهر الموالي للفترة. أي تأخير: زيادة 10% + 5% عن كل شهر إضافي. التسوية التلقائية قبل أي مراقبة جبائية قد تُخفِّف من الغرامات.',
+              },
+            ],
+          },
+          {
+            h2: 'النظام الشهري مقابل النظام الربعي',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['النظام', 'رقم الأعمال السنوي', 'الدورية', 'الموعد النهائي'],
+                rows: [
+                  ['الشهري', 'رقم الأعمال > 1,000,000 درهم', 'كل شهر', 'قبل الـ 20 من الشهر الموالي'],
+                  ['الربعي', 'رقم الأعمال ≤ 1,000,000 درهم', 'كل ربع سنة', 'قبل الـ 20 من الشهر الموالي للربع'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'تصريح الربع الأول يُودَع قبل 20 أبريل، الربع الثاني قبل 20 يوليوز، الربع الثالث قبل 20 أكتوبر، الربع الرابع قبل 20 يناير.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الاختيار للنظام الشهري',
+                body: 'حتى لو لم يتجاوز رقم أعمالك 1,000,000 درهم، يمكنك الاختيار الطوعي للنظام الشهري — مفيد إذا كانت لديك أرصدة TVA متكررة تريد استردادها بسرعة.',
+              },
+            ],
+          },
+          {
+            h2: 'أبرز 5 أخطاء شائعة يجب تجنبها',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'تطبيق المعدل الخاطئ: فاتُرة خدمة بـ 20% بينما تستحق 10% يُولِّد تحميلاً زائداً أو خطراً جبائياً',
+                  'الخلط بين HT وTTC في رقم أعمالك: رقم الأعمال المُصرَّح هو HT لا TTC المحصَّل',
+                  'إهمال خصم TVA على المشتريات: تدفع للدولة أكثر من اللازم',
+                  'قبول فواتير موردين ناقصة: بدون ICE أو معدل أو مبلغ TVA لا تُخصَم جبائياً',
+                  'التأخر في التصريح: زيادة 10% من اليوم الأول — ضع تذكيراً في مفكرتك',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'أدِّر TVA الخاصة بك بسهولة مع Sayerli',
+                body: 'يُولِّد Sayerli تلقائياً تصريح TVA انطلاقاً من فواتيرك ومصاريفك — TVA المحصَّلة، TVA القابلة للخصم، TVA الصافية المستحقة. صدِّر PDF جاهزاً للتقديم لمحاسبك أو للمديرية العامة للضرائب. لا حسابات يدوية، لا نسيان مواعيد.',
+                href: '/register',
+                cta: 'جرِّب Sayerli مجاناً',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
 }

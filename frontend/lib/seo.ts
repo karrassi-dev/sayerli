@@ -299,6 +299,29 @@ export const BLOG_POSTS: BlogPost[] = [
     image: '/blog/seuil-ca-auto-entrepreneur-maroc.webp',
     readingTime: 6,
   },
+  {
+    slug: 'calcul-tva-maroc',
+    title: 'TVA au Maroc : taux, calcul et déclaration — guide complet 2025',
+    description: 'Tout savoir sur la TVA au Maroc : taux de 7%, 10%, 14% et 20%, comment calculer la TVA, bien facturer et déclarer en ligne via Simpl-TVA. Guide complet pour PME, freelancers et auto-entrepreneurs.',
+    category: 'tva',
+    keywords: [
+      'calcul tva maroc',
+      'tva maroc',
+      'taux tva maroc',
+      'tva 20 maroc',
+      'tva 10 maroc',
+      'declaration tva maroc',
+      'simulateur tva maroc',
+      'tva facture maroc',
+      'tva deductible maroc',
+      'logiciel tva maroc',
+      'tva pme maroc',
+      'facture tva maroc',
+    ],
+    publishedAt: '2026-07-24',
+    image: '/blog/calcul-tva-maroc.webp',
+    readingTime: 9,
+  },
 ]
 
 export interface BlogPost {
