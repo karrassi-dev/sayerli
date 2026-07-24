@@ -7922,4 +7922,626 @@ export const ARTICLES: Record<string, ArticleData> = {
       },
     },
   },
+
+  'facture-electronique-maroc-dgi': {
+    slug: 'facture-electronique-maroc-dgi',
+    image: '/blog/facture-electronique-maroc-dgi.webp',
+    readingTime: 9,
+    content: {
+
+      fr: {
+        title: 'Facture électronique au Maroc : DGI, xHub et ce que les PME doivent savoir en 2025',
+        description: 'Tout comprendre sur la facture électronique au Maroc : le projet DGI, le rôle de xHub, les entreprises concernées, les obligations techniques et comment préparer votre PME dès maintenant.',
+        intro: [
+          {
+            type: 'p',
+            text: 'La facturation électronique obligatoire arrive au Maroc. Ce n\'est plus un projet lointain — la Direction Générale des Impôts (DGI) a engagé le chantier de dématérialisation des factures, avec xHub comme opérateur technique central. Pour les PME, freelancers et auto-entrepreneurs marocains, ce changement va transformer la façon de créer, d\'envoyer et d\'archiver les factures.',
+          },
+          {
+            type: 'p',
+            text: 'Dans ce guide, on explique clairement ce qu\'est la facture électronique au sens de la DGI, qui est concerné et quand, comment fonctionne le système xHub, quelles sont les obligations techniques, et surtout comment se préparer dès maintenant sans attendre la dernière minute.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Qu\'est-ce que la facture électronique au Maroc ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La facture électronique — ou e-facture — n\'est pas simplement un PDF envoyé par email. Au sens réglementaire marocain, c\'est une facture émise, transmise et archivée dans un format structuré et standardisé (XML ou JSON), qui passe par une plateforme agréée par la DGI avant d\'être validée et envoyée au client.',
+              },
+              {
+                type: 'p',
+                text: 'Concrètement, le processus change fondamentalement : au lieu d\'émettre votre facture et de l\'envoyer directement à votre client, vous devrez d\'abord la soumettre à la plateforme DGI pour validation. La facture reçoit un numéro unique et un QR code de vérification, puis est transmise au client. La DGI dispose ainsi d\'une visibilité en temps réel sur toutes les transactions commerciales.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Facture PDF ≠ facture électronique',
+                body: 'Un PDF envoyé par email n\'est pas une facture électronique au sens légal. Une vraie e-facture est un fichier de données structurées (XML/JSON) lisible par les systèmes informatiques, transmis via une plateforme agréée et horodaté par la DGI. La différence est fondamentale.',
+              },
+            ],
+          },
+          {
+            h2: 'xHub : qui est-il et quel est son rôle dans l\'e-facture ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'xHub est la société marocaine sélectionnée comme opérateur technique de la plateforme nationale de facturation électronique. Son rôle est de construire et d\'opérer l\'infrastructure qui relie les entreprises émettrices de factures à la DGI, et d\'assurer la validation, le routage et l\'archivage des e-factures.',
+              },
+              {
+                type: 'p',
+                text: 'Concrètement, xHub joue le rôle d\'un tiers de confiance numérique : quand une entreprise émet une facture, celle-ci est soumise à la plateforme xHub qui la transmet à la DGI pour validation fiscale, génère un identifiant unique et un QR code, puis la route vers le système du client destinataire. Aucune facture ne transite directement entre fournisseur et client sans passer par ce canal officiel.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Un modèle inspiré de systèmes déjà en place ailleurs',
+                body: 'Le Maroc s\'inspire de systèmes déjà déployés avec succès : la France avec Chorus Pro et le futur portail public de facturation, l\'Arabie Saoudite avec ZATCA/FATOORAH, l\'Égypte avec ETA. L\'objectif est partout le même : réduire la fraude fiscale, accélérer les remboursements de TVA et digitaliser l\'économie formelle.',
+              },
+            ],
+          },
+          {
+            h2: 'Qui est concerné et selon quel calendrier ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le déploiement se fait progressivement, par vagues, selon la taille des entreprises. Les grandes entreprises sont les premières touchées, et le dispositif s\'étend ensuite aux PME puis aux TPE et indépendants.',
+              },
+              {
+                type: 'table',
+                headers: ['Vague', 'Entreprises concernées', 'Statut'],
+                rows: [
+                  ['Vague 1', 'Grandes entreprises (CA > 50 M MAD)', 'Déploiement en cours'],
+                  ['Vague 2', 'PME (CA entre 10 M et 50 M MAD)', 'Prévu progressivement'],
+                  ['Vague 3', 'TPE, auto-entrepreneurs et freelancers', 'Calendrier à confirmer par la DGI'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Ne pas attendre la vague 3 pour se préparer',
+                body: 'Les PME et freelancers qui attendent la dernière vague pour s\'adapter risquent de se retrouver dans l\'urgence. Les logiciels de facturation devront être certifiés conformes à la norme DGI — choisir dès maintenant un outil qui prépare activement cette intégration est une décision stratégique.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment fonctionne le processus e-facture DGI step by step',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Voici le flux exact d\'une facture électronique dans le système marocain :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Le fournisseur crée sa facture dans son logiciel de gestion ou ERP — dans un format structuré conforme à la norme DGI (XML/JSON)',
+                  'La facture est soumise automatiquement à la plateforme xHub via une API sécurisée',
+                  'xHub transmet la facture à la DGI pour contrôle et validation fiscale (vérification IF, ICE, TVA, cohérence des données)',
+                  'La DGI valide la facture et lui attribue un identifiant unique (numéro e-facture) et génère un QR code de vérification',
+                  'La facture validée est transmise au client (acheteur) via la plateforme ou directement dans son système',
+                  'Le client peut vérifier l\'authenticité de la facture en scannant le QR code',
+                  'La facture est archivée automatiquement pendant la durée légale de conservation',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Un avantage concret : la TVA récupérée plus vite',
+                body: 'Avec la facture électronique, la DGI dispose en temps réel de toutes les transactions. Les remboursements de crédit de TVA peuvent donc être traités plus rapidement, car les données sont déjà vérifiées et validées dans le système.',
+              },
+            ],
+          },
+          {
+            h2: 'Les obligations techniques pour les entreprises marocaines',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Pour être conforme au système e-facture marocain, votre logiciel de facturation devra répondre aux exigences suivantes :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Génération de factures dans un format structuré standardisé (XML ou JSON selon les spécifications DGI)',
+                  'Connexion API sécurisée avec la plateforme xHub pour la transmission automatique des factures',
+                  'Intégration du QR code de vérification généré par la DGI sur chaque facture',
+                  'Signature électronique des factures avant transmission',
+                  'Archivage électronique sécurisé des factures pendant 10 ans minimum',
+                  'Traçabilité complète : chaque facture doit avoir un statut (soumise, validée, rejetée, archivée)',
+                  'Gestion des factures rectificatives (avoirs) dans le même système',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Les logiciels non conformes seront inutilisables',
+                body: 'Un logiciel de facturation qui ne s\'intègre pas avec la plateforme DGI/xHub ne pourra plus légalement émettre des factures une fois l\'obligation entrée en vigueur pour votre catégorie. Vérifiez dès maintenant la feuille de route de conformité de votre outil.',
+              },
+            ],
+          },
+          {
+            h2: 'Les avantages de la facture électronique pour les PME marocaines',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Au-delà de l\'obligation légale, la facturation électronique apporte des avantages concrets pour les entreprises qui l\'adoptent bien :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Réduction des erreurs : le système DGI rejette automatiquement les factures avec données manquantes ou incohérentes',
+                  'Fin des litiges sur les factures : la validation DGI crée une preuve irréfutable de l\'émission et du contenu',
+                  'Archivage automatique : plus besoin de conserver des classeurs de factures papier pendant 10 ans',
+                  'Récupération de TVA accélérée : les crédits de TVA validés en temps réel sont remboursés plus vite',
+                  'Réduction des coûts d\'impression et d\'envoi postal',
+                  'Meilleure visibilité financière : toutes vos factures centralisées dans un système unique',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Les entreprises formelles y gagnent face à la concurrence informelle',
+                body: 'La généralisation de la facture électronique réduit la concurrence déloyale des opérateurs informels qui ne facturent pas. Pour les PME formalisées, c\'est un nivellement par le haut qui valorise leur conformité.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment se préparer dès maintenant à la facture électronique',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Que vous soyez grande entreprise déjà dans la première vague ou PME qui attend la suivante, voici les actions concrètes à engager maintenant :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Vérifiez que vos données de base sont propres : IF, ICE, ICE clients — des erreurs dans ces données bloqueront la validation DGI',
+                  'Auditez votre logiciel de facturation actuel : interrogez votre éditeur sur sa feuille de route de conformité e-facture',
+                  'Formez vos équipes comptables et commerciales aux nouveaux flux — la facture électronique change le processus Order-to-Cash',
+                  'Mettez à jour vos conditions générales de vente pour y intégrer la facturation électronique',
+                  'Testez vos connexions API si vous avez un ERP — la migration technique peut prendre plusieurs mois',
+                  'Choisissez un logiciel de facturation qui prépare activement son intégration xHub/DGI',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli prépare activement sa conformité e-facture DGI',
+                body: 'Sayerli est le logiciel de facturation marocain conçu pour les PME et freelancers. Vos factures sont déjà structurées avec IF, ICE, TVA et toutes les mentions légales — la base exacte requise pour la conformité e-facture. Sayerli intègre la connexion xHub/DGI dans sa feuille de route pour que vos données soient prêtes le jour J, sans migration douloureuse. Commencez dès aujourd\'hui avec une base conforme.',
+                href: '/register',
+                cta: 'Créer mon compte gratuit',
+              },
+            ],
+          },
+          {
+            h2: 'Questions fréquentes sur la facture électronique au Maroc',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Un PDF envoyé par email est-il une facture électronique ? Non — une e-facture au sens DGI est un fichier structuré transmis via la plateforme officielle, pas un simple PDF.',
+                  'Les auto-entrepreneurs sont-ils concernés ? Oui, à terme — mais dans une vague ultérieure. Mieux vaut anticiper dès maintenant.',
+                  'Peut-on continuer à facturer sur papier ? Non, une fois l\'obligation active pour votre catégorie, seule la voie électronique sera légalement valide.',
+                  'Que se passe-t-il si la DGI rejette une facture ? La facture n\'est pas valide — vous devez corriger les erreurs et la soumettre à nouveau. D\'où l\'importance de données propres en amont.',
+                  'Mon comptable doit-il changer quelque chose ? Oui — le processus de saisie comptable change puisque les factures arrivent directement via la plateforme DGI et non plus par email ou courrier.',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Gérez vos factures aujourd\'hui, soyez prêt demain',
+                body: 'Avec Sayerli, chaque facture que vous créez aujourd\'hui est structurée avec les données exactes requises par la DGI : IF, ICE, TVA, numérotation séquentielle. Quand l\'obligation e-facture entrera en vigueur, vos données seront déjà propres et votre transition sera fluide.',
+                href: '/fonctionnalites',
+                cta: 'Découvrir Sayerli',
+              },
+            ],
+          },
+        ],
+      },
+
+      en: {
+        title: 'Electronic Invoicing in Morocco: DGI, xHub and What SMEs Need to Know in 2025',
+        description: 'Everything about electronic invoicing in Morocco: the DGI project, xHub\'s role, which businesses are affected and when, technical requirements and how to prepare your SME now.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Mandatory electronic invoicing is coming to Morocco. This is no longer a distant project — the Direction Générale des Impôts (DGI) has launched the invoice digitalisation programme, with xHub as the central technical operator. For Moroccan SMEs, freelancers and auto-entrepreneurs, this change will transform how invoices are created, sent and archived.',
+          },
+          {
+            type: 'p',
+            text: 'In this guide, we clearly explain what electronic invoicing means under Moroccan DGI rules, who is affected and when, how the xHub system works, what the technical requirements are, and most importantly how to prepare now — before the deadline hits.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'What is Electronic Invoicing in Morocco?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'An electronic invoice — or e-invoice — is not simply a PDF sent by email. Under Moroccan regulations, it is an invoice issued, transmitted and archived in a structured, standardised format (XML or JSON) that passes through a DGI-approved platform before being validated and sent to the client.',
+              },
+              {
+                type: 'p',
+                text: 'The process fundamentally changes: instead of issuing an invoice and sending it directly to your client, you must first submit it to the DGI platform for validation. The invoice receives a unique number and a verification QR code, then is forwarded to the client. The DGI gains real-time visibility over all commercial transactions.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'PDF invoice ≠ electronic invoice',
+                body: 'A PDF sent by email is not a legal electronic invoice. A true e-invoice is a structured data file (XML/JSON) readable by computer systems, transmitted through an approved platform and timestamped by the DGI. The difference is fundamental.',
+              },
+            ],
+          },
+          {
+            h2: 'xHub: Who Are They and What is Their Role in e-Invoicing?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'xHub is the Moroccan company selected as the technical operator of the national electronic invoicing platform. Their role is to build and operate the infrastructure connecting invoice-issuing businesses to the DGI, ensuring validation, routing and archiving of e-invoices.',
+              },
+              {
+                type: 'p',
+                text: 'Concretely, xHub acts as a digital trusted third party: when a business issues an invoice, it is submitted to the xHub platform which transmits it to the DGI for tax validation, generates a unique identifier and QR code, then routes it to the recipient client\'s system. No invoice can legally transit directly between supplier and client without passing through this official channel.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'A model inspired by systems already in place elsewhere',
+                body: 'Morocco draws inspiration from systems already successfully deployed: France with Chorus Pro and the future public invoicing portal, Saudi Arabia with ZATCA/FATOORAH, Egypt with ETA. The objective is the same everywhere: reduce tax fraud, accelerate VAT refunds and digitalise the formal economy.',
+              },
+            ],
+          },
+          {
+            h2: 'Who is Affected and According to What Timeline?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The rollout is progressive, in waves, according to company size. Large companies are affected first, then the system extends to SMEs, micro-businesses and independents.',
+              },
+              {
+                type: 'table',
+                headers: ['Wave', 'Businesses affected', 'Status'],
+                rows: [
+                  ['Wave 1', 'Large companies (turnover > 50M MAD)', 'Rollout in progress'],
+                  ['Wave 2', 'SMEs (turnover 10M to 50M MAD)', 'Planned progressively'],
+                  ['Wave 3', 'Micro-businesses, auto-entrepreneurs and freelancers', 'Timeline to be confirmed by DGI'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Do not wait for wave 3 to prepare',
+                body: 'SMEs and freelancers who wait for the final wave risk finding themselves in a rush. Invoicing software will need to be certified as DGI-compliant — choosing a tool now that is actively preparing this integration is a strategic decision.',
+              },
+            ],
+          },
+          {
+            h2: 'How the DGI e-Invoice Process Works Step by Step',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Here is the exact flow of an electronic invoice in the Moroccan system:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'The supplier creates their invoice in their management software — in a structured format compliant with DGI standards (XML/JSON)',
+                  'The invoice is automatically submitted to the xHub platform via a secure API',
+                  'xHub transmits the invoice to the DGI for tax control and validation (checking IF, ICE, VAT, data consistency)',
+                  'The DGI validates the invoice and assigns it a unique identifier (e-invoice number) and generates a verification QR code',
+                  'The validated invoice is transmitted to the client (buyer) via the platform or directly into their system',
+                  'The client can verify the invoice\'s authenticity by scanning the QR code',
+                  'The invoice is automatically archived for the legally required retention period',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'A concrete benefit: VAT recovered faster',
+                body: 'With electronic invoicing, the DGI has real-time visibility of all transactions. VAT credit refunds can therefore be processed faster, since the data is already verified and validated in the system.',
+              },
+            ],
+          },
+          {
+            h2: 'Technical Requirements for Moroccan Businesses',
+            blocks: [
+              {
+                type: 'p',
+                text: 'To comply with the Moroccan e-invoice system, your invoicing software will need to meet the following requirements:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Generate invoices in a standardised structured format (XML or JSON per DGI specifications)',
+                  'Secure API connection with the xHub platform for automatic invoice transmission',
+                  'Integration of the DGI-generated verification QR code on each invoice',
+                  'Electronic signature of invoices before transmission',
+                  'Secure electronic archiving of invoices for a minimum of 10 years',
+                  'Full traceability: each invoice must have a status (submitted, validated, rejected, archived)',
+                  'Management of credit notes (avoirs) within the same system',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Non-compliant software will be unusable',
+                body: 'An invoicing tool that does not integrate with the DGI/xHub platform will no longer be legally able to issue invoices once the obligation comes into force for your category. Check your tool\'s e-invoice compliance roadmap now.',
+              },
+            ],
+          },
+          {
+            h2: 'Benefits of Electronic Invoicing for Moroccan SMEs',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Fewer errors: the DGI system automatically rejects invoices with missing or inconsistent data',
+                  'End of invoice disputes: DGI validation creates irrefutable proof of issue and content',
+                  'Automatic archiving: no more filing cabinets full of paper invoices for 10 years',
+                  'Faster VAT recovery: real-time validated VAT credits are refunded more quickly',
+                  'Reduced printing and postal costs',
+                  'Better financial visibility: all invoices centralised in a single system',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Formal businesses gain against informal competition',
+                body: 'The rollout of e-invoicing reduces unfair competition from informal operators who do not issue invoices. For formalised SMEs, this is an upward levelling that rewards compliance.',
+              },
+            ],
+          },
+          {
+            h2: 'How to Prepare Now for Electronic Invoicing',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'Verify your base data is clean: IF, ICE, client ICE numbers — errors in this data will block DGI validation',
+                  'Audit your current invoicing software: ask your vendor about their e-invoice compliance roadmap',
+                  'Train your accounting and sales teams on new workflows — e-invoicing changes the Order-to-Cash process',
+                  'Update your general terms of sale to include electronic invoicing',
+                  'Test your API connections if you have an ERP — technical migration can take several months',
+                  'Choose invoicing software that is actively preparing its xHub/DGI integration',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli is actively preparing DGI e-invoice compliance',
+                body: 'Sayerli is the Moroccan invoicing software built for SMEs and freelancers. Your invoices are already structured with IF, ICE, VAT and all mandatory legal fields — the exact foundation required for e-invoice compliance. Sayerli has xHub/DGI connection on its roadmap so your data is ready on day one, with no painful migration. Start today with a compliant foundation.',
+                href: '/register',
+                cta: 'Create my free account',
+              },
+            ],
+          },
+          {
+            h2: 'Frequently Asked Questions About Electronic Invoicing in Morocco',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Is a PDF sent by email an electronic invoice? No — a DGI e-invoice is a structured file transmitted via the official platform, not a simple PDF.',
+                  'Are auto-entrepreneurs affected? Yes, eventually — but in a later wave. Better to anticipate now.',
+                  'Can you continue to invoice on paper? No — once the obligation is active for your category, only the electronic route is legally valid.',
+                  'What happens if the DGI rejects an invoice? The invoice is invalid — you must correct the errors and resubmit. Which is why clean upstream data matters.',
+                  'Does my accountant need to change anything? Yes — the accounting entry process changes since invoices arrive via the DGI platform rather than by email or post.',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Manage your invoices today, be ready tomorrow',
+                body: 'With Sayerli, every invoice you create today is structured with the exact data required by the DGI: IF, ICE, VAT, sequential numbering. When the e-invoice obligation comes into force, your data will already be clean and your transition smooth.',
+                href: '/fonctionnalites',
+                cta: 'Discover Sayerli',
+              },
+            ],
+          },
+        ],
+      },
+
+      ar: {
+        title: 'الفاتورة الإلكترونية في المغرب: DGI وxHub وما يجب على المقاولات معرفته في 2025',
+        description: 'كل شيء عن الفاتورة الإلكترونية في المغرب: مشروع المديرية العامة للضرائب، دور xHub، المقاولات المعنية والتواريخ، المتطلبات التقنية وكيفية تحضير مقاولتك الآن.',
+        intro: [
+          {
+            type: 'p',
+            text: 'الفاتورة الإلكترونية الإلزامية قادمة إلى المغرب. لم يعد هذا مشروعاً بعيداً — المديرية العامة للضرائب (DGI) أطلقت مسار رقمنة الفواتير، مع xHub كمشغّل تقني مركزي. بالنسبة للمقاولات الصغيرة والمتوسطة والمستقلين والمقاولين الذاتيين المغاربة، هذا التغيير سيُحوِّل طريقة إنشاء الفواتير وإرسالها وأرشفتها.',
+          },
+          {
+            type: 'p',
+            text: 'في هذا الدليل، نشرح بوضوح ما هي الفاتورة الإلكترونية بمفهوم المديرية العامة للضرائب، من المعني ومتى، كيف يعمل نظام xHub، ما هي المتطلبات التقنية، وكيف تستعد الآن قبل فوات الأوان.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'ما هي الفاتورة الإلكترونية في المغرب؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'الفاتورة الإلكترونية — أو e-facture — ليست مجرد PDF يُرسَل بالبريد الإلكتروني. بالمفهوم التنظيمي المغربي، هي فاتورة تُصدَر وتُنقَل وتُؤرشَف بصيغة منظَّمة ومعيارية (XML أو JSON)، تمر عبر منصة معتمدة من المديرية العامة للضرائب قبل التحقق منها وإرسالها للعميل.',
+              },
+              {
+                type: 'p',
+                text: 'عملياً، تتغير العملية جذرياً: بدلاً من إصدار فاتورتك وإرسالها مباشرةً لعميلك، ستضطر أولاً لتقديمها لمنصة المديرية العامة للضرائب للتحقق. تحصل الفاتورة على رقم فريد ورمز QR للتحقق، ثم تُحوَّل للعميل. تحصل المديرية العامة للضرائب بذلك على رؤية فورية لجميع المعاملات التجارية.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'فاتورة PDF ≠ فاتورة إلكترونية',
+                body: 'PDF مُرسَل بالبريد الإلكتروني ليس فاتورة إلكترونية بالمفهوم القانوني. الفاتورة الإلكترونية الحقيقية هي ملف بيانات منظَّمة (XML/JSON) قابلة للقراءة آلياً، مُنقَلة عبر منصة معتمدة وموثَّقة زمنياً من المديرية العامة للضرائب. الفارق جوهري.',
+              },
+            ],
+          },
+          {
+            h2: 'xHub: من هم وما دورهم في الفاتورة الإلكترونية؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'xHub هي الشركة المغربية المُختارة كمشغِّل تقني للمنصة الوطنية للفاتورة الإلكترونية. دورها بناء وتشغيل البنية التحتية التي تربط الشركات المُصدِرة للفواتير بالمديرية العامة للضرائب، وضمان التحقق والتوجيه والأرشفة للفواتير الإلكترونية.',
+              },
+              {
+                type: 'p',
+                text: 'عملياً، تعمل xHub كطرف ثالث موثوق رقمياً: حين تُصدِر شركة فاتورة، تُقدَّم لمنصة xHub التي تُحيلها للمديرية العامة للضرائب للتحقق الجبائي، وتُولِّد معرِّفاً فريداً ورمز QR، ثم تُوجِّهها لنظام العميل المُستلِم. لا يمكن لأي فاتورة أن تنتقل مباشرةً بين المورد والعميل دون المرور بهذه القناة الرسمية.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'نموذج مُستلهَم من أنظمة ناجحة في مكان آخر',
+                body: 'يستلهم المغرب من أنظمة مُطبَّقة بنجاح: فرنسا مع Chorus Pro والبوابة العمومية المستقبلية، المملكة العربية السعودية مع ZATCA/فاتورة، مصر مع ETA. الهدف في كل مكان واحد: الحد من التهرب الضريبي، تسريع استرداد TVA ورقمنة الاقتصاد الرسمي.',
+              },
+            ],
+          },
+          {
+            h2: 'من المعني وفق أي جدول زمني؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'يتم الانتشار تدريجياً بموجات حسب حجم الشركات. الشركات الكبيرة هي الأولى المعنية، ثم يمتد الجهاز للمقاولات الصغيرة والمتوسطة، فالمقاولات الصغيرة جداً والمستقلين.',
+              },
+              {
+                type: 'table',
+                headers: ['الموجة', 'الشركات المعنية', 'الحالة'],
+                rows: [
+                  ['الموجة 1', 'الشركات الكبيرة (رقم الأعمال > 50 مليون درهم)', 'الانتشار جارٍ'],
+                  ['الموجة 2', 'المقاولات الصغيرة والمتوسطة (رقم الأعمال 10-50 مليون درهم)', 'مخطط تدريجياً'],
+                  ['الموجة 3', 'المقاولات الصغيرة جداً والمقاولون الذاتيون والمستقلون', 'الجدول الزمني تُؤكده المديرية العامة للضرائب'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'لا تنتظر الموجة الثالثة للاستعداد',
+                body: 'المقاولات والمستقلون الذين ينتظرون الموجة الأخيرة للتكيف يخاطرون بالوجود في حالة استعجال. برامج الفوترة ستحتاج للحصول على شهادة مطابقة لمعيار المديرية العامة للضرائب — اختيار أداة الآن تُحضِّر هذا الاندماج بشكل فعال قرار استراتيجي.',
+              },
+            ],
+          },
+          {
+            h2: 'كيف تعمل عملية e-facture DGI خطوة بخطوة',
+            blocks: [
+              {
+                type: 'p',
+                text: 'إليك المسار الدقيق للفاتورة الإلكترونية في النظام المغربي:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'يُنشئ المورِّد فاتورته في برنامج تسييره — بصيغة منظَّمة مطابقة لمعايير المديرية العامة للضرائب (XML/JSON)',
+                  'تُقدَّم الفاتورة تلقائياً لمنصة xHub عبر API آمنة',
+                  'تُحيل xHub الفاتورة للمديرية العامة للضرائب للمراقبة والتحقق الجبائي (التحقق من IF وICE وTVA وتناسق البيانات)',
+                  'تُصادق المديرية العامة للضرائب على الفاتورة وتُسنِد لها معرِّفاً فريداً (رقم e-facture) وتُولِّد رمز QR للتحقق',
+                  'تُحوَّل الفاتورة المُصادَق عليها للعميل عبر المنصة أو مباشرةً في نظامه',
+                  'يمكن للعميل التحقق من أصالة الفاتورة بمسح رمز QR',
+                  'تُؤرشَف الفاتورة تلقائياً طيلة مدة الحفظ القانونية',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'ميزة ملموسة: استرداد TVA أسرع',
+                body: 'مع الفاتورة الإلكترونية، تمتلك المديرية العامة للضرائب رؤية فورية لجميع المعاملات. يمكن بالتالي معالجة استردادات رصيد TVA بشكل أسرع، إذ البيانات مُتحقَّق منها ومُصادَق عليها في النظام.',
+              },
+            ],
+          },
+          {
+            h2: 'المتطلبات التقنية للشركات المغربية',
+            blocks: [
+              {
+                type: 'p',
+                text: 'لتكون مطابقاً لنظام e-facture المغربي، يجب أن يستوفي برنامج فوترتك المتطلبات التالية:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'توليد فواتير بصيغة منظَّمة معيارية (XML أو JSON وفق مواصفات المديرية العامة للضرائب)',
+                  'اتصال API آمن بمنصة xHub للإرسال التلقائي للفواتير',
+                  'دمج رمز QR للتحقق الصادر عن المديرية العامة للضرائب في كل فاتورة',
+                  'توقيع إلكتروني للفواتير قبل الإرسال',
+                  'أرشفة إلكترونية آمنة للفواتير لمدة 10 سنوات على الأقل',
+                  'إمكانية تتبع كاملة: لكل فاتورة حالة (مُقدَّمة، مُصادَق عليها، مرفوضة، مُؤرشَفة)',
+                  'إدارة الفواتير التصحيحية (الإشعارات الدائنة) في نفس النظام',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'البرامج غير المطابقة ستصبح غير قابلة للاستخدام',
+                body: 'برنامج فوترة لا يندمج مع منصة المديرية العامة للضرائب/xHub لن يستطيع قانونياً إصدار فواتير بمجرد دخول الإلزامية حيز التنفيذ لفئتك. تحقق الآن من خارطة طريق المطابقة لأداتك.',
+              },
+            ],
+          },
+          {
+            h2: 'مزايا الفاتورة الإلكترونية للمقاولات الصغيرة والمتوسطة المغربية',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'أقل أخطاء: النظام يرفض تلقائياً الفواتير ذات البيانات الناقصة أو غير المتناسقة',
+                  'نهاية النزاعات حول الفواتير: التحقق من المديرية العامة للضرائب يُنشئ دليلاً دامغاً على الإصدار والمحتوى',
+                  'أرشفة تلقائية: لا مزيد من ملفات الفواتير الورقية لـ 10 سنوات',
+                  'استرداد TVA أسرع: أرصدة TVA المُتحقَّق منها فورياً تُسترَد بسرعة أكبر',
+                  'تقليص تكاليف الطباعة والبريد',
+                  'رؤية مالية أفضل: جميع فواتيرك مركزية في نظام واحد',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الشركات الرسمية تكسب أمام المنافسة غير الرسمية',
+                body: 'تعميم الفاتورة الإلكترونية يُقلِّص المنافسة غير العادلة من المشغلين غير الرسميين الذين لا يُفوترون. للمقاولات الرسمية، هذا تسوية تصاعدية تُثمِّن امتثالها.',
+              },
+            ],
+          },
+          {
+            h2: 'كيف تستعد الآن للفاتورة الإلكترونية',
+            blocks: [
+              {
+                type: 'ol',
+                items: [
+                  'تحقق من نظافة بياناتك الأساسية: IF وICE وأرقام ICE العملاء — الأخطاء في هذه البيانات ستُعيق التحقق من المديرية العامة للضرائب',
+                  'دقِّق برنامج فوترتك الحالي: اسأل مُطوِّره عن خارطة طريق المطابقة لـ e-facture',
+                  'درِّب فرقك المحاسبية والتجارية على المسارات الجديدة — الفاتورة الإلكترونية تُغيِّر عملية Order-to-Cash',
+                  'حدِّث شروطك العامة للبيع لدمج الفاتورة الإلكترونية',
+                  'اختبر اتصالات API إذا كان لديك ERP — الهجرة التقنية قد تستغرق عدة أشهر',
+                  'اختر برنامج فوترة يُحضِّر فعلياً اندماجه مع xHub/المديرية العامة للضرائب',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli يُحضِّر فعلياً مطابقة e-facture للمديرية العامة للضرائب',
+                body: 'Sayerli هو برنامج الفوترة المغربي المصمَّم للمقاولات الصغيرة والمتوسطة والمستقلين. فواتيرك مُهيكَلة بالفعل مع IF وICE وTVA وجميع البيانات القانونية — الأساس المطلوب تماماً للمطابقة مع e-facture. Sayerli يدمج اتصال xHub/المديرية العامة للضرائب في خارطة طريقه لتكون بياناتك جاهزة يوم الإلزامية بدون هجرة مؤلمة. ابدأ اليوم بأساس مطابق.',
+                href: '/register',
+                cta: 'إنشاء حسابي المجاني',
+              },
+            ],
+          },
+          {
+            h2: 'أسئلة متكررة حول الفاتورة الإلكترونية في المغرب',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'هل PDF مُرسَل بالبريد الإلكتروني فاتورة إلكترونية؟ لا — e-facture بمفهوم المديرية العامة للضرائب هو ملف منظَّم مُنقَل عبر المنصة الرسمية، وليس مجرد PDF.',
+                  'هل المقاولون الذاتيون معنيون؟ نعم، في نهاية المطاف — لكن في موجة لاحقة. من الأفضل الاستعداد الآن.',
+                  'هل يمكن الاستمرار في الفوترة الورقية؟ لا — بمجرد دخول الإلزامية حيز التنفيذ لفئتك، القناة الإلكترونية وحدها هي القانونية.',
+                  'ماذا يحدث إذا رفضت المديرية العامة للضرائب فاتورة؟ الفاتورة غير صالحة — يجب تصحيح الأخطاء وإعادة تقديمها. ومن هنا أهمية البيانات النظيفة مسبقاً.',
+                  'هل يحتاج محاسبي إلى تغيير شيء؟ نعم — تتغير عملية التسجيل المحاسبي إذ تصل الفواتير عبر منصة المديرية العامة للضرائب لا عبر البريد الإلكتروني أو البريد العادي.',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'أدِّر فواتيرك اليوم، كن جاهزاً غداً',
+                body: 'مع Sayerli، كل فاتورة تُنشئها اليوم مُهيكَلة بالبيانات المطلوبة تماماً من المديرية العامة للضرائب: IF وICE وTVA وترقيم متسلسل. حين يدخل إلزام e-facture حيز التنفيذ، ستكون بياناتك نظيفة بالفعل وانتقالك سلساً.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف Sayerli',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
 }

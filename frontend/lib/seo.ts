@@ -385,6 +385,27 @@ export const BLOG_POSTS: BlogPost[] = [
     image: '/blog/modele-devis-maroc.webp',
     readingTime: 8,
   },
+  {
+    slug: 'facture-electronique-maroc-dgi',
+    title: 'Facture électronique au Maroc : DGI, xHub et ce que les PME doivent savoir en 2025',
+    description: 'Tout comprendre sur la facture électronique au Maroc : le projet DGI, le rôle de xHub, les entreprises concernées, les obligations techniques et comment préparer votre PME dès maintenant.',
+    category: 'facturation',
+    keywords: [
+      'facture electronique maroc',
+      'e-facture maroc',
+      'e-facture dgi maroc',
+      'facturation electronique maroc',
+      'xhub maroc',
+      'xhub facture electronique maroc',
+      'obligation facture electronique maroc',
+      'facture electronique pme maroc',
+      'logiciel facture electronique maroc',
+      'dgi facture numerique maroc',
+    ],
+    publishedAt: '2026-07-24',
+    image: '/blog/facture-electronique-maroc-dgi.webp',
+    readingTime: 9,
+  },
 ]
 
 export interface BlogPost {
