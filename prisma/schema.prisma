@@ -509,6 +509,8 @@ model Depense {
   userId                  String
   montant                 Decimal          @db.Decimal(12, 2)
   devise                  String           @default("MAD")
+  tauxTva                 Decimal          @default(0) @db.Decimal(5, 2)
+  montantTva              Decimal          @default(0) @db.Decimal(12, 2)
   categorie               CategorieDepense
   categoriePersonnalisee  String?
   fournisseur             String?

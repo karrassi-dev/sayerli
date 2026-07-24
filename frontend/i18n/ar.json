@@ -1713,7 +1713,14 @@
         "recuWrongType": "تنسيق غير مدعوم. JPG أو PNG فقط.",
         "recuRemove": "إزالة الوصل",
         "categorieAutrePlaceholder": "حدد الفئة…",
-        "categorieAutreRequired": "يرجى تحديد الفئة."
+        "categorieAutreRequired": "يرجى تحديد الفئة.",
+        "tva": "ضريبة القيمة المضافة",
+        "tauxTva": "نسبة الضريبة",
+        "tauxTvaAutre": "نسبة أخرى",
+        "tauxTvaCustomPlaceholder": "مثال: 14",
+        "montantTva": "مبلغ الضريبة",
+        "montantTtc": "الإجمالي شامل الضريبة",
+        "tvaExonere": "معفى"
       },
       "categories": {
         "LOYER": "الإيجار",

@@ -144,6 +144,8 @@ export class ExpensesService {
         userId,
         montant: dto.montant,
         devise: dto.devise ?? 'MAD',
+        tauxTva: dto.tauxTva ?? 0,
+        montantTva: dto.montantTva ?? 0,
         categorie: dto.categorie,
         categoriePersonnalisee: dto.categorie === 'AUTRE' ? (dto.categoriePersonnalisee ?? null) : null,
         fournisseur: dto.fournisseur,
@@ -225,6 +227,8 @@ export class ExpensesService {
         ...(dto.fournisseur !== undefined ? { fournisseur: dto.fournisseur } : {}),
         ...(dto.description !== undefined ? { description: dto.description } : {}),
         ...(dto.date !== undefined ? { date: new Date(dto.date) } : {}),
+        ...(dto.tauxTva !== undefined ? { tauxTva: dto.tauxTva } : {}),
+        ...(dto.montantTva !== undefined ? { montantTva: dto.montantTva } : {}),
       },
     });
 
@@ -286,18 +290,26 @@ export class ExpensesService {
       { header: 'Catégorie', key: 'categorie', width: 20 },
       { header: 'Fournisseur', key: 'fournisseur', width: 24 },
       { header: 'Description', key: 'description', width: 32 },
-      { header: 'Montant', key: 'montant', width: 14 },
+      { header: 'Montant HT', key: 'montant', width: 14 },
+      { header: 'Taux TVA (%)', key: 'tauxTva', width: 14 },
+      { header: 'Montant TVA', key: 'montantTva', width: 14 },
+      { header: 'Montant TTC', key: 'montantTtc', width: 14 },
       { header: 'Devise', key: 'devise', width: 10 },
       { header: 'Reçu', key: 'receiptUrl', width: 50 },
     ];
 
     for (const d of depenses) {
+      const ht = Number(d.montant);
+      const tva = Number(d.montantTva);
       sheet.addRow({
         date: new Date(d.date).toLocaleDateString('fr-MA'),
         categorie: d.categorie === 'AUTRE' && d.categoriePersonnalisee ? d.categoriePersonnalisee : d.categorie,
         fournisseur: d.fournisseur ?? '',
         description: d.description ?? '',
-        montant: Number(d.montant),
+        montant: ht,
+        tauxTva: Number(d.tauxTva),
+        montantTva: tva,
+        montantTtc: ht + tva,
         devise: d.devise,
         receiptUrl: d.receiptUrl ?? '',
       });

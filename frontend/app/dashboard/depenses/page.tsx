@@ -46,10 +46,14 @@ const CATEGORIE_COLORS: Record<CategorieDepense, string> = {
   AUTRE:             'bg-gray-100 text-gray-700 dark:bg-gray-700/40 dark:text-gray-300',
 }
 
+const TVA_PRESETS = ['0', '7', '10', '14', '20']
+
 interface Depense {
   id: string
   montant: number
   devise: string
+  tauxTva: number
+  montantTva: number
   categorie: CategorieDepense
   categoriePersonnalisee: string | null
   fournisseur: string | null
@@ -69,6 +73,8 @@ interface DepenseForm {
   fournisseur: string
   description: string
   date: string
+  tauxTva: string
+  montantTva: string
 }
 
 const EMPTY_FORM: DepenseForm = {
@@ -79,6 +85,8 @@ const EMPTY_FORM: DepenseForm = {
   fournisseur: '',
   description: '',
   date: new Date().toISOString().slice(0, 10),
+  tauxTva: '20',
+  montantTva: '',
 }
 
 const PAGE_SIZE = 10
@@ -286,6 +294,7 @@ export default function DepensesPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<DepenseForm>(EMPTY_FORM)
+  const [tvaCustom, setTvaCustom] = useState(false)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
 
@@ -353,9 +362,17 @@ export default function DepensesPage() {
 
   // ── Form ───────────────────────────────────────────────────────────────────
 
+  const computeMontantTva = (montant: string, taux: string) => {
+    const ht = parseFloat(montant)
+    const rate = parseFloat(taux)
+    if (isNaN(ht) || isNaN(rate) || rate === 0) return '0.00'
+    return (ht * rate / 100).toFixed(2)
+  }
+
   const openCreate = () => {
     setEditingId(null)
     setForm(EMPTY_FORM)
+    setTvaCustom(false)
     setReceiptKey(null)
     setReceiptUrl(null)
     setReceiptSizeBytes(null)
@@ -365,6 +382,9 @@ export default function DepensesPage() {
 
   const openEdit = (dep: Depense) => {
     setEditingId(dep.id)
+    const tauxStr = String(Number(dep.tauxTva))
+    const isPreset = TVA_PRESETS.includes(tauxStr)
+    setTvaCustom(!isPreset)
     setForm({
       montant: String(dep.montant),
       devise: dep.devise,
@@ -373,6 +393,8 @@ export default function DepensesPage() {
       fournisseur: dep.fournisseur ?? '',
       description: dep.description ?? '',
       date: dep.date.slice(0, 10),
+      tauxTva: tauxStr,
+      montantTva: String(Number(dep.montantTva)),
     })
     setReceiptKey(dep.receiptKey)
     setReceiptUrl(dep.receiptUrl)
@@ -397,9 +419,13 @@ export default function DepensesPage() {
     if (!validate()) return
     setSaving(true)
     try {
+      const tauxTvaNum = parseFloat(form.tauxTva) || 0
+      const montantTvaNum = parseFloat(form.montantTva) || 0
       const payload = {
         montant: Number(form.montant),
         devise: form.devise,
+        tauxTva: tauxTvaNum,
+        montantTva: montantTvaNum,
         categorie: form.categorie,
         ...(form.categorie === 'AUTRE' ? { categoriePersonnalisee: form.categoriePersonnalisee.trim() } : {}),
         fournisseur: form.fournisseur || undefined,
@@ -601,8 +627,15 @@ export default function DepensesPage() {
                       <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">
                         {dep.fournisseur ?? <span className="text-slate-300 dark:text-slate-600">—</span>}
                       </td>
-                      <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white whitespace-nowrap">
-                        {Number(dep.montant).toLocaleString('fr-MA', { minimumFractionDigits: 2 })} {dep.devise}
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                          {Number(dep.montant).toLocaleString('fr-MA', { minimumFractionDigits: 2 })} {dep.devise}
+                        </p>
+                        {Number(dep.tauxTva) > 0 && (
+                          <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                            TVA {Number(dep.tauxTva)}% · +{Number(dep.montantTva).toLocaleString('fr-MA', { minimumFractionDigits: 2 })}
+                          </p>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         {dep.receiptUrl ? (
@@ -666,6 +699,11 @@ export default function DepensesPage() {
                       <p className="text-base font-bold text-slate-900 dark:text-white mt-1">
                         {Number(dep.montant).toLocaleString('fr-MA', { minimumFractionDigits: 2 })} {dep.devise}
                       </p>
+                      {Number(dep.tauxTva) > 0 && (
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                          TVA {Number(dep.tauxTva)}% · +{Number(dep.montantTva).toLocaleString('fr-MA', { minimumFractionDigits: 2 })}
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       {dep.receiptUrl && (
@@ -743,7 +781,11 @@ export default function DepensesPage() {
                   step="0.01"
                   min="0"
                   value={form.montant}
-                  onChange={e => setForm(f => ({ ...f, montant: e.target.value }))}
+                  onChange={e => {
+                    const montant = e.target.value
+                    const newMtv = computeMontantTva(montant, form.tauxTva)
+                    setForm(f => ({ ...f, montant, montantTva: newMtv }))
+                  }}
                   placeholder="0.00"
                   className={cn(inp, 'pr-16', formErrors.montant && 'border-red-400')}
                 />
@@ -761,6 +803,103 @@ export default function DepensesPage() {
                 </p>
               )}
             </div>
+          </div>
+
+          {/* TVA */}
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-3 space-y-3">
+            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              {t('pages.depenses.form.tva')}
+            </p>
+
+            {/* Rate pills */}
+            <div className="flex flex-wrap gap-1.5">
+              {TVA_PRESETS.map(rate => (
+                <button
+                  key={rate}
+                  type="button"
+                  onClick={() => {
+                    setTvaCustom(false)
+                    const newMtv = computeMontantTva(form.montant, rate)
+                    setForm(f => ({ ...f, tauxTva: rate, montantTva: newMtv }))
+                  }}
+                  className={cn(
+                    'px-3 py-1 rounded-lg text-xs font-semibold border transition-all',
+                    !tvaCustom && form.tauxTva === rate
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-300'
+                      : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-800'
+                  )}
+                >
+                  {rate === '0' ? t('pages.depenses.form.tvaExonere') : `${rate}%`}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setTvaCustom(true)
+                  setForm(f => ({ ...f, tauxTva: '', montantTva: '' }))
+                }}
+                className={cn(
+                  'px-3 py-1 rounded-lg text-xs font-semibold border transition-all',
+                  tvaCustom
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-300'
+                    : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-800'
+                )}
+              >
+                {t('pages.depenses.form.tauxTvaAutre')}
+              </button>
+            </div>
+
+            {/* Custom rate input */}
+            {tvaCustom && (
+              <div>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value={form.tauxTva}
+                  onChange={e => {
+                    const rate = e.target.value
+                    const newMtv = computeMontantTva(form.montant, rate)
+                    setForm(f => ({ ...f, tauxTva: rate, montantTva: newMtv }))
+                  }}
+                  placeholder={t('pages.depenses.form.tauxTvaCustomPlaceholder')}
+                  className={cn(inp, 'w-32')}
+                />
+              </div>
+            )}
+
+            {/* Montant TVA + TTC */}
+            {parseFloat(form.tauxTva) > 0 && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">
+                    {t('pages.depenses.form.montantTva')}
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={form.montantTva}
+                    onChange={e => setForm(f => ({ ...f, montantTva: e.target.value }))}
+                    placeholder="0.00"
+                    className={inp}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">
+                    {t('pages.depenses.form.montantTtc')}
+                  </label>
+                  <div className={cn(inp, 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 select-none')}>
+                    {(() => {
+                      const ht = parseFloat(form.montant) || 0
+                      const tva = parseFloat(form.montantTva) || 0
+                      return (ht + tva).toLocaleString('fr-MA', { minimumFractionDigits: 2 })
+                    })()} {form.devise}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Categorie */}
@@ -849,7 +988,7 @@ export default function DepensesPage() {
               disabled={saving}
               className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all disabled:opacity-50"
             >
-              Annuler
+              {t('common.cancel')}
             </button>
             <button
               type="button"
@@ -858,7 +997,7 @@ export default function DepensesPage() {
               className="px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-all shadow-sm disabled:opacity-60 flex items-center gap-2"
             >
               {saving && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-              {editingId ? 'Mettre à jour' : 'Enregistrer'}
+              {editingId ? t('pages.depenses.edit') : t('common.save')}
             </button>
           </div>
         </div>

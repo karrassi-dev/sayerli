@@ -1714,7 +1714,14 @@
         "recuWrongType": "Format non autorisé. JPG ou PNG uniquement.",
         "recuRemove": "Supprimer le reçu",
         "categorieAutrePlaceholder": "Précisez la catégorie…",
-        "categorieAutreRequired": "Veuillez préciser la catégorie."
+        "categorieAutreRequired": "Veuillez préciser la catégorie.",
+        "tva": "TVA",
+        "tauxTva": "Taux TVA",
+        "tauxTvaAutre": "Autre %",
+        "tauxTvaCustomPlaceholder": "Ex: 14",
+        "montantTva": "Montant TVA",
+        "montantTtc": "Total TTC",
+        "tvaExonere": "Exonéré"
       },
       "categories": {
         "LOYER": "Loyer",

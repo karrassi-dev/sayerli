@@ -1713,7 +1713,14 @@
         "recuWrongType": "Invalid format. JPG or PNG only.",
         "recuRemove": "Remove receipt",
         "categorieAutrePlaceholder": "Specify the category…",
-        "categorieAutreRequired": "Please specify the category."
+        "categorieAutreRequired": "Please specify the category.",
+        "tva": "VAT",
+        "tauxTva": "VAT rate",
+        "tauxTvaAutre": "Other %",
+        "tauxTvaCustomPlaceholder": "e.g. 14",
+        "montantTva": "VAT amount",
+        "montantTtc": "Total incl. tax",
+        "tvaExonere": "Exempt"
       },
       "categories": {
         "LOYER": "Rent",

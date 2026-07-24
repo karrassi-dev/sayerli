@@ -30,4 +30,12 @@ export class ModifierDepenseDto {
   @IsDateString()
   @IsOptional()
   date?: string;
+
+  @IsNumber()
+  @IsOptional()
+  tauxTva?: number;
+
+  @IsNumber()
+  @IsOptional()
+  montantTva?: number;
 }

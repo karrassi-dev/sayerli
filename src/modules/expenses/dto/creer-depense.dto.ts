@@ -39,4 +39,12 @@ export class CreerDepenseDto {
   @IsNumber()
   @IsOptional()
   receiptSizeBytes?: number;
+
+  @IsNumber()
+  @IsOptional()
+  tauxTva?: number;
+
+  @IsNumber()
+  @IsOptional()
+  montantTva?: number;
 }
