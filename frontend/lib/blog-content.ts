@@ -5886,4 +5886,671 @@ export const ARTICLES: Record<string, ArticleData> = {
       },
     },
   },
+
+  'modele-facture-maroc': {
+    slug: 'modele-facture-maroc',
+    image: '/blog/modele-facture-maroc.webp',
+    readingTime: 8,
+    content: {
+
+      fr: {
+        title: 'Modèle de facture au Maroc : Word, PDF et Excel — guide complet 2025',
+        description: 'Téléchargez un modèle de facture gratuit pour le Maroc : Word, PDF et Excel avec toutes les mentions obligatoires. Guide complet pour freelancers, auto-entrepreneurs et PME marocaines.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Chaque jour, des milliers de freelancers et de PME au Maroc ouvrent Word ou Excel pour créer une facture à la main. Le résultat : une numérotation incohérente, des mentions légales manquantes, des calculs TVA approximatifs, et un document qui ne inspire pas confiance au client. Pire, en cas de contrôle fiscal, une facture incomplète peut être rejetée.',
+          },
+          {
+            type: 'p',
+            text: 'Dans ce guide, on couvre exactement ce que doit contenir un modèle de facture conforme au Maroc, les formats disponibles (Word, Excel, PDF), leurs avantages et limites, et comment passer à un niveau supérieur pour ne plus jamais se poser ces questions.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Les mentions obligatoires sur une facture marocaine en 2025',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Avant de choisir un modèle, il faut savoir ce qu\'il doit impérativement contenir. Au Maroc, une facture non conforme peut être refusée par votre client ou rejetée lors d\'un contrôle fiscal. Voici les mentions obligatoires :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Détail'],
+                rows: [
+                  ['Nom / Raison sociale', 'Votre nom complet ou le nom de votre société'],
+                  ['Adresse professionnelle', 'Adresse complète de votre siège ou lieu d\'activité'],
+                  ['Identifiant Fiscal (IF)', 'Votre numéro fiscal obtenu à la DGI'],
+                  ['ICE', 'Identifiant Commun de l\'Entreprise — obligatoire pour les sociétés'],
+                  ['Numéro de facture', 'Séquentiel et unique (ex : FA-2025-001)'],
+                  ['Date d\'émission', 'Date de création de la facture'],
+                  ['Coordonnées client', 'Nom, adresse, ICE du client pour les B2B'],
+                  ['Description prestation', 'Désignation précise du bien ou service fourni'],
+                  ['Montant HT', 'Prix unitaire et total hors taxes'],
+                  ['Taux et montant TVA', 'Taux applicable (7%, 10%, 14%, 20%) et montant calculé'],
+                  ['Total TTC', 'Montant total toutes taxes comprises'],
+                  ['Conditions de paiement', 'Délai, mode de paiement, pénalités de retard éventuelles'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Auto-entrepreneur : mention TVA spécifique',
+                body: 'Si vous êtes auto-entrepreneur, vous êtes exonéré de TVA. Votre facture doit mentionner : "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". N\'inscrivez aucun montant TVA.',
+              },
+            ],
+          },
+          {
+            h2: 'Modèle de facture Word pour le Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le modèle Word est le plus utilisé au Maroc par les indépendants qui débutent. Il est simple à personnaliser — logo, couleurs, coordonnées — et ne nécessite aucune compétence technique.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Avantage : personnalisation facile, mise en page libre, aucun abonnement',
+                  'Avantage : compatible avec toutes les versions de Word et LibreOffice',
+                  'Limite : numérotation manuelle — risque de doublons ou de sauts de numéros',
+                  'Limite : aucun calcul automatique — erreurs fréquentes sur les totaux HT/TVA/TTC',
+                  'Limite : pas de suivi des paiements — vous ne savez pas qui a payé et qui ne l\'a pas fait',
+                  'Limite : chaque facture est un fichier séparé — archivage complexe',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Un bon modèle Word pour le Maroc doit comporter : un en-tête avec logo et coordonnées, un bloc client, un tableau de lignes (description / quantité / prix unitaire HT / total HT), un récapitulatif TVA, et un pied de page avec conditions de paiement et coordonnées bancaires (RIB).',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Le problème de la numérotation manuelle',
+                body: 'La loi marocaine exige une numérotation séquentielle et sans interruption. Si vous sautez un numéro (FA-2025-003 après FA-2025-001), cela peut être interprété comme une facture dissimulée lors d\'un contrôle fiscal. Avec un modèle Word, c\'est un risque réel.',
+              },
+            ],
+          },
+          {
+            h2: 'Modèle de facture Excel pour le Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le modèle Excel est préféré par ceux qui veulent que les calculs soient automatiques. Les formules se chargent de la TVA et du total TTC, ce qui réduit les erreurs arithmétiques.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Avantage : calculs automatiques (HT × TVA = TTC) avec des formules simples',
+                  'Avantage : peut servir de journal de suivi si bien structuré',
+                  'Avantage : export PDF natif depuis Excel',
+                  'Limite : mise en page difficile à contrôler — sauts de page aléatoires à l\'impression',
+                  'Limite : partage par email peu professionnel — le client reçoit un fichier modifiable',
+                  'Limite : pas de gestion des relances, des impayés ou des devis associés',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'La structure recommandée pour un modèle Excel marocain : un onglet "Facture" avec le template visuel, un onglet "Registre" listant toutes vos factures avec numéro, date, client, montant et statut de paiement. Le registre devient votre journal des ventes pour vos déclarations fiscales.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Excel n\'est pas un logiciel de facturation',
+                body: 'Un fichier Excel partagé par email peut être modifié par votre client après réception. Une facture PDF horodatée et envoyée depuis un logiciel crée une preuve juridique bien plus solide.',
+              },
+            ],
+          },
+          {
+            h2: 'Modèle de facture PDF pour le Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le PDF est le format de référence pour la facturation professionnelle. Un fichier PDF est non modifiable, compatible sur tous les appareils, et peut être archivé facilement. Pour créer une facture PDF conforme au Maroc, deux approches :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Créer dans Word ou Excel puis exporter en PDF — simple mais vous conservez tous les inconvénients de ces outils',
+                  'Utiliser un logiciel de facturation qui génère directement le PDF avec toutes les mentions légales — la solution professionnelle',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Le PDF généré par un logiciel de facturation inclut généralement : logo et branding de votre entreprise, toutes les mentions légales automatiquement remplies, numérotation automatique, calcul TVA exact, et possibilité d\'ajouter un lien de paiement en ligne.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Le PDF, c\'est la norme chez vos clients grands comptes',
+                body: 'Les grandes entreprises et administrations marocaines exigent des factures en PDF avec ICE, IF et toutes les mentions légales. Un document Word ou Excel risque d\'être refusé par leur service comptabilité.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment numéroter vos factures correctement au Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'La numérotation des factures est un point souvent négligé qui peut coûter cher en cas de contrôle. Voici les règles à respecter :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'La numérotation doit être séquentielle et continue — pas de trous, pas de doublons',
+                  'Le format recommandé : FA-AAAA-NNN (ex : FA-2025-001, FA-2025-002...)',
+                  'La numérotation peut redémarrer chaque année ou être continue — choisissez et restez cohérent',
+                  'Les factures annulées doivent être conservées avec la mention "ANNULÉE" — ne les supprimez pas',
+                  'Les avoirs (notes de crédit) ont leur propre numérotation séparée (ex : AV-2025-001)',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Format', 'Exemple', 'Usage'],
+                rows: [
+                  ['FA-AAAA-NNN', 'FA-2025-001', 'Le plus courant — inclut l\'année'],
+                  ['AAAA/NNN', '2025/001', 'Simple, adopté par certains comptables'],
+                  ['NNN', '00123', 'Numérotation continue sans année — déconseillé'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Une numérotation automatique évite tous ces problèmes',
+                body: 'Avec un logiciel de facturation, la numérotation est automatique et inviolable. Vous ne pouvez pas créer deux factures avec le même numéro, ni en supprimer une sans laisser de trace.',
+              },
+            ],
+          },
+          {
+            h2: 'Les 6 erreurs les plus fréquentes sur les factures marocaines',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'IF manquant ou erroné : votre Identifiant Fiscal doit figurer sur chaque facture sans exception',
+                  'ICE absent : obligatoire pour les sociétés — sans ICE, votre client B2B ne peut pas déduire la TVA',
+                  'TVA mal calculée ou absent : le taux et le montant TVA doivent être explicites (ou la mention d\'exonération pour les auto-entrepreneurs)',
+                  'Numérotation incohérente : factures dans le désordre ou numéros répétés',
+                  'Description vague : "Prestation de service" ne suffit pas — décrivez précisément ce qui a été fourni',
+                  'Conditions de paiement absentes : le délai légal maximum au Maroc est 60 jours — précisez-le',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Une facture rejetée = un paiement retardé',
+                body: 'Les services comptabilité des grandes entreprises marocaines retournent systématiquement les factures incomplètes. Chaque erreur peut retarder votre paiement de 30 à 60 jours.',
+              },
+            ],
+          },
+          {
+            h2: 'Au-delà du modèle : pourquoi Sayerli remplace Word, Excel et PDF',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Un modèle Word ou Excel résout la forme, pas le fond. Ce qu\'un modèle ne peut pas faire pour vous :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Numéroter automatiquement vos factures sans risque de doublons',
+                  'Calculer et appliquer la TVA correcte selon votre statut',
+                  'Envoyer la facture par email directement depuis l\'outil',
+                  'Suivre qui a payé, qui est en retard, et relancer automatiquement',
+                  'Générer votre journal des ventes pour vos déclarations fiscales',
+                  'Créer un devis et le convertir en facture en un clic',
+                  'Donner à votre client un portail pour consulter et accepter ses documents',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Créez votre première facture conforme en 2 minutes',
+                body: 'Sayerli a été conçu pour les freelancers, auto-entrepreneurs et PME marocaines. Factures PDF professionnelles avec ICE, IF, TVA automatique et numérotation séquentielle. Envoi par email, suivi des paiements, relances automatiques et déclaration TVA intégrée. Essai gratuit — sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer mon compte gratuit',
+              },
+            ],
+          },
+        ],
+      },
+
+      en: {
+        title: 'Invoice Template for Morocco: Word, PDF and Excel — Complete Guide 2025',
+        description: 'Download a free invoice template for Morocco: Word, PDF and Excel with all mandatory fields. Complete guide for freelancers, auto-entrepreneurs and Moroccan SMEs.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Every day, thousands of freelancers and SMEs in Morocco open Word or Excel to manually create an invoice. The result: inconsistent numbering, missing legal mentions, approximate VAT calculations, and a document that does not inspire client confidence. Worse, during a tax audit, an incomplete invoice can be rejected entirely.',
+          },
+          {
+            type: 'p',
+            text: 'In this guide, we cover exactly what a compliant Moroccan invoice template must contain, the available formats (Word, Excel, PDF), their advantages and limitations, and how to step up to a solution that eliminates these headaches permanently.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Mandatory Fields on a Moroccan Invoice in 2025',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Before choosing a template, you need to know what it must contain. In Morocco, a non-compliant invoice can be refused by your client or rejected during a tax audit. Here are the mandatory fields:',
+              },
+              {
+                type: 'table',
+                headers: ['Field', 'Detail'],
+                rows: [
+                  ['Name / Company name', 'Your full name or company name'],
+                  ['Business address', 'Complete address of your registered office or place of business'],
+                  ['Tax Identifier (IF)', 'Your tax number obtained from the DGI'],
+                  ['ICE', 'Common Business Identifier — mandatory for companies'],
+                  ['Invoice number', 'Sequential and unique (e.g. FA-2025-001)'],
+                  ['Issue date', 'Date the invoice was created'],
+                  ['Client details', 'Name, address, ICE for B2B transactions'],
+                  ['Service description', 'Precise description of the goods or service provided'],
+                  ['Pre-tax amount (HT)', 'Unit price and total excluding taxes'],
+                  ['VAT rate and amount', 'Applicable rate (7%, 10%, 14%, 20%) and calculated amount'],
+                  ['Total including tax (TTC)', 'Grand total with all taxes included'],
+                  ['Payment terms', 'Due date, payment method, late payment penalties'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Auto-entrepreneur: specific VAT mention',
+                body: 'If you are an auto-entrepreneur, you are exempt from VAT. Your invoice must state: "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". Do not include any VAT amount.',
+              },
+            ],
+          },
+          {
+            h2: 'Word Invoice Template for Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The Word template is the most widely used in Morocco by independent workers starting out. It is easy to customise — logo, colours, contact details — and requires no technical skills.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Advantage: easy personalisation, free layout, no subscription',
+                  'Advantage: compatible with all versions of Word and LibreOffice',
+                  'Limitation: manual numbering — risk of duplicates or number gaps',
+                  'Limitation: no automatic calculations — frequent errors on HT/VAT/TTC totals',
+                  'Limitation: no payment tracking — you cannot see who has paid and who has not',
+                  'Limitation: each invoice is a separate file — complex archiving',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'A good Word template for Morocco should include: a header with logo and contact details, a client block, a line-item table (description / quantity / unit price HT / total HT), a VAT summary, and a footer with payment terms and bank details (RIB).',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'The manual numbering problem',
+                body: 'Moroccan law requires sequential and uninterrupted numbering. If you skip a number (FA-2025-003 after FA-2025-001), it can be interpreted as a concealed invoice during a tax audit. With a Word template, this is a real risk.',
+              },
+            ],
+          },
+          {
+            h2: 'Excel Invoice Template for Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The Excel template is preferred by those who want automatic calculations. Formulas handle the VAT and TTC total, reducing arithmetic errors.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Advantage: automatic calculations (HT × VAT = TTC) with simple formulas',
+                  'Advantage: can serve as a tracking register if well structured',
+                  'Advantage: native PDF export from Excel',
+                  'Limitation: difficult layout control — random page breaks when printing',
+                  'Limitation: sharing by email is unprofessional — the client receives an editable file',
+                  'Limitation: no management of reminders, unpaid invoices or associated quotes',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'The recommended structure for a Moroccan Excel template: one "Invoice" tab with the visual template, one "Register" tab listing all your invoices with number, date, client, amount and payment status. The register becomes your sales journal for tax declarations.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Excel is not invoicing software',
+                body: 'An Excel file shared by email can be modified by your client after receipt. A timestamped PDF invoice sent from dedicated software creates a far stronger legal record.',
+              },
+            ],
+          },
+          {
+            h2: 'PDF Invoice Template for Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'PDF is the reference format for professional invoicing. A PDF file is non-editable, compatible on all devices, and easy to archive. Two approaches to creating a compliant PDF invoice in Morocco:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Create in Word or Excel then export to PDF — simple, but you keep all the drawbacks of those tools',
+                  'Use invoicing software that generates the PDF directly with all mandatory legal fields — the professional solution',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'A PDF generated by invoicing software typically includes: your company logo and branding, all legal fields automatically filled, automatic sequential numbering, accurate VAT calculation, and the option to add an online payment link.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'PDF is the standard for large-account clients',
+                body: 'Major Moroccan companies and public administrations require invoices in PDF format with ICE, IF and all mandatory fields. A Word or Excel document is likely to be rejected by their accounting department.',
+              },
+            ],
+          },
+          {
+            h2: 'How to Number Your Invoices Correctly in Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Invoice numbering is often overlooked but can be costly during an audit. Here are the rules to follow:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Numbering must be sequential and continuous — no gaps, no duplicates',
+                  'Recommended format: FA-YYYY-NNN (e.g. FA-2025-001, FA-2025-002...)',
+                  'Numbering can restart each year or be continuous — choose one and stay consistent',
+                  'Cancelled invoices must be kept with the note "CANCELLED" — never delete them',
+                  'Credit notes have their own separate numbering (e.g. AV-2025-001)',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Format', 'Example', 'Usage'],
+                rows: [
+                  ['FA-YYYY-NNN', 'FA-2025-001', 'Most common — includes the year'],
+                  ['YYYY/NNN', '2025/001', 'Simple, adopted by some accountants'],
+                  ['NNN', '00123', 'Continuous numbering without year — not recommended'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Automatic numbering eliminates all these problems',
+                body: 'With invoicing software, numbering is automatic and tamper-proof. You cannot create two invoices with the same number, nor delete one without leaving a trace.',
+              },
+            ],
+          },
+          {
+            h2: 'The 6 Most Common Errors on Moroccan Invoices',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Missing or incorrect IF: your Tax Identifier must appear on every invoice without exception',
+                  'Absent ICE: mandatory for companies — without ICE, your B2B client cannot deduct the VAT',
+                  'Missing or miscalculated VAT: the rate and VAT amount must be explicit (or the exemption mention for auto-entrepreneurs)',
+                  'Inconsistent numbering: out-of-order invoices or repeated numbers',
+                  'Vague description: "Service provision" is not enough — describe precisely what was delivered',
+                  'Missing payment terms: the legal maximum in Morocco is 60 days — specify it',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'A rejected invoice = a delayed payment',
+                body: 'Accounting departments at large Moroccan companies routinely return incomplete invoices. Each error can delay your payment by 30 to 60 days.',
+              },
+            ],
+          },
+          {
+            h2: 'Beyond the Template: Why Sayerli Replaces Word, Excel and PDF',
+            blocks: [
+              {
+                type: 'p',
+                text: 'A Word or Excel template solves the appearance, not the substance. Here is what a template cannot do for you:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Automatically number invoices with no risk of duplicates',
+                  'Calculate and apply the correct VAT rate based on your status',
+                  'Send the invoice by email directly from the tool',
+                  'Track who has paid, who is late, and send automatic reminders',
+                  'Generate your sales journal for tax declarations',
+                  'Convert a quote to an invoice in one click',
+                  'Give your client a portal to view and accept their documents',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Create your first compliant invoice in 2 minutes',
+                body: 'Sayerli is built for Moroccan freelancers, auto-entrepreneurs and SMEs. Professional PDF invoices with ICE, IF, automatic VAT and sequential numbering. Email sending, payment tracking, automatic reminders and integrated VAT declaration. Free trial — no credit card.',
+                href: '/register',
+                cta: 'Create my free account',
+              },
+            ],
+          },
+        ],
+      },
+
+      ar: {
+        title: 'نموذج فاتورة في المغرب: Word وPDF وExcel — دليل شامل 2025',
+        description: 'حمّل نموذج فاتورة مجاني للمغرب: Word وPDF وExcel مع جميع البيانات الإلزامية. دليل شامل للمستقلين والمقاولين الذاتيين والمقاولات الصغيرة والمتوسطة.',
+        intro: [
+          {
+            type: 'p',
+            text: 'كل يوم، آلاف المستقلين والمقاولات في المغرب يفتحون Word أو Excel لإنشاء فاتورة يدوياً. النتيجة: ترقيم غير منتظم، بيانات قانونية ناقصة، حسابات TVA تقريبية، ووثيقة لا تُوحي بالثقة للعميل. والأسوأ أن فاتورة ناقصة قد تُرفض عند مراقبة جبائية.',
+          },
+          {
+            type: 'p',
+            text: 'في هذا الدليل، نغطي بدقة ما يجب أن يتضمنه نموذج فاتورة مطابق في المغرب، والصيغ المتاحة (Word وExcel وPDF)، ومزاياها وحدودها، وكيف ترتقي إلى مستوى أعلى يجعلك تنسى هذه الأسئلة نهائياً.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'البيانات الإلزامية في الفاتورة المغربية 2025',
+            blocks: [
+              {
+                type: 'p',
+                text: 'قبل اختيار نموذج، عليك معرفة ما يجب أن يتضمنه حتماً. في المغرب، فاتورة غير مطابقة قد يرفضها عميلك أو تُردّ عند مراقبة جبائية. إليك البيانات الإلزامية:',
+              },
+              {
+                type: 'table',
+                headers: ['البيان', 'التفصيل'],
+                rows: [
+                  ['الاسم / الشخصية القانونية', 'اسمك الكامل أو اسم شركتك'],
+                  ['العنوان المهني', 'عنوان مقرك الاجتماعي أو مكان ممارسة النشاط'],
+                  ['المعرِّف الجبائي (IF)', 'رقمك الجبائي المحصَّل من المديرية العامة للضرائب'],
+                  ['ICE', 'المعرِّف المشترك للمقاولة — إلزامي للشركات'],
+                  ['رقم الفاتورة', 'متسلسل وفريد (مثال: FA-2025-001)'],
+                  ['تاريخ الإصدار', 'تاريخ إنشاء الفاتورة'],
+                  ['بيانات العميل', 'الاسم والعنوان وICE للمعاملات B2B'],
+                  ['وصف الخدمة', 'وصف دقيق للسلعة أو الخدمة المقدَّمة'],
+                  ['المبلغ خارج الضريبة (HT)', 'سعر الوحدة والإجمالي خارج الضريبة'],
+                  ['معدل ومبلغ TVA', 'المعدل المطبَّق (7%، 10%، 14%، 20%) والمبلغ المحسوب'],
+                  ['الإجمالي الشامل للضريبة (TTC)', 'المبلغ الكلي شاملاً جميع الضرائب'],
+                  ['شروط الدفع', 'الأجل، طريقة الدفع، وعقوبات التأخير إن وُجدت'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'المقاول الذاتي: بيان TVA الخاص',
+                body: 'إذا كنت مقاولاً ذاتياً، فأنت معفًى من TVA. يجب أن تتضمن فاتورتك: "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". لا تُدرج أي مبلغ TVA.',
+              },
+            ],
+          },
+          {
+            h2: 'نموذج فاتورة Word للمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'نموذج Word هو الأكثر استخداماً في المغرب من قِبَل المستقلين في بداية مسيرتهم. سهل التخصيص — شعار، ألوان، بيانات الاتصال — ولا يتطلب أي مهارات تقنية.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ميزة: تخصيص سهل، تخطيط حر، لا اشتراك',
+                  'ميزة: متوافق مع جميع إصدارات Word وLibreOffice',
+                  'حد: ترقيم يدوي — خطر التكرار أو وجود ثغرات في الأرقام',
+                  'حد: لا حسابات تلقائية — أخطاء متكررة في مجاميع HT/TVA/TTC',
+                  'حد: لا تتبع للمدفوعات — لا تعرف من دفع ومن لم يدفع',
+                  'حد: كل فاتورة ملف منفصل — أرشفة معقدة',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'نموذج Word جيد للمغرب يجب أن يتضمن: رأس صفحة بالشعار وبيانات الاتصال، كتلة العميل، جدول السطور (الوصف / الكمية / سعر الوحدة HT / الإجمالي HT)، ملخص TVA، وتذييل بشروط الدفع والبيانات البنكية (RIB).',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'مشكلة الترقيم اليدوي',
+                body: 'يشترط القانون المغربي ترقيماً متسلسلاً ومتواصلاً. إذا أسقطت رقماً (FA-2025-003 بعد FA-2025-001)، فقد يُفسَّر ذلك على أنه فاتورة مخفية عند مراقبة جبائية. مع نموذج Word، هذا خطر حقيقي.',
+              },
+            ],
+          },
+          {
+            h2: 'نموذج فاتورة Excel للمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'يُفضَّل نموذج Excel من قِبَل من يريد حسابات تلقائية. تتولى الصيغ حساب TVA والإجمالي TTC، مما يقلل الأخطاء الحسابية.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ميزة: حسابات تلقائية (HT × TVA = TTC) بصيغ بسيطة',
+                  'ميزة: يمكن أن يكون سجلاً للمتابعة إذا نُظِّم جيداً',
+                  'ميزة: تصدير PDF مدمج من Excel',
+                  'حد: تخطيط صعب التحكم — فواصل صفحات عشوائية عند الطباعة',
+                  'حد: المشاركة بالبريد الإلكتروني غير احترافية — العميل يستلم ملفاً قابلاً للتعديل',
+                  'حد: لا إدارة للتذكيرات أو المستحقات غير المدفوعة أو عروض الأسعار المرتبطة',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'الهيكل الموصى به لنموذج Excel المغربي: علامة تبويب "الفاتورة" بالنموذج البصري، وعلامة تبويب "السجل" تُدرج جميع فواتيرك مع الرقم والتاريخ والعميل والمبلغ وحالة الدفع. يصبح السجل دفتر مبيعاتك للتصريحات الجبائية.',
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Excel ليس برنامج فوترة',
+                body: 'ملف Excel مشارَك بالبريد الإلكتروني يمكن تعديله من قِبَل عميلك بعد الاستلام. فاتورة PDF مؤرَّخة ومُرسَلة من برنامج مخصص توفر سنداً قانونياً أقوى بكثير.',
+              },
+            ],
+          },
+          {
+            h2: 'نموذج فاتورة PDF للمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'PDF هو صيغة المرجع في الفوترة الاحترافية. ملف PDF غير قابل للتعديل، متوافق مع جميع الأجهزة، وسهل الأرشفة. لإنشاء فاتورة PDF مطابقة في المغرب، ثمة مقاربتان:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'الإنشاء في Word أو Excel ثم التصدير إلى PDF — بسيط لكن تبقى كل عيوب هذه الأدوات',
+                  'استخدام برنامج فوترة يُولِّد PDF مباشرةً مع جميع البيانات القانونية — الحل الاحترافي',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'PDF الصادر عن برنامج فوترة يتضمن عادةً: شعار المقاولة وهويتها البصرية، جميع البيانات القانونية مملوءة تلقائياً، ترقيم تلقائي متسلسل، حساب TVA دقيق، وإمكانية إضافة رابط دفع إلكتروني.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'PDF هو المعيار لدى عملاء الحسابات الكبيرة',
+                body: 'الشركات الكبيرة والإدارات المغربية تشترط فواتير بصيغة PDF مع ICE وIF وجميع البيانات الإلزامية. وثيقة Word أو Excel على الأرجح ستُردّ من قِبَل قسم المحاسبة.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية ترقيم فواتيرك بشكل صحيح في المغرب',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'الترقيم يجب أن يكون متسلسلاً ومتواصلاً — لا ثغرات، لا تكرار',
+                  'الصيغة الموصى بها: FA-SSSS-NNN (مثال: FA-2025-001، FA-2025-002...)',
+                  'يمكن إعادة الترقيم كل سنة أو بشكل مستمر — اختر وابقَ متسقاً',
+                  'الفواتير الملغاة تُحتفظ بها مع عبارة "ملغاة" — لا تحذفها أبداً',
+                  'الإشعارات الدائنة (notes de crédit) لها ترقيمها الخاص المستقل (مثال: AV-2025-001)',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['الصيغة', 'مثال', 'الاستخدام'],
+                rows: [
+                  ['FA-SSSS-NNN', 'FA-2025-001', 'الأكثر شيوعاً — يتضمن السنة'],
+                  ['SSSS/NNN', '2025/001', 'بسيطة، يعتمدها بعض المحاسبين'],
+                  ['NNN', '00123', 'ترقيم مستمر بدون سنة — غير موصى به'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'الترقيم التلقائي يحل كل هذه المشكلات',
+                body: 'مع برنامج فوترة، الترقيم تلقائي ومحمي. لا يمكنك إنشاء فاتورتين بنفس الرقم، ولا حذف فاتورة دون ترك أثر.',
+              },
+            ],
+          },
+          {
+            h2: 'أبرز 6 أخطاء شائعة في الفواتير المغربية',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'IF مفقود أو خاطئ: معرِّفك الجبائي يجب أن يظهر على كل فاتورة دون استثناء',
+                  'ICE غائب: إلزامي للشركات — بدون ICE لا يستطيع عميلك B2B خصم TVA',
+                  'TVA منقوصة أو محسوبة خطأً: المعدل والمبلغ يجب أن يكونا صريحَيْن (أو بيان الإعفاء للمقاولين الذاتيين)',
+                  'ترقيم غير منتظم: فواتير مبعثرة أو أرقام متكررة',
+                  'وصف مبهم: "تقديم خدمة" لا يكفي — صِف بدقة ما قُدِّم',
+                  'شروط الدفع غائبة: الحد القانوني الأقصى في المغرب 60 يوماً — حدِّده صراحةً',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'فاتورة مردودة = تأخر في الدفع',
+                body: 'أقسام المحاسبة في الشركات الكبيرة المغربية ترفض بشكل منتظم الفواتير الناقصة. كل خطأ قد يؤخر دفعتك 30 إلى 60 يوماً.',
+              },
+            ],
+          },
+          {
+            h2: 'ما وراء النموذج: لماذا Sayerli يُغني عن Word وExcel وPDF',
+            blocks: [
+              {
+                type: 'p',
+                text: 'نموذج Word أو Excel يحل الشكل لا الجوهر. ما لا يستطيعه أي نموذج:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ترقيم فواتيرك تلقائياً دون خطر التكرار',
+                  'حساب وتطبيق معدل TVA الصحيح حسب وضعيتك',
+                  'إرسال الفاتورة بالبريد الإلكتروني مباشرةً من الأداة',
+                  'تتبع من دفع ومن تأخر وإرسال تذكيرات تلقائية',
+                  'توليد دفتر مبيعاتك للتصريحات الجبائية',
+                  'تحويل عرض السعر إلى فاتورة بنقرة واحدة',
+                  'منح عميلك بوابة لاستشارة وثائقه وقبولها',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'أنشئ أول فاتورة مطابقة في دقيقتين',
+                body: 'Sayerli مصمَّم للمستقلين والمقاولين الذاتيين والمقاولات الصغيرة والمتوسطة المغربية. فواتير PDF احترافية مع ICE وIF وTVA تلقائية وترقيم متسلسل. إرسال بالبريد الإلكتروني، تتبع المدفوعات، تذكيرات تلقائية وتصريح TVA مدمج. تجربة مجانية — بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء حسابي المجاني',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
 }

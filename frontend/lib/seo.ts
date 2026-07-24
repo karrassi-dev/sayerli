@@ -322,6 +322,27 @@ export const BLOG_POSTS: BlogPost[] = [
     image: '/blog/calcul-tva-maroc.webp',
     readingTime: 9,
   },
+  {
+    slug: 'modele-facture-maroc',
+    title: 'Modèle de facture au Maroc : Word, PDF et Excel — guide complet 2025',
+    description: 'Téléchargez un modèle de facture gratuit pour le Maroc : Word, PDF et Excel avec toutes les mentions obligatoires. Guide complet pour freelancers, auto-entrepreneurs et PME marocaines.',
+    category: 'facturation',
+    keywords: [
+      'modele facture maroc',
+      'modele facture word',
+      'modele facture excel',
+      'facture pdf maroc',
+      'facture gratuite pdf',
+      'facture auto entrepreneur maroc',
+      'mentions obligatoires facture maroc',
+      'logiciel facturation maroc',
+      'facture freelance maroc',
+      'numerotation facture maroc',
+    ],
+    publishedAt: '2026-07-24',
+    image: '/blog/modele-facture-maroc.webp',
+    readingTime: 8,
+  },
 ]
 
 export interface BlogPost {
