@@ -843,6 +843,7 @@
     "confirm": "Confirmer",
     "save": "Enregistrer",
     "saving": "Enregistrement...",
+    "saved": "Enregistré !",
     "status": "Statut",
     "viewAll": "Voir tout",
     "noResults": "Aucun résultat",
@@ -1492,6 +1493,7 @@
       },
       "profile": {
         "title": "Informations personnelles",
+        "subtitle": "Vos informations personnelles",
         "fullName": "Nom complet",
         "email": "Email",
         "phone": "Téléphone",
@@ -1499,6 +1501,8 @@
       },
       "company": {
         "title": "Informations de l'entreprise",
+        "subtitleSimple": "Ces informations apparaissent sur vos devis et factures.",
+        "subtitlePme": "Informations légales et coordonnées de votre entreprise.",
         "name": "Nom de l'entreprise",
         "ice": "ICE",
         "rc": "Registre de commerce",
@@ -1529,7 +1533,9 @@
       },
       "branding": {
         "title": "Identité visuelle",
+        "subtitle": "Choisissez le modèle et la couleur utilisés sur tous vos documents.",
         "logo": "Logo",
+        "logoHint": "PNG, JPG ou SVG — max 2 MB",
         "primaryColor": "Couleur principale",
         "uploadLogo": "Télécharger un logo"
       },
@@ -1559,6 +1565,7 @@
         "emailSectionDesc": "Recevez des alertes par email selon vos activités",
         "inAppSection": "Notifications en temps réel",
         "inAppSectionDesc": "Bannières instantanées dans le tableau de bord",
+        "starterWarning": "Passez au plan Pro ou Business pour activer les notifications par email.",
         "masterEmail": "Activer les emails",
         "masterEmailDesc": "Active ou désactive tous les emails",
         "devis": "Devis",
@@ -1572,6 +1579,9 @@
       },
       "security": {
         "title": "Sécurité",
+        "subtitle": "Gérez la sécurité de votre compte",
+        "securedTitle": "Compte sécurisé",
+        "securedDesc": "Authentification JWT active — Session valide",
         "changePassword": "Changer le mot de passe",
         "currentPassword": "Mot de passe actuel",
         "newPassword": "Nouveau mot de passe",
@@ -1607,6 +1617,12 @@
           "receipts": "Emails reçu ce mois",
           "depenses": "Reçus dépenses ce mois",
           "stockage": "Stockage reçus"
+        },
+        "storage": {
+          "title": "Stockage R2",
+          "subtitle": "Reçus de dépenses et documents téléversés",
+          "used": "utilisé",
+          "of": "sur"
         }
       },
       "numerotation": {

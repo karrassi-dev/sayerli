@@ -842,6 +842,7 @@
     "confirm": "Confirm",
     "save": "Save",
     "saving": "Saving...",
+    "saved": "Saved!",
     "status": "Status",
     "viewAll": "View all",
     "noResults": "No results found",
@@ -1491,6 +1492,7 @@
       },
       "profile": {
         "title": "Personal Information",
+        "subtitle": "Your personal information",
         "fullName": "Full Name",
         "email": "Email",
         "phone": "Phone",
@@ -1498,6 +1500,8 @@
       },
       "company": {
         "title": "Company Information",
+        "subtitleSimple": "This information appears on your quotes and invoices.",
+        "subtitlePme": "Legal information and company contact details.",
         "name": "Company Name",
         "ice": "ICE",
         "rc": "Trade Register",
@@ -1528,7 +1532,9 @@
       },
       "branding": {
         "title": "Visual Identity",
+        "subtitle": "Choose the template and color used on all your documents.",
         "logo": "Logo",
+        "logoHint": "PNG, JPG or SVG — max 2 MB",
         "primaryColor": "Primary Color",
         "uploadLogo": "Upload Logo"
       },
@@ -1558,6 +1564,7 @@
         "emailSectionDesc": "Receive email alerts based on your activity",
         "inAppSection": "Real-time Notifications",
         "inAppSectionDesc": "Instant banners inside the dashboard",
+        "starterWarning": "Upgrade to Pro or Business to enable email notifications.",
         "masterEmail": "Enable emails",
         "masterEmailDesc": "Turn all notification emails on or off",
         "devis": "Quotes",
@@ -1571,6 +1578,9 @@
       },
       "security": {
         "title": "Security",
+        "subtitle": "Manage your account security",
+        "securedTitle": "Account secured",
+        "securedDesc": "JWT authentication active — Valid session",
         "changePassword": "Change Password",
         "currentPassword": "Current Password",
         "newPassword": "New Password",
@@ -1606,6 +1616,12 @@
           "receipts": "Receipt emails this month",
           "depenses": "Expense receipts this month",
           "stockage": "Receipt storage"
+        },
+        "storage": {
+          "title": "R2 Storage",
+          "subtitle": "Expense receipts and uploaded documents",
+          "used": "used",
+          "of": "of"
         }
       },
       "numerotation": {

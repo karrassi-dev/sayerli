@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes'
 import {
   User, Building2, Palette, Globe, Sun, Moon, Monitor, Bell, Shield, CreditCard,
   Camera, Check, ChevronRight, Eye, EyeOff, Zap, AlertCircle,
-  Mail, FileText, Receipt, AlertTriangle, Lock, Hash, ShieldCheck,
+  Mail, FileText, Receipt, AlertTriangle, Lock, Hash, ShieldCheck, HardDrive,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -71,6 +71,7 @@ const PLAN_LIMITS_FRONTEND: Record<string, { clients: number; devisParMois: numb
 }
 
 function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean }) {
+  const { t } = useTranslation()
   return (
     <button
       onClick={onClick}
@@ -85,7 +86,7 @@ function SaveButton({ onClick, saving, saved, disabled }: { onClick: () => void;
       ) : saved ? (
         <Check className="w-4 h-4" />
       ) : null}
-      {saving ? 'Enregistrement...' : saved ? 'Enregistré !' : 'Enregistrer'}
+      {saving ? t('common.saving') : saved ? t('common.saved') : t('common.save')}
     </button>
   )
 }
@@ -432,7 +433,7 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.profile.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Vos informations personnelles</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.profile.subtitle')}</p>
             </div>
 
             <div className="flex items-center gap-4">
@@ -530,7 +531,7 @@ export default function SettingsPage() {
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.company.title')}</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {isSimple ? 'Ces informations apparaissent sur vos devis et factures.' : 'Informations légales et coordonnées de votre entreprise.'}
+                  {isSimple ? t('pages.settings.company.subtitleSimple') : t('pages.settings.company.subtitlePme')}
                 </p>
               </div>
               {!companyLoading && (
@@ -736,7 +737,7 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.branding.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Choisissez le modèle et la couleur utilisés sur tous vos documents</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.branding.subtitle')}</p>
             </div>
 
             {/* Logo upload */}
@@ -768,7 +769,7 @@ export default function SettingsPage() {
                     {logoUploading ? <span className="w-4 h-4 border-2 border-slate-400/30 border-t-slate-600 rounded-full animate-spin" /> : <Camera className="w-4 h-4" />}
                     {logoUploading ? 'Téléchargement...' : t('pages.settings.branding.uploadLogo')}
                   </button>
-                  <p className="text-xs text-slate-400 mt-1.5">PNG, JPG ou SVG — max 2MB</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1.5">{t('pages.settings.branding.logoHint')}</p>
                 </div>
               </div>
             </div>
@@ -1058,7 +1059,7 @@ export default function SettingsPage() {
 
                   {billing?.plan === 'STARTER' && (
                     <p className="text-xs text-amber-600 dark:text-amber-400 text-center pt-1">
-                      Passez au plan <strong>Pro</strong> ou <strong>Business</strong> pour activer les notifications par email.
+                      {t('pages.settings.notifications.starterWarning')}
                     </p>
                   )}
                 </div>
@@ -1094,7 +1095,7 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white mb-1">{t('pages.settings.security.title')}</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Gérez la sécurité de votre compte</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.security.subtitle')}</p>
             </div>
 
             <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-2xl border border-green-200 dark:border-green-800 flex items-center gap-3">
@@ -1102,8 +1103,8 @@ export default function SettingsPage() {
                 <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-green-800 dark:text-green-300">Compte sécurisé</p>
-                <p className="text-xs text-green-600 dark:text-green-400">Authentification JWT active — Session valide</p>
+                <p className="text-sm font-semibold text-green-800 dark:text-green-300">{t('pages.settings.security.securedTitle')}</p>
+                <p className="text-xs text-green-600 dark:text-green-400">{t('pages.settings.security.securedDesc')}</p>
               </div>
             </div>
 
@@ -1305,6 +1306,66 @@ export default function SettingsPage() {
                     })}
                   </div>
                 </div>
+
+                {/* ── Storage card ── */}
+                {(() => {
+                  const s = billing.usage.stockage
+                  const unlimited = s.limite === -1
+                  const pct = unlimited ? 0 : Math.min(100, Math.round((s.actuel / s.limite) * 100))
+                  const atLimit = !unlimited && s.actuel >= s.limite
+                  const nearLimit = !unlimited && !atLimit && pct >= 80
+                  const barColor = atLimit ? 'bg-red-500' : nearLimit ? 'bg-amber-500' : 'bg-blue-500'
+                  const badgeClass = atLimit
+                    ? 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800'
+                    : nearLimit
+                    ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800'
+                    : 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800'
+                  return (
+                    <div className="card rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center flex-shrink-0">
+                            <HardDrive className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-slate-900 dark:text-white">{t('pages.settings.billing.storage.title')}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{t('pages.settings.billing.storage.subtitle')}</p>
+                          </div>
+                        </div>
+                        <span className={cn('flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-full border', badgeClass)}>
+                          {unlimited ? '∞' : `${pct}%`}
+                        </span>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                          {unlimited ? (
+                            <div className="h-full w-full rounded-full bg-blue-200 dark:bg-blue-800/60" />
+                          ) : (
+                            <div
+                              className={cn('h-full rounded-full transition-all duration-500', barColor)}
+                              style={{ width: `${Math.max(pct, s.actuel > 0 ? 2 : 0)}%` }}
+                            />
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={cn('font-semibold', atLimit ? 'text-red-500' : nearLimit ? 'text-amber-500' : 'text-slate-600 dark:text-slate-400')}>
+                            {formatBytes(s.actuel)} {t('pages.settings.billing.storage.used')}
+                          </span>
+                          <span className="text-slate-500 dark:text-slate-400">
+                            {t('pages.settings.billing.storage.of')} {unlimited ? '∞' : formatBytes(s.limite)}
+                          </span>
+                        </div>
+                        {atLimit && (
+                          <p className="text-xs text-red-500 flex items-center gap-1 pt-0.5">
+                            <AlertTriangle className="w-3 h-3 flex-shrink-0" />
+                            {t('pages.settings.billing.limitReached')}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })()}
 
                 {/* ── Plan comparison ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
