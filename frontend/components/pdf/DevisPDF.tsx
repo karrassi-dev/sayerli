@@ -30,8 +30,10 @@ export interface DevisPDFProps {
   entreprise: {
     nom: string; email: string | null; telephone: string | null; adresse: string | null
     logoUrl: string | null; couleurPrimaire: string | null; ice: string | null; rc: string | null
-    activite?: string | null
+    activite?: string | null; signature?: string | null
   }
+  signatureClient?: string | null
+  signatureClientNom?: string | null
 }
 
 const CURRENCY_LOCALE: Record<string, string> = { MAD: 'fr-MA', EUR: 'fr-FR', USD: 'en-US' }
@@ -143,6 +145,7 @@ function tplConfig(template: string, brand: string) {
 export default function DevisPDF({
   reference, createdAt, dateExpiration, dateAcceptation, notes,
   totalHT, remise, taxe, totalTTC, template = 'classic', devise = 'MAD', lignes, client, entreprise,
+  signatureClient, signatureClientNom,
 }: DevisPDFProps) {
   const f = (v: number) => fmt(v, devise)
   const brand = entreprise.couleurPrimaire || '#2563eb'
@@ -238,6 +241,14 @@ export default function DevisPDF({
     },
     footerTxt: { fontSize: 7.5, color: G400 },
     footerBrand: { fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: G700 },
+
+    sigRow: { flexDirection: 'row', gap: 16, marginBottom: 16, marginTop: 4 },
+    sigBox: { flex: 1, borderWidth: 1, borderColor: G200, borderRadius: 4, padding: 10 },
+    sigLbl: { fontSize: 6.5, fontFamily: 'Helvetica-Bold', color: G400, letterSpacing: 1.2, marginBottom: 6, textTransform: 'uppercase' },
+    sigImg: { height: 48, objectFit: 'contain', marginBottom: 4 },
+    sigName: { fontSize: 7.5, color: G700, fontFamily: 'Helvetica-Bold', marginTop: 2 },
+    sigLine: { height: 1, backgroundColor: G200, marginVertical: 8 },
+    sigEmpty: { height: 48, borderBottomWidth: 1, borderBottomColor: G400, borderStyle: 'dashed' },
   })
 
   const logoNode = entreprise.logoUrl
@@ -386,6 +397,26 @@ export default function DevisPDF({
           L&apos;acceptation vaut accord sur l&apos;ensemble des prestations et montants décrits dans ce document.
         </Text>
         <Text style={s.certDate}>Date d&apos;acceptation : {fmtDateTime(dateAcceptation)}</Text>
+      </View>
+
+      {/* Signature block */}
+      <View style={s.sigRow}>
+        <View style={s.sigBox}>
+          <Text style={s.sigLbl}>Signature du client</Text>
+          {signatureClient
+            ? <Image src={signatureClient} style={s.sigImg} />
+            : <View style={s.sigEmpty} />}
+          <View style={s.sigLine} />
+          <Text style={s.sigName}>{signatureClientNom ?? client.nom}</Text>
+        </View>
+        <View style={s.sigBox}>
+          <Text style={s.sigLbl}>Signature du prestataire</Text>
+          {entreprise.signature
+            ? <Image src={entreprise.signature} style={s.sigImg} />
+            : <View style={s.sigEmpty} />}
+          <View style={s.sigLine} />
+          <Text style={s.sigName}>{entreprise.nom}</Text>
+        </View>
       </View>
     </View>
   )

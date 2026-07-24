@@ -1542,7 +1542,30 @@
         "logo": "الشعار",
         "logoHint": "PNG أو JPG أو SVG — حجم أقصى 2 ميغابايت",
         "primaryColor": "اللون الأساسي",
-        "uploadLogo": "رفع شعار"
+        "uploadLogo": "رفع شعار",
+        "signatureTitle": "التوقيع",
+        "signatureSubtitle": "سيضاف تلقائياً على عروض الأسعار والفواتير.",
+        "signatureDraw": "ارسم توقيعك",
+        "signatureClear": "مسح",
+        "signatureSave": "حفظ التوقيع",
+        "signatureDelete": "حذف التوقيع",
+        "signatureSaved": "تم حفظ التوقيع بنجاح.",
+        "signatureDeleted": "تم حذف التوقيع.",
+        "signatureEmpty": "لا يوجد توقيع محفوظ",
+        "signatureHint": "استخدم الماوس أو إصبعك للرسم"
+      },
+      "signatureModal": {
+        "title": "توقيع العرض",
+        "subtitle": "ارسم توقيعك لقبول هذا العرض.",
+        "instruction": "استخدم إصبعك أو الماوس للتوقيع في المربع أدناه.",
+        "clear": "مسح",
+        "accept": "توقيع وقبول",
+        "cancel": "إلغاء",
+        "emptyError": "يرجى رسم توقيعك قبل القبول.",
+        "clientSignature": "توقيع العميل",
+        "providerSignature": "توقيع المزود",
+        "signedBy": "وقّع من قِبل",
+        "signedOn": "تاريخ التوقيع"
       },
       "language": {
         "title": "اللغة والمنطقة",

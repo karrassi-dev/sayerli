@@ -75,7 +75,7 @@ interface PublicFacture {
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
     templateDocument: string | null
     ice: string | null; rc: string | null; website: string | null
-    activite: string | null
+    activite: string | null; signature: string | null
     titulaireCompte: string | null; banque: string | null
     rib: string | null; iban: string | null; swift: string | null
   }
@@ -653,6 +653,7 @@ export default function PublicFacturePage() {
       ice: facture.entreprise.ice,
       rc: facture.entreprise.rc,
       activite: facture.entreprise.activite,
+      signature: facture.entreprise.signature ?? null,
       titulaireCompte: facture.entreprise.titulaireCompte,
       banque: facture.entreprise.banque,
       rib: facture.entreprise.rib,

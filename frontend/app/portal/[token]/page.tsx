@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import {
   FileText, Receipt, CheckCircle, XCircle, Clock, AlertCircle,
   Mail, Phone, Globe, Loader2, Check, ArrowRight, ExternalLink,
-  Sun, Moon, Truck,
+  Sun, Moon, Truck, Pen, X,
 } from 'lucide-react'
 import { portalApi } from '@/lib/api'
+import SignatureCanvas, { type SignatureCanvasHandle } from '@/components/dashboard/ui/SignatureCanvas'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -111,10 +112,13 @@ export default function PortalPage() {
   const [data, setData]           = useState<PortalData | null>(null)
   const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState(false)
-  const [accepting, setAccepting] = useState<string | null>(null)
-  const [accepted, setAccepted]   = useState<Set<string>>(new Set())
-  const [tab, setTab]             = useState<'factures' | 'devis' | 'livraisons' | 'recus'>('factures')
-  const [dark, setDark]           = useState(false)
+  const [accepting, setAccepting]       = useState<string | null>(null)
+  const [accepted, setAccepted]         = useState<Set<string>>(new Set())
+  const [tab, setTab]                   = useState<'factures' | 'devis' | 'livraisons' | 'recus'>('factures')
+  const [dark, setDark]                 = useState(false)
+  const [sigDevisId, setSigDevisId]     = useState<string | null>(null)
+  const [sigError, setSigError]         = useState('')
+  const sigCanvasRef                    = useRef<SignatureCanvasHandle>(null)
 
   useEffect(() => {
     if (localStorage.getItem('portal-theme') === 'dark') setDark(true)
@@ -135,15 +139,30 @@ export default function PortalPage() {
 
   useEffect(() => { fetchPortal() }, [fetchPortal])
 
-  const handleAccept = async (devisId: string) => {
-    setAccepting(devisId)
+  const handleAccept = (devisId: string) => {
+    setSigError('')
+    setSigDevisId(devisId)
+    setTimeout(() => sigCanvasRef.current?.clear(), 50)
+  }
+
+  const handleSignAndAccept = async () => {
+    if (!sigDevisId) return
+    if (!sigCanvasRef.current || sigCanvasRef.current.isEmpty()) {
+      setSigError('Veuillez dessiner votre signature avant d\'accepter.')
+      return
+    }
+    const signatureClient = sigCanvasRef.current.toDataURL()
+    const clientNom = data?.nom ?? ''
+    setSigError('')
+    setAccepting(sigDevisId)
     try {
-      await portalApi.acceptDevis(token, devisId)
-      setAccepted(prev => new Set([...prev, devisId]))
+      await portalApi.acceptDevis(token, sigDevisId, { signatureClient, signatureClientNom: clientNom })
+      setAccepted(prev => new Set([...prev, sigDevisId]))
       setData(prev => prev ? {
         ...prev,
-        devis: prev.devis.map(d => d.id === devisId ? { ...d, statut: 'ACCEPTE' } : d),
+        devis: prev.devis.map(d => d.id === sigDevisId ? { ...d, statut: 'ACCEPTE', dateAcceptation: new Date().toISOString() } : d),
       } : prev)
+      setSigDevisId(null)
     } catch { /* ignore */ }
     finally { setAccepting(null) }
   }
@@ -597,6 +616,98 @@ export default function PortalPage() {
         </footer>
 
       </main>
+
+      {/* ── SIGNATURE MODAL ── */}
+      {sigDevisId && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+          }}
+          onClick={e => { if (e.target === e.currentTarget) setSigDevisId(null) }}
+        >
+          <div style={{
+            background: dark ? '#1e293b' : '#ffffff', borderRadius: 20,
+            padding: 28, width: '100%', maxWidth: 520,
+            border: `1px solid ${dark ? '#334155' : '#e2e8f0'}`,
+            boxShadow: '0 25px 50px rgba(0,0,0,0.3)',
+          }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: `${brand}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Pen style={{ width: 18, height: 18, color: brand }} />
+                </div>
+                <p style={{ fontSize: 16, fontWeight: 800, color: t.text, margin: 0 }}>Signer le devis</p>
+              </div>
+              <button
+                onClick={() => setSigDevisId(null)}
+                style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${t.border}`, background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X style={{ width: 16, height: 16, color: t.textSub }} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: 13, color: t.textSub, marginBottom: 20 }}>
+              Dessinez votre signature pour accepter officiellement ce devis.
+            </p>
+
+            {/* Canvas area */}
+            <p style={{ fontSize: 11, fontWeight: 700, color: t.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
+              Utilisez votre doigt ou la souris pour signer
+            </p>
+            <div style={{ borderRadius: 12, overflow: 'hidden', border: `2px dashed ${brand}`, background: '#ffffff' }}>
+              <SignatureCanvas
+                ref={sigCanvasRef}
+                width={600}
+                height={140}
+                penColor="#1e293b"
+                backgroundColor="#ffffff"
+                style={{ display: 'block', width: '100%' }}
+              />
+            </div>
+
+            {sigError && (
+              <p style={{ fontSize: 12, color: '#dc2626', marginTop: 8 }}>{sigError}</p>
+            )}
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
+              <button
+                onClick={() => sigCanvasRef.current?.clear()}
+                style={{
+                  flex: 1, padding: '11px 0', borderRadius: 12, border: `1px solid ${t.border}`,
+                  background: 'transparent', color: t.textSub, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                }}
+              >
+                Effacer
+              </button>
+              <button
+                onClick={handleSignAndAccept}
+                disabled={!!accepting}
+                style={{
+                  flex: 2, padding: '11px 0', borderRadius: 12, border: 'none',
+                  background: brand, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  opacity: accepting ? 0.7 : 1,
+                }}
+              >
+                {accepting ? (
+                  <Loader2 style={{ width: 15, height: 15, animation: 'spin 1s linear infinite' }} />
+                ) : (
+                  <Check style={{ width: 15, height: 15 }} />
+                )}
+                {accepting ? 'En cours…' : 'Signer et accepter'}
+              </button>
+            </div>
+
+            <p style={{ fontSize: 11, color: t.textMuted, marginTop: 14, textAlign: 'center' }}>
+              En signant, vous confirmez accepter l'ensemble des prestations et montants de ce devis.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

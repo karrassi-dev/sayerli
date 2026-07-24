@@ -88,8 +88,8 @@ export const publicDevisApi = {
 
 export const portalApi = {
   get: (token: string) => publicApi.get(`/public/portal/${token}`),
-  acceptDevis: (token: string, devisId: string) =>
-    publicApi.post(`/public/portal/${token}/devis/${devisId}/accepter`),
+  acceptDevis: (token: string, devisId: string, data?: { signatureClient?: string; signatureClientNom?: string }) =>
+    publicApi.post(`/public/portal/${token}/devis/${devisId}/accepter`, data ?? {}),
 }
 
 // Invitation public info (no auth required)
@@ -232,7 +232,7 @@ export const settingsApi = {
 
   // Branding
   getBranding: () => api.get('/settings/branding'),
-  updateBranding: (data: { couleurPrimaire?: string; logo?: string; templateDocument?: string }) =>
+  updateBranding: (data: { couleurPrimaire?: string; logo?: string; templateDocument?: string; signature?: string | null }) =>
     api.patch('/settings/branding', data),
   uploadLogo: (file: File) => {
     const form = new FormData()

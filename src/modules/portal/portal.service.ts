@@ -101,8 +101,11 @@ export class PortalService {
     return clientData;
   }
 
-  async accepterDevis(portalToken: string, devisId: string) {
-    // Verify client owns this portal
+  async accepterDevis(
+    portalToken: string,
+    devisId: string,
+    signatureData: { signatureClient?: string; signatureClientNom?: string; signatureClientIp?: string } = {},
+  ) {
     const client = await this.prisma.client.findUnique({
       where: { portalToken },
       select: { id: true, actif: true, entrepriseId: true, nom: true },
@@ -110,7 +113,6 @@ export class PortalService {
 
     if (!client || !client.actif) throw new NotFoundException('Portail introuvable.');
 
-    // Verify devis belongs to this client (security: cross-reference)
     const devis = await this.prisma.devis.findFirst({
       where: { id: devisId, clientId: client.id },
     });
@@ -124,7 +126,13 @@ export class PortalService {
 
     await this.prisma.devis.update({
       where: { id: devisId },
-      data: { statut: StatutDevis.ACCEPTE, dateAcceptation: new Date() },
+      data: {
+        statut: StatutDevis.ACCEPTE,
+        dateAcceptation: new Date(),
+        ...(signatureData.signatureClient && { signatureClient: signatureData.signatureClient }),
+        ...(signatureData.signatureClientNom && { signatureClientNom: signatureData.signatureClientNom }),
+        ...(signatureData.signatureClientIp && { signatureClientIp: signatureData.signatureClientIp }),
+      },
     });
 
     this.notificationsService.creerEtEnvoyer({

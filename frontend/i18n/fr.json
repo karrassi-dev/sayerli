@@ -1543,7 +1543,30 @@
         "logo": "Logo",
         "logoHint": "PNG, JPG ou SVG — max 2 MB",
         "primaryColor": "Couleur principale",
-        "uploadLogo": "Télécharger un logo"
+        "uploadLogo": "Télécharger un logo",
+        "signatureTitle": "Signature",
+        "signatureSubtitle": "Sera apposée automatiquement sur vos devis et factures.",
+        "signatureDraw": "Dessinez votre signature",
+        "signatureClear": "Effacer",
+        "signatureSave": "Enregistrer la signature",
+        "signatureDelete": "Supprimer la signature",
+        "signatureSaved": "Signature enregistrée avec succès.",
+        "signatureDeleted": "Signature supprimée.",
+        "signatureEmpty": "Aucune signature enregistrée",
+        "signatureHint": "Utilisez votre souris ou votre doigt pour dessiner"
+      },
+      "signatureModal": {
+        "title": "Signer le devis",
+        "subtitle": "Dessinez votre signature pour accepter ce devis.",
+        "instruction": "Utilisez votre doigt ou la souris pour signer dans le cadre ci-dessous.",
+        "clear": "Effacer",
+        "accept": "Signer et accepter",
+        "cancel": "Annuler",
+        "emptyError": "Veuillez dessiner votre signature avant d'accepter.",
+        "clientSignature": "Signature du client",
+        "providerSignature": "Signature du prestataire",
+        "signedBy": "Signé par",
+        "signedOn": "Signé le"
       },
       "language": {
         "title": "Langue et région",

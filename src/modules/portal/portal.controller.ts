@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Param } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { Throttle } from '@nestjs/throttler';
 import { Public } from '../../common/decorators/public.decorator';
 import { PortalService } from './portal.service';
@@ -20,7 +21,14 @@ export class PortalController {
   async accepterDevis(
     @Param('token') token: string,
     @Param('devisId') devisId: string,
+    @Body() body: { signatureClient?: string; signatureClientNom?: string } = {},
+    @Req() req: Request,
   ) {
-    return this.portalService.accepterDevis(token, devisId);
+    const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? req.ip ?? '';
+    return this.portalService.accepterDevis(token, devisId, {
+      signatureClient: body.signatureClient,
+      signatureClientNom: body.signatureClientNom,
+      signatureClientIp: ip,
+    });
   }
 }

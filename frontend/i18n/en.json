@@ -1542,7 +1542,30 @@
         "logo": "Logo",
         "logoHint": "PNG, JPG or SVG — max 2 MB",
         "primaryColor": "Primary Color",
-        "uploadLogo": "Upload Logo"
+        "uploadLogo": "Upload Logo",
+        "signatureTitle": "Signature",
+        "signatureSubtitle": "Will be automatically added to your quotes and invoices.",
+        "signatureDraw": "Draw your signature",
+        "signatureClear": "Clear",
+        "signatureSave": "Save signature",
+        "signatureDelete": "Delete signature",
+        "signatureSaved": "Signature saved successfully.",
+        "signatureDeleted": "Signature deleted.",
+        "signatureEmpty": "No signature saved",
+        "signatureHint": "Use your mouse or finger to draw"
+      },
+      "signatureModal": {
+        "title": "Sign the quote",
+        "subtitle": "Draw your signature to accept this quote.",
+        "instruction": "Use your finger or mouse to sign in the box below.",
+        "clear": "Clear",
+        "accept": "Sign & accept",
+        "cancel": "Cancel",
+        "emptyError": "Please draw your signature before accepting.",
+        "clientSignature": "Client signature",
+        "providerSignature": "Provider signature",
+        "signedBy": "Signed by",
+        "signedOn": "Signed on"
       },
       "language": {
         "title": "Language & Region",

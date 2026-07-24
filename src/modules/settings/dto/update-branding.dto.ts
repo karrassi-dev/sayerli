@@ -1,7 +1,5 @@
 import { IsOptional, IsString, Matches } from 'class-validator';
 
-const VALID_TEMPLATES = ['classic', 'minimal', 'stripe', 'corporate', 'bold', 'elegant'];
-
 export class UpdateBrandingDto {
   @IsOptional()
   @IsString()
@@ -13,4 +11,8 @@ export class UpdateBrandingDto {
   @IsOptional()
   @IsString()
   templateDocument?: string;
+
+  @IsOptional()
+  @IsString()
+  signature?: string;
 }

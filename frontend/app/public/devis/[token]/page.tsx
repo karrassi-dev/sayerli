@@ -48,8 +48,10 @@ interface PublicDevis {
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
     templateDocument: string | null
     ice: string | null; rc: string | null; website: string | null
-    activite: string | null
+    activite: string | null; signature: string | null
   }
+  signatureClient: string | null
+  signatureClientNom: string | null
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -180,6 +182,8 @@ function AcceptedScreen({ devis, acceptedAt }: { devis: PublicDevis; acceptedAt:
     })),
     client: devis.client,
     entreprise: { ...devis.entreprise, logoUrl: pdfLogoUrl },
+    signatureClient: devis.signatureClient ?? null,
+    signatureClientNom: devis.signatureClientNom ?? null,
   }
 
   const acceptedStr = acceptedAt.toLocaleString('fr-MA', {
@@ -377,6 +381,8 @@ export default function PublicDevisPage() {
     })),
     client: devis.client,
     entreprise: { ...devis.entreprise, logoUrl: pdfLogoUrl },
+    signatureClient: devis.signatureClient ?? null,
+    signatureClientNom: devis.signatureClientNom ?? null,
   }
 
   return (
