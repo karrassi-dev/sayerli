@@ -62,13 +62,13 @@ function loadCompanies(): CompanyInfo[] {
 
 export function useAuth() {
   const router = useRouter()
-  const [state, setState] = useState<AuthState>({
+  const [state, setState] = useState<AuthState>(() => ({
     user: null,
     entreprise: null,
-    companies: [],
+    companies: loadCompanies(),
     loading: true,
     error: null,
-  })
+  }))
 
   useEffect(() => {
     const token = Cookies.get('sayerli_token')
