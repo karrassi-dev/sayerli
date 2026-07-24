@@ -126,6 +126,8 @@
         "5 emails reçu / mois",
         "3 relances auto / mois",
         "10 emails / mois",
+        "20 dépenses / mois",
+        "Stockage 200 MB",
         "Support communauté"
       ],
       "excluded": [
@@ -149,6 +151,8 @@
         "Emails reçu automatiques",
         "Relances auto email + WhatsApp",
         "100 emails / mois",
+        "150 dépenses / mois",
+        "Stockage 5 GB",
         "Journal des ventes basique",
         "Support email 48h"
       ],
@@ -171,6 +175,8 @@
         "Emails reçu avancés",
         "Relances avancées",
         "Emails illimités",
+        "Dépenses illimitées",
+        "Stockage 20 GB",
         "Journal des ventes complet + TVA",
         "Support prioritaire 24h"
       ],
@@ -1623,6 +1629,17 @@
           "subtitle": "Reçus de dépenses et documents téléversés",
           "used": "utilisé",
           "of": "sur"
+        },
+        "plans": {
+          "starter": {
+            "features": ["5 clients", "5 devis / mois", "5 factures / mois", "5 BL / mois", "2 utilisateurs", "3 relances / mois", "5 emails / mois", "20 dépenses / mois", "Stockage 200 MB"]
+          },
+          "pro": {
+            "features": ["20 clients", "100 devis / mois", "100 factures / mois", "100 BL / mois", "5 utilisateurs", "Relances illimitées", "Emails illimités", "Journal des ventes", "Support email 48h", "150 dépenses / mois", "Stockage 5 GB"]
+          },
+          "business": {
+            "features": ["Clients illimités", "Devis illimités", "Factures illimitées", "BL illimités", "12 utilisateurs", "Emails illimités", "Journal complet + TVA", "Support prioritaire 24h", "Dépenses illimitées", "Stockage 20 GB"]
+          }
         }
       },
       "numerotation": {

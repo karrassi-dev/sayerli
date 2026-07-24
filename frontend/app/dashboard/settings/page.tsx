@@ -53,10 +53,10 @@ const PRESET_COLORS = [
   { name: 'Émeraude', color: '#059669', class: 'bg-emerald-600' },
 ]
 
-const PLAN_LABELS: Record<string, { label: string; prix: string; features: string[] }> = {
-  STARTER: { label: 'Starter', prix: '0',   features: ['5 clients', '5 devis/mois', '5 factures/mois', '5 BL/mois', '2 utilisateurs', '3 relances/mois', '5 emails/mois'] },
-  PRO:     { label: 'Pro',     prix: '199', features: ['20 clients', '100 devis/mois', '100 factures/mois', '100 BL/mois', '5 utilisateurs', 'Relances illimitées', 'Emails illimités', 'Journal des ventes', 'Support email 48h'] },
-  BUSINESS:{ label: 'Business',prix: '299', features: ['Clients illimités', 'Devis illimités', 'Factures illimitées', 'BL illimités', '12 utilisateurs', 'Emails illimités', 'Journal complet + TVA', 'Support prioritaire 24h'] },
+const PLAN_LABELS: Record<string, { label: string; prix: string }> = {
+  STARTER: { label: 'Starter', prix: '0'   },
+  PRO:     { label: 'Pro',     prix: '199' },
+  BUSINESS:{ label: 'Business',prix: '299' },
 }
 
 const PLAN_ORDER: Record<string, number> = { STARTER: 0, PRO: 1, BUSINESS: 2 }
@@ -104,7 +104,7 @@ function FieldError({ msg }: { msg?: string }) {
 const PERSONAL_TABS: Tab[] = ['profile', 'language', 'theme', 'security']
 
 export default function SettingsPage() {
-  const { t, setLocale } = useTranslation()
+  const { t, tArray, setLocale } = useTranslation()
   const { setTheme } = useTheme()
   const { user } = useAuth()
   const { toasts, success, error: toastError, removeToast } = useToast()
@@ -1260,7 +1260,7 @@ export default function SettingsPage() {
                   )}
 
                   <div className="mt-4 pt-4 border-t border-white/20 flex flex-wrap gap-2">
-                    {PLAN_LABELS[billing.plan]?.features.map(f => (
+                    {tArray(`pages.settings.billing.plans.${billing.plan.toLowerCase()}.features`).map((f: string) => (
                       <span key={f} className="text-xs px-2.5 py-1 rounded-full bg-white/15 font-medium">{f}</span>
                     ))}
                   </div>
@@ -1388,7 +1388,7 @@ export default function SettingsPage() {
                           {info.prix !== '0' && <span className="text-xs font-normal text-slate-400 ml-1">/{t('pages.settings.billing.perMonth')}</span>}
                         </p>
                         <ul className="space-y-1.5 mb-4 flex-1">
-                          {info.features.map(f => (
+                          {tArray(`pages.settings.billing.plans.${plan.toLowerCase()}.features`).map((f: string) => (
                             <li key={f} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
                               <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
                               {f}

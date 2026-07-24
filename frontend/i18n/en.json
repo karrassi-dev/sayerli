@@ -126,6 +126,8 @@
         "5 receipt emails / month",
         "3 auto reminders / month",
         "10 emails / month",
+        "20 expenses / month",
+        "200 MB storage",
         "Community support"
       ],
       "excluded": [
@@ -149,6 +151,8 @@
         "Automatic receipt emails",
         "Auto reminders email + WhatsApp",
         "100 emails / month",
+        "150 expenses / month",
+        "5 GB storage",
         "Basic sales journal",
         "Email support 48h"
       ],
@@ -171,6 +175,8 @@
         "Advanced receipt emails",
         "Advanced reminders",
         "Unlimited emails",
+        "Unlimited expenses",
+        "20 GB storage",
         "Full sales journal + VAT",
         "Priority support 24h"
       ],
@@ -1622,6 +1628,17 @@
           "subtitle": "Expense receipts and uploaded documents",
           "used": "used",
           "of": "of"
+        },
+        "plans": {
+          "starter": {
+            "features": ["5 clients", "5 quotes / month", "5 invoices / month", "5 delivery notes / month", "2 users", "3 reminders / month", "5 emails / month", "20 expenses / month", "200 MB storage"]
+          },
+          "pro": {
+            "features": ["20 clients", "100 quotes / month", "100 invoices / month", "100 delivery notes / month", "5 users", "Unlimited reminders", "Unlimited emails", "Sales journal", "Email support 48h", "150 expenses / month", "5 GB storage"]
+          },
+          "business": {
+            "features": ["Unlimited clients", "Unlimited quotes", "Unlimited invoices", "Unlimited delivery notes", "12 users", "Unlimited emails", "Full journal + VAT", "Priority support 24h", "Unlimited expenses", "20 GB storage"]
+          }
         }
       },
       "numerotation": {
