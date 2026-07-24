@@ -699,6 +699,141 @@ export class EmailService {
     }
   }
 
+  async sendDeclarationTVAEmail(opts: {
+    toEmail: string;
+    prenom: string;
+    entrepriseNom: string;
+    moisLabel: string;
+    deadline: string;
+    totalTVA: number;
+    totalTVADeductible: number;
+    totalTVANette: number;
+    debut: string;
+    fin: string;
+    pdfBuffer: Buffer;
+  }) {
+    const fmt = (n: number) =>
+      new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' MAD';
+    const dashboardUrl = `${this.frontendUrl}/dashboard/declarations-tva`;
+
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Déclaration TVA — ${opts.moisLabel}</title>
+</head>
+<body style="margin:0;padding:0;background:#f0fdf4;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#16a34a,#0d9488);padding:32px 40px;text-align:center;">
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${this.logoUrl}" alt="Sayerli" width="38" height="38" style="display:block;border-radius:8px;border:0;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="color:#ffffff;font-size:24px;font-weight:900;letter-spacing:-0.5px;">Sayerl</span><span style="color:#bbf7d0;font-size:24px;font-weight:900;letter-spacing:-0.5px;">i</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:12px 0 0;color:#bbf7d0;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">
+                Déclaration TVA — ${opts.moisLabel}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+              <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#0f172a;">
+                Votre déclaration TVA est prête 📊
+              </h1>
+              <p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">
+                Bonjour <strong style="color:#0f172a;">${opts.prenom}</strong>,<br/>
+                Sayerli a calculé automatiquement votre TVA pour <strong>${opts.moisLabel}</strong>.
+                Votre déclaration est en pièce jointe. Vous devez déclarer avant le <strong style="color:#dc2626;">${opts.deadline}</strong>.
+              </p>
+
+              <!-- Summary card -->
+              <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:24px;margin-bottom:28px;">
+                <p style="margin:0 0 16px;font-size:11px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Résumé · ${opts.debut} au ${opts.fin}</p>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding:8px 0;border-bottom:1px solid #dcfce7;">
+                      <span style="font-size:13px;color:#374151;">TVA collectée (factures)</span>
+                      <span style="float:right;font-size:13px;font-weight:700;color:#16a34a;">+${fmt(opts.totalTVA)}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;border-bottom:1px solid #dcfce7;">
+                      <span style="font-size:13px;color:#374151;">TVA déductible (dépenses)</span>
+                      <span style="float:right;font-size:13px;font-weight:700;color:#d97706;">-${fmt(opts.totalTVADeductible)}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:12px 0 4px;">
+                      <span style="font-size:15px;font-weight:800;color:#0f172a;">TVA nette à payer</span>
+                      <span style="float:right;font-size:17px;font-weight:900;color:#1d4ed8;">${fmt(opts.totalTVANette)}</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="margin:0 0 24px;font-size:14px;color:#64748b;line-height:1.6;">
+                La déclaration complète (avec le détail par taux) est jointe en PDF.<br/>
+                Connectez-vous à Sayerli pour recalculer ou ajuster la période si nécessaire.
+              </p>
+
+              <div style="text-align:center;">
+                <a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#16a34a,#0d9488);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:12px;">
+                  Voir dans Sayerli
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;">
+                Sayerli · Logiciel de gestion pour PME marocaines<br/>
+                Ce document est à titre indicatif — vérifiez auprès de votre comptable avant déclaration.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    try {
+      const { error } = await this.resend.emails.send({
+        from: this.from,
+        to: opts.toEmail,
+        subject: `📊 Déclaration TVA ${opts.moisLabel} — ${fmt(opts.totalTVANette)} à déclarer avant le ${opts.deadline}`,
+        html,
+        attachments: [
+          {
+            filename: `declaration-tva-${opts.debut}-${opts.fin}.pdf`,
+            content: opts.pdfBuffer,
+          },
+        ],
+      });
+      if (error) this.logger.error(`Resend error (TVA declaration): ${JSON.stringify(error)}`);
+    } catch (err) {
+      this.logger.error(`Failed to send TVA declaration email to ${opts.toEmail}: ${err}`);
+    }
+  }
+
   async sendJoinCompanyInvitation(opts: {
     toEmail: string;
     toName: string;

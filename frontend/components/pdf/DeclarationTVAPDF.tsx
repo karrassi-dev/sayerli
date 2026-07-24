@@ -139,7 +139,7 @@ export default function DeclarationTVAPDF({
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
             <Text style={[s.td, { color: G700 }]}>TVA déductible</Text>
-            <Text style={[s.tdBold, { color: '#d97706' }]}>−{fmt(totalTVADeductible)} MAD</Text>
+            <Text style={[s.tdBold, { color: '#d97706' }]}>-{fmt(totalTVADeductible)} MAD</Text>
           </View>
           <View style={{ height: 1, backgroundColor: '#bfdbfe', marginBottom: 8 }} />
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
