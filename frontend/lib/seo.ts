@@ -364,6 +364,27 @@ export const BLOG_POSTS: BlogPost[] = [
     image: '/blog/freelance-maroc-guide.webp',
     readingTime: 10,
   },
+  {
+    slug: 'modele-devis-maroc',
+    title: 'Modèle de devis professionnel au Maroc : télécharger gratuitement (2025)',
+    description: 'Créez un devis professionnel et conforme au Maroc : mentions obligatoires, modèles Word, Excel et PDF, durée de validité, TVA et conversion en facture. Guide complet pour freelancers et PME marocaines.',
+    category: 'devis',
+    keywords: [
+      'modele devis maroc',
+      'devis freelance maroc',
+      'exemple devis maroc',
+      'devis entreprise maroc',
+      'modele devis word',
+      'modele devis excel',
+      'devis pdf maroc',
+      'comment faire un devis maroc',
+      'devis professionnel maroc',
+      'logiciel devis maroc',
+    ],
+    publishedAt: '2026-07-24',
+    image: '/blog/modele-devis-maroc.webp',
+    readingTime: 8,
+  },
 ]
 
 export interface BlogPost {

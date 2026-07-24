@@ -7254,4 +7254,672 @@ export const ARTICLES: Record<string, ArticleData> = {
       },
     },
   },
+
+  'modele-devis-maroc': {
+    slug: 'modele-devis-maroc',
+    image: '/blog/modele-devis-maroc.webp',
+    readingTime: 8,
+    content: {
+
+      fr: {
+        title: 'Modèle de devis professionnel au Maroc : télécharger gratuitement (2025)',
+        description: 'Créez un devis professionnel et conforme au Maroc : mentions obligatoires, modèles Word, Excel et PDF, durée de validité, TVA et conversion en facture. Guide complet pour freelancers et PME marocaines.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Le devis est souvent la première impression que vous donnez à un client potentiel. Un devis professionnel, bien structuré et conforme inspire confiance et augmente vos chances d\'être retenu. Un devis flou, sans mentions claires, peut faire douter même un client intéressé — ou pire, créer un litige sur le périmètre de la mission.',
+          },
+          {
+            type: 'p',
+            text: 'Dans ce guide, on couvre tout ce qu\'un devis marocain doit contenir, les différents formats disponibles, comment le structurer pour maximiser votre taux d\'acceptation, et comment le convertir en facture sans ressaisir quoi que ce soit.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Qu\'est-ce qu\'un devis et quelle est sa valeur juridique au Maroc ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Un devis est une offre commerciale chiffrée que vous soumettez à un client avant de commencer une mission. Une fois signé par les deux parties, il a une valeur contractuelle au Maroc : il engage le prestataire sur le prix et le périmètre, et le client sur son intention d\'accepter la prestation aux conditions décrites.',
+              },
+              {
+                type: 'p',
+                text: 'Contrairement à une facture qui documente une prestation déjà réalisée, le devis précède le travail. Il protège les deux parties : vous êtes protégé contre les demandes hors périmètre non prévues, et votre client est protégé contre les mauvaises surprises de prix.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Devis signé = contrat valide',
+                body: 'Au Maroc, un devis signé par le client constitue un accord contractuel. Si votre devis est bien rédigé — périmètre précis, prix ferme, conditions de paiement — vous n\'avez pas forcément besoin d\'un contrat séparé pour les petites et moyennes missions.',
+              },
+            ],
+          },
+          {
+            h2: 'Les mentions obligatoires d\'un devis professionnel au Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Un devis professionnel au Maroc doit inclure les éléments suivants pour être complet et crédible :',
+              },
+              {
+                type: 'table',
+                headers: ['Mention', 'Détail'],
+                rows: [
+                  ['Vos coordonnées', 'Nom / raison sociale, adresse, téléphone, email'],
+                  ['Identifiant Fiscal (IF)', 'Votre numéro fiscal — obligatoire pour toute offre commerciale'],
+                  ['ICE', 'Pour les sociétés — Identifiant Commun de l\'Entreprise'],
+                  ['Numéro de devis', 'Séquentiel et unique (ex : DV-2025-001)'],
+                  ['Date d\'émission', 'Date à laquelle vous envoyez le devis'],
+                  ['Date de validité', 'Durée pendant laquelle votre offre reste valable (en général 30 jours)'],
+                  ['Coordonnées client', 'Nom, adresse, ICE pour les entreprises'],
+                  ['Désignation des prestations', 'Description précise de chaque ligne de service ou produit'],
+                  ['Quantité et prix unitaire HT', 'Pour chaque ligne, quantité × prix unitaire = sous-total HT'],
+                  ['Taux et montant TVA', 'Applicable si vous êtes assujetti — ou mention d\'exonération'],
+                  ['Total HT et TTC', 'Récapitulatif clair des montants'],
+                  ['Conditions de paiement', 'Acompte demandé, délais, mode de règlement'],
+                  ['Signature', 'Zone de signature client avec mention "Bon pour accord"'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'La date de validité est souvent oubliée',
+                body: 'Sans date de validité, votre devis reste théoriquement valable indéfiniment. Si vos coûts augmentent, un client peut revenir 6 mois plus tard et exiger le prix initial. Ajoutez toujours "Devis valable 30 jours à compter de la date d\'émission".',
+              },
+            ],
+          },
+          {
+            h2: 'Modèle de devis Word pour le Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le modèle Word est le point de départ le plus accessible. Il vous permet de personnaliser rapidement le design avec votre logo, vos couleurs et vos coordonnées.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Avantage : personnalisation facile, aucun abonnement, compatible LibreOffice',
+                  'Avantage : envoyable en PDF après export',
+                  'Limite : numérotation manuelle — risque de doublons (DV-2025-003 après DV-2025-001)',
+                  'Limite : pas de calcul automatique des totaux HT / TVA / TTC',
+                  'Limite : aucun suivi — vous ne savez pas si le client a ouvert le devis',
+                  'Limite : impossible de convertir en facture sans tout ressaisir',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Structure recommandée pour un modèle Word de devis marocain : en-tête avec logo et coordonnées complètes (IF + ICE), bloc client, tableau de lignes avec colonnes Désignation / Qté / Prix unitaire HT / Total HT, récapitulatif TVA, total TTC, conditions de paiement, et zone "Bon pour accord + signature + date".',
+              },
+            ],
+          },
+          {
+            h2: 'Modèle de devis Excel pour le Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'L\'avantage d\'Excel sur Word pour les devis est majeur : les formules calculent automatiquement les sous-totaux, la TVA et le total TTC dès que vous saisissez les quantités et les prix unitaires.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Avantage : calculs automatiques (quantité × prix = total, application TVA)',
+                  'Avantage : facile à adapter pour plusieurs lignes de prestations',
+                  'Avantage : export PDF natif depuis Excel',
+                  'Limite : mise en page difficile à contrôler — rendu PDF souvent approximatif',
+                  'Limite : le client reçoit un fichier modifiable — peu professionnel',
+                  'Limite : aucune traçabilité — pas d\'historique des versions envoyées',
+                  'Limite : conversion en facture = nouveau fichier à créer de zéro',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Astuce Excel : protégez les cellules de formule',
+                body: 'Dans votre modèle Excel, protégez les cellules contenant des formules (Total HT, TVA, TTC) pour ne pas les écraser accidentellement. Laissez libres uniquement les cellules de saisie : désignation, quantité, prix unitaire.',
+              },
+            ],
+          },
+          {
+            h2: 'Modèle de devis PDF pour le Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le PDF est le format de référence pour l\'envoi d\'un devis professionnel. Il est non modifiable, compatible sur tous les appareils et donne une image soignée. Deux façons de créer un devis PDF :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Créer dans Word ou Excel puis exporter en PDF — simple, mais vous perdez l\'interactivité',
+                  'Utiliser un logiciel de devis qui génère directement un PDF professionnel avec toutes les mentions légales et un bouton de signature en ligne',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Le devis PDF avec lien de signature : le standard en 2025',
+                body: 'Les meilleurs outils de devis génèrent un PDF avec un lien "Accepter le devis" directement intégré. Le client signe en ligne, vous êtes notifié instantanément, et le devis passe automatiquement en statut "Accepté". Fini les allers-retours par email.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment structurer votre devis pour maximiser le taux d\'acceptation',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Un devis ne se lit pas comme une facture. Il doit vendre avant de chiffrer. Voici les bonnes pratiques qui font la différence :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Commencez par reformuler le besoin du client : montrez que vous avez compris sa situation avant de parler prix',
+                  'Détaillez les livrables précisément : "3 pages web responsive avec intégration CMS" vaut mieux que "développement web"',
+                  'Proposez 2 à 3 options de tarification si possible : une option de base, une option recommandée, une option premium',
+                  'Précisez ce qui n\'est PAS inclus : cela évite les malentendus et les demandes hors périmètre',
+                  'Ajoutez un délai de livraison clair : "Livraison sous 15 jours ouvrables après validation de l\'acompte"',
+                  'Terminez par un appel à l\'action clair : "Pour valider ce devis, signez et retournez-le avant le [date]"',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'La règle des 3 options',
+                body: 'Présenter 3 options de prix augmente le taux d\'acceptation et le panier moyen. Le client qui voulait choisir la moins chère opte souvent pour l\'option du milieu — votre "recommandée". L\'option premium ancre la perception de valeur.',
+              },
+            ],
+          },
+          {
+            h2: 'Durée de validité, TVA et acompte : les détails qui comptent',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Élément', 'Recommandation', 'Pourquoi'],
+                rows: [
+                  ['Durée de validité', '30 jours', 'Protège contre les hausses de coûts et force la décision'],
+                  ['Acompte', '30 à 50% à la commande', 'Couvre vos frais de démarrage et filtre les clients peu sérieux'],
+                  ['Solde', 'À la livraison ou à 30 jours facture', 'Standard Maroc — max légal 60 jours'],
+                  ['TVA auto-entrepreneur', 'Mention exonération IF', 'Pas de TVA à appliquer — indiquez-le explicitement'],
+                  ['TVA société', 'Taux applicable (20% en général)', 'Détaillez HT + TVA + TTC sur chaque ligne si taux multiples'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Ne confondez pas devis et bon de commande',
+                body: 'Le devis vient de vous (le prestataire) et est signé par le client. Le bon de commande vient du client et confirme sa commande. Dans les PME marocaines, les deux coexistent souvent — votre devis signé peut servir de bon de commande.',
+              },
+            ],
+          },
+          {
+            h2: 'De la perte de temps au gain de client : pourquoi Sayerli remplace vos modèles',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Un modèle Word ou Excel résout l\'apparence. Il ne résout pas ce qui vous coûte vraiment du temps et de l\'argent :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Numérotation automatique sans risque de doublons ou de trous dans la séquence',
+                  'Calcul automatique HT / TVA / TTC sur chaque ligne et en total',
+                  'Envoi par email avec lien de signature en ligne — le client accepte en un clic',
+                  'Notification instantanée quand le devis est accepté',
+                  'Conversion en facture en un clic — zéro ressaisie, zéro erreur de copier-coller',
+                  'Suivi du statut de chaque devis : brouillon, envoyé, accepté, refusé',
+                  'Historique complet de tous vos devis classés par client',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Créez votre premier devis professionnel en 3 minutes',
+                body: 'Sayerli génère des devis PDF conformes avec toutes les mentions légales marocaines : IF, ICE, TVA automatique, numérotation séquentielle. Envoyez par email, suivez l\'ouverture, recevez la signature en ligne et convertissez en facture d\'un clic. Essai gratuit — sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer mon compte gratuit',
+              },
+            ],
+          },
+        ],
+      },
+
+      en: {
+        title: 'Professional Quote Template for Morocco: Download for Free (2025)',
+        description: 'Create a professional and compliant quote in Morocco: mandatory fields, Word, Excel and PDF templates, validity period, VAT and conversion to invoice. Complete guide for Moroccan freelancers and SMEs.',
+        intro: [
+          {
+            type: 'p',
+            text: 'A quote is often the first impression you give a potential client. A professional, well-structured and compliant quote builds trust and increases your chances of winning the project. A vague quote without clear terms can make even an interested client hesitate — or worse, create a dispute about the scope of work.',
+          },
+          {
+            type: 'p',
+            text: 'In this guide, we cover everything a Moroccan quote must contain, the different formats available, how to structure it to maximise your acceptance rate, and how to convert it into an invoice without re-entering any data.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'What is a Quote and What is its Legal Value in Morocco?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'A quote is a priced commercial offer you submit to a client before starting a project. Once signed by both parties, it has contractual value in Morocco: it binds the service provider on price and scope, and the client on their intention to accept the service under the stated conditions.',
+              },
+              {
+                type: 'p',
+                text: 'Unlike an invoice which documents a completed service, a quote precedes the work. It protects both parties: you are protected against out-of-scope requests, and your client is protected against price surprises.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Signed quote = valid contract',
+                body: 'In Morocco, a quote signed by the client constitutes a contractual agreement. If your quote is well-written — precise scope, firm price, payment terms — you may not need a separate contract for small and medium-sized projects.',
+              },
+            ],
+          },
+          {
+            h2: 'Mandatory Fields of a Professional Quote in Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'A professional quote in Morocco must include the following elements to be complete and credible:',
+              },
+              {
+                type: 'table',
+                headers: ['Field', 'Detail'],
+                rows: [
+                  ['Your contact details', 'Name / company name, address, phone, email'],
+                  ['Tax Identifier (IF)', 'Your tax number — mandatory for any commercial offer'],
+                  ['ICE', 'For companies — Common Business Identifier'],
+                  ['Quote number', 'Sequential and unique (e.g. DV-2025-001)'],
+                  ['Issue date', 'Date on which you send the quote'],
+                  ['Validity date', 'How long your offer remains valid (generally 30 days)'],
+                  ['Client details', 'Name, address, ICE for companies'],
+                  ['Service description', 'Precise description of each line item'],
+                  ['Quantity and unit price (HT)', 'For each line: quantity × unit price = subtotal HT'],
+                  ['VAT rate and amount', 'Applicable if you are VAT-registered — or exemption note'],
+                  ['Total HT and TTC', 'Clear summary of amounts'],
+                  ['Payment terms', 'Deposit requested, deadlines, payment method'],
+                  ['Signature box', 'Client signature area with "Approved and agreed" mention'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'The validity date is often forgotten',
+                body: 'Without a validity date, your quote theoretically remains valid indefinitely. If your costs rise, a client can come back 6 months later and demand the original price. Always add "Quote valid for 30 days from issue date".',
+              },
+            ],
+          },
+          {
+            h2: 'Word Quote Template for Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The Word template is the most accessible starting point. It lets you quickly personalise the design with your logo, colours and contact details.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Advantage: easy personalisation, no subscription, LibreOffice compatible',
+                  'Advantage: can be exported to PDF before sending',
+                  'Limitation: manual numbering — risk of duplicates (DV-2025-003 after DV-2025-001)',
+                  'Limitation: no automatic calculation of HT / VAT / TTC totals',
+                  'Limitation: no tracking — you do not know if the client opened the quote',
+                  'Limitation: converting to an invoice means re-entering everything from scratch',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Recommended structure for a Moroccan Word quote template: header with logo and full details (IF + ICE), client block, line-item table with columns Description / Qty / Unit price HT / Total HT, VAT summary, TTC total, payment terms, and "Approved and agreed + signature + date" area.',
+              },
+            ],
+          },
+          {
+            h2: 'Excel Quote Template for Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Excel\'s advantage over Word for quotes is significant: formulas automatically calculate subtotals, VAT and TTC total as soon as you enter quantities and unit prices.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Advantage: automatic calculations (quantity × price = total, VAT applied)',
+                  'Advantage: easy to adapt for multiple service lines',
+                  'Advantage: native PDF export from Excel',
+                  'Limitation: layout is hard to control — PDF output is often approximate',
+                  'Limitation: client receives an editable file — unprofessional',
+                  'Limitation: no traceability — no history of sent versions',
+                  'Limitation: converting to an invoice means creating a new file from scratch',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Excel tip: protect formula cells',
+                body: 'In your Excel template, protect the cells containing formulas (Total HT, VAT, TTC) to avoid accidentally overwriting them. Leave only the input cells editable: description, quantity, unit price.',
+              },
+            ],
+          },
+          {
+            h2: 'PDF Quote Template for Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'PDF is the reference format for sending a professional quote. It is non-editable, compatible on all devices and projects a polished image. Two ways to create a PDF quote:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Create in Word or Excel then export to PDF — simple, but you lose interactivity',
+                  'Use quoting software that directly generates a professional PDF with all legal fields and an online signature button',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'PDF quote with signature link: the 2025 standard',
+                body: 'The best quoting tools generate a PDF with an "Accept quote" link built in. The client signs online, you are notified instantly, and the quote automatically moves to "Accepted" status. No more email back-and-forth.',
+              },
+            ],
+          },
+          {
+            h2: 'How to Structure Your Quote to Maximise Acceptance Rate',
+            blocks: [
+              {
+                type: 'p',
+                text: 'A quote is not read like an invoice. It must sell before it prices. Here are the best practices that make the difference:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Start by restating the client\'s need: show you understood their situation before talking price',
+                  'Detail deliverables precisely: "3 responsive web pages with CMS integration" beats "web development"',
+                  'Offer 2 to 3 pricing options if possible: a basic option, a recommended option, a premium option',
+                  'Specify what is NOT included: this prevents scope creep and misunderstandings',
+                  'Add a clear delivery timeline: "Delivered within 15 working days after deposit payment"',
+                  'End with a clear call to action: "To approve this quote, sign and return before [date]"',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'The 3-option rule',
+                body: 'Presenting 3 pricing options increases the acceptance rate and average basket. The client who wanted to pick the cheapest often goes for the middle "recommended" option. The premium option anchors the value perception.',
+              },
+            ],
+          },
+          {
+            h2: 'Validity, VAT and Deposit: the Details That Matter',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['Element', 'Recommendation', 'Why'],
+                rows: [
+                  ['Validity period', '30 days', 'Protects against cost increases and forces a decision'],
+                  ['Deposit', '30 to 50% on order', 'Covers your startup costs and filters unserious clients'],
+                  ['Balance', 'On delivery or net 30 days', 'Morocco standard — legal max 60 days'],
+                  ['VAT auto-entrepreneur', 'Exemption + IF mention', 'No VAT to apply — state it explicitly'],
+                  ['VAT company', 'Applicable rate (20% generally)', 'Detail HT + VAT + TTC per line if multiple rates'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Do not confuse a quote with a purchase order',
+                body: 'A quote comes from you (the service provider) and is signed by the client. A purchase order comes from the client confirming their order. In Moroccan SMEs, both often coexist — your signed quote can serve as the purchase order.',
+              },
+            ],
+          },
+          {
+            h2: 'From Wasted Time to Won Clients: Why Sayerli Replaces Your Templates',
+            blocks: [
+              {
+                type: 'p',
+                text: 'A Word or Excel template fixes the appearance. It does not fix what actually costs you time and money:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Automatic sequential numbering with no risk of duplicates or gaps',
+                  'Automatic HT / VAT / TTC calculation on every line and in the total',
+                  'Send by email with an online signature link — client accepts in one click',
+                  'Instant notification when the quote is accepted',
+                  'Convert to invoice in one click — zero re-entry, zero copy-paste errors',
+                  'Track the status of every quote: draft, sent, accepted, declined',
+                  'Complete history of all your quotes sorted by client',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Create your first professional quote in 3 minutes',
+                body: 'Sayerli generates compliant PDF quotes with all Moroccan legal fields: IF, ICE, automatic VAT, sequential numbering. Send by email, track opening, receive the online signature and convert to invoice in one click. Free trial — no credit card.',
+                href: '/register',
+                cta: 'Create my free account',
+              },
+            ],
+          },
+        ],
+      },
+
+      ar: {
+        title: 'نموذج عرض سعر احترافي في المغرب: تحميل مجاني (2025)',
+        description: 'أنشئ عرض سعر احترافياً ومطابقاً في المغرب: البيانات الإلزامية، نماذج Word وExcel وPDF، مدة الصلاحية، TVA والتحويل إلى فاتورة. دليل شامل للمستقلين والمقاولات الصغيرة والمتوسطة.',
+        intro: [
+          {
+            type: 'p',
+            text: 'عرض السعر كثيراً ما يكون الانطباع الأول الذي تتركه لدى عميل محتمل. عرض سعر احترافي، منظَّم ومطابق يبعث على الثقة ويزيد فرصك في الفوز بالمشروع. عرض غامض بدون شروط واضحة قد يُشكِّك حتى في عميل مهتم — أو الأسوأ، يُفضي إلى نزاع حول نطاق المهمة.',
+          },
+          {
+            type: 'p',
+            text: 'في هذا الدليل، نغطي كل ما يجب أن يتضمنه عرض السعر المغربي، والصيغ المتاحة، وكيفية هيكلته لتعظيم نسبة القبول، وكيفية تحويله إلى فاتورة دون إعادة إدخال أي بيانات.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'ما هو عرض السعر وما قيمته القانونية في المغرب؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'عرض السعر هو عرض تجاري مُسعَّر تُقدِّمه للعميل قبل الشروع في المهمة. بمجرد توقيعه من الطرفين، تكون له قيمة تعاقدية في المغرب: يُلزِم مقدم الخدمة بالسعر والنطاق، والعميل بنيته في قبول الخدمة وفق الشروط الموصوفة.',
+              },
+              {
+                type: 'p',
+                text: 'على خلاف الفاتورة التي توثِّق خدمة منجزة، يسبق عرض السعر العمل. إنه يحمي الطرفين: أنت محمي من الطلبات خارج النطاق، وعميلك محمي من مفاجآت الأسعار.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'عرض سعر موقَّع = عقد ساري',
+                body: 'في المغرب، عرض السعر الموقَّع من العميل يُشكِّل اتفاقاً تعاقدياً. إذا كان عرضك محرَّراً جيداً — نطاق دقيق، سعر ثابت، شروط دفع — فقد لا تحتاج إلى عقد منفصل للمهام الصغيرة والمتوسطة.',
+              },
+            ],
+          },
+          {
+            h2: 'البيانات الإلزامية لعرض السعر الاحترافي في المغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'يجب أن يتضمن عرض السعر الاحترافي في المغرب العناصر التالية ليكون مكتملاً وذا مصداقية:',
+              },
+              {
+                type: 'table',
+                headers: ['البيان', 'التفصيل'],
+                rows: [
+                  ['بيانات الاتصال الخاصة بك', 'الاسم / الشخصية القانونية، العنوان، الهاتف، البريد الإلكتروني'],
+                  ['المعرِّف الجبائي (IF)', 'رقمك الجبائي — إلزامي لأي عرض تجاري'],
+                  ['ICE', 'للشركات — المعرِّف المشترك للمقاولة'],
+                  ['رقم عرض السعر', 'متسلسل وفريد (مثال: DV-2025-001)'],
+                  ['تاريخ الإصدار', 'التاريخ الذي ترسل فيه العرض'],
+                  ['تاريخ الصلاحية', 'المدة التي يبقى فيها عرضك سارياً (عادةً 30 يوماً)'],
+                  ['بيانات العميل', 'الاسم، العنوان، ICE للشركات'],
+                  ['وصف الخدمات', 'وصف دقيق لكل سطر من الخدمات أو المنتجات'],
+                  ['الكمية والسعر الوحدوي HT', 'لكل سطر: الكمية × السعر الوحدوي = المجموع الجزئي HT'],
+                  ['معدل ومبلغ TVA', 'مطبَّق إن كنت خاضعاً — أو بيان الإعفاء'],
+                  ['الإجمالي HT وTTC', 'ملخص واضح للمبالغ'],
+                  ['شروط الدفع', 'السُّلفة المطلوبة، الآجال، طريقة الأداء'],
+                  ['خانة التوقيع', 'منطقة توقيع العميل مع عبارة "موافق عليه"'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'تاريخ الصلاحية كثيراً ما يُنسى',
+                body: 'بدون تاريخ صلاحية، يبقى عرضك نظرياً سارياً إلى أجل غير محدد. إذا ارتفعت تكاليفك، قد يعود عميل بعد 6 أشهر ويطالب بالسعر الأصلي. أضِف دائماً: "عرض السعر صالح لمدة 30 يوماً من تاريخ الإصدار".',
+              },
+            ],
+          },
+          {
+            h2: 'نموذج عرض سعر Word للمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'نموذج Word هو نقطة الانطلاق الأكثر سهولةً. يتيح لك تخصيص التصميم بسرعة بشعارك وألوانك وبيانات اتصالك.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ميزة: تخصيص سهل، لا اشتراك، متوافق مع LibreOffice',
+                  'ميزة: قابل للتصدير إلى PDF قبل الإرسال',
+                  'حد: ترقيم يدوي — خطر التكرار (DV-2025-003 بعد DV-2025-001)',
+                  'حد: لا حسابات تلقائية للمجاميع HT / TVA / TTC',
+                  'حد: لا تتبع — لا تعرف إن فتح العميل العرض أم لا',
+                  'حد: التحويل إلى فاتورة يعني إعادة إدخال كل شيء من الصفر',
+                ],
+              },
+              {
+                type: 'p',
+                text: 'الهيكل الموصى به لنموذج Word لعرض السعر المغربي: رأس صفحة بالشعار والبيانات الكاملة (IF + ICE)، كتلة العميل، جدول سطور بأعمدة الوصف / الكمية / السعر الوحدوي HT / الإجمالي HT، ملخص TVA، الإجمالي TTC، شروط الدفع، ومنطقة "موافق عليه + توقيع + تاريخ".',
+              },
+            ],
+          },
+          {
+            h2: 'نموذج عرض سعر Excel للمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'ميزة Excel على Word في عروض الأسعار كبيرة: تحسب الصيغ تلقائياً المجاميع الجزئية وTVA والإجمالي TTC فور إدخال الكميات والأسعار الوحدوية.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ميزة: حسابات تلقائية (الكمية × السعر = الإجمالي، تطبيق TVA)',
+                  'ميزة: سهل التكيف مع سطور خدمات متعددة',
+                  'ميزة: تصدير PDF مدمج من Excel',
+                  'حد: تخطيط صعب التحكم — الإخراج بصيغة PDF كثيراً ما يكون تقريبياً',
+                  'حد: العميل يستلم ملفاً قابلاً للتعديل — غير احترافي',
+                  'حد: لا إمكانية تتبع — لا سجل للنسخ المرسَلة',
+                  'حد: التحويل إلى فاتورة يعني إنشاء ملف جديد من الصفر',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'نصيحة Excel: احمِ خلايا الصيغ',
+                body: 'في نموذج Excel الخاص بك، احمِ الخلايا المحتوية على صيغ (الإجمالي HT، TVA، TTC) لتجنب الكتابة فوقها بالخطأ. اترك قابلة للتعديل فقط خلايا الإدخال: الوصف والكمية والسعر الوحدوي.',
+              },
+            ],
+          },
+          {
+            h2: 'نموذج عرض سعر PDF للمغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'PDF هو الصيغة المرجعية لإرسال عرض سعر احترافي. غير قابل للتعديل، متوافق مع جميع الأجهزة، ويعكس صورة مصقولة. طريقتان لإنشاء عرض سعر PDF:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'الإنشاء في Word أو Excel ثم التصدير إلى PDF — بسيط لكن تفقد التفاعلية',
+                  'استخدام برنامج عروض أسعار يُولِّد مباشرةً PDF احترافياً مع جميع البيانات القانونية وزر التوقيع الإلكتروني',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'عرض سعر PDF مع رابط التوقيع: المعيار في 2025',
+                body: 'أفضل أدوات عروض الأسعار تُولِّد PDF مع رابط "قبول عرض السعر" مُدمَج. يوقِّع العميل إلكترونياً، تتلقى إشعاراً فورياً، وينتقل العرض تلقائياً إلى حالة "مقبول". لا مزيد من ذهاب وإياب عبر البريد الإلكتروني.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية هيكلة عرضك لتعظيم نسبة القبول',
+            blocks: [
+              {
+                type: 'p',
+                text: 'عرض السعر لا يُقرأ كالفاتورة. يجب أن يبيع قبل أن يُسعِّر. إليك الممارسات الجيدة التي تُحدث الفرق:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ابدأ بإعادة صياغة حاجة العميل: أظهر أنك فهمت وضعيته قبل الحديث عن السعر',
+                  'فصِّل المنجزات بدقة: "3 صفحات ويب متجاوبة مع تكامل CMS" أفضل من "تطوير ويب"',
+                  'اقترح 2 إلى 3 خيارات تسعير إن أمكن: خيار أساسي، خيار موصى به، خيار بريميوم',
+                  'حدِّد ما هو غير مُدرَج: يمنع سوء الفهم والطلبات خارج النطاق',
+                  'أضِف أجل تسليم واضح: "تسليم في 15 يوم عمل بعد تسوية السُّلفة"',
+                  'اختم بدعوة للعمل واضحة: "لتأكيد هذا العرض، وقِّع وأعِده قبل [التاريخ]"',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'قاعدة الخيارات الثلاثة',
+                body: 'تقديم 3 خيارات تسعير يرفع نسبة القبول ومتوسط السلة. العميل الذي أراد اختيار الأرخص كثيراً ما يختار الخيار الأوسط "الموصى به". الخيار البريميوم يُرسِّخ إدراك القيمة.',
+              },
+            ],
+          },
+          {
+            h2: 'الصلاحية والTVA والسُّلفة: التفاصيل التي تُحدث فرقاً',
+            blocks: [
+              {
+                type: 'table',
+                headers: ['العنصر', 'التوصية', 'السبب'],
+                rows: [
+                  ['مدة الصلاحية', '30 يوماً', 'تحمي من ارتفاع التكاليف وتُجبر على اتخاذ القرار'],
+                  ['السُّلفة', '30 إلى 50% عند الطلب', 'تغطي تكاليف انطلاقك وتُصفِّي العملاء غير الجادين'],
+                  ['الباقي', 'عند التسليم أو 30 يوماً', 'المعيار المغربي — الحد القانوني الأقصى 60 يوماً'],
+                  ['TVA مقاول ذاتي', 'بيان إعفاء + IF', 'لا TVA يُطبَّق — صرِّح بذلك صراحةً'],
+                  ['TVA شركة', 'المعدل المطبَّق (20% عموماً)', 'فصِّل HT + TVA + TTC لكل سطر عند تعدد المعدلات'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'لا تخلط بين عرض السعر وأمر الشراء',
+                body: 'عرض السعر يصدر عنك (مزوِّد الخدمة) ويوقِّعه العميل. أمر الشراء يصدر عن العميل ليؤكد طلبه. في المقاولات الصغيرة والمتوسطة المغربية كثيراً ما يتعايشان — عرض سعرك الموقَّع يمكن أن يُغني عن أمر الشراء.',
+              },
+            ],
+          },
+          {
+            h2: 'من إضاعة الوقت إلى كسب العميل: لماذا Sayerli يُغني عن نماذجك',
+            blocks: [
+              {
+                type: 'p',
+                text: 'نموذج Word أو Excel يحل المظهر. لا يحل ما يُكلِّفك حقاً وقتاً ومالاً:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'ترقيم تلقائي متسلسل دون خطر التكرار أو الثغرات',
+                  'حساب تلقائي HT / TVA / TTC على كل سطر وفي الإجمالي',
+                  'إرسال بالبريد الإلكتروني مع رابط توقيع إلكتروني — يقبل العميل بنقرة واحدة',
+                  'إشعار فوري عند قبول عرض السعر',
+                  'تحويل إلى فاتورة بنقرة واحدة — صفر إعادة إدخال، صفر أخطاء نسخ ولصق',
+                  'تتبع حالة كل عرض: مسودة، مُرسَل، مقبول، مرفوض',
+                  'سجل كامل لجميع عروضك مصنَّفة حسب العميل',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'أنشئ أول عرض سعر احترافي في 3 دقائق',
+                body: 'يُولِّد Sayerli عروض أسعار PDF مطابقة مع جميع البيانات القانونية المغربية: IF وICE وTVA تلقائية وترقيم متسلسل. أرسِل بالبريد الإلكتروني، تتبَّع الفتح، استلم التوقيع الإلكتروني وحوِّل إلى فاتورة بنقرة واحدة. تجربة مجانية — بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء حسابي المجاني',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
 }
