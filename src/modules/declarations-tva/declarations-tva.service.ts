@@ -127,13 +127,52 @@ export class DeclarationsTVAService {
     const totalBaseHT = groupes.reduce((s, g) => s + g.baseHT, 0);
     const totalTVA    = groupes.reduce((s, g) => s + g.tva, 0);
 
+    // ── TVA Déductible (dépenses) ─────────────────────────────────────────────
+    const depenses = await this.prisma.depense.findMany({
+      where: {
+        entrepriseId,
+        date: { gte: debut, lte: fin },
+        montantTva: { gt: 0 },
+      },
+      select: { tauxTva: true, montantTva: true, montant: true },
+    });
+
+    const groupsDepenses = new Map<number, { montantHT: number; tva: number; count: number }>();
+    for (const d of depenses) {
+      const taux = Number(d.tauxTva);
+      const tva  = Number(d.montantTva);
+      const ht   = Number(d.montant);
+      const g    = groupsDepenses.get(taux) ?? { montantHT: 0, tva: 0, count: 0 };
+      g.montantHT += ht;
+      g.tva       += tva;
+      g.count     += 1;
+      groupsDepenses.set(taux, g);
+    }
+
+    const groupesDepenses = Array.from(groupsDepenses.entries())
+      .map(([taux, g]) => ({
+        taux,
+        montantHT: Math.round(g.montantHT * 100) / 100,
+        tva: Math.round(g.tva * 100) / 100,
+        count: g.count,
+      }))
+      .sort((a, b) => a.taux - b.taux);
+
+    const totalBaseHTDepenses  = groupesDepenses.reduce((s, g) => s + g.montantHT, 0);
+    const totalTVADeductible   = groupesDepenses.reduce((s, g) => s + g.tva, 0);
+    const totalTVANette        = totalTVA - totalTVADeductible;
+
     return {
       regime,
       entrepriseNom: entreprise?.nom ?? '',
       periode: { debut: debutPeriode, fin: finPeriode },
       groupes,
-      totalBaseHT: Math.round(totalBaseHT * 100) / 100,
-      totalTVA:    Math.round(totalTVA * 100) / 100,
+      totalBaseHT:         Math.round(totalBaseHT * 100) / 100,
+      totalTVA:            Math.round(totalTVA * 100) / 100,
+      groupesDepenses,
+      totalBaseHTDepenses: Math.round(totalBaseHTDepenses * 100) / 100,
+      totalTVADeductible:  Math.round(totalTVADeductible * 100) / 100,
+      totalTVANette:       Math.round(totalTVANette * 100) / 100,
       hasMultiDevise: devises.size > 0,
       devises: Array.from(devises),
       tauxUtilises: { EUR: rateEUR, USD: rateUSD },

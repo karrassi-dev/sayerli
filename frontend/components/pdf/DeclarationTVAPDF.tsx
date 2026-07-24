@@ -19,6 +19,10 @@ export interface DeclarationTVAPDFProps {
   groupes: { taux: number; baseHT: number; tva: number; count: number }[]
   totalBaseHT: number
   totalTVA: number
+  groupesDepenses: { taux: number; montantHT: number; tva: number; count: number }[]
+  totalBaseHTDepenses: number
+  totalTVADeductible: number
+  totalTVANette: number
   conversions: { devise: string; count: number; totalOriginal: number; totalMAD: number; taux: number }[]
   facturesPartielles: { numero: string; totalTTC: number; montantPaye: number; restant: number; devise: string }[]
   generatedAt: string
@@ -26,6 +30,7 @@ export interface DeclarationTVAPDFProps {
 
 export default function DeclarationTVAPDF({
   entrepriseNom, periode, regime, groupes, totalBaseHT, totalTVA,
+  groupesDepenses, totalBaseHTDepenses, totalTVADeductible, totalTVANette,
   conversions, facturesPartielles, generatedAt,
 }: DeclarationTVAPDFProps) {
   const s = StyleSheet.create({
@@ -95,6 +100,52 @@ export default function DeclarationTVAPDF({
           <Text style={s.totalLabel}>TOTAL</Text>
           <Text style={s.totalAmt}>{fmt(totalBaseHT)} MAD</Text>
           <Text style={s.totalAmt}>{fmt(totalTVA)} MAD</Text>
+        </View>
+
+        {/* TVA Déductible */}
+        <View style={{ marginTop: 20 }}>
+          <Text style={s.sectionTitle}>TVA Déductible (Dépenses)</Text>
+          {groupesDepenses.length === 0 ? (
+            <Text style={[s.note, { marginTop: 4 }]}>Aucune dépense avec TVA sur cette période.</Text>
+          ) : (
+            <>
+              <View style={s.tableHead}>
+                <Text style={[s.th, s.col1]}>Taux TVA</Text>
+                <Text style={[s.th, s.col2]}>Montant HT (MAD)</Text>
+                <Text style={[s.th, s.col3]}>TVA déductible (MAD)</Text>
+              </View>
+              {groupesDepenses.map((g, i) => (
+                <View key={g.taux} style={[s.tableRow, i % 2 === 1 ? s.rowAlt : {}]}>
+                  <Text style={[s.td, s.col1]}>{g.taux === 0 ? 'Exonéré (0%)' : `${g.taux}%`}</Text>
+                  <Text style={[s.tdBold, s.col2]}>{fmt(g.montantHT)} MAD</Text>
+                  <Text style={[s.tdBold, s.col3]}>{fmt(g.tva)} MAD</Text>
+                </View>
+              ))}
+              <View style={[s.totalRow, { backgroundColor: '#d97706' }]}>
+                <Text style={s.totalLabel}>TOTAL</Text>
+                <Text style={s.totalAmt}>{fmt(totalBaseHTDepenses)} MAD</Text>
+                <Text style={s.totalAmt}>{fmt(totalTVADeductible)} MAD</Text>
+              </View>
+            </>
+          )}
+        </View>
+
+        {/* TVA Nette à Payer */}
+        <View style={{ marginTop: 20, padding: 12, backgroundColor: '#eff6ff', borderRadius: 6 }}>
+          <Text style={[s.sectionTitle, { color: '#1d4ed8', marginBottom: 8 }]}>TVA Nette à Payer</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+            <Text style={[s.td, { color: G700 }]}>TVA collectée</Text>
+            <Text style={[s.tdBold, { color: '#16a34a' }]}>+{fmt(totalTVA)} MAD</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+            <Text style={[s.td, { color: G700 }]}>TVA déductible</Text>
+            <Text style={[s.tdBold, { color: '#d97706' }]}>−{fmt(totalTVADeductible)} MAD</Text>
+          </View>
+          <View style={{ height: 1, backgroundColor: '#bfdbfe', marginBottom: 8 }} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 10, color: '#1e3a8a' }}>TVA nette à payer</Text>
+            <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 12, color: '#1d4ed8' }}>{fmt(totalTVANette)} MAD</Text>
+          </View>
         </View>
 
         {/* Conversions */}
