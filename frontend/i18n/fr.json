@@ -1465,7 +1465,12 @@
         "equipe_read": "Voir l'équipe",
         "equipe_manage": "Gérer l'équipe",
         "settings": "Paramètres entreprise",
-        "billing": "Facturation & Plan"
+        "billing": "Facturation & Plan",
+        "bons_livraison_read": "Voir les bons de livraison",
+        "bons_livraison_manage": "Créer/modifier des bons de livraison",
+        "depenses_read": "Voir les dépenses",
+        "depenses_manage": "Créer/modifier des dépenses",
+        "declarations_tva": "Déclaration TVA"
       },
       "empty": {
         "title": "Votre équipe est vide",

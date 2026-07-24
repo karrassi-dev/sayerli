@@ -1464,7 +1464,12 @@
         "equipe_read": "View team",
         "equipe_manage": "Manage team",
         "settings": "Company settings",
-        "billing": "Billing & Plan"
+        "billing": "Billing & Plan",
+        "bons_livraison_read": "View delivery notes",
+        "bons_livraison_manage": "Create/edit delivery notes",
+        "depenses_read": "View expenses",
+        "depenses_manage": "Create/edit expenses",
+        "declarations_tva": "VAT Declaration"
       },
       "empty": {
         "title": "Your team is empty",

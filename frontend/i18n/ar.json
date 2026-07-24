@@ -1464,7 +1464,12 @@
         "equipe_read": "عرض الفريق",
         "equipe_manage": "إدارة الفريق",
         "settings": "إعدادات الشركة",
-        "billing": "الفوترة والخطة"
+        "billing": "الفوترة والخطة",
+        "bons_livraison_read": "عرض وصولات التسليم",
+        "bons_livraison_manage": "إنشاء/تعديل وصولات التسليم",
+        "depenses_read": "عرض المصاريف",
+        "depenses_manage": "إنشاء/تعديل المصاريف",
+        "declarations_tva": "تصريح ضريبة القيمة المضافة"
       },
       "empty": {
         "title": "فريقك فارغ",

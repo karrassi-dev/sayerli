@@ -7,6 +7,7 @@ export type PermissionKey =
   | 'export' | 'dashboard' | 'catalogue.read' | 'catalogue.manage'
   | 'equipe.read' | 'equipe.manage' | 'settings' | 'billing'
   | 'bons-livraison.read' | 'bons-livraison.manage'
+  | 'depenses.read' | 'depenses.manage' | 'declarations-tva'
 
 export const ALL_PERMISSIONS: PermissionKey[] = [
   'clients.read','clients.create','clients.edit','clients.delete',
@@ -16,6 +17,7 @@ export const ALL_PERMISSIONS: PermissionKey[] = [
   'export','dashboard','catalogue.read','catalogue.manage',
   'equipe.read','equipe.manage','settings','billing',
   'bons-livraison.read','bons-livraison.manage',
+  'depenses.read','depenses.manage','declarations-tva',
 ]
 
 export const PERMISSION_LABELS: Record<PermissionKey, string> = {
@@ -49,6 +51,9 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   'billing': 'Facturation & Plan',
   'bons-livraison.read': 'Voir les bons de livraison',
   'bons-livraison.manage': 'Créer/modifier des bons de livraison',
+  'depenses.read': 'Voir les dépenses',
+  'depenses.manage': 'Créer/modifier des dépenses',
+  'declarations-tva': 'Déclaration TVA',
 }
 
 export const ROLE_LABELS: Record<string, string> = {
@@ -89,6 +94,7 @@ export const ROLE_DEFAULTS: Record<string, PermissionKey[]> = {
     'export','dashboard','catalogue.read','catalogue.manage',
     'equipe.read','equipe.manage','settings','billing',
     'bons-livraison.read','bons-livraison.manage',
+    'depenses.read','depenses.manage','declarations-tva',
   ],
   ADMIN: [
     'clients.read','clients.create','clients.edit','clients.delete',
@@ -98,6 +104,7 @@ export const ROLE_DEFAULTS: Record<string, PermissionKey[]> = {
     'export','dashboard','catalogue.read','catalogue.manage',
     'equipe.read','equipe.manage','settings',
     'bons-livraison.read','bons-livraison.manage',
+    'depenses.read','depenses.manage','declarations-tva',
   ],
   MANAGER: [
     'clients.read','clients.create','clients.edit','clients.delete',
@@ -106,15 +113,16 @@ export const ROLE_DEFAULTS: Record<string, PermissionKey[]> = {
     'paiements.read','paiements.create','paiements.delete','paiements.declarations',
     'export','dashboard','catalogue.read','catalogue.manage','equipe.read',
     'bons-livraison.read','bons-livraison.manage',
+    'depenses.read','depenses.manage','declarations-tva',
   ],
-  DAF: ['factures.read','paiements.read','paiements.declarations','export','dashboard','equipe.read','bons-livraison.read'],
-  COMPTABLE: ['factures.read','paiements.read','paiements.create','paiements.declarations','export','dashboard','bons-livraison.read'],
-  COMPTABLE_EXTERNE: ['clients.read','factures.read','paiements.read','paiements.declarations','export','dashboard','bons-livraison.read'],
+  DAF: ['factures.read','paiements.read','paiements.declarations','export','dashboard','equipe.read','bons-livraison.read','depenses.read','declarations-tva'],
+  COMPTABLE: ['factures.read','paiements.read','paiements.create','paiements.declarations','export','dashboard','bons-livraison.read','depenses.read','depenses.manage','declarations-tva'],
+  COMPTABLE_EXTERNE: ['clients.read','factures.read','paiements.read','paiements.declarations','export','dashboard','bons-livraison.read','depenses.read','declarations-tva'],
   RESPONSABLE_RECOUVREMENT: ['clients.read','factures.read','factures.relance','paiements.create','paiements.declarations'],
   CAISSIER: ['factures.read','paiements.create'],
   COMMERCIAL: ['clients.read','clients.create','clients.edit','clients.delete','devis.read','devis.create','devis.edit','devis.delete','devis.send','factures.read','dashboard','catalogue.read','catalogue.manage','bons-livraison.read','bons-livraison.manage'],
   COMMERCIAL_PROPRE: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','devis.send','factures.read','dashboard','catalogue.read','bons-livraison.read','bons-livraison.manage'],
-  ASSISTANT: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','factures.read','factures.create','factures.edit','catalogue.read','bons-livraison.read','bons-livraison.manage'],
+  ASSISTANT: ['clients.read','clients.create','clients.edit','devis.read','devis.create','devis.edit','factures.read','factures.create','factures.edit','catalogue.read','bons-livraison.read','bons-livraison.manage','depenses.read','depenses.manage'],
   ASSOCIE: ['factures.read','dashboard','bons-livraison.read'],
 }
 
