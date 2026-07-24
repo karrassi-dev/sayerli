@@ -37,6 +37,7 @@ interface PublicFacture {
     nom: string; email: string | null; telephone: string | null
     adresse: string | null; logo: string | null; couleurPrimaire: string | null
     ice: string | null; activite: string | null; rc: string | null
+    signature: string | null
   }
 }
 
@@ -174,6 +175,7 @@ function RecuContent() {
       couleurPrimaire: brand,
       ice: facture.entreprise.ice,
       rc: facture.entreprise.rc,
+      signature: facture.entreprise.signature,
     },
     paiements: [{ ...paiement, montant: n(paiement.montant) }],
     totalTTC,
