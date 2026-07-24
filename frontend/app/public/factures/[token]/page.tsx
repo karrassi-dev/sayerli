@@ -1031,6 +1031,7 @@ export default function PublicFacturePage() {
                     email: facture.entreprise.email,
                     couleurPrimaire: facture.entreprise.couleurPrimaire,
                     ice: facture.entreprise.ice,
+                    signature: facture.entreprise.signature,
                   },
                   paiements: facture.paiements.map(p => ({
                     ...p,

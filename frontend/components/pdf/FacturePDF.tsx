@@ -49,7 +49,7 @@ export interface FacturePDFProps {
   entreprise: {
     nom: string; email: string | null; telephone: string | null; adresse: string | null
     logoUrl: string | null; couleurPrimaire: string | null; ice: string | null; rc: string | null
-    activite?: string | null
+    activite?: string | null; signature?: string | null
   }
   declaration: {
     montant: number
@@ -210,6 +210,14 @@ export default function FacturePDF({
     },
     pendingTitle: { fontSize: 8.5, fontFamily: 'Helvetica-Bold', color: isFullyPaid ? GREEN : G700, marginBottom: 4 },
     pendingTxt: { fontSize: 8.5, color: isFullyPaid ? '#166534' : G600, lineHeight: 1.5 },
+
+    // Signature
+    sigSection: { marginTop: 16, flexDirection: 'row', justifyContent: 'flex-end' },
+    sigBox: { width: 180, borderWidth: 1, borderColor: G200, borderRadius: 6, padding: 10 },
+    sigLbl: { fontSize: 7, fontFamily: 'Helvetica-Bold', color: G400, letterSpacing: 0.8, marginBottom: 6, textTransform: 'uppercase' },
+    sigImg: { maxHeight: 40, objectFit: 'contain', marginBottom: 4 },
+    sigLine: { height: 1, backgroundColor: G200, marginVertical: 4 },
+    sigName: { fontSize: 8, color: G600 },
 
     // Footer
     footer: {
@@ -442,6 +450,18 @@ export default function FacturePDF({
               }
             </Text>
           </View>
+
+        {/* ── Signature ── */}
+        {entreprise.signature && (
+          <View style={s.sigSection}>
+            <View style={s.sigBox}>
+              <Text style={s.sigLbl}>SIGNATURE DU PRESTATAIRE</Text>
+              <Image src={entreprise.signature} style={s.sigImg} />
+              <View style={s.sigLine} />
+              <Text style={s.sigName}>{entreprise.nom}</Text>
+            </View>
+          </View>
+        )}
 
         </View>
 

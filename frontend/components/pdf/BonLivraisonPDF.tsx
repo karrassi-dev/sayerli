@@ -30,6 +30,7 @@ export interface BonLivraisonPDFProps {
     couleurPrimaire?: string | null
     ice?: string | null
     rc?: string | null
+    signature?: string | null
   }
   lignes: { description: string; quantite: number | string; unite?: string | null; ordre?: number }[]
   devisRef?: string | null
@@ -100,6 +101,7 @@ export default function BonLivraisonPDF({
     signatureCol: { flex: 1, borderWidth: 1, borderColor: G200, borderRadius: 4, padding: 10, minHeight: 64 },
     signatureLabel: { fontFamily: 'Helvetica-Bold', fontSize: 8, color: G900, marginBottom: 4 },
     signatureHint: { fontSize: 7, color: G400, fontFamily: 'Helvetica-Oblique' },
+    signatureImg: { maxHeight: 40, objectFit: 'contain' },
 
     footer: {
       position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -235,7 +237,9 @@ export default function BonLivraisonPDF({
         <View style={styles.signatureBlock}>
           <View style={styles.signatureCol}>
             <Text style={styles.signatureLabel}>Signature du fournisseur</Text>
-            <Text style={styles.signatureHint}>{entreprise.nom}</Text>
+            {entreprise.signature
+              ? <Image src={entreprise.signature} style={styles.signatureImg} />
+              : <Text style={styles.signatureHint}>{entreprise.nom}</Text>}
           </View>
           <View style={styles.signatureCol}>
             <Text style={styles.signatureLabel}>Signature et cachet client</Text>

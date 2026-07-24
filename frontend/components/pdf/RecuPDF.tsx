@@ -34,6 +34,7 @@ export interface RecuPDFProps {
     couleurPrimaire?: string | null
     ice?: string | null
     rc?: string | null
+    signature?: string | null
   }
   paiements: { id?: string; montant: number | string; methode: string; datePaiement: string; reference?: string | null }[]
   totalTTC: number | string
@@ -239,10 +240,18 @@ export default function RecuPDF({
     statusLabel: { flex: 1, fontSize: 8, fontFamily: 'Helvetica-Bold' },
     statusAmt:   { width: 80, fontSize: 8, fontFamily: 'Helvetica-Bold', textAlign: 'right' },
 
+    // ── SIGNATURE ──
+    sigSection: { marginHorizontal: 40, marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end' },
+    sigBox: { width: 180, borderWidth: 1, borderColor: G200, borderRadius: 4, padding: 10 },
+    sigLbl: { fontSize: 7, fontFamily: 'Helvetica-Bold', color: G400, letterSpacing: 0.8, marginBottom: 6 },
+    sigImg: { maxHeight: 40, objectFit: 'contain', marginBottom: 4 },
+    sigLine: { height: 1, backgroundColor: G200, marginVertical: 4 },
+    sigName: { fontSize: 8, color: G600 },
+
     // ── NOTE ──
     note: {
       marginHorizontal: 40,
-      marginTop: 20,
+      marginTop: 16,
       fontSize: 8,
       color: G400,
       lineHeight: 1.5,
@@ -408,6 +417,18 @@ export default function RecuPDF({
           </Text>
           <Text style={styles.summaryPlaceholder}></Text>
         </View>
+
+        {/* ── SIGNATURE ── */}
+        {entreprise.signature && (
+          <View style={styles.sigSection}>
+            <View style={styles.sigBox}>
+              <Text style={styles.sigLbl}>SIGNATURE DU PRESTATAIRE</Text>
+              <Image src={entreprise.signature} style={styles.sigImg} />
+              <View style={styles.sigLine} />
+              <Text style={styles.sigName}>{entreprise.nom}</Text>
+            </View>
+          </View>
+        )}
 
         {/* ── NOTE ── */}
         <View style={styles.note}>

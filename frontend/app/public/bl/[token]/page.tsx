@@ -41,6 +41,7 @@ interface PublicBL {
     ice: string | null
     rc: string | null
     website: string | null
+    signature: string | null
   }
 }
 

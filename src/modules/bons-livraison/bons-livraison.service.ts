@@ -67,7 +67,7 @@ export class BonsLivraisonService {
         entreprise: {
           select: {
             nom: true, logo: true, email: true, telephone: true, adresse: true, ville: true,
-            couleurPrimaire: true, ice: true, rc: true, website: true,
+            couleurPrimaire: true, ice: true, rc: true, website: true, signature: true,
           },
         },
       },
