@@ -343,6 +343,27 @@ export const BLOG_POSTS: BlogPost[] = [
     image: '/blog/modele-facture-maroc.webp',
     readingTime: 8,
   },
+  {
+    slug: 'freelance-maroc-guide',
+    title: 'Freelance au Maroc en 2025 : statut, contrat, facturation et fiscalité — guide complet',
+    description: 'Tout savoir pour travailler en freelance au Maroc : quel statut choisir, comment rédiger un contrat, facturer correctement, fixer ses tarifs et gérer sa fiscalité. Guide complet pour indépendants marocains.',
+    category: 'freelance',
+    keywords: [
+      'freelance maroc',
+      'facture freelance maroc',
+      'contrat freelance maroc',
+      'tarif freelance maroc',
+      'statut freelance maroc',
+      'fiscalite freelance maroc',
+      'auto entrepreneur freelance maroc',
+      'logiciel facturation freelance maroc',
+      'devis freelance maroc',
+      'cnss freelance maroc',
+    ],
+    publishedAt: '2026-07-24',
+    image: '/blog/freelance-maroc-guide.webp',
+    readingTime: 10,
+  },
 ]
 
 export interface BlogPost {

@@ -6553,4 +6553,705 @@ export const ARTICLES: Record<string, ArticleData> = {
       },
     },
   },
+
+  'freelance-maroc-guide': {
+    slug: 'freelance-maroc-guide',
+    image: '/blog/freelance-maroc-guide.webp',
+    readingTime: 10,
+    content: {
+
+      fr: {
+        title: 'Freelance au Maroc en 2025 : statut, contrat, facturation et fiscalité — guide complet',
+        description: 'Tout savoir pour travailler en freelance au Maroc : quel statut choisir, comment rédiger un contrat, facturer correctement, fixer ses tarifs et gérer sa fiscalité. Guide complet pour indépendants marocains.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Le freelancing explose au Maroc. Développeurs, designers, consultants, rédacteurs, marketeurs digitaux — des dizaines de milliers de Marocains travaillent aujourd\'hui de façon indépendante, que ce soit à temps plein ou en complément d\'un emploi salarié. Mais la grande majorité le fait dans le flou : sans statut légal, sans contrat, avec des factures approximatives, et sans visibilité sur leur fiscalité.',
+          },
+          {
+            type: 'p',
+            text: 'Ce guide couvre tout ce qu\'il faut savoir pour exercer en freelance au Maroc de façon professionnelle et sereine : le bon statut juridique, comment rédiger un contrat solide, comment fixer ses tarifs, facturer correctement et gérer sa situation fiscale. Du concret, sans jargon.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Quel statut juridique choisir pour travailler en freelance au Maroc ?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'C\'est la première question que se pose tout freelance sérieux. Au Maroc, trois options s\'offrent à vous selon votre situation et vos ambitions :',
+              },
+              {
+                type: 'table',
+                headers: ['Statut', 'Pour qui', 'Plafond CA', 'Comptabilité'],
+                rows: [
+                  ['Auto-entrepreneur', 'Freelances débutants, petits CA, activités de services', '500 000 MAD/an', 'Registre des recettes uniquement'],
+                  ['Personne physique patentée', 'Freelances avec CA moyen, professions libérales', 'Pas de plafond', 'Comptabilité simplifiée'],
+                  ['SARL / SASU', 'CA élevé, clients grands comptes, croissance prévue', 'Pas de plafond', 'Comptabilité complète obligatoire'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Pour la grande majorité des freelances marocains qui débutent ou ont un CA inférieur à 200 000 MAD par an, le statut auto-entrepreneur est la meilleure option : inscription gratuite en ligne, fiscalité allégée, couverture CNSS incluse, et aucune comptabilité complexe.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Auto-entrepreneur et TVA : vous êtes exonéré',
+                body: 'En tant qu\'auto-entrepreneur, vous n\'êtes pas assujetti à la TVA. Vous ne la facturez pas à vos clients et ne la déclarez pas. Sur vos factures, inscrivez : "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". C\'est un avantage compétitif pour vos clients particuliers, mais un inconvénient si vos clients sont des entreprises qui récupèrent la TVA.',
+              },
+            ],
+          },
+          {
+            h2: 'Le contrat freelance au Maroc : ce qu\'il doit absolument contenir',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Travailler sans contrat est la première erreur des freelances marocains. Un contrat bien rédigé vous protège contre les impayés, les changements de périmètre en cours de mission et les litiges. Il n\'a pas besoin d\'être long — une page suffit si elle couvre les bons points.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Identité des deux parties : vos coordonnées complètes + IF, et celles du client + ICE',
+                  'Description précise de la mission : livrables attendus, format, nombre de révisions incluses',
+                  'Calendrier : date de début, jalons intermédiaires, date de livraison finale',
+                  'Tarif et mode de paiement : montant HT, TVA si applicable, TTC, acompte demandé',
+                  'Délai de paiement : précisez 30 ou 60 jours max — le délai légal au Maroc est 60 jours',
+                  'Clause de propriété intellectuelle : qui est propriétaire du travail livré et à partir de quand',
+                  'Clause de confidentialité si nécessaire',
+                  'Conditions de résiliation : que se passe-t-il si le client annule ? Que gardez-vous ?',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'L\'acompte : indispensable pour les missions importantes',
+                body: 'Demandez systématiquement 30 à 50% d\'acompte avant de démarrer toute mission dépassant 5 000 MAD. C\'est la norme internationale et un signal de sérieux. Un client qui refuse de payer un acompte est souvent un client qui tarde à payer le solde.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Un devis signé vaut contrat',
+                body: 'Si vous ne voulez pas rédiger un contrat formel, un devis détaillé signé par le client a une valeur juridique réelle au Maroc. Il suffit d\'y inclure toutes les mentions ci-dessus. C\'est exactement ce que Sayerli vous permet de faire en quelques minutes.',
+              },
+            ],
+          },
+          {
+            h2: 'Comment fixer ses tarifs en freelance au Maroc',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le tarif est la décision la plus difficile pour un freelance qui débute. Trop bas, vous vous épuisez pour rien et dévaluez votre marché. Trop haut sans expérience visible, vous perdez les missions. Voici une méthode simple pour trouver votre juste tarif :',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Calculez votre coût de vie minimum mensuel (loyer, nourriture, transport, charges) — c\'est votre plancher',
+                  'Divisez par le nombre de jours facturables par mois (en général 15 à 18 jours, pas 22 — les imprévus existent)',
+                  'Ajoutez 30% pour les charges sociales (CNSS), fiscales (IR) et une épargne de précaution',
+                  'Comparez avec les tarifs du marché dans votre domaine — ajustez selon votre expérience',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Métier', 'Tarif journalier bas', 'Tarif journalier moyen', 'Tarif senior'],
+                rows: [
+                  ['Développeur web / mobile', '800 MAD', '1 500 MAD', '3 000+ MAD'],
+                  ['Designer UI/UX', '700 MAD', '1 200 MAD', '2 500+ MAD'],
+                  ['Consultant marketing digital', '600 MAD', '1 000 MAD', '2 000+ MAD'],
+                  ['Rédacteur / traducteur', '300 MAD', '600 MAD', '1 200+ MAD'],
+                  ['Chef de projet', '800 MAD', '1 500 MAD', '2 800+ MAD'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Tarif horaire vs tarif au projet',
+                body: 'Facturer au projet est généralement plus rentable que facturer à l\'heure, surtout quand vous gagnez en efficacité. Un client paye pour un résultat, pas pour votre temps. Commencez par le tarif horaire pour calibrer, puis passez aux forfaits projet.',
+              },
+            ],
+          },
+          {
+            h2: 'La facturation freelance au Maroc : mentions obligatoires',
+            blocks: [
+              {
+                type: 'p',
+                text: 'En tant que freelance au Maroc, chaque prestation doit être documentée par une facture conforme. Cette facture est aussi la base de votre déclaration fiscale trimestrielle. Elle doit impérativement mentionner :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Vos nom, prénom et adresse professionnelle',
+                  'Votre Identifiant Fiscal (IF) obtenu lors de l\'inscription auto-entrepreneur',
+                  'Un numéro de facture séquentiel (FA-2025-001, FA-2025-002...)',
+                  'La date d\'émission',
+                  'Les coordonnées complètes de votre client (nom, adresse, ICE pour les sociétés)',
+                  'La description précise de la prestation réalisée',
+                  'Le montant HT, et si applicable le taux TVA + montant TVA + TTC',
+                  'La mention "Exonéré de TVA — Auto-entrepreneur IF n°..." si vous êtes auto-entrepreneur',
+                  'Les conditions de paiement (délai, mode)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'Une facture Word ou Excel coûte du temps et de la crédibilité',
+                body: 'Un client grand compte ou une PME organisée refusera souvent une facture Word sans numéro IF visible, sans ICE, ou avec une mise en page approximative. Chaque facture refusée décale votre paiement de 30 à 60 jours.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Factures freelance conformes en 2 minutes sur Sayerli',
+                body: 'Sayerli génère automatiquement des factures PDF avec toutes les mentions légales : IF, numérotation séquentielle, exonération TVA auto-entrepreneur. Envoyez directement par email, suivez les paiements et relancez les retardataires en un clic. Essai gratuit — sans carte bancaire.',
+                href: '/register',
+                cta: 'Créer mon compte gratuit',
+              },
+            ],
+          },
+          {
+            h2: 'La fiscalité du freelance marocain : IR, TVA et CNSS',
+            blocks: [
+              {
+                type: 'p',
+                text: 'C\'est le sujet qui fait le plus peur — et pourtant, pour un freelance sous régime auto-entrepreneur, la fiscalité est relativement simple :',
+              },
+              {
+                type: 'table',
+                headers: ['Charge', 'Taux', 'Périodicité', 'Base de calcul'],
+                rows: [
+                  ['IR libératoire (services)', '2% du CA HT', 'Trimestriel', 'CA encaissé sur le trimestre'],
+                  ['IR libératoire (commerce)', '1% du CA HT', 'Trimestriel', 'CA encaissé sur le trimestre'],
+                  ['CNSS (services)', '10,4% du CA HT', 'Trimestriel', 'CA encaissé sur le trimestre'],
+                  ['TVA', 'Exonéré', '—', 'Auto-entrepreneurs non assujettis'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Bonne nouvelle pour les nouveaux inscrits : les 3 premières années d\'activité, vous bénéficiez d\'une exonération totale d\'IR. Vous ne payez que la CNSS. En pratique, pour un freelance en prestations de services, prévoyez de mettre de côté 12 à 13% de chaque encaissement (10,4% CNSS + 2% IR après les 3 ans d\'exonération).',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Astuce : ouvrez un compte dédié à votre activité',
+                body: 'Même si ce n\'est pas obligatoire pour les auto-entrepreneurs, un compte bancaire séparé pour vos encaissements professionnels simplifie énormément votre gestion : vous voyez votre CA d\'un coup d\'œil, vous provisionnez facilement les charges CNSS et IR, et votre comptable appréciera la clarté.',
+              },
+            ],
+          },
+          {
+            h2: 'Trouver des clients en freelance au Maroc : les meilleurs canaux',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Le plus grand défi du freelance marocain n\'est pas le statut ou la facturation — c\'est l\'acquisition client. Voici les canaux qui fonctionnent réellement au Maroc en 2025 :',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'LinkedIn : le réseau B2B le plus actif au Maroc — publiez des cas clients, des conseils et des résultats concrets',
+                  'Bouche-à-oreille : vos 3 premiers clients viennent quasi toujours de votre réseau proche — commencez là',
+                  'Groupes Facebook et WhatsApp : nombreuses communautés marocaines de freelances et de recrutement digital',
+                  'Plateformes internationales : Upwork, Malt, Freelancer.com — accès aux clients étrangers qui paient en EUR/USD',
+                  'Plateformes locales : Emploi.ma, Rekrute.ma proposent aussi des missions freelance',
+                  'Votre propre site ou portfolio : investissement long terme mais crédibilité maximale',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'La spécialisation paie plus que la polyvalence',
+                body: 'Un développeur "React spécialisé e-commerce Shopify au Maroc" trouve plus facilement des clients — et à meilleur tarif — qu\'un développeur "fullstack qui fait tout". Plus votre niche est précise, plus votre valeur perçue est haute.',
+              },
+            ],
+          },
+          {
+            h2: 'Les 7 erreurs classiques du freelance marocain débutant',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Travailler sans contrat ni devis signé : le client change d\'avis en cours de route, vous n\'avez aucun recours',
+                  'Ne pas demander d\'acompte : vous avancez du temps et des ressources pour un client qui peut disparaître',
+                  'Sous-facturer par peur de perdre le client : un client qui négocie agressivement votre prix sera souvent difficile sur tout le reste',
+                  'Oublier de provisionner les charges CNSS et IR : la déclaration trimestrielle arrive, les fonds ne sont pas là',
+                  'Mélanger compte personnel et professionnel : impossible de savoir si votre activité est rentable',
+                  'Ne pas numéroter ses factures correctement : risque fiscal réel et image peu professionnelle',
+                  'Négliger le suivi des impayés : 20% des freelances marocains ont des factures non payées depuis plus de 90 jours',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli règle 4 de ces 7 erreurs automatiquement',
+                body: 'Devis signables en ligne, numérotation automatique, suivi des paiements en temps réel, relances automatiques des impayés — et bientôt la génération de votre déclaration trimestrielle. Sayerli est le copilote du freelance marocain sérieux.',
+                href: '/fonctionnalites',
+                cta: 'Découvrir toutes les fonctionnalités',
+              },
+            ],
+          },
+        ],
+      },
+
+      en: {
+        title: 'Freelancing in Morocco in 2025: Status, Contract, Invoicing and Tax — Complete Guide',
+        description: 'Everything you need to know to freelance in Morocco: which legal status to choose, how to write a contract, invoice correctly, set your rates and manage your taxes. Complete guide for Moroccan independents.',
+        intro: [
+          {
+            type: 'p',
+            text: 'Freelancing is booming in Morocco. Developers, designers, consultants, copywriters, digital marketers — tens of thousands of Moroccans now work independently, whether full-time or alongside a salaried job. But the vast majority operate in a legal grey zone: no formal status, no contract, rough invoices, and no visibility on their tax situation.',
+          },
+          {
+            type: 'p',
+            text: 'This guide covers everything you need to freelance professionally and confidently in Morocco: the right legal status, how to write a solid contract, how to set your rates, invoice correctly and manage your tax situation. Practical, jargon-free.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'Which Legal Status Should You Choose to Freelance in Morocco?',
+            blocks: [
+              {
+                type: 'p',
+                text: 'This is the first question every serious freelancer asks. In Morocco, three options are available depending on your situation and ambitions:',
+              },
+              {
+                type: 'table',
+                headers: ['Status', 'For whom', 'Revenue cap', 'Accounting'],
+                rows: [
+                  ['Auto-entrepreneur', 'Starting freelancers, low revenue, service activities', '500,000 MAD/year', 'Income register only'],
+                  ['Licensed individual (patenté)', 'Mid-revenue freelancers, liberal professions', 'No cap', 'Simplified accounting'],
+                  ['SARL / SASU', 'High revenue, large-account clients, planned growth', 'No cap', 'Full accounting required'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'For the vast majority of Moroccan freelancers starting out or earning under 200,000 MAD per year, the auto-entrepreneur status is the best option: free online registration, reduced taxation, CNSS social coverage included, and no complex accounting.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Auto-entrepreneur and VAT: you are exempt',
+                body: 'As an auto-entrepreneur, you are not subject to VAT. You do not charge it to clients and do not declare it. On your invoices, write: "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". This is a competitive advantage for individual clients, but a drawback if your clients are VAT-registered companies.',
+              },
+            ],
+          },
+          {
+            h2: 'The Freelance Contract in Morocco: What It Must Include',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Working without a contract is the number one mistake among Moroccan freelancers. A well-written contract protects you against non-payment, scope creep and disputes. It does not need to be long — one page covering the right points is enough.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Identity of both parties: your full details + IF, and the client\'s + ICE',
+                  'Precise mission description: expected deliverables, format, number of revisions included',
+                  'Timeline: start date, milestones, final delivery date',
+                  'Rate and payment method: pre-tax amount, VAT if applicable, total, deposit requested',
+                  'Payment terms: specify 30 or 60 days max — the legal limit in Morocco is 60 days',
+                  'Intellectual property clause: who owns the delivered work and from when',
+                  'Confidentiality clause if needed',
+                  'Cancellation conditions: what happens if the client cancels? What do you keep?',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'The deposit: essential for significant projects',
+                body: 'Systematically request 30 to 50% upfront before starting any project over 5,000 MAD. It is international standard practice and a signal of seriousness. A client who refuses to pay a deposit often delays the final payment too.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'A signed quote counts as a contract',
+                body: 'If you do not want to draft a formal contract, a detailed quote signed by the client has real legal standing in Morocco. Just include all the points above. That is exactly what Sayerli lets you do in minutes.',
+              },
+            ],
+          },
+          {
+            h2: 'How to Set Your Freelance Rates in Morocco',
+            blocks: [
+              {
+                type: 'p',
+                text: 'Pricing is the hardest decision for a starting freelancer. Too low and you burn out for nothing. Too high without visible experience and you lose projects. Here is a simple method to find your right rate:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'Calculate your minimum monthly cost of living (rent, food, transport, bills) — this is your floor',
+                  'Divide by billable days per month (typically 15 to 18 days, not 22 — unexpected things happen)',
+                  'Add 30% for social contributions (CNSS), taxes (IR) and a precautionary reserve',
+                  'Compare with market rates in your field — adjust based on your experience level',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['Field', 'Low daily rate', 'Average daily rate', 'Senior rate'],
+                rows: [
+                  ['Web / mobile developer', '800 MAD', '1,500 MAD', '3,000+ MAD'],
+                  ['UI/UX designer', '700 MAD', '1,200 MAD', '2,500+ MAD'],
+                  ['Digital marketing consultant', '600 MAD', '1,000 MAD', '2,000+ MAD'],
+                  ['Copywriter / translator', '300 MAD', '600 MAD', '1,200+ MAD'],
+                  ['Project manager', '800 MAD', '1,500 MAD', '2,800+ MAD'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Hourly rate vs project rate',
+                body: 'Billing per project is generally more profitable than billing hourly, especially as you gain efficiency. A client pays for a result, not your time. Start with hourly to calibrate, then move to project packages.',
+              },
+            ],
+          },
+          {
+            h2: 'Freelance Invoicing in Morocco: Mandatory Fields',
+            blocks: [
+              {
+                type: 'p',
+                text: 'As a freelancer in Morocco, every service must be documented by a compliant invoice. This invoice is also the basis of your quarterly tax declaration. It must include:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'Your full name and professional address',
+                  'Your Tax Identifier (IF) obtained when registering as auto-entrepreneur',
+                  'A sequential invoice number (FA-2025-001, FA-2025-002...)',
+                  'The issue date',
+                  'Your client\'s full contact details (name, address, ICE for companies)',
+                  'A precise description of the service rendered',
+                  'The pre-tax amount, and if applicable VAT rate + VAT amount + total',
+                  'The note "Exonéré de TVA — Auto-entrepreneur IF n°..." if you are an auto-entrepreneur',
+                  'Payment terms (deadline, method)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'A Word or Excel invoice costs you time and credibility',
+                body: 'A large company or organised SME will often reject a Word invoice without a visible IF number, without ICE, or with an approximate layout. Each rejected invoice delays your payment by 30 to 60 days.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Compliant freelance invoices in 2 minutes on Sayerli',
+                body: 'Sayerli automatically generates PDF invoices with all mandatory fields: IF, sequential numbering, auto-entrepreneur VAT exemption. Send directly by email, track payments and chase late payers in one click. Free trial — no credit card.',
+                href: '/register',
+                cta: 'Create my free account',
+              },
+            ],
+          },
+          {
+            h2: 'Freelance Tax in Morocco: IR, VAT and CNSS',
+            blocks: [
+              {
+                type: 'p',
+                text: 'This is the topic that scares freelancers most — yet for an auto-entrepreneur freelancer, taxes are relatively straightforward:',
+              },
+              {
+                type: 'table',
+                headers: ['Charge', 'Rate', 'Frequency', 'Calculation base'],
+                rows: [
+                  ['IR (services)', '2% of pre-tax revenue', 'Quarterly', 'Revenue collected in the quarter'],
+                  ['IR (commerce)', '1% of pre-tax revenue', 'Quarterly', 'Revenue collected in the quarter'],
+                  ['CNSS (services)', '10.4% of pre-tax revenue', 'Quarterly', 'Revenue collected in the quarter'],
+                  ['VAT', 'Exempt', '—', 'Auto-entrepreneurs not subject to VAT'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'Good news for new registrants: for the first 3 years of activity, you benefit from a total IR exemption. You only pay CNSS. In practice, for a service freelancer, set aside 12 to 13% of each payment received (10.4% CNSS + 2% IR after the 3-year exemption period).',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'Tip: open a dedicated business account',
+                body: 'Even though it is not mandatory for auto-entrepreneurs, a separate bank account for your professional income simplifies everything: you see your revenue at a glance, provision CNSS and IR easily, and your accountant will appreciate the clarity.',
+              },
+            ],
+          },
+          {
+            h2: 'Finding Clients as a Freelancer in Morocco: Best Channels',
+            blocks: [
+              {
+                type: 'p',
+                text: 'The biggest challenge for Moroccan freelancers is not legal status or invoicing — it is client acquisition. Here are the channels that actually work in Morocco in 2025:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'LinkedIn: the most active B2B network in Morocco — publish case studies, tips and concrete results',
+                  'Word of mouth: your first 3 clients almost always come from your close network — start there',
+                  'Facebook and WhatsApp groups: many Moroccan freelance and digital recruitment communities',
+                  'International platforms: Upwork, Malt, Freelancer.com — access to foreign clients paying in EUR/USD',
+                  'Local platforms: Emploi.ma, Rekrute.ma also offer freelance missions',
+                  'Your own website or portfolio: long-term investment but maximum credibility',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'Specialisation pays more than versatility',
+                body: 'A developer "specialised in React e-commerce Shopify in Morocco" finds clients more easily — and at better rates — than a "fullstack developer who does everything". The more precise your niche, the higher your perceived value.',
+              },
+            ],
+          },
+          {
+            h2: 'The 7 Classic Mistakes of the Starting Moroccan Freelancer',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'Working without a contract or signed quote: the client changes their mind mid-project, you have no recourse',
+                  'Not requesting a deposit: you invest time and resources for a client who may disappear',
+                  'Under-pricing out of fear of losing the client: a client who aggressively negotiates your rate will often be difficult on everything else',
+                  'Forgetting to provision CNSS and IR: the quarterly declaration arrives and the funds are not there',
+                  'Mixing personal and professional accounts: impossible to know if your activity is profitable',
+                  'Not numbering invoices correctly: real tax risk and an unprofessional image',
+                  'Neglecting late payment follow-up: 20% of Moroccan freelancers have unpaid invoices over 90 days old',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli automatically solves 4 of these 7 mistakes',
+                body: 'Online-signable quotes, automatic sequential numbering, real-time payment tracking, automatic late-payment reminders — and soon your quarterly declaration generation. Sayerli is the co-pilot for the serious Moroccan freelancer.',
+                href: '/fonctionnalites',
+                cta: 'Discover all features',
+              },
+            ],
+          },
+        ],
+      },
+
+      ar: {
+        title: 'العمل الحر في المغرب 2025: الوضع القانوني، العقد، الفوترة والجبايات — دليل شامل',
+        description: 'كل ما تحتاج معرفته للعمل الحر في المغرب: اختيار الوضع القانوني، كتابة العقد، الفوترة الصحيحة، تحديد التعريفات وإدارة الجبايات. دليل شامل للمستقلين المغاربة.',
+        intro: [
+          {
+            type: 'p',
+            text: 'العمل الحر يشهد انتعاشاً كبيراً في المغرب. مطورون، مصممون، مستشارون، كتّاب، مسوّقون رقميون — عشرات الآلاف من المغاربة يعملون اليوم باستقلالية، سواء بدوام كامل أو إلى جانب وظيفة مأجورة. لكن غالبيتهم تعمل في ضبابية: بدون وضع قانوني، بدون عقد، بفواتير تقريبية، وبدون أي رؤية على وضعيتهم الجبائية.',
+          },
+          {
+            type: 'p',
+            text: 'يغطي هذا الدليل كل ما تحتاجه لممارسة العمل الحر في المغرب باحترافية وطمأنينة: الوضع القانوني المناسب، كيفية صياغة عقد متين، كيفية تحديد تعريفاتك، الفوترة الصحيحة وإدارة وضعيتك الجبائية. محتوى عملي وبدون تعقيد.',
+          },
+        ],
+        sections: [
+          {
+            h2: 'أي وضع قانوني تختار للعمل الحر في المغرب؟',
+            blocks: [
+              {
+                type: 'p',
+                text: 'هذا أول سؤال يطرحه كل مستقل جاد. في المغرب، ثلاثة خيارات متاحة حسب وضعيتك وطموحاتك:',
+              },
+              {
+                type: 'table',
+                headers: ['الوضع', 'لمن', 'سقف رقم الأعمال', 'المحاسبة'],
+                rows: [
+                  ['المقاول الذاتي', 'المستقلون في البداية، رقم الأعمال المحدود، الخدمات', '500,000 درهم/سنة', 'سجل المداخيل فقط'],
+                  ['شخص طبيعي مُرسَّم', 'المستقلون بدخل متوسط، المهن الحرة', 'بدون سقف', 'محاسبة مبسطة'],
+                  ['SARL / SASU', 'رقم أعمال مرتفع، حسابات كبيرة، نمو مخطط', 'بدون سقف', 'محاسبة كاملة إلزامية'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'لغالبية المستقلين المغاربة في البداية أو أصحاب رقم أعمال أقل من 200,000 درهم سنوياً، وضع المقاول الذاتي هو الأفضل: تسجيل مجاني عبر الإنترنت، جباية مخففة، تغطية CNSS مدمجة، وبدون محاسبة معقدة.',
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'المقاول الذاتي وTVA: أنت معفًى',
+                body: 'بوصفك مقاولاً ذاتياً، لست خاضعاً لـ TVA. لا تُفاتر بها عملاءك ولا تُصرِّح بها. أدرج في فواتيرك: "Exonéré de TVA — Auto-entrepreneur IF n° XXXXXXXX". هذه ميزة تنافسية أمام العملاء الأفراد، لكنها قد تكون عائقاً أمام الشركات التي تستردّ TVA.',
+              },
+            ],
+          },
+          {
+            h2: 'العقد في العمل الحر بالمغرب: ما يجب أن يتضمنه حتماً',
+            blocks: [
+              {
+                type: 'p',
+                text: 'العمل بدون عقد هو الخطأ الأول للمستقلين المغاربة. عقد محرَّر جيداً يحميك من عدم الدفع، والتغييرات في نطاق المهمة، والنزاعات. لا حاجة لأن يكون طويلاً — صفحة واحدة تغطي النقاط الصحيحة تكفي.',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'هوية الطرفين: بياناتك الكاملة + IF، وبيانات العميل + ICE',
+                  'وصف دقيق للمهمة: المنجزات المتوقعة، الصيغة، عدد المراجعات المُدرجة',
+                  'الجدول الزمني: تاريخ البداية، المراحل الوسيطة، تاريخ التسليم النهائي',
+                  'التعريفة وطريقة الدفع: المبلغ HT، TVA إن وُجدت، الإجمالي TTC، السُّلفة المطلوبة',
+                  'أجل الدفع: حدِّد 30 أو 60 يوماً كحد أقصى — الحد القانوني في المغرب 60 يوماً',
+                  'بند الملكية الفكرية: من يمتلك العمل المُسلَّم ومتى',
+                  'بند السرية عند الاقتضاء',
+                  'شروط الفسخ: ماذا يحدث إذا ألغى العميل؟ ما الذي تحتفظ به؟',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'السُّلفة: ضرورة لا غنى عنها للمهام المهمة',
+                body: 'اطلب بشكل منتظم 30 إلى 50% سُلفةً قبل بدء أي مهمة تتجاوز 5,000 درهم. هذا معيار دولي ومؤشر على الجدية. عميل يرفض دفع سُلفة كثيراً ما يتأخر في تسديد الباقي.',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'عرض سعر موقَّع يُعادل عقداً',
+                body: 'إذا لم ترغب في صياغة عقد رسمي، فعرض سعر مفصَّل موقَّع من العميل له قيمة قانونية حقيقية في المغرب. يكفي إدراج جميع النقاط أعلاه. وهذا تحديداً ما يتيح لك Sayerli إنجازه في دقائق.',
+              },
+            ],
+          },
+          {
+            h2: 'كيفية تحديد تعريفاتك كمستقل في المغرب',
+            blocks: [
+              {
+                type: 'p',
+                text: 'التسعير هو القرار الأصعب على المستقل المبتدئ. تسعير منخفض جداً يُرهقك دون جدوى. تسعير مرتفع جداً بدون خبرة ظاهرة يُفقِدك المهام. إليك طريقة بسيطة لإيجاد تعريفتك الصحيحة:',
+              },
+              {
+                type: 'ol',
+                items: [
+                  'احسب تكاليف معيشتك الشهرية الدنيا (إيجار، طعام، تنقل، فواتير) — هذا هو حدّك الأدنى',
+                  'اقسم على عدد الأيام القابلة للفوترة شهرياً (عادةً 15 إلى 18 يوماً لا 22 — الطوارئ واردة)',
+                  'أضِف 30% للأعباء الاجتماعية (CNSS) والجبائية (IR) واحتياطي الطوارئ',
+                  'قارن مع تعريفات السوق في مجالك وعدِّل حسب مستوى خبرتك',
+                ],
+              },
+              {
+                type: 'table',
+                headers: ['المجال', 'تعريفة يومية منخفضة', 'تعريفة يومية متوسطة', 'تعريفة المحترف'],
+                rows: [
+                  ['مطوّر ويب / موبايل', '800 درهم', '1,500 درهم', '3,000+ درهم'],
+                  ['مصمم UI/UX', '700 درهم', '1,200 درهم', '2,500+ درهم'],
+                  ['مستشار تسويق رقمي', '600 درهم', '1,000 درهم', '2,000+ درهم'],
+                  ['كاتب / مترجم', '300 درهم', '600 درهم', '1,200+ درهم'],
+                  ['مدير مشروع', '800 درهم', '1,500 درهم', '2,800+ درهم'],
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'التعريفة بالساعة مقابل التعريفة بالمشروع',
+                body: 'الفوترة بالمشروع عادةً أكثر ربحاً من الفوترة بالساعة، خاصةً حين تكتسب الكفاءة. العميل يدفع مقابل نتيجة لا مقابل وقتك. ابدأ بالتعريفة بالساعة للمعايرة، ثم انتقل إلى الأسعار الجزافية للمشاريع.',
+              },
+            ],
+          },
+          {
+            h2: 'فوترة المستقل في المغرب: البيانات الإلزامية',
+            blocks: [
+              {
+                type: 'p',
+                text: 'بوصفك مستقلاً في المغرب، كل خدمة يجب توثيقها بفاتورة مطابقة. هذه الفاتورة هي أيضاً أساس تصريحك الجبائي الفصلي. يجب أن تتضمن حتماً:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'اسمك الكامل وعنوانك المهني',
+                  'معرِّفك الجبائي (IF) المحصَّل عند التسجيل كمقاول ذاتي',
+                  'رقم فاتورة متسلسل (FA-2025-001، FA-2025-002...)',
+                  'تاريخ الإصدار',
+                  'بيانات عميلك الكاملة (الاسم، العنوان، ICE للشركات)',
+                  'وصف دقيق للخدمة المقدَّمة',
+                  'المبلغ HT، وإن اقتضى الأمر معدل TVA + مبلغها + الإجمالي TTC',
+                  'بيان "Exonéré de TVA — Auto-entrepreneur IF n°..." إن كنت مقاولاً ذاتياً',
+                  'شروط الدفع (الأجل، طريقة الأداء)',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'warning',
+                title: 'فاتورة Word أو Excel تُكلِّفك وقتاً ومصداقية',
+                body: 'شركة كبيرة أو مقاولة صغيرة منظَّمة ستُردّ في الغالب فاتورة Word بدون رقم IF ظاهر أو بدون ICE أو بإخراج تقريبي. كل فاتورة مردودة تُؤخِّر دفعتك 30 إلى 60 يوماً.',
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'فواتير مستقل مطابقة في دقيقتين على Sayerli',
+                body: 'يُولِّد Sayerli تلقائياً فواتير PDF مع جميع البيانات القانونية: IF، ترقيم متسلسل، إعفاء TVA للمقاول الذاتي. أرسِل مباشرةً بالبريد الإلكتروني، تتبّع المدفوعات وذكِّر المتأخرين بنقرة واحدة. تجربة مجانية — بدون بطاقة بنكية.',
+                href: '/register',
+                cta: 'إنشاء حسابي المجاني',
+              },
+            ],
+          },
+          {
+            h2: 'جبايات المستقل المغربي: IR وTVA وCNSS',
+            blocks: [
+              {
+                type: 'p',
+                text: 'هذا الموضوع الأكثر إثارةً للقلق — ومع ذلك، للمستقل تحت نظام المقاول الذاتي، الجبايات بسيطة نسبياً:',
+              },
+              {
+                type: 'table',
+                headers: ['العبء', 'المعدل', 'الدورية', 'أساس الحساب'],
+                rows: [
+                  ['ضريبة الدخل (الخدمات)', '2% من رقم الأعمال HT', 'فصلي', 'رقم الأعمال المحصَّل خلال الربع'],
+                  ['ضريبة الدخل (التجارة)', '1% من رقم الأعمال HT', 'فصلي', 'رقم الأعمال المحصَّل خلال الربع'],
+                  ['CNSS (الخدمات)', '10.4% من رقم الأعمال HT', 'فصلي', 'رقم الأعمال المحصَّل خلال الربع'],
+                  ['TVA', 'معفًى', '—', 'المقاولون الذاتيون غير خاضعين'],
+                ],
+              },
+              {
+                type: 'p',
+                text: 'خبر سار للمسجَّلين الجدد: السنوات الثلاث الأولى من النشاط تستفيد من إعفاء كامل من ضريبة الدخل. تدفع فقط CNSS. عملياً، لمستقل في الخدمات، خصِّص 12 إلى 13% من كل تحصيل (10.4% CNSS + 2% ضريبة دخل بعد انتهاء الإعفاء).',
+              },
+              {
+                type: 'callout',
+                variant: 'success',
+                title: 'نصيحة: افتح حساباً مصرفياً مخصصاً لنشاطك',
+                body: 'حتى لو لم يكن إلزامياً للمقاولين الذاتيين، فحساب بنكي منفصل لتحصيلاتك المهنية يُبسِّط كل شيء: ترى رقم أعمالك دفعةً واحدة، وتُؤمِّن مخصصات CNSS وضريبة الدخل بسهولة، ومحاسبك سيُقدِّر الوضوح.',
+              },
+            ],
+          },
+          {
+            h2: 'إيجاد العملاء كمستقل في المغرب: أفضل القنوات',
+            blocks: [
+              {
+                type: 'p',
+                text: 'التحدي الأكبر للمستقل المغربي ليس الوضع القانوني أو الفوترة — بل استقطاب العملاء. إليك القنوات التي تُجدي نفعاً في المغرب عام 2025:',
+              },
+              {
+                type: 'ul',
+                items: [
+                  'LinkedIn: الشبكة B2B الأكثر نشاطاً في المغرب — انشر حالات عملاء ونصائح ونتائج ملموسة',
+                  'التوصيات الشفهية: عملاؤك الثلاثة الأوائل يأتون شبه دائماً من شبكتك المقربة — ابدأ من هناك',
+                  'مجموعات Facebook وWhatsApp: مجتمعات مغربية كثيرة للمستقلين والتوظيف الرقمي',
+                  'منصات دولية: Upwork وMalt وFreelancer.com — وصول لعملاء أجانب يدفعون بالأورو والدولار',
+                  'منصات محلية: Emploi.ma وRekrute.ma تعرضان أيضاً مهاماً للمستقلين',
+                  'موقعك الخاص أو ملفك الإبداعي: استثمار بعيد المدى لكن بمصداقية قصوى',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'info',
+                title: 'التخصص يُدرّ أكثر من التعدد',
+                body: 'مطوّر "متخصص في React للتجارة الإلكترونية Shopify بالمغرب" يجد عملاء بسهولة أكبر — وبتعريفات أفضل — من مطوّر "fullstack يعمل في كل شيء". كلما كانت تخصصيتك أدق، كانت قيمتك المُدرَكة أعلى.',
+              },
+            ],
+          },
+          {
+            h2: 'أبرز 7 أخطاء كلاسيكية للمستقل المغربي المبتدئ',
+            blocks: [
+              {
+                type: 'ul',
+                items: [
+                  'العمل بدون عقد أو عرض سعر موقَّع: يغيّر العميل رأيه في منتصف المشروع وليس لك أي سند',
+                  'عدم طلب سُلفة: تستثمر وقتاً وموارد لعميل قد يختفي',
+                  'التسعير بالأدنى خوفاً من فقدان العميل: عميل يُفاوض بعدوانية على سعرك سيكون صعباً في كل شيء آخر',
+                  'نسيان تخصيص مستحقات CNSS وضريبة الدخل: يصل التصريح الفصلي والأموال غير موجودة',
+                  'خلط الحسابات الشخصية والمهنية: يستحيل معرفة ما إذا كان نشاطك مربحاً',
+                  'عدم ترقيم الفواتير بشكل صحيح: خطر جبائي حقيقي وصورة غير احترافية',
+                  'إهمال متابعة المستحقات غير المسددة: 20% من المستقلين المغاربة لديهم فواتير غير مدفوعة منذ أكثر من 90 يوماً',
+                ],
+              },
+              {
+                type: 'callout',
+                variant: 'sayerli',
+                title: 'Sayerli يحل تلقائياً 4 من هذه الأخطاء السبعة',
+                body: 'عروض أسعار قابلة للتوقيع إلكترونياً، ترقيم تلقائي متسلسل، تتبع المدفوعات في الوقت الحقيقي، تذكيرات تلقائية للمستحقات المتأخرة — وقريباً توليد تصريحك الفصلي. Sayerli هو المساعد الذكي للمستقل المغربي الجاد.',
+                href: '/fonctionnalites',
+                cta: 'اكتشف جميع المزايا',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
 }
