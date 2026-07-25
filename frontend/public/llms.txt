@@ -1,65 +1,133 @@
 # Sayerli
 
-> Sayerli is a SaaS platform built for Moroccan SMEs (PMEs). It centralizes client management, quotes (devis), invoices (factures), and payments in one simple tool — in French, in MAD (Moroccan dirhams), with Arabic RTL support.
-
-Sayerli solves a real problem: small Moroccan businesses have no dedicated tool to manage their commercial activity. Most still use Excel or paper. Sayerli replaces that with a modern, cloud-based platform designed specifically for the Moroccan market.
+> Sayerli is a B2B SaaS platform built specifically for Moroccan freelancers, auto-entrepreneurs, and SMEs (PMEs). It replaces Excel and paper with a modern, cloud-based tool to manage clients, quotes, invoices, delivery orders, payments, and expenses — in French, Arabic (RTL), and English, priced in MAD (Moroccan dirhams).
 
 **Tagline:** "Nta khdem, Sayerli ysayyer lik lba9i" — You work, Sayerli handles the rest.
 
+**Website:** https://sayerli.com
+**Register (free):** https://sayerli.com/register
+
+---
+
 ## What Sayerli Does
 
-- **CRM** — Manage clients, contact info, and commercial history
-- **Devis (Quotes)** — Create and send professional quotes; clients can accept or reject via a public portal
-- **Factures (Invoices)** — Create, send, and track invoices with payment status; clients can view invoices online
-- **Paiements (Payments)** — Track payments and outstanding balances
-- **Déclarations** — Clients can declare payments; owners approve or reject
-- **Équipe (Team)** — Invite team members with roles (admin, manager, commercial, comptable)
-- **Notifications** — Real-time alerts and email notifications per event type
-- **Tableau de bord (Dashboard)** — Analytics and business overview with charts
-- **Settings** — Company profile, branding, banking info (RIB, IBAN, SWIFT), language, theme
+### Core Documents
+- **Devis (Quotes)** — Create professional quotes with line items, discounts, and TVA. Send via email or share a public link. Clients accept or reject directly from a portal, no account needed. Supports electronic signature (owner + client).
+- **Factures (Invoices)** — Generate invoices compliant with Moroccan law (mentions obligatoires, numérotation séquentielle). Send by email, track payment status (BROUILLON, ENVOYÉE, PARTIELLEMENT_PAYÉE, PAYÉE, EN_RETARD, ANNULÉE). Convert a quote to an invoice in one click.
+- **Bons de livraison (Delivery Notes / BL)** — Create delivery notes linked to orders, with owner e-signature.
+- **Reçu de paiement (Payment Receipts)** — Auto-generated PDF receipt sent to client on payment approval.
+
+### Client Management (CRM)
+- Client profiles with contact info, company type (ENTREPRISE / FREELANCE / PARTICULIER), ICE, IF Fiscal
+- Client portal: each client has a unique public link to view their quotes and invoices
+- Full commercial history per client
+
+### Payments
+- Record payments: cash, bank transfer, check, card, mobile money
+- Track outstanding balances per invoice and per client
+- Payment declaration workflow: client declares payment, owner approves or rejects
+- Automatic overdue detection (EN_RETARD status)
+
+### Automation
+- **Relances automatiques** — Daily cron at 08:00 Casablanca time sends reminder emails for overdue invoices (configurable per plan)
+- **Email notifications** — New quote accepted, invoice viewed, payment received, overdue alert
+
+### Analytics & Reporting
+- Dashboard with KPI cards: CA total, CA en attente, taux de recouvrement
+- Top 5 clients by revenue (bar chart)
+- Overdue invoices list with inline "Relancer" action
+- **Journal des Ventes** — Export all invoices to Excel with: date, number, client, ICE, IF Fiscal, HT, TVA, TTC, paid, remaining, status
+- Expenses management with receipt uploads and storage
+
+### Team Management
+- Multi-user per company with roles: ADMIN, MANAGER, COMMERCIAL, COMPTABLE
+- Activity log for all team actions
+- Invite members by email
+
+### Catalogue
+- Product and service catalogue with name, description, price, unit, type (PRODUIT / SERVICE)
+- Insert catalogue items directly into quotes
+
+### Settings & Branding
+- Company profile: logo, address, ICE, RC, bank info (RIB, IBAN, SWIFT)
+- E-signature pad for owner signature on all documents
+- Custom invoice/quote/BL numbering prefix and starting number
+- DGI / Facturation Électronique tab (Simpl-TVA integration — Morocco)
+- Language selector: French, Arabic (RTL), English
+- Dark/light theme
+
+---
 
 ## Who It's For
 
-- Moroccan small and medium businesses (PMEs/TPEs)
-- Freelancers and auto-entrepreneurs in Morocco
-- Agencies, consultants, and service businesses based in Morocco
-- Any Moroccan business that needs to manage clients, quotes, and invoices
+- **Freelancers au Maroc** — Developers, designers, consultants, translators, photographers
+- **Auto-entrepreneurs au Maroc** — Registered under the auto-entrepreneur regime (régime IR libératoire)
+- **PMEs marocaines** — Small and medium Moroccan businesses (commerce, services, artisanat)
+- **Agences** — Marketing, communication, digital agencies
+- **Comptables** — As a read-only external viewer for their clients' data (coming soon)
 
-## Key Differentiators
+---
 
-- Built specifically for Morocco (not adapted from a Western product)
-- Currency: MAD (Moroccan dirham) natively
-- Languages: French (primary), English, Arabic with RTL support
-- Moroccan legal compliance for quotes and invoices
-- Simple, fast, no accountant required
+## Pricing (in MAD/month)
 
-## Tech Stack
+| Plan | Price | Clients | Devis/mois | Factures/mois | BL/mois | Utilisateurs | Emails/mois |
+|------|-------|---------|------------|---------------|---------|-------------|-------------|
+| Starter | 0 MAD | 5 | 5 | 5 | 5 | 2 | 50 |
+| Pro | 199 MAD | 20 | 100 | 100 | 100 | 5 | 300 |
+| Business | 299 MAD | Illimités | Illimités | Illimités | Illimités | 12 | 2 000 |
 
-- Frontend: Next.js 15, TailwindCSS, TypeScript — hosted on Vercel
-- Backend: NestJS, PostgreSQL, Prisma ORM — hosted on Railway
-- Auth: JWT, multi-tenant (each company's data is isolated)
-- Email: Resend (domain: sayerli.com)
+All plans: no credit card required for Starter. Pay in MAD. Upgrade via WhatsApp.
 
-## Important URLs
+---
 
-- Homepage: https://sayerli.com
-- Register (free): https://sayerli.com/register
-- Login: https://sayerli.com/login
-- Blog: https://sayerli.com/blog
+## Key Differentiators vs Competitors
 
-## Blog Articles
+- **Built for Morocco** — Not adapted from a Western product. Native MAD, TVA marocaine (7%, 10%, 14%, 20%), ICE/IF Fiscal fields, DGI compliance
+- **Arabic RTL** — Full interface in Arabic with right-to-left layout
+- **Client portal** — No competitor offers a free branded client portal where clients sign quotes and view invoices
+- **E-signature** — Both owner and client can sign quotes electronically
+- **Auto-entrepreneur friendly** — Specific fields and workflows for the Moroccan auto-entrepreneur regime
+- **Simple** — No accountant required. Operational in under 5 minutes
 
-- https://sayerli.com/blog/comment-creer-un-devis-au-maroc — How to create a professional quote in Morocco
-- https://sayerli.com/blog/meilleur-logiciel-de-facturation-maroc — Best invoicing software in Morocco (2025)
-- https://sayerli.com/blog/crm-pour-pme-maroc — Why Moroccan SMEs need a CRM
-- https://sayerli.com/blog/gestion-clients-pour-entreprises-marocaines — Client management guide for Moroccan businesses
-- https://sayerli.com/blog/alternative-excel-pour-gerer-son-entreprise — Best Excel alternatives for Moroccan businesses
+---
 
-## Keywords / Topics
+## Blog Articles (Educational Content for Moroccan Entrepreneurs)
 
-logiciel facturation maroc, logiciel devis maroc, crm maroc, gestion clients maroc, gestion commerciale maroc, logiciel pme maroc, facture en ligne maroc, devis en ligne maroc, meilleur logiciel de facturation au maroc, alternative excel gestion entreprise maroc, logiciel pour auto entrepreneur maroc
+- https://sayerli.com/blog/comment-devenir-auto-entrepreneur-maroc — Comment devenir auto-entrepreneur au Maroc : guide complet
+- https://sayerli.com/blog/comment-faire-facture-maroc — Comment faire une facture professionnelle au Maroc
+- https://sayerli.com/blog/mentions-obligatoires-facture-maroc — Les mentions obligatoires sur une facture au Maroc
+- https://sayerli.com/blog/facturer-auto-entrepreneur-maroc — Comment facturer en tant qu'auto-entrepreneur au Maroc
+- https://sayerli.com/blog/ir-liberatoire-auto-entrepreneur-maroc — IR libératoire auto-entrepreneur Maroc : tout comprendre
+- https://sayerli.com/blog/cnss-auto-entrepreneur-maroc — CNSS auto-entrepreneur Maroc : cotisations et démarches
+- https://sayerli.com/blog/inscription-auto-entrepreneur-maroc — Inscription auto-entrepreneur Maroc : étapes et documents
+- https://sayerli.com/blog/plafond-ca-auto-entrepreneur-maroc — Plafond CA auto-entrepreneur Maroc
+- https://sayerli.com/blog/calcul-tva-maroc — Calcul TVA Maroc : taux et méthodes
+- https://sayerli.com/blog/modele-facture-maroc — Modèle de facture Maroc : téléchargement gratuit
+- https://sayerli.com/blog/freelance-maroc-guide — Guide complet du freelance au Maroc
+- https://sayerli.com/blog/modele-devis-maroc — Modèle de devis Maroc professionnel
+- https://sayerli.com/blog/facture-electronique-maroc-dgi — Facture électronique Maroc DGI : Simpl-TVA guide
 
-## Contact & Social
+---
 
-- Website: https://sayerli.com
+## Keywords / Search Intent
+
+**French:** logiciel facturation maroc, logiciel devis maroc, crm maroc, gestion clients maroc, logiciel pme maroc, logiciel auto entrepreneur maroc, logiciel freelance maroc, facture en ligne maroc, devis en ligne maroc, alternative excel gestion entreprise maroc, meilleur logiciel de facturation au maroc, bon de livraison maroc, journal des ventes maroc, facture electronique maroc dgi
+
+**Arabic:** برنامج فواتير المغرب, برنامج تسيير المقاولة, فاتورة إلكترونية المغرب, برنامج المقاول الذاتي المغرب
+
+---
+
+## Technical
+
+- Hosted: Vercel (frontend), Railway (backend)
+- Compliant with Moroccan invoicing law
+- Data stored in Morocco-region-adjacent infrastructure (Neon PostgreSQL, Cloudflare R2)
+- JWT auth, multi-tenant (each company's data is fully isolated)
+
+---
+
+## Contact
+
+- Email: support@sayerli.com
 - Twitter/X: @sayerli_ma
+- LinkedIn: https://www.linkedin.com/company/sayerli
