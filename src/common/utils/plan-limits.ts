@@ -19,9 +19,9 @@ const MB = 1024 * 1024;
 const GB = 1024 * MB;
 
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
-  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsEmailsParMois: 5,   journalDesVentes: false, depensesParMois: 20,  depensesStorageBytes: 200 * MB },
-  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true,  depensesParMois: 150, depensesStorageBytes: 5 * GB   },
-  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsEmailsParMois: -1,  journalDesVentes: true,  depensesParMois: -1,  depensesStorageBytes: 20 * GB  },
+  STARTER:  { clients: 5,  devisParMois: 5,   facturesParMois: 5,   bonsLivraisonParMois: 5,   utilisateurs: 2,  relancesParMois: 3,  receiptsEmailsParMois: 50,   journalDesVentes: false, depensesParMois: 20,  depensesStorageBytes: 200 * MB },
+  PRO:      { clients: 20, devisParMois: 100, facturesParMois: 100, bonsLivraisonParMois: 100, utilisateurs: 5,  relancesParMois: -1, receiptsEmailsParMois: 300,  journalDesVentes: true,  depensesParMois: 150, depensesStorageBytes: 5 * GB   },
+  BUSINESS: { clients: -1, devisParMois: -1,  facturesParMois: -1,  bonsLivraisonParMois: -1,  utilisateurs: 12, relancesParMois: -1, receiptsEmailsParMois: 2000, journalDesVentes: true,  depensesParMois: -1,  depensesStorageBytes: 20 * GB  },
 };
 
 export function verifierLimite(
