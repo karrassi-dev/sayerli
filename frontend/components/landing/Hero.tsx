@@ -10,7 +10,7 @@ export function Hero() {
   const loggedIn = useIsLoggedIn()
 
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
 
       {/* ── Background ── */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
