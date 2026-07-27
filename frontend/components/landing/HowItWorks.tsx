@@ -1,70 +1,66 @@
 'use client'
 
-import { UserPlus, BookUser, FileText, Truck, CreditCard, ArrowRight } from 'lucide-react'
+import { UserPlus, BookUser, FileText, Truck, CreditCard } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { cn } from '@/lib/utils'
 
 const STEPS = [
   {
-    number: 1,
+    number: '01',
     icon: UserPlus,
-    gradient: 'from-blue-500 to-blue-600',
-    shadow: 'shadow-blue-500/25',
-    chipBg: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900',
+    color: '#6366f1',
+    glow: 'rgba(99,102,241,0.12)',
+    border: 'rgba(99,102,241,0.2)',
     key: 'step1',
   },
   {
-    number: 2,
+    number: '02',
     icon: BookUser,
-    gradient: 'from-violet-500 to-violet-600',
-    shadow: 'shadow-violet-500/25',
-    chipBg: 'bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900',
+    color: '#14b8a6',
+    glow: 'rgba(20,184,166,0.12)',
+    border: 'rgba(20,184,166,0.2)',
     key: 'step2',
   },
   {
-    number: 3,
+    number: '03',
     icon: FileText,
-    gradient: 'from-teal-500 to-teal-600',
-    shadow: 'shadow-teal-500/25',
-    chipBg: 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900',
+    color: '#3b82f6',
+    glow: 'rgba(59,130,246,0.12)',
+    border: 'rgba(59,130,246,0.2)',
     key: 'step3',
   },
   {
-    number: 4,
+    number: '04',
     icon: Truck,
-    gradient: 'from-amber-500 to-orange-500',
-    shadow: 'shadow-amber-500/25',
-    chipBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900',
+    color: '#f59e0b',
+    glow: 'rgba(245,158,11,0.12)',
+    border: 'rgba(245,158,11,0.2)',
     key: 'step4',
   },
   {
-    number: 5,
+    number: '05',
     icon: CreditCard,
-    gradient: 'from-green-500 to-emerald-600',
-    shadow: 'shadow-green-500/25',
-    chipBg: 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-100 dark:border-green-900',
+    color: '#10b981',
+    glow: 'rgba(16,185,129,0.12)',
+    border: 'rgba(16,185,129,0.2)',
     key: 'step5',
   },
 ] as const
 
-const STATUS_JOURNEY = [
-  { label: 'Brouillon', color: 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400' },
-  { label: 'Devis envoyé', color: 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300' },
-  { label: 'Accepté', color: 'bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300' },
-  { label: 'BL livré', color: 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300' },
-  { label: 'Facturée', color: 'bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300' },
-  { label: 'Payée ✓', color: 'bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300 font-semibold' },
-]
-
 export function HowItWorks() {
   const { t } = useTranslation()
+  const { ref, visible } = useScrollAnimation()
 
   return (
-    <section id="how-it-works" className="py-24 bg-slate-50 dark:bg-slate-900/50 overflow-hidden">
+    <section id="how-it-works" ref={ref} className="py-24 sm:py-32 bg-slate-50 dark:bg-slate-900/30 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className={cn(
+          'text-center mb-16 transition-all duration-700',
+          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        )}>
           <span className="inline-block px-4 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 text-sm font-semibold mb-4">
             {t('howItWorks.badge')}
           </span>
@@ -72,81 +68,82 @@ export function HowItWorks() {
           <p className="section-sub max-w-2xl mx-auto">{t('howItWorks.sub')}</p>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-
-          {/* Desktop connector line */}
-          <div
-            className="hidden lg:block absolute top-[1.875rem] h-px bg-gradient-to-r from-blue-300 via-teal-300 via-amber-300 to-green-300 dark:from-blue-800 dark:via-teal-800 dark:via-amber-800 dark:to-green-800"
-            style={{ left: 'calc(10% + 28px)', right: 'calc(10% + 28px)' }}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
-            {STEPS.map((step, idx) => {
-              const Icon = step.icon
-              const isLast = idx === STEPS.length - 1
-              return (
-                <div key={step.number} className="relative group flex flex-col">
-
-                  {/* Mobile connector (vertical) */}
-                  {!isLast && (
-                    <div className="lg:hidden absolute left-[1.875rem] top-[3.75rem] w-px h-full bg-gradient-to-b from-slate-300 to-transparent dark:from-slate-700" />
-                  )}
-
-                  {/* Mobile layout: horizontal icon + content */}
-                  <div className="flex lg:flex-col items-start lg:items-center gap-4 lg:gap-0 lg:text-center">
-
-                    {/* Icon bubble */}
-                    <div className="relative flex-shrink-0">
-                      <div className={cn(
-                        'w-[3.75rem] h-[3.75rem] rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg z-10 relative',
-                        'group-hover:scale-105 group-hover:-translate-y-0.5 transition-all duration-300',
-                        step.gradient, step.shadow
-                      )}>
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black flex items-center justify-center shadow-md z-20">
-                        {step.number}
-                      </span>
-                    </div>
-
-                    {/* Text */}
-                    <div className="lg:mt-5 flex-1">
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1.5 lg:mb-2">
-                        {t(`howItWorks.${step.key}.title`)}
-                      </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3">
-                        {t(`howItWorks.${step.key}.desc`)}
-                      </p>
-                      <span className={cn('inline-block text-[11px] font-semibold px-2.5 py-1 rounded-full', step.chipBg)}>
-                        {t(`howItWorks.${step.key}.chip`)}
-                      </span>
-                    </div>
-
-                  </div>
-
-                  {/* Desktop arrow between cards */}
-                  {!isLast && (
-                    <div className="hidden lg:flex absolute -right-3 top-[1.375rem] z-10 w-6 h-6 items-center justify-center">
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
-                    </div>
-                  )}
+        {/* Steps grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-3">
+          {STEPS.map((step, idx) => {
+            const Icon = step.icon
+            return (
+              <div
+                key={step.number}
+                className={cn(
+                  'relative group rounded-2xl p-5 overflow-hidden transition-all duration-500',
+                  'hover:-translate-y-1 hover:shadow-xl',
+                  'bg-white dark:bg-slate-900/60 border',
+                  visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                )}
+                style={{
+                  borderColor: visible ? step.border : 'transparent',
+                  transitionDelay: `${idx * 80}ms`,
+                  boxShadow: `0 1px 3px rgba(0,0,0,0.06)`,
+                }}
+              >
+                {/* Large background step number */}
+                <div
+                  className="absolute -bottom-3 -right-2 text-[5.5rem] font-black leading-none select-none pointer-events-none"
+                  style={{ color: step.glow }}
+                >
+                  {step.number}
                 </div>
-              )
-            })}
-          </div>
+
+                {/* Subtle top accent line */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
+                  style={{ background: `linear-gradient(to right, ${step.color}60, ${step.color}00)` }}
+                />
+
+                {/* Icon */}
+                <div
+                  className="relative w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105"
+                  style={{ background: step.glow, border: `1px solid ${step.border}` }}
+                >
+                  <Icon className="w-5 h-5" style={{ color: step.color }} />
+                </div>
+
+                {/* Content */}
+                <div className="relative">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2 leading-snug">
+                    {t(`howItWorks.${step.key}.title`)}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3">
+                    {t(`howItWorks.${step.key}.desc`)}
+                  </p>
+                  <span
+                    className="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full"
+                    style={{ background: step.glow, color: step.color, border: `1px solid ${step.border}` }}
+                  >
+                    {t(`howItWorks.${step.key}.chip`)}
+                  </span>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
-        {/* Status journey bar */}
-        <div className="mt-14 flex flex-wrap items-center justify-center gap-1.5">
-          <span className="text-xs text-slate-400 dark:text-slate-500 mr-2 font-medium">Statut :</span>
-          {STATUS_JOURNEY.map((s, i) => (
-            <div key={s.label} className="flex items-center gap-1.5">
-              <span className={cn('text-[11px] px-2.5 py-1 rounded-full', s.color)}>
-                {s.label}
+        {/* Connector arrow row — desktop only */}
+        <div className={cn(
+          'hidden lg:flex items-center justify-center gap-1 mt-8 transition-all duration-700 delay-500',
+          visible ? 'opacity-100' : 'opacity-0'
+        )}>
+          {STEPS.map((step, idx) => (
+            <div key={step.number} className="flex items-center gap-1">
+              <span
+                className="text-[10px] font-bold px-3 py-1 rounded-full"
+                style={{ background: step.glow, color: step.color, border: `1px solid ${step.border}` }}
+              >
+                {t(`howItWorks.${step.key}.chip`)}
               </span>
-              {i < STATUS_JOURNEY.length - 1 && (
-                <ArrowRight className="w-3 h-3 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+              {idx < STEPS.length - 1 && (
+                <span className="text-slate-300 dark:text-slate-700 text-sm mx-0.5">→</span>
               )}
             </div>
           ))}

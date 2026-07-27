@@ -6,13 +6,18 @@ import {
   WebSiteJsonLd,
 } from '@/components/seo/JsonLd'
 
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
-import { Hero } from '@/components/landing/Hero'
-import { HowItWorks } from '@/components/landing/HowItWorks'
-import { Pricing } from '@/components/landing/Pricing'
-import { Testimonials } from '@/components/landing/Testimonials'
-import { FinalCta } from '@/components/landing/FinalCta'
+import { Navbar }            from '@/components/layout/Navbar'
+import { Footer }            from '@/components/layout/Footer'
+import { Hero }              from '@/components/landing/Hero'
+import { StatsBar }          from '@/components/landing/StatsBar'
+import { DashboardShowcase } from '@/components/landing/DashboardShowcase'
+import { HowItWorks }        from '@/components/landing/HowItWorks'
+import { WhyChooseSayerli }  from '@/components/landing/WhyChooseSayerli'
+import { FeatureComparison } from '@/components/landing/FeatureComparison'
+import { Testimonials }      from '@/components/landing/Testimonials'
+import { Pricing }           from '@/components/landing/Pricing'
+import { FAQ }               from '@/components/landing/FAQ'
+import { FinalMegaCta }      from '@/components/landing/FinalMegaCta'
 
 export const metadata: Metadata = buildMetadata({
   title: 'Sayerli | Devis et Facturation pour Freelancers, Auto-entrepreneurs & PME au Maroc',
@@ -31,10 +36,15 @@ export default function Home() {
       <main className="min-h-screen">
         <Navbar />
         <Hero />
+        <StatsBar />
+        <DashboardShowcase />
         <HowItWorks />
-        <Pricing />
+        <WhyChooseSayerli />
+        <FeatureComparison />
         <Testimonials />
-        <FinalCta />
+        <Pricing />
+        <FAQ />
+        <FinalMegaCta />
         <Footer />
       </main>
     </>
