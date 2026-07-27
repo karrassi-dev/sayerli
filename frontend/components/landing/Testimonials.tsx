@@ -35,7 +35,7 @@ export function Testimonials() {
   const { ref, visible } = useScrollAnimation()
 
   return (
-    <section id="testimonials" ref={ref} className="py-24 sm:py-32 overflow-hidden">
+    <section id="testimonials" ref={ref} className="py-16 sm:py-24 overflow-hidden">
 
       {/* Background */}
       <div className="absolute inset-y-0 left-0 right-0 -z-10 pointer-events-none overflow-hidden">

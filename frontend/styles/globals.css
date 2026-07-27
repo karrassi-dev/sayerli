@@ -94,6 +94,10 @@
 .animate-marquee-rtl { animation: marquee-rtl 30s linear infinite; }
 
 /* Landing page keyframes (used via inline animation: styles) */
-@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
-@keyframes revealUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes float    { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes fadeIn     { from { opacity: 0; } to { opacity: 1; } }
+@keyframes revealUp   { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float      { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes stepIn     { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes progFill   { from { width: 0%; } to { width: 100%; } }
+.step-in    { animation: stepIn   0.28s cubic-bezier(0.16,1,0.3,1) both; }
+.prog-fill  { animation: progFill 4s linear both; }

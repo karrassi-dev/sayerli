@@ -53,9 +53,9 @@ export function FeatureComparison() {
   const features = tArray('comparison.features')
 
   return (
-    <section ref={ref} className="py-28 bg-slate-50 dark:bg-slate-900/40">
+    <section ref={ref} className="py-16 sm:py-24 bg-slate-50 dark:bg-slate-900/40">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={cn('text-center mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
+        <div className={cn('text-center mb-10 sm:mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-950/60 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-sm font-semibold mb-4">
             {t('comparison.badge')}
           </span>
@@ -64,7 +64,8 @@ export function FeatureComparison() {
         </div>
 
         <div className={cn('transition-all duration-700 delay-100', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
-          <div className="card rounded-2xl overflow-hidden shadow-xl">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="card rounded-2xl overflow-hidden shadow-xl min-w-[560px]">
             {/* Header */}
             <div className="grid grid-cols-4 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
               <div className="p-4 col-span-1">
@@ -124,6 +125,7 @@ export function FeatureComparison() {
               {t('comparison.legend.unavailable')}
             </div>
           </div>
+          </div>{/* end overflow-x-auto */}
         </div>
       </div>
     </section>

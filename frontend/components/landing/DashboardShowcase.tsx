@@ -81,7 +81,7 @@ export function DashboardShowcase() {
   const tab = TABS[activeIdx]
 
   return (
-    <section ref={ref} className="py-24 sm:py-28 overflow-hidden bg-slate-50 dark:bg-slate-900/40">
+    <section ref={ref} className="py-16 sm:py-24 overflow-hidden bg-slate-50 dark:bg-slate-900/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}

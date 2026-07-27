@@ -22,7 +22,7 @@ export function FinalMegaCta() {
   const { ref, visible } = useScrollAnimation()
 
   return (
-    <section ref={ref} className="py-24">
+    <section ref={ref} className="py-12 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={cn('relative rounded-3xl overflow-hidden transition-all duration-700', visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95')}>
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-primary-950 dark:from-slate-950 dark:via-slate-900 dark:to-primary-950" />
