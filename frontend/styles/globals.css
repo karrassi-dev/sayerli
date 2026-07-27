@@ -58,12 +58,18 @@
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-bold text-slate-900 dark:text-white;
+    @apply text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white;
   }
 
   .section-sub {
-    @apply text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto;
+    @apply text-base sm:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto;
   }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
 }
 
 /* Smooth scrollbar */

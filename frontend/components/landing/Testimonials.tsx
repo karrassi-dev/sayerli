@@ -94,14 +94,15 @@ export function Testimonials() {
         </div>
 
         {/* Secondary testimonials */}
-        <div className={cn(
-          'grid sm:grid-cols-2 gap-5 transition-all duration-700 delay-200',
-          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        )}>
-          {SECONDARY.map(({ key, initial, gradient }) => (
+        <div className="grid sm:grid-cols-2 gap-5">
+          {SECONDARY.map(({ key, initial, gradient }, i) => (
             <div
               key={key}
-              className="bg-white dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 sm:p-7 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              className={cn(
+                'bg-white dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 sm:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-500',
+                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              )}
+              style={{ transitionDelay: `${200 + i * 100}ms` }}
             >
               <Stars />
 
