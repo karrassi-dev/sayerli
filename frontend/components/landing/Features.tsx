@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import {
   Users, FileText, Truck, Receipt, CreditCard,
-  BarChart3, UserCog, Globe, BookOpen, Bell,
+  BarChart3, UserCog, Globe, BookOpen, Bell, Layers,
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
@@ -53,7 +53,8 @@ export function Features() {
 
         {/* ── Header ── */}
         <div className={cn('text-center mb-12 sm:mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
-          <span className="inline-block px-4 py-1.5 rounded-full border text-sm font-semibold mb-5 bg-primary-50 dark:bg-[rgba(99,102,241,0.12)] border-primary-200 dark:border-[rgba(99,102,241,0.3)] text-primary-700 dark:text-[#818cf8]">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-semibold mb-5 bg-primary-50 dark:bg-[rgba(99,102,241,0.12)] border-primary-200 dark:border-[rgba(99,102,241,0.3)] text-primary-700 dark:text-[#818cf8]">
+            <Layers className="w-3.5 h-3.5" />
             {t('features.badge')}
           </span>
           <h2 className="section-title mb-4">{t('features.title')}</h2>
@@ -77,7 +78,7 @@ export function Features() {
                 )}
                 style={{
                   animation: visible
-                    ? `revealUp 0.55s cubic-bezier(0.16,1,0.3,1) ${i * 45}ms both`
+                    ? `flipInUp 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 50}ms both`
                     : 'none',
                   /* Hover overrides — undefined falls back to Tailwind class */
                   ...(on ? {

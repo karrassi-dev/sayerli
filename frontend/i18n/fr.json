@@ -198,7 +198,11 @@
     "title": "Commencez à organiser votre business dès aujourd'hui avec Sayerli",
     "sub": "Rejoignez des centaines de freelancers, auto-entrepreneurs et PME marocaines qui font confiance à Sayerli.",
     "btn": "Essai gratuit — Sans carte bancaire",
-    "btnSecondary": "Voir une démo"
+    "btnSecondary": "Voir une démo",
+    "badge": "🇲🇦 Conçu pour le Maroc · Données hébergées en Europe",
+    "trust1": "Sans carte bancaire",
+    "trust2": "Annulable à tout moment",
+    "trust3": "Support WhatsApp direct"
   },
   "footer": {
     "tagline": "La solution de gestion simple pour les PME marocaines.",

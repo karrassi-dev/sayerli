@@ -198,7 +198,11 @@
     "title": "Start organizing your business today with Sayerli",
     "sub": "Join hundreds of Moroccan freelancers, entrepreneurs and SMEs that trust Sayerli.",
     "btn": "Start Free — No credit card",
-    "btnSecondary": "Watch Demo"
+    "btnSecondary": "Watch Demo",
+    "badge": "🇲🇦 Built for Morocco · Data hosted in Europe",
+    "trust1": "No credit card required",
+    "trust2": "Cancel anytime",
+    "trust3": "Direct WhatsApp support"
   },
   "footer": {
     "tagline": "The simple management solution for Moroccan SMEs.",
