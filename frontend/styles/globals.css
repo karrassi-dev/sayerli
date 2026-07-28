@@ -100,10 +100,20 @@
 .animate-marquee-rtl { animation: marquee-rtl 30s linear infinite; }
 
 /* Landing page keyframes (used via inline animation: styles) */
-@keyframes fadeIn     { from { opacity: 0; } to { opacity: 1; } }
-@keyframes revealUp   { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes float      { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes stepIn     { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes progFill   { from { width: 0%; } to { width: 100%; } }
-.step-in    { animation: stepIn   0.28s cubic-bezier(0.16,1,0.3,1) both; }
-.prog-fill  { animation: progFill 4s linear both; }
+@keyframes fadeIn       { from { opacity: 0; } to { opacity: 1; } }
+@keyframes revealUp     { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float        { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes stepIn       { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes progFill     { from { width: 0%; } to { width: 100%; } }
+@keyframes slideInLeft  { from { opacity: 0; transform: translateX(-56px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(56px);  } to { opacity: 1; transform: translateX(0); } }
+@keyframes flipInUp     { from { opacity: 0; transform: perspective(600px) rotateX(22deg) translateY(28px); } to { opacity: 1; transform: perspective(600px) rotateX(0) translateY(0); } }
+@keyframes popIn        { from { opacity: 0; transform: scale(0.82) translateY(16px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes shimmer      { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
+
+.step-in        { animation: stepIn       0.28s cubic-bezier(0.16,1,0.3,1)   both; }
+.prog-fill      { animation: progFill     4s    linear                        both; }
+.slide-in-left  { animation: slideInLeft  0.6s  cubic-bezier(0.16,1,0.3,1)   both; }
+.slide-in-right { animation: slideInRight 0.6s  cubic-bezier(0.16,1,0.3,1)   both; }
+.flip-in-up     { animation: flipInUp     0.65s cubic-bezier(0.16,1,0.3,1)   both; }
+.pop-in         { animation: popIn        0.55s cubic-bezier(0.34,1.56,0.64,1) both; }
