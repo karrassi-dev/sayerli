@@ -60,14 +60,7 @@ export function TrustSecurity() {
 
                 {/* Stat */}
                 <div className="text-right">
-                  <div
-                    className="text-xl font-black mb-0.5"
-                    style={{
-                      background: `linear-gradient(135deg, ${color}, ${color}99)`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
+                  <div className="text-xl font-black mb-0.5" style={{ color }}>
                     {t(`security.${key}.stat`)}
                   </div>
                   <div className="text-xs text-slate-400 dark:text-slate-500">{t(`security.${key}.statLabel`)}</div>
@@ -110,14 +103,7 @@ export function TrustSecurity() {
                   <Icon className="w-5 h-5" style={{ color }} />
                 </div>
                 <div className="text-right">
-                  <div
-                    className="text-base font-black mb-0.5"
-                    style={{
-                      background: `linear-gradient(135deg, ${color}, ${color}99)`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
+                  <div className="text-base font-black mb-0.5" style={{ color }}>
                     {t(`security.${key}.stat`)}
                   </div>
                   <div className="text-xs text-slate-400 dark:text-slate-500">{t(`security.${key}.statLabel`)}</div>

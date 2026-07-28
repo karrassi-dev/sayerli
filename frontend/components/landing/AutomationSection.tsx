@@ -56,7 +56,7 @@ export function AutomationSection() {
                   <div className="pr-8 flex justify-end">
                     {isLeft ? (
                       <div
-                        className="w-full max-w-[380px] rounded-2xl p-6 border bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group"
+                        className="w-full max-w-[380px] rounded-2xl p-6 border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
                         style={{
                           animation: visible
                             ? `slideInLeft 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms both`
@@ -93,7 +93,7 @@ export function AutomationSection() {
                   <div className="pl-8 flex justify-start">
                     {!isLeft ? (
                       <div
-                        className="w-full max-w-[380px] rounded-2xl p-6 border bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group"
+                        className="w-full max-w-[380px] rounded-2xl p-6 border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
                         style={{
                           animation: visible
                             ? `slideInRight 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms both`
@@ -140,7 +140,7 @@ export function AutomationSection() {
                 </div>
 
                 <div
-                  className="rounded-2xl p-5 border bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 shadow-sm"
+                  className="rounded-2xl p-5 border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none"
                   style={{
                     animation: visible
                       ? `slideInRight 0.55s cubic-bezier(0.16,1,0.3,1) ${i * 100}ms both`

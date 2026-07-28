@@ -27,20 +27,6 @@ const TOP_CLIENTS = [
   { name: 'Rabat Consulting', amount: 7600,  pct: 27 },
 ]
 
-const BAR_COLORS = [
-  'rgba(99,102,241,0.2)',
-  'rgba(99,102,241,0.2)',
-  'rgba(99,102,241,0.2)',
-  'rgba(99,102,241,0.28)',
-  'rgba(99,102,241,0.2)',
-  'rgba(99,102,241,0.28)',
-  'rgba(99,102,241,0.2)',
-  'rgba(99,102,241,0.28)',
-  'rgba(99,102,241,0.2)',
-  'rgba(99,102,241,0.28)',
-  'rgba(99,102,241,0.2)',
-  'linear-gradient(to top, #6366f1, #818cf8)',
-]
 
 export function AnalyticsPreview() {
   const { t, tArray } = useTranslation()
