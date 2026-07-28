@@ -583,7 +583,34 @@
       "available": "Disponible",
       "partial": "Partiel / Payant",
       "unavailable": "Non disponible"
-    }
+    },
+    "before": {
+      "title": "Avant",
+      "badge": "Excel & fichiers dispersés",
+      "items": [
+        "12 fichiers Excel éparpillés",
+        "Paiements en retard non suivis",
+        "Factures créées manuellement",
+        "Aucune visibilité en temps réel",
+        "Clients et historique éparpillés",
+        "Relances WhatsApp manuelles"
+      ]
+    },
+    "after": {
+      "title": "Après",
+      "badge": "Sayerli",
+      "items": [
+        "1 tableau de bord centralisé",
+        "Paiements suivis automatiquement",
+        "Factures PDF instantanées",
+        "Analytics en temps réel",
+        "Portail client intégré",
+        "Relances automatiques"
+      ]
+    },
+    "statSpeed": "+34% paiements plus rapides",
+    "statTime": "2 min pour envoyer un devis",
+    "social": "500+ PME marocaines utilisent déjà Sayerli"
   },
   "automation": {
     "badge": "Automatisation",

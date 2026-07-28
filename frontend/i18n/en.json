@@ -583,7 +583,34 @@
       "available": "Available",
       "partial": "Partial / Paid",
       "unavailable": "Not available"
-    }
+    },
+    "before": {
+      "title": "Before",
+      "badge": "Excel & scattered files",
+      "items": [
+        "12 scattered Excel files",
+        "Overdue payments not tracked",
+        "Manually created invoices",
+        "No real-time visibility",
+        "Clients and history scattered",
+        "Manual WhatsApp follow-ups"
+      ]
+    },
+    "after": {
+      "title": "After",
+      "badge": "Sayerli",
+      "items": [
+        "1 centralized dashboard",
+        "Payments tracked automatically",
+        "Instant PDF invoices",
+        "Real-time analytics",
+        "Integrated client portal",
+        "Automatic follow-ups"
+      ]
+    },
+    "statSpeed": "+34% faster payments",
+    "statTime": "2 min to send a quote",
+    "social": "500+ Moroccan SMEs already use Sayerli"
   },
   "automation": {
     "badge": "Automation",
