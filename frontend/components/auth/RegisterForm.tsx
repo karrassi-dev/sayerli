@@ -9,45 +9,52 @@ import { cn } from '@/lib/utils'
 
 type ProfileType = 'freelancer' | 'entrepreneur' | 'pme'
 
-const PROFILE_TYPES: { key: ProfileType; labelKey: string }[] = [
-  { key: 'freelancer',   labelKey: 'typeFreelancer'   },
-  { key: 'entrepreneur', labelKey: 'typeEntrepreneur' },
-  { key: 'pme',          labelKey: 'typePme'          },
+const PROFILES: { key: ProfileType; label: string }[] = [
+  { key: 'freelancer',   label: 'Freelancer'   },
+  { key: 'entrepreneur', label: 'Entrepreneur' },
+  { key: 'pme',          label: 'PME'          },
 ]
 
-const INPUT = 'w-full bg-transparent text-white text-sm placeholder:text-white/30 outline-none transition-colors py-3.5 border-0 border-b border-white/[0.18] focus:border-[#B8922A]'
+const INPUT = 'w-full text-white text-sm placeholder:text-white/30 outline-none px-4 py-3.5 rounded-lg transition-colors'
+const IS: React.CSSProperties = { background: 'rgba(8,6,2,0.75)', border: '1px solid rgba(196,154,46,0.24)' }
+
+const AVATARS = [
+  { bg: '#7C5B3A', l: 'Y' },
+  { bg: '#4A6348', l: 'A' },
+  { bg: '#3C4A6B', l: 'K' },
+  { bg: '#6B3C5A', l: 'N' },
+]
 
 export function RegisterForm() {
   const { t } = useTranslation()
   const { register, loading, error } = useAuth()
 
   const [profileType, setProfileType] = useState<ProfileType>('freelancer')
-  const [showPassword, setShowPassword] = useState(false)
-  const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [showPass, setShowPass] = useState(false)
+  const [agreed, setAgreed] = useState(false)
 
-  const [simpleForm, setSimpleForm] = useState({ nom: '', email: '', telephone: '', motDePasse: '' })
-  const [pmeForm, setPmeForm] = useState({
+  const [sf, setSf] = useState({ nom: '', email: '', motDePasse: '' })
+  const [pf, setPf] = useState({
     nomEntreprise: '', emailEntreprise: '', telephoneEntreprise: '',
     nomAdmin: '', emailAdmin: '', motDePasse: '',
   })
 
-  const setSimple = (k: keyof typeof simpleForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setSimpleForm(f => ({ ...f, [k]: e.target.value }))
-  const setPme = (k: keyof typeof pmeForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setPmeForm(f => ({ ...f, [k]: e.target.value }))
+  const ss = (k: keyof typeof sf) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSf(p => ({ ...p, [k]: e.target.value }))
+  const sp = (k: keyof typeof pf) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPf(p => ({ ...p, [k]: e.target.value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (profileType === 'pme') {
-      await register({ ...pmeForm, typeCompte: 'pme' })
+      await register({ ...pf, typeCompte: 'pme' })
     } else {
       await register({
-        nomEntreprise: simpleForm.nom,
-        emailEntreprise: simpleForm.email,
-        telephoneEntreprise: simpleForm.telephone || undefined,
-        nomAdmin: simpleForm.nom,
-        emailAdmin: simpleForm.email,
-        motDePasse: simpleForm.motDePasse,
+        nomEntreprise: sf.nom,
+        emailEntreprise: sf.email,
+        nomAdmin: sf.nom,
+        emailAdmin: sf.email,
+        motDePasse: sf.motDePasse,
         typeCompte: profileType,
       })
     }
@@ -57,156 +64,145 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit}>
       {/* Error banner */}
       {error && (
-        <div className="flex items-center gap-2 p-3 mb-4 text-sm"
-          style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.22)', color: '#FCA5A5', borderRadius: 2 }}>
+        <div className="flex items-center gap-2 p-3 mb-4 text-sm rounded-lg"
+          style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.22)', color: '#FCA5A5' }}>
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* Profile type — underline tab selector */}
-      <div className="flex mb-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.10)' }}>
-        {PROFILE_TYPES.map(({ key, labelKey }) => {
+      {/* Profile selector — pill separator style */}
+      <div className="flex items-center justify-center gap-1.5 mb-5">
+        {PROFILES.map(({ key, label }, i) => {
           const active = profileType === key
           return (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setProfileType(key)}
-              className="flex-1 py-2.5 text-xs font-semibold transition-all"
-              style={{
-                color: active ? '#B8922A' : 'rgba(255,255,255,0.30)',
-                borderBottom: active ? '2px solid #B8922A' : '2px solid transparent',
-                marginBottom: -1,
-                background: 'transparent',
-                cursor: 'pointer',
-                letterSpacing: '0.02em',
-              }}
-            >
-              {t(`auth.${labelKey}`)}
-            </button>
+            <div key={key} className="flex items-center gap-1.5">
+              {i > 0 && (
+                <span style={{ color: 'rgba(255,255,255,0.26)', fontSize: '0.78rem', userSelect: 'none' }}>·</span>
+              )}
+              <button
+                type="button"
+                onClick={() => setProfileType(key)}
+                style={{
+                  color: active ? '#fff' : 'rgba(255,255,255,0.42)',
+                  fontWeight: active ? 600 : 400,
+                  fontSize: '0.88rem',
+                  background: active ? 'rgba(255,255,255,0.10)' : 'transparent',
+                  border: active ? '1px solid rgba(255,255,255,0.15)' : '1px solid transparent',
+                  borderRadius: 6,
+                  padding: '4px 10px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {label}
+              </button>
+            </div>
           )
         })}
       </div>
 
-      {/* ── Freelancer / Entrepreneur ── */}
+      {/* ── Freelancer / Entrepreneur fields ── */}
       {profileType !== 'pme' && (
-        <div className="space-y-1">
+        <div className="space-y-3">
           <input
             type="text" required
-            value={simpleForm.nom}
-            onChange={setSimple('nom')}
-            placeholder={profileType === 'freelancer' ? 'Youssef Benali' : 'Youssef Design'}
-            className={INPUT}
+            value={sf.nom} onChange={ss('nom')}
+            placeholder="Nom"
+            className={INPUT} style={IS}
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2">
-            <input
-              type="email" required
-              value={simpleForm.email}
-              onChange={setSimple('email')}
-              placeholder={t('auth.yourEmail')}
-              className={INPUT}
-            />
-            <input
-              type="tel"
-              value={simpleForm.telephone}
-              onChange={setSimple('telephone')}
-              placeholder="+212 6 00 00 00 00"
-              className={cn(INPUT, 'sm:pl-3')}
-            />
-          </div>
+          <input
+            type="email" required
+            value={sf.email} onChange={ss('email')}
+            placeholder="Email"
+            className={INPUT} style={IS}
+          />
           <div className="relative">
             <input
-              type={showPassword ? 'text' : 'password'}
-              required minLength={8}
-              value={simpleForm.motDePasse}
-              onChange={setSimple('motDePasse')}
-              placeholder={t('auth.password')}
-              className={cn(INPUT, 'pr-9')}
+              type={showPass ? 'text' : 'password'} required minLength={8}
+              value={sf.motDePasse} onChange={ss('motDePasse')}
+              placeholder="Mot de passe"
+              className={cn(INPUT, 'pr-10')} style={IS}
             />
-            <button type="button" onClick={() => setShowPassword(v => !v)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 transition-colors"
-              style={{ color: 'rgba(255,255,255,0.28)' }}>
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            <button
+              type="button" onClick={() => setShowPass(v => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+              style={{ color: 'rgba(255,255,255,0.30)' }}
+            >
+              {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
       )}
 
-      {/* ── PME ── */}
+      {/* ── PME fields ── */}
       {profileType === 'pme' && (
-        <div className="space-y-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2">
+        <div className="space-y-3">
+          <input
+            type="text" required
+            value={pf.nomEntreprise} onChange={sp('nomEntreprise')}
+            placeholder={t('auth.companyName')}
+            className={INPUT} style={IS}
+          />
+          <div className="grid grid-cols-2 gap-3">
             <input
-              type="text" required
-              value={pmeForm.nomEntreprise}
-              onChange={setPme('nomEntreprise')}
-              placeholder={t('auth.companyName')}
-              className={INPUT}
+              type="email" required
+              value={pf.emailEntreprise} onChange={sp('emailEntreprise')}
+              placeholder={t('auth.email')}
+              className={INPUT} style={IS}
             />
             <input
               type="tel"
-              value={pmeForm.telephoneEntreprise}
-              onChange={setPme('telephoneEntreprise')}
+              value={pf.telephoneEntreprise} onChange={sp('telephoneEntreprise')}
               placeholder="+212 6 00 00 00 00"
-              className={cn(INPUT, 'sm:pl-3')}
+              className={INPUT} style={IS}
             />
           </div>
-          <input
-            type="email" required
-            value={pmeForm.emailEntreprise}
-            onChange={setPme('emailEntreprise')}
-            placeholder={t('auth.companyEmail')}
-            className={INPUT}
-          />
-          <div className="pt-4">
-            <p className="text-[9px] uppercase tracking-[0.16em] mb-2" style={{ color: 'rgba(255,255,255,0.22)' }}>
-              {t('auth.adminSection')}
-            </p>
-            <div className="space-y-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
-                <input
-                  type="text" required
-                  value={pmeForm.nomAdmin}
-                  onChange={setPme('nomAdmin')}
-                  placeholder={t('auth.yourName')}
-                  className={INPUT}
-                />
-                <input
-                  type="email" required
-                  value={pmeForm.emailAdmin}
-                  onChange={setPme('emailAdmin')}
-                  placeholder={t('auth.email')}
-                  className={cn(INPUT, 'sm:pl-3')}
-                />
-              </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required minLength={8}
-                  value={pmeForm.motDePasse}
-                  onChange={setPme('motDePasse')}
-                  placeholder={t('auth.password')}
-                  className={cn(INPUT, 'pr-9')}
-                />
-                <button type="button" onClick={() => setShowPassword(v => !v)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.28)' }}>
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
+          <div style={{ height: 1, background: 'rgba(184,146,42,0.12)', margin: '2px 0' }} />
+          <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.22)' }}>
+            {t('auth.adminSection')}
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              type="text" required
+              value={pf.nomAdmin} onChange={sp('nomAdmin')}
+              placeholder={t('auth.yourName')}
+              className={INPUT} style={IS}
+            />
+            <input
+              type="email" required
+              value={pf.emailAdmin} onChange={sp('emailAdmin')}
+              placeholder={t('auth.email')}
+              className={INPUT} style={IS}
+            />
+          </div>
+          <div className="relative">
+            <input
+              type={showPass ? 'text' : 'password'} required minLength={8}
+              value={pf.motDePasse} onChange={sp('motDePasse')}
+              placeholder="Mot de passe"
+              className={cn(INPUT, 'pr-10')} style={IS}
+            />
+            <button
+              type="button" onClick={() => setShowPass(v => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+              style={{ color: 'rgba(255,255,255,0.30)' }}
+            >
+              {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
       )}
 
       {/* Terms */}
-      <div className="flex items-start gap-3 mt-5 pt-4"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+      <div
+        className="flex items-start gap-3 mt-4 pt-3.5"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+      >
         <input
           id="terms" type="checkbox" required
-          checked={agreedToTerms}
-          onChange={e => setAgreedToTerms(e.target.checked)}
+          checked={agreed} onChange={e => setAgreed(e.target.checked)}
           className="mt-0.5 w-3.5 h-3.5 shrink-0 cursor-pointer accent-[#B8922A]"
         />
         <label htmlFor="terms" className="text-[11px] leading-relaxed cursor-pointer"
@@ -228,26 +224,44 @@ export function RegisterForm() {
         </label>
       </div>
 
-      {/* CTA — gold gradient, zero radius, 52px */}
+      {/* CTA button */}
       <button
         type="submit"
-        disabled={loading || !agreedToTerms}
-        className="w-full mt-5 font-black tracking-widest uppercase transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+        disabled={loading || !agreed}
+        className="w-full mt-4 font-bold uppercase tracking-wide transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         style={{
           height: 52,
-          borderRadius: 0,
-          background: 'linear-gradient(135deg, #B8922A 0%, #D97706 100%)',
-          color: '#0A0505',
-          fontWeight: 800,
-          fontSize: '0.75rem',
-          letterSpacing: '0.10em',
+          borderRadius: 8,
+          background: 'linear-gradient(135deg, #C49228 0%, #E09820 100%)',
+          color: '#0A0600',
+          fontSize: '0.85rem',
+          letterSpacing: '0.06em',
           border: 'none',
-          cursor: loading || !agreedToTerms ? 'not-allowed' : 'pointer',
+          cursor: loading || !agreed ? 'not-allowed' : 'pointer',
         }}
       >
         {loading ? t('auth.registering') : t('auth.enterBtn')}
       </button>
 
+      {/* Avatar social proof */}
+      <div className="flex items-center justify-center gap-3 mt-5">
+        <div className="flex -space-x-2">
+          {AVATARS.map((av, i) => (
+            <div
+              key={i}
+              className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-white text-[10px] font-bold"
+              style={{ background: av.bg, borderColor: '#080808', zIndex: 10 - i }}
+            >
+              {av.l}
+            </div>
+          ))}
+        </div>
+        <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.42)' }}>
+          +3 200 entreprises marocaines
+        </span>
+      </div>
+
+      {/* Sign in link */}
       <p className="text-center text-xs mt-4" style={{ color: 'rgba(255,255,255,0.28)' }}>
         {t('auth.hasAccount')}{' '}
         <Link href="/login" className="font-semibold hover:underline" style={{ color: '#B8922A' }}>
