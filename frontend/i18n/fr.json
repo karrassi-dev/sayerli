@@ -302,7 +302,13 @@
       "activating": "Activation…",
       "minLength": "Le mot de passe doit contenir au moins 8 caractères.",
       "passwordMismatch": "Les mots de passe ne correspondent pas."
-    }
+    },
+    "gatewayHeadline": "Votre business, enfin maîtrisé.",
+    "gatewaySub": "Gratuit 14 jours · Aucune carte requise",
+    "enterBtn": "Entrer dans Sayerli →",
+    "trustSSL": "SSL",
+    "trust2min": "2 minutes",
+    "trustMaroc": "Conforme Maroc"
   },
   "dashboard": {
     "welcome": "Bonjour",

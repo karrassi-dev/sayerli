@@ -18,7 +18,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function RegisterPage() {
   return (
-    <AuthShell titleKey="auth.registerTitle" subKey="auth.registerSub">
+    <AuthShell titleKey="auth.gatewayHeadline" subKey="auth.gatewaySub">
       <RegisterForm />
     </AuthShell>
   )

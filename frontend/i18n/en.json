@@ -302,7 +302,13 @@
       "activating": "Activating…",
       "minLength": "Password must be at least 8 characters.",
       "passwordMismatch": "Passwords do not match."
-    }
+    },
+    "gatewayHeadline": "Your business, finally mastered.",
+    "gatewaySub": "Free 14 days · No card required",
+    "enterBtn": "Enter Sayerli →",
+    "trustSSL": "SSL",
+    "trust2min": "2 minutes",
+    "trustMaroc": "Morocco compliant"
   },
   "dashboard": {
     "welcome": "Hello",

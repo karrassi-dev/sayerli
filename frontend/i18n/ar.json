@@ -302,7 +302,13 @@
       "activating": "جارٍ التفعيل…",
       "minLength": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل.",
       "passwordMismatch": "كلمتا المرور غير متطابقتين."
-    }
+    },
+    "gatewayHeadline": "عملك، تحت السيطرة أخيراً.",
+    "gatewaySub": "14 يوماً مجاناً · بدون بطاقة",
+    "enterBtn": "الدخول إلى سايرلي ←",
+    "trustSSL": "SSL",
+    "trust2min": "دقيقتان",
+    "trustMaroc": "متوافق مع المغرب"
   },
   "dashboard": {
     "welcome": "مرحباً",
