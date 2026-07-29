@@ -15,14 +15,10 @@ const PROFILE_TYPES: { key: ProfileType; labelKey: string }[] = [
   { key: 'pme',          labelKey: 'typePme'          },
 ]
 
-const INPUT = 'w-full px-4 py-3 rounded-xl text-white placeholder:text-white/35 text-sm focus:outline-none transition-all'
-const INPUT_STYLE = {
-  background: 'rgba(255,255,255,0.07)',
-  border: '1px solid rgba(255,255,255,0.10)',
-}
-const INPUT_FOCUS_STYLE = {
-  '--tw-ring-color': 'rgba(196,154,46,0.4)',
-} as React.CSSProperties
+// Bottom-line input style (architectural — no box, single gold-on-focus line)
+const INPUT_BASE = 'w-full bg-transparent text-white text-sm placeholder:text-white/28 outline-none transition-colors py-3.5 border-0 border-b focus:border-[#B8922A]'
+const INPUT_STYLE: React.CSSProperties = { borderRadius: 0 }
+const BORDER_DEFAULT: React.CSSProperties = { borderBottomColor: 'rgba(255,255,255,0.14)' }
 
 export function RegisterForm() {
   const { t } = useTranslation()
@@ -34,12 +30,12 @@ export function RegisterForm() {
 
   const [simpleForm, setSimpleForm] = useState({ nom: '', email: '', telephone: '', motDePasse: '' })
   const [pmeForm, setPmeForm] = useState({
-    nomEntreprise: '', emailEntreprise: '', telephoneEntreprise: '', nomAdmin: '', emailAdmin: '', motDePasse: '',
+    nomEntreprise: '', emailEntreprise: '', telephoneEntreprise: '',
+    nomAdmin: '', emailAdmin: '', motDePasse: '',
   })
 
   const setSimple = (key: keyof typeof simpleForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setSimpleForm(f => ({ ...f, [key]: e.target.value }))
-
   const setPme = (key: keyof typeof pmeForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setPmeForm(f => ({ ...f, [key]: e.target.value }))
 
@@ -61,74 +57,77 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3.5">
+    <form onSubmit={handleSubmit} className="space-y-0">
+
+      {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-xl text-sm"
-          style={{ background: 'rgba(220,38,38,0.15)', border: '1px solid rgba(220,38,38,0.3)', color: '#FCA5A5' }}>
+        <div className="flex items-center gap-2 p-3 rounded-none mb-4 text-sm"
+          style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.25)', color: '#FCA5A5' }}>
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* ── Profile pill selector ── */}
+      {/* ── Profile selector — underline tab style ── */}
       <div
-        className="flex items-center justify-center rounded-xl p-1 gap-0.5"
-        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+        className="flex items-stretch mb-5"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.10)' }}
       >
-        {PROFILE_TYPES.map(({ key, labelKey }, idx) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setProfileType(key)}
-            className={cn(
-              'flex-1 text-xs font-semibold py-2 px-2 rounded-lg transition-all',
-              profileType === key
-                ? 'text-white'
-                : 'text-white/40 hover:text-white/65',
-            )}
-            style={profileType === key
-              ? { background: 'rgba(196,154,46,0.25)', color: '#E8C464' }
-              : undefined}
-          >
-            {t(`auth.${labelKey}`)}
-            {idx < PROFILE_TYPES.length - 1 && profileType !== key && profileType !== PROFILE_TYPES[idx + 1]?.key && (
-              <span className="mx-1 opacity-30">·</span>
-            )}
-          </button>
-        ))}
+        {PROFILE_TYPES.map(({ key, labelKey }) => {
+          const active = profileType === key
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setProfileType(key)}
+              className="flex-1 py-2 text-xs font-semibold transition-all leading-tight text-center"
+              style={{
+                color: active ? '#B8922A' : 'rgba(255,255,255,0.32)',
+                borderBottom: active ? '2px solid #B8922A' : '2px solid transparent',
+                marginBottom: -1,
+                background: 'transparent',
+                cursor: 'pointer',
+              }}
+            >
+              {t(`auth.${labelKey}`)}
+            </button>
+          )
+        })}
       </div>
 
       {/* ── Freelancer / Entrepreneur fields ── */}
       {profileType !== 'pme' && (
-        <>
+        <div className="space-y-0">
           <input
             type="text"
             required
             value={simpleForm.nom}
             onChange={setSimple('nom')}
             placeholder={profileType === 'freelancer' ? 'Youssef Benali' : 'Youssef Design'}
-            className={INPUT}
-            style={INPUT_STYLE}
+            className={INPUT_BASE}
+            style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
           />
-          <div className="grid grid-cols-2 gap-3">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
             <input
               type="email"
               required
               value={simpleForm.email}
               onChange={setSimple('email')}
               placeholder={t('auth.yourEmail')}
-              className={INPUT}
-              style={INPUT_STYLE}
+              className={INPUT_BASE}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
             />
             <input
               type="tel"
               value={simpleForm.telephone}
               onChange={setSimple('telephone')}
               placeholder="+212 6 00 00 00 00"
-              className={INPUT}
-              style={INPUT_STYLE}
+              className={cn(INPUT_BASE, 'sm:border-l sm:border-l-white/8')}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
             />
           </div>
+
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -137,40 +136,41 @@ export function RegisterForm() {
               value={simpleForm.motDePasse}
               onChange={setSimple('motDePasse')}
               placeholder={t('auth.password')}
-              className={cn(INPUT, 'pr-10')}
-              style={INPUT_STYLE}
+              className={cn(INPUT_BASE, 'pr-9')}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
             />
             <button
               type="button"
               onClick={() => setShowPassword(v => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/60 transition-colors"
+              className="absolute right-0 top-1/2 -translate-y-1/2 transition-colors"
+              style={{ color: 'rgba(255,255,255,0.28)' }}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {/* ── PME fields ── */}
       {profileType === 'pme' && (
-        <>
-          <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
             <input
               type="text"
               required
               value={pmeForm.nomEntreprise}
               onChange={setPme('nomEntreprise')}
               placeholder={t('auth.companyName')}
-              className={INPUT}
-              style={INPUT_STYLE}
+              className={INPUT_BASE}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
             />
             <input
               type="tel"
               value={pmeForm.telephoneEntreprise}
               onChange={setPme('telephoneEntreprise')}
               placeholder="+212 6 00 00 00 00"
-              className={INPUT}
-              style={INPUT_STYLE}
+              className={cn(INPUT_BASE, 'sm:border-l sm:border-l-white/8')}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
             />
           </div>
           <input
@@ -179,36 +179,34 @@ export function RegisterForm() {
             value={pmeForm.emailEntreprise}
             onChange={setPme('emailEntreprise')}
             placeholder={t('auth.companyEmail')}
-            className={INPUT}
-            style={INPUT_STYLE}
+            className={INPUT_BASE}
+            style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
           />
-          <div
-            className="pt-3 mt-1"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <p className="text-[10px] uppercase tracking-widest mb-2.5" style={{ color: 'rgba(255,255,255,0.30)' }}>
+          {/* Admin section divider */}
+          <div className="pt-4 pb-1">
+            <p className="text-[10px] uppercase tracking-[0.14em]" style={{ color: 'rgba(255,255,255,0.24)' }}>
               {t('auth.adminSection')}
             </p>
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                type="text"
-                required
-                value={pmeForm.nomAdmin}
-                onChange={setPme('nomAdmin')}
-                placeholder={t('auth.yourName')}
-                className={INPUT}
-                style={INPUT_STYLE}
-              />
-              <input
-                type="email"
-                required
-                value={pmeForm.emailAdmin}
-                onChange={setPme('emailAdmin')}
-                placeholder={t('auth.email')}
-                className={INPUT}
-                style={INPUT_STYLE}
-              />
-            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+            <input
+              type="text"
+              required
+              value={pmeForm.nomAdmin}
+              onChange={setPme('nomAdmin')}
+              placeholder={t('auth.yourName')}
+              className={INPUT_BASE}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
+            />
+            <input
+              type="email"
+              required
+              value={pmeForm.emailAdmin}
+              onChange={setPme('emailAdmin')}
+              placeholder={t('auth.email')}
+              className={cn(INPUT_BASE, 'sm:border-l sm:border-l-white/8')}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
+            />
           </div>
           <div className="relative">
             <input
@@ -218,69 +216,66 @@ export function RegisterForm() {
               value={pmeForm.motDePasse}
               onChange={setPme('motDePasse')}
               placeholder={t('auth.password')}
-              className={cn(INPUT, 'pr-10')}
-              style={INPUT_STYLE}
+              className={cn(INPUT_BASE, 'pr-9')}
+              style={{ ...INPUT_STYLE, ...BORDER_DEFAULT }}
             />
             <button
               type="button"
               onClick={() => setShowPassword(v => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/60 transition-colors"
+              className="absolute right-0 top-1/2 -translate-y-1/2 transition-colors"
+              style={{ color: 'rgba(255,255,255,0.28)' }}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {/* ── Terms ── */}
-      <div
-        className="flex items-start gap-3 p-3 rounded-xl"
-        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
-      >
+      <div className="flex items-start gap-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: '1.25rem' }}>
         <input
           id="terms"
           type="checkbox"
           required
           checked={agreedToTerms}
           onChange={e => setAgreedToTerms(e.target.checked)}
-          className="mt-0.5 w-4 h-4 rounded shrink-0 cursor-pointer accent-amber-500"
+          className="mt-0.5 w-3.5 h-3.5 shrink-0 cursor-pointer accent-[#B8922A]"
         />
-        <label htmlFor="terms" className="text-xs leading-relaxed cursor-pointer" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        <label htmlFor="terms" className="text-[11px] leading-relaxed cursor-pointer" style={{ color: 'rgba(255,255,255,0.38)' }}>
           {t('auth.termsAgree')}{' '}
-          <Link href="/legal/terms" target="_blank" className="hover:underline" style={{ color: '#C49A2E' }}>
-            {t('auth.termsTermsLink')}
-          </Link>
+          <Link href="/legal/terms" target="_blank" className="hover:underline" style={{ color: '#B8922A' }}>{t('auth.termsTermsLink')}</Link>
           {t('auth.termsComma')}{' '}
           {t('auth.termsPrivacyIntro') && <>{t('auth.termsPrivacyIntro')}{' '}</>}
-          <Link href="/legal/privacy" target="_blank" className="hover:underline" style={{ color: '#C49A2E' }}>
-            {t('auth.termsPrivacyLink')}
-          </Link>
+          <Link href="/legal/privacy" target="_blank" className="hover:underline" style={{ color: '#B8922A' }}>{t('auth.termsPrivacyLink')}</Link>
           {t('auth.termsAndThe')}{' '}
-          <Link href="/legal/refund" target="_blank" className="hover:underline" style={{ color: '#C49A2E' }}>
-            {t('auth.termsRefundLink')}
-          </Link>{' '}
-          {t('auth.termsBrand')}
+          <Link href="/legal/refund" target="_blank" className="hover:underline" style={{ color: '#B8922A' }}>{t('auth.termsRefundLink')}</Link>
+          {' '}{t('auth.termsBrand')}
         </label>
       </div>
 
-      {/* ── CTA button ── */}
+      {/* ── CTA button — architectural, full-width, zero radius, gold gradient ── */}
       <button
         type="submit"
         disabled={loading || !agreedToTerms}
-        className="w-full py-3.5 rounded-xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full font-black tracking-wide transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         style={{
-          background: loading || !agreedToTerms
-            ? 'rgba(196,154,46,0.4)'
-            : 'linear-gradient(135deg, #D4A520 0%, #C49A2E 100%)',
-          color: '#0A0A0F',
+          height: 52,
+          borderRadius: 0,
+          background: 'linear-gradient(135deg, #B8922A 0%, #D97706 100%)',
+          color: '#0A0505',
+          fontWeight: 800,
+          fontSize: '0.875rem',
+          letterSpacing: '0.06em',
+          border: 'none',
+          cursor: loading || !agreedToTerms ? 'not-allowed' : 'pointer',
         }}
       >
         {loading ? t('auth.registering') : t('auth.enterBtn')}
       </button>
 
-      <p className="text-center text-sm" style={{ color: 'rgba(255,255,255,0.40)' }}>
+      <p className="text-center text-xs pt-4" style={{ color: 'rgba(255,255,255,0.32)' }}>
         {t('auth.hasAccount')}{' '}
-        <Link href="/login" className="font-semibold hover:underline" style={{ color: '#C49A2E' }}>
+        <Link href="/login" className="font-semibold hover:underline" style={{ color: '#B8922A' }}>
           {t('auth.signIn')}
         </Link>
       </p>
