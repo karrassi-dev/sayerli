@@ -15,18 +15,6 @@ const serif = Cormorant_Garamond({
   display: 'swap',
 })
 
-// Morocco + Western Sahara silhouette
-const MOROCCO = `M 430 12 C 445 4 460 5 532 46 L 572 55 L 574 130 L 570 260
-  L 566 390 L 562 498 C 545 508 520 520 480 530 L 400 538 L 330 542
-  L 328 720 L 328 900 L 32 882 C 50 840 65 800 74 738
-  C 85 700 105 650 124 594 C 140 560 158 542 169 528
-  C 175 512 180 498 182 484 C 205 465 230 458 244 452
-  C 265 440 280 418 286 396 C 291 374 295 350 296 330
-  C 294 310 290 292 288 268 C 298 248 315 232 332 216
-  C 348 200 362 186 368 166 C 376 150 386 136 393 122
-  C 398 114 402 108 404 100 C 408 88 414 70 420 52
-  C 424 34 427 18 430 12 Z`
-
 // 8-pointed Rub el Hizb star (48 × 48 tile)
 const STAR48 = `M 24,4 L 27.2,16.3 L 38.1,9.9 L 31.7,20.8 L 44,24
   L 31.7,27.2 L 38.1,38.1 L 27.2,31.7 L 24,44
@@ -55,14 +43,14 @@ export function AuthShell({ titleKey, subKey, children }: AuthShellProps) {
   const isDark = !mounted || theme === 'dark'
 
   // Right-panel colours — fully theme-aware
-  const rightBg   = isDark ? '#0F0E18' : '#F7F5F0'
-  const cardBg    = isDark ? '#1C1B2C' : '#FFFFFF'
-  const cardBdr   = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(26,24,40,0.09)'
+  const rightBg    = isDark ? '#0F0E18' : '#E4DDD0'   // warm tan makes white card pop
+  const cardBg     = isDark ? '#1C1B2C' : '#FFFFFF'
+  const cardBdr    = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(30,20,10,0.11)'
   const cardShadow = isDark
     ? '0 24px 80px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.04) inset'
-    : '0 8px 48px rgba(26,24,40,0.10)'
-  const subText   = isDark ? 'rgba(245,240,232,0.50)' : 'rgba(26,24,40,0.50)'
-  const mainText  = isDark ? '#F5F0E8' : '#1A1828'
+    : '0 8px 40px rgba(30,20,10,0.14), 0 1px 0 rgba(255,255,255,0.9) inset'
+  const subText    = isDark ? 'rgba(245,240,232,0.50)' : 'rgba(26,20,10,0.52)'
+  const mainText   = isDark ? '#F5F0E8' : '#1A1206'
 
   return (
     <div
@@ -109,28 +97,25 @@ export function AuthShell({ titleKey, subKey, children }: AuthShellProps) {
           }} />
         </div>
 
-        {/* Morocco map watermark */}
-        <div aria-hidden className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <svg viewBox="0 0 600 900" style={{ width: '78%', opacity: 0.08 }}>
-            <defs>
-              <clipPath id="mc"><path d={MOROCCO} /></clipPath>
-            </defs>
-            <path d={MOROCCO} fill="rgba(196,146,40,0.25)" />
-            <g clipPath="url(#mc)">
-              {Array.from({ length: 22 }, (_, i) => {
-                const y = i * 42
-                const p = i * 0.75
-                return (
-                  <path key={i}
-                    d={`M 0 ${y} Q ${145+Math.sin(p)*28} ${y-11} ${295+Math.cos(p*.85)*18} ${y} Q ${448+Math.sin(p+1.1)*13} ${y+11} ${600} ${y}`}
-                    fill="none" stroke="#C49228" strokeWidth="1"
-                  />
-                )
-              })}
-            </g>
-            <path d={MOROCCO} fill="none" stroke="#C49228" strokeWidth="2.2" />
-          </svg>
-        </div>
+        {/* Morocco map — official SVG, tinted gold */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/morocco-maps.svg"
+          alt=""
+          aria-hidden
+          style={{
+            position: 'absolute',
+            width: '88%',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            opacity: 0.18,
+            // Turn green fill → warm gold on dark background
+            filter: 'sepia(1) saturate(2.8) hue-rotate(-22deg) brightness(0.82)',
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+        />
 
         {/* Bottom fade */}
         <div aria-hidden style={{

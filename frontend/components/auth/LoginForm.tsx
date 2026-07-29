@@ -9,7 +9,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 
 const INPUT = [
   'w-full text-sm px-4 py-3.5 rounded-xl outline-none transition-all',
-  'bg-black/[0.04] border border-black/[0.10] text-[#1A1828] placeholder:text-black/30',
+  'bg-black/[0.04] border border-black/[0.16] text-[#1A1206] placeholder:text-black/35',
   'dark:bg-white/[0.05] dark:border-white/[0.09] dark:text-[#F5F0E8] dark:placeholder:text-white/30',
   'focus:border-[#C49228] focus:ring-2 focus:ring-[#C49228]/10',
   'dark:focus:border-[#C49228] dark:focus:ring-[#C49228]/10',
@@ -25,8 +25,9 @@ export function LoginForm() {
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
 
-  const subText  = isDark ? 'rgba(245,240,232,0.45)' : 'rgba(26,24,40,0.45)'
-  const divColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(26,24,40,0.07)'
+  const subText  = isDark ? 'rgba(245,240,232,0.45)' : 'rgba(26,20,10,0.50)'
+  const divColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(26,20,10,0.10)'
+  const linkColor = isDark ? '#C49228' : '#8C6410'
 
   return (
     <form onSubmit={async e => { e.preventDefault(); await login(email, password) }}>
@@ -53,7 +54,7 @@ export function LoginForm() {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 6 }}>
             <Link
               href="/forgot-password"
-              style={{ fontSize: '0.75rem', color: '#C49228' }}
+              style={{ fontSize: '0.75rem', color: linkColor }}
               className="hover:underline"
             >
               {t('auth.forgotPassword')}
@@ -90,10 +91,14 @@ export function LoginForm() {
         style={{
           width: '100%',
           height: 52, borderRadius: 12, border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
-          background: 'linear-gradient(135deg, #C49228 0%, #E5A820 100%)',
-          color: '#0A0600',
+          background: isDark
+            ? 'linear-gradient(135deg, #C49228 0%, #E5A820 100%)'
+            : 'linear-gradient(135deg, #8C6410 0%, #B8861E 100%)',
+          color: isDark ? '#0A0600' : '#FFFBF0',
           fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase',
-          boxShadow: !loading ? '0 4px 22px rgba(196,146,40,0.38)' : 'none',
+          boxShadow: !loading
+            ? isDark ? '0 4px 22px rgba(196,146,40,0.38)' : '0 4px 18px rgba(100,70,10,0.28)'
+            : 'none',
           opacity: loading ? 0.45 : 1,
           transition: 'all 0.2s',
         }}
@@ -104,7 +109,7 @@ export function LoginForm() {
       {/* Sign up link */}
       <p style={{ textAlign: 'center', fontSize: '0.78rem', marginTop: 14, color: subText }}>
         {t('auth.noAccount')}{' '}
-        <Link href="/register" className="font-semibold hover:underline" style={{ color: '#C49228' }}>
+        <Link href="/register" className="font-semibold hover:underline" style={{ color: linkColor }}>
           {t('auth.signUp')}
         </Link>
       </p>
