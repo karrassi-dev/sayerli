@@ -23,7 +23,13 @@
     "ctaSecondary": "Se connecter",
     "socialProof": "Rejoignez +3 200 freelancers, entrepreneurs et PME marocains",
     "ctaDashboard": "Accéder au tableau de bord",
-    "badge": "🇲🇦 Freelancers · Auto-entrepreneurs · PME"
+    "badge": "🇲🇦 Freelancers · Auto-entrepreneurs · PME",
+    "wfClients": "Clients",
+    "wfDevis": "Devis",
+    "wfCatalogue": "Catalogue",
+    "wfBl": "Bon de Livraison",
+    "wfFactures": "Factures",
+    "wfPaiements": "Paiements"
   },
   "features": {
     "badge": "Fonctionnalités",

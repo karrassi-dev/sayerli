@@ -23,7 +23,13 @@
     "ctaSecondary": "Log In",
     "socialProof": "Join +3,200 Moroccan freelancers, entrepreneurs and SMEs",
     "ctaDashboard": "Go to Dashboard",
-    "badge": "🇲🇦 Freelancers · Entrepreneurs · SMEs"
+    "badge": "🇲🇦 Freelancers · Entrepreneurs · SMEs",
+    "wfClients": "Clients",
+    "wfDevis": "Quotes",
+    "wfCatalogue": "Catalogue",
+    "wfBl": "Delivery Note",
+    "wfFactures": "Invoices",
+    "wfPaiements": "Payments"
   },
   "features": {
     "badge": "Features",
