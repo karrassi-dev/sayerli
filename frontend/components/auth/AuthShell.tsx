@@ -91,7 +91,7 @@ export function AuthShell({ children, isRegister }: AuthShellProps) {
         />
 
         <div className="relative z-10 flex flex-col h-full p-10 xl:p-12" style={{ minHeight: '100vh' }}>
-          <Logo size={30} variant={isDark ? 'dark' : 'auto'} />
+          <Link href="/"><Logo size={30} variant={isDark ? 'dark' : 'auto'} /></Link>
 
           {/* Morocco map */}
           <div className="flex-1 flex items-center justify-center py-6">
@@ -202,7 +202,7 @@ export function AuthShell({ children, isRegister }: AuthShellProps) {
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 sm:px-8 py-4 shrink-0">
           <div className="lg:hidden">
-            <Logo size={26} variant={isDark ? 'dark' : 'auto'} />
+            <Link href="/"><Logo size={26} variant={isDark ? 'dark' : 'auto'} /></Link>
           </div>
           <div className="hidden lg:block" />
 
