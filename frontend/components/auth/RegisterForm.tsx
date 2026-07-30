@@ -2,46 +2,38 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, AlertCircle, CheckCircle, ShieldCheck, MapPin, CreditCard } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { useAuth } from '@/hooks/useAuth'
 import { useTranslation } from '@/hooks/useTranslation'
+import { RoleSelector, type RoleType } from './RoleSelector'
 
-type ProfileType = 'freelancer' | 'entrepreneur' | 'pme'
+// ── Password strength ───────────────────────────────────────────────
+function getStrength(pw: string): 0 | 1 | 2 | 3 {
+  let score = 0
+  if (pw.length >= 8)                        score++
+  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++
+  if (/[0-9]/.test(pw))                      score++
+  return Math.min(score, 3) as 0 | 1 | 2 | 3
+}
 
-const PROFILES: { key: ProfileType; label: string }[] = [
-  { key: 'freelancer',   label: 'Freelancer'   },
-  { key: 'entrepreneur', label: 'Entrepreneur' },
-  { key: 'pme',          label: 'PME'          },
-]
-
-const AVATARS = [
-  { bg: 'linear-gradient(135deg,#8B5E3C,#A06B40)', l: 'Y' },
-  { bg: 'linear-gradient(135deg,#3C6B4A,#4A8059)', l: 'A' },
-  { bg: 'linear-gradient(135deg,#3C486B,#4A5C88)', l: 'K' },
-  { bg: 'linear-gradient(135deg,#6B3C5A,#884A72)', l: 'S' },
-]
-
-// Shared input Tailwind class — works with darkMode: 'class'
-const INPUT = [
-  'w-full text-sm px-4 py-3.5 rounded-xl outline-none transition-all',
-  'bg-black/[0.04] border border-black/[0.16] text-[#1A1206] placeholder:text-black/35',
-  'dark:bg-white/[0.05] dark:border-white/[0.09] dark:text-[#F5F0E8] dark:placeholder:text-white/30',
-  'focus:border-[#C49228] focus:ring-2 focus:ring-[#C49228]/10',
-  'dark:focus:border-[#C49228] dark:focus:ring-[#C49228]/10',
-].join(' ')
+const STRENGTH_COLOR = ['#ef4444', '#f59e0b', '#22c55e', '#7c6cff'] as const
+const STRENGTH_KEY   = ['pwWeak', 'pwFair', 'pwGood', 'pwStrong']  as const
 
 export function RegisterForm() {
   const { t } = useTranslation()
   const { register, loading, error } = useAuth()
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
 
-  const [profile, setProfile] = useState<ProfileType>('freelancer')
-  const [showPass, setShowPass] = useState(false)
-  const [agreed, setAgreed] = useState(false)
+  const [profile, setProfile] = useState<RoleType>('entrepreneur')
+  const [showPass, setShowPass]   = useState(false)
+  const [agreed, setAgreed]       = useState(false)
 
+  // Solo fields (freelancer / entrepreneur)
   const [sf, setSf] = useState({ nom: '', email: '', motDePasse: '' })
+  // PME fields
   const [pf, setPf] = useState({
     nomEntreprise: '', emailEntreprise: '', telephoneEntreprise: '',
     nomAdmin: '', emailAdmin: '', motDePasse: '',
@@ -51,6 +43,9 @@ export function RegisterForm() {
     setSf(p => ({ ...p, [k]: e.target.value }))
   const sp = (k: keyof typeof pf) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setPf(p => ({ ...p, [k]: e.target.value }))
+
+  const currentPw  = profile === 'pme' ? pf.motDePasse : sf.motDePasse
+  const strength   = currentPw.length ? getStrength(currentPw) : -1 as const
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,251 +60,345 @@ export function RegisterForm() {
     }
   }
 
-  // Segmented control colours
-  const segBg   = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(26,20,10,0.08)'
-  const segText  = isDark ? 'rgba(245,240,232,0.38)' : 'rgba(26,20,10,0.42)'
-  const segActive = isDark ? 'rgba(255,255,255,0.10)' : '#FFFFFF'
-  const segActiveShadow = isDark ? 'none' : '0 1px 5px rgba(26,20,10,0.15)'
-  const activeText = isDark ? '#F5F0E8' : '#1A1206'
-  const subText  = isDark ? 'rgba(245,240,232,0.45)' : 'rgba(26,20,10,0.50)'
-  const divColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(26,20,10,0.10)'
-  const labelColor = isDark ? 'rgba(245,240,232,0.22)' : 'rgba(26,20,10,0.38)'
-  const linkColor = isDark ? '#C49228' : '#8C6410'
+  // ── Dynamic styles ─────────────────────────────────────────────────
+  const cardBg   = isDark ? '#13112a' : '#ffffff'
+  const inputBg  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(30,23,67,0.04)'
+  const inputBdr = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(30,23,67,0.12)'
+  const textMain = isDark ? 'rgba(245,243,255,0.92)' : '#1e1743'
+  const textSub  = isDark ? 'rgba(245,243,255,0.48)' : 'rgba(30,23,67,0.52)'
+  const divClr   = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(30,23,67,0.09)'
+  const labelClr = isDark ? 'rgba(245,243,255,0.22)' : 'rgba(30,23,67,0.38)'
+  const linkClr  = isDark ? '#a78bfa' : '#5b4ef5'
+
+  const inputClass = [
+    'w-full text-sm px-4 py-3 rounded-xl outline-none transition-all',
+    'placeholder:opacity-40',
+    'focus:ring-2 focus:ring-[#7c6cff]/20 focus:border-[#7c6cff]',
+  ].join(' ')
+  const inputStyle = {
+    background: inputBg,
+    border: `1.5px solid ${inputBdr}`,
+    color: textMain,
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Error banner */}
-      {error && (
+    <motion.form
+      onSubmit={handleSubmit}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+    >
+      {/* Header */}
+      <div className="mb-5">
         <div
-          className="flex items-center gap-2.5 p-3 mb-4 text-sm rounded-xl"
-          style={{ background: 'rgba(220,38,38,0.10)', border: '1px solid rgba(220,38,38,0.20)', color: '#FCA5A5' }}
+          className="inline-flex items-center justify-center w-9 h-9 rounded-xl mb-3"
+          style={{ background: 'linear-gradient(135deg,#7c6cff,#9d8dff)', boxShadow: '0 4px 14px rgba(124,108,255,0.35)' }}
         >
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+          <ShieldCheck className="w-4 h-4 text-white" />
         </div>
-      )}
+        <h1 className="text-xl font-bold mb-0.5" style={{ color: textMain }}>
+          {t('auth.registerTitle')}
+        </h1>
+        <p className="text-sm" style={{ color: textSub }}>{t('auth.trialSub')}</p>
 
-      {/* ── Segmented control ──────────────────────────────────── */}
-      <div
-        style={{
-          display: 'flex', borderRadius: 12, padding: 4,
-          background: segBg, marginBottom: 20, gap: 2,
-        }}
-      >
-        {PROFILES.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setProfile(key)}
-            style={{
-              flex: 1, padding: '8px 4px', borderRadius: 9, fontSize: '0.80rem',
-              fontWeight: profile === key ? 600 : 400, border: 'none', cursor: 'pointer',
-              transition: 'all 0.18s',
-              color: profile === key ? activeText : segText,
-              background: profile === key ? segActive : 'transparent',
-              boxShadow: profile === key ? segActiveShadow : 'none',
-            }}
-          >
-            {label}
-          </button>
-        ))}
+        {/* Trust pills */}
+        <div className="flex flex-wrap gap-2 mt-3">
+          {[
+            { icon: <CheckCircle className="w-3 h-3" />, label: t('auth.noCreditCard') },
+            { icon: <CheckCircle className="w-3 h-3" />, label: t('auth.cancelAnytime') },
+          ].map(({ icon, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full"
+              style={{
+                background: isDark ? 'rgba(124,108,255,0.12)' : 'rgba(99,91,255,0.08)',
+                color: isDark ? '#a78bfa' : '#5b4ef5',
+                border: isDark ? '1px solid rgba(124,108,255,0.22)' : '1px solid rgba(99,91,255,0.15)',
+              }}
+            >
+              {icon}{label}
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* ── Freelancer / Auto-entrepreneur fields ─────────────── */}
-      {profile !== 'pme' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <input
-            type="text" required
-            value={sf.nom} onChange={ss('nom')}
-            placeholder="Nom"
-            className={INPUT}
-          />
-          <input
-            type="email" required
-            value={sf.email} onChange={ss('email')}
-            placeholder="Email"
-            className={INPUT}
-          />
-          <div style={{ position: 'relative' }}>
-            <input
-              type={showPass ? 'text' : 'password'} required minLength={8}
-              value={sf.motDePasse} onChange={ss('motDePasse')}
-              placeholder="Mot de passe"
-              className={INPUT}
-              style={{ paddingRight: 44 }}
-            />
-            <button
-              type="button" onClick={() => setShowPass(v => !v)}
-              style={{
-                position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-                color: subText, background: 'none', border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center',
-              }}
-            >
-              {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Error banner */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="flex items-center gap-2.5 p-3 mb-4 text-sm rounded-xl"
+            style={{ background: 'rgba(220,38,38,0.10)', border: '1px solid rgba(220,38,38,0.22)', color: '#fca5a5' }}
+          >
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* ── PME fields ────────────────────────────────────────── */}
-      {profile === 'pme' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <input
-            type="text" required
-            value={pf.nomEntreprise} onChange={sp('nomEntreprise')}
-            placeholder={t('auth.companyName')}
-            className={INPUT}
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-            <input
-              type="email" required
-              value={pf.emailEntreprise} onChange={sp('emailEntreprise')}
-              placeholder={t('auth.email')}
-              className={INPUT}
-            />
-            <input
-              type="tel"
-              value={pf.telephoneEntreprise} onChange={sp('telephoneEntreprise')}
-              placeholder="+212 6 00 00 00"
-              className={INPUT}
-            />
-          </div>
+      {/* Role selector */}
+      <div className="mb-5">
+        <RoleSelector
+          value={profile}
+          onChange={setProfile}
+          isDark={isDark}
+          legend={t('auth.chooseProfile')}
+          sublabel={t('auth.whoAreYouSub')}
+          labels={{
+            entrepreneur: t('auth.roleEntrepreneurName'),
+            freelance:    t('auth.roleFreelanceName'),
+            pme:          t('auth.rolePmeName'),
+          }}
+          descs={{
+            entrepreneur: t('auth.roleEntrepreneurDesc'),
+            freelance:    t('auth.roleFreelanceDesc'),
+            pme:          t('auth.rolePmeDesc'),
+          }}
+        />
+      </div>
 
-          {/* Admin section divider */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '2px 0' }}>
-            <div style={{ flex: 1, height: 1, background: divColor }} />
-            <span style={{ fontSize: '0.68rem', letterSpacing: '0.10em', textTransform: 'uppercase', color: labelColor, whiteSpace: 'nowrap' }}>
-              {t('auth.adminSection')}
-            </span>
-            <div style={{ flex: 1, height: 1, background: divColor }} />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+      {/* ── Fields: Freelancer / Entrepreneur ─────────── */}
+      <AnimatePresence mode="wait">
+        {profile !== 'pme' ? (
+          <motion.div
+            key="solo"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
+          >
             <input
               type="text" required
-              value={pf.nomAdmin} onChange={sp('nomAdmin')}
-              placeholder={t('auth.yourName')}
-              className={INPUT}
+              value={sf.nom} onChange={ss('nom')}
+              placeholder={t('auth.yourNameOrBrand')}
+              className={inputClass} style={inputStyle}
             />
             <input
               type="email" required
-              value={pf.emailAdmin} onChange={sp('emailAdmin')}
-              placeholder={t('auth.email')}
-              className={INPUT}
+              value={sf.email} onChange={ss('email')}
+              placeholder={t('auth.yourEmail')}
+              className={inputClass} style={inputStyle}
             />
-          </div>
-          <div style={{ position: 'relative' }}>
+            <PasswordField
+              value={sf.motDePasse}
+              onChange={ss('motDePasse')}
+              show={showPass}
+              onToggle={() => setShowPass(v => !v)}
+              isDark={isDark}
+              inputClass={inputClass}
+              inputStyle={inputStyle}
+              textSub={textSub}
+              strength={strength}
+              t={t}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="pme"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
+          >
             <input
-              type={showPass ? 'text' : 'password'} required minLength={8}
-              value={pf.motDePasse} onChange={sp('motDePasse')}
-              placeholder="Mot de passe"
-              className={INPUT}
-              style={{ paddingRight: 44 }}
+              type="text" required
+              value={pf.nomEntreprise} onChange={sp('nomEntreprise')}
+              placeholder={t('auth.companyName')}
+              className={inputClass} style={inputStyle}
             />
-            <button
-              type="button" onClick={() => setShowPass(v => !v)}
-              style={{
-                position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-                color: subText, background: 'none', border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center',
-              }}
-            >
-              {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-        </div>
-      )}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <input
+                type="email" required
+                value={pf.emailEntreprise} onChange={sp('emailEntreprise')}
+                placeholder={t('auth.companyEmail')}
+                className={inputClass} style={inputStyle}
+              />
+              <input
+                type="tel"
+                value={pf.telephoneEntreprise} onChange={sp('telephoneEntreprise')}
+                placeholder="+212 6 00 00 00"
+                className={inputClass} style={inputStyle}
+              />
+            </div>
 
-      {/* Terms checkbox */}
+            {/* Admin divider */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' }}>
+              <div style={{ flex: 1, height: 1, background: divClr }} />
+              <span style={{ fontSize: '0.68rem', letterSpacing: '0.10em', textTransform: 'uppercase', color: labelClr, whiteSpace: 'nowrap' }}>
+                {t('auth.adminSection')}
+              </span>
+              <div style={{ flex: 1, height: 1, background: divClr }} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <input
+                type="text" required
+                value={pf.nomAdmin} onChange={sp('nomAdmin')}
+                placeholder={t('auth.yourName')}
+                className={inputClass} style={inputStyle}
+              />
+              <input
+                type="email" required
+                value={pf.emailAdmin} onChange={sp('emailAdmin')}
+                placeholder={t('auth.email')}
+                className={inputClass} style={inputStyle}
+              />
+            </div>
+            <PasswordField
+              value={pf.motDePasse}
+              onChange={sp('motDePasse')}
+              show={showPass}
+              onToggle={() => setShowPass(v => !v)}
+              isDark={isDark}
+              inputClass={inputClass}
+              inputStyle={inputStyle}
+              textSub={textSub}
+              strength={strength}
+              t={t}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Terms */}
       <div
-        style={{
-          display: 'flex', alignItems: 'flex-start', gap: 10,
-          marginTop: 16, paddingTop: 14,
-          borderTop: `1px solid ${divColor}`,
-        }}
+        style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 16, paddingTop: 14, borderTop: `1px solid ${divClr}` }}
       >
         <input
           id="terms" type="checkbox" required
           checked={agreed} onChange={e => setAgreed(e.target.checked)}
-          className="mt-0.5 w-3.5 h-3.5 shrink-0 cursor-pointer accent-[#C49228]"
+          className="mt-0.5 w-3.5 h-3.5 shrink-0 cursor-pointer accent-violet-500"
         />
-        <label
-          htmlFor="terms"
-          style={{ fontSize: '0.71rem', lineHeight: 1.55, cursor: 'pointer', color: subText }}
-        >
+        <label htmlFor="terms" style={{ fontSize: '0.70rem', lineHeight: 1.55, cursor: 'pointer', color: textSub }}>
           {t('auth.termsAgree')}{' '}
-          <Link href="/legal/terms" target="_blank" style={{ color: linkColor }} className="hover:underline">
-            {t('auth.termsTermsLink')}
-          </Link>
+          <Link href="/legal/terms"   target="_blank" style={{ color: linkClr }} className="hover:underline">{t('auth.termsTermsLink')}</Link>
           {t('auth.termsComma')}{' '}
           {t('auth.termsPrivacyIntro') && <>{t('auth.termsPrivacyIntro')}{' '}</>}
-          <Link href="/legal/privacy" target="_blank" style={{ color: linkColor }} className="hover:underline">
-            {t('auth.termsPrivacyLink')}
-          </Link>
+          <Link href="/legal/privacy" target="_blank" style={{ color: linkClr }} className="hover:underline">{t('auth.termsPrivacyLink')}</Link>
           {t('auth.termsAndThe')}{' '}
-          <Link href="/legal/refund" target="_blank" style={{ color: linkColor }} className="hover:underline">
-            {t('auth.termsRefundLink')}
-          </Link>{' '}
-          {t('auth.termsBrand')}
+          <Link href="/legal/refund"  target="_blank" style={{ color: linkClr }} className="hover:underline">{t('auth.termsRefundLink')}</Link>
+          {' '}{t('auth.termsBrand')}
         </label>
       </div>
 
-      {/* CTA button */}
-      <button
+      {/* CTA */}
+      <motion.button
         type="submit"
         disabled={loading || !agreed}
+        whileHover={!loading && agreed ? { scale: 1.01, boxShadow: '0 6px 28px rgba(124,108,255,0.45)' } : {}}
+        whileTap={!loading && agreed ? { scale: 0.985 } : {}}
         style={{
           width: '100%', marginTop: 14,
-          height: 52, borderRadius: 12, border: 'none', cursor: loading || !agreed ? 'not-allowed' : 'pointer',
-          background: isDark
-            ? 'linear-gradient(135deg, #C49228 0%, #E5A820 100%)'
-            : 'linear-gradient(135deg, #8C6410 0%, #B8861E 100%)',
-          color: isDark ? '#0A0600' : '#FFFBF0',
-          fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase',
-          boxShadow: agreed && !loading
-            ? isDark ? '0 4px 22px rgba(196,146,40,0.38)' : '0 4px 18px rgba(100,70,10,0.30)'
-            : 'none',
-          opacity: loading || !agreed ? 0.45 : 1,
-          transition: 'all 0.2s',
+          height: 52, borderRadius: 14, border: 'none',
+          cursor: loading || !agreed ? 'not-allowed' : 'pointer',
+          background: 'linear-gradient(135deg, #635BFF 0%, #7c6cff 100%)',
+          color: '#ffffff',
+          fontWeight: 700, fontSize: '0.88rem', letterSpacing: '0.03em',
+          boxShadow: agreed && !loading ? '0 4px 20px rgba(99,91,255,0.38)' : 'none',
+          opacity: loading || !agreed ? 0.48 : 1,
+          transition: 'opacity 0.2s',
         }}
       >
-        {loading ? t('auth.registering') : t('auth.enterBtn')}
-      </button>
+        {loading ? t('auth.registering') : t('auth.registerBtn')}
+      </motion.button>
 
-      {/* Avatar social proof */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 18 }}>
-        <div style={{ display: 'flex' }}>
-          {AVATARS.map((av, i) => (
-            <div
-              key={i}
-              style={{
-                width: 28, height: 28, borderRadius: '50%',
-                border: `2px solid ${isDark ? '#1C1B2C' : '#FFFFFF'}`,
-                marginLeft: i === 0 ? 0 : -8,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: av.bg,
-                color: '#fff', fontSize: '0.62rem', fontWeight: 700,
-                zIndex: AVATARS.length - i,
-                position: 'relative',
-              }}
-            >
-              {av.l}
-            </div>
-          ))}
-        </div>
-        <span style={{ fontSize: '0.73rem', color: subText }}>
-          +3 200 entreprises marocaines
+      {/* Trust row */}
+      <div
+        className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mt-4"
+        style={{ fontSize: '0.65rem', color: textSub }}
+      >
+        <span className="flex items-center gap-1">
+          <ShieldCheck className="w-3 h-3 opacity-60" />{t('auth.trustData')}
+        </span>
+        <span className="opacity-30">·</span>
+        <span className="flex items-center gap-1">
+          <MapPin className="w-3 h-3 opacity-60" />{t('auth.trustLegal')}
+        </span>
+        <span className="opacity-30">·</span>
+        <span className="flex items-center gap-1">
+          <CreditCard className="w-3 h-3 opacity-60" />{t('auth.trustPay')}
         </span>
       </div>
 
-      {/* Sign in link */}
-      <p style={{ textAlign: 'center', fontSize: '0.78rem', marginTop: 14, color: subText }}>
+      {/* Sign-in link */}
+      <p style={{ textAlign: 'center', fontSize: '0.78rem', marginTop: 14, color: textSub }}>
         {t('auth.hasAccount')}{' '}
-        <Link href="/login" className="font-semibold hover:underline" style={{ color: linkColor }}>
-          {t('auth.signIn')}
+        <Link href="/login" className="font-semibold hover:underline" style={{ color: linkClr }}>
+          {t('auth.signIn')} →
         </Link>
       </p>
-    </form>
+    </motion.form>
+  )
+}
+
+// ── Password sub-component ────────────────────────────────────────────
+interface PasswordFieldProps {
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  show: boolean
+  onToggle: () => void
+  isDark: boolean
+  inputClass: string
+  inputStyle: React.CSSProperties
+  textSub: string
+  strength: number
+  t: (k: string) => string
+}
+
+function PasswordField({ value, onChange, show, onToggle, isDark, inputClass, inputStyle, textSub, strength, t }: PasswordFieldProps) {
+  const bars = [0, 1, 2]
+
+  return (
+    <div>
+      <div style={{ position: 'relative' }}>
+        <input
+          type={show ? 'text' : 'password'} required minLength={8}
+          value={value} onChange={onChange}
+          placeholder={t('auth.password')}
+          className={inputClass}
+          style={{ ...inputStyle, paddingRight: 44 }}
+        />
+        <button
+          type="button" onClick={onToggle}
+          style={{
+            position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+            color: textSub, background: 'none', border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center',
+          }}
+        >
+          {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {/* Strength indicator */}
+      {value.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="mt-1.5 flex items-center gap-2"
+        >
+          <div className="flex gap-1 flex-1">
+            {bars.map(i => (
+              <div
+                key={i}
+                className="h-1 flex-1 rounded-full transition-all duration-300"
+                style={{
+                  background: i <= strength
+                    ? STRENGTH_COLOR[Math.max(0, strength)]
+                    : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(30,23,67,0.08)',
+                }}
+              />
+            ))}
+          </div>
+          <span className="text-[10px] font-medium" style={{ color: STRENGTH_COLOR[Math.max(0, strength)], minWidth: 34 }}>
+            {t(STRENGTH_KEY[Math.max(0, strength)])}
+          </span>
+        </motion.div>
+      )}
+    </div>
   )
 }
