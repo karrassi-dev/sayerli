@@ -35,7 +35,7 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto">
 
         {/* ── Pill container ── */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-white/8 rounded-2xl shadow-[0_2px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-slate-100/95 dark:bg-[#0c0d1e]/95 backdrop-blur-sm border border-slate-200 dark:border-white/8 rounded-2xl shadow-[0_2px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
 
           {/* Logo */}
           <Link href="/" aria-label="Sayerli" className="flex-shrink-0 me-6">
@@ -154,7 +154,7 @@ export function Navbar() {
 
         {/* ── Mobile dropdown ── */}
         {mobileOpen && (
-          <div className="md:hidden mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-white/8 rounded-2xl shadow-xl overflow-hidden">
+          <div className="md:hidden mt-2 bg-slate-100/95 dark:bg-[#0c0d1e]/95 backdrop-blur-sm border border-slate-200 dark:border-white/8 rounded-2xl shadow-xl overflow-hidden">
 
             {/* Nav links */}
             <div className="p-2 space-y-0.5">
