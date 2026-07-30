@@ -54,17 +54,17 @@ export function RoleSelector({ value, onChange, isDark, labels, descs, legend, s
               whileTap={{ scale: 0.97 }}
               animate={active ? { scale: 1.02 } : { scale: 1 }}
               transition={{ type: 'spring', stiffness: 380, damping: 24 }}
-              className="relative text-left rounded-2xl p-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+              className="relative text-left rounded-2xl p-3 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               style={{
                 border: active
-                  ? '1.5px solid #7c6cff'
+                  ? '1.5px solid #4f46e5'
                   : isDark
                     ? '1.5px solid rgba(255,255,255,0.08)'
                     : '1.5px solid rgba(30,23,67,0.11)',
                 background: active
                   ? isDark
-                    ? 'rgba(124,108,255,0.13)'
-                    : 'rgba(99,91,255,0.07)'
+                    ? 'rgba(99,102,241,0.13)'
+                    : 'rgba(99,102,241,0.07)'
                   : isDark
                     ? 'rgba(255,255,255,0.03)'
                     : 'rgba(30,23,67,0.02)',
@@ -77,7 +77,7 @@ export function RoleSelector({ value, onChange, isDark, labels, descs, legend, s
                 <motion.span
                   layoutId="roleActive"
                   className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full"
-                  style={{ background: '#7c6cff' }}
+                  style={{ background: '#4f46e5' }}
                 />
               )}
 
@@ -86,9 +86,9 @@ export function RoleSelector({ value, onChange, isDark, labels, descs, legend, s
                 className="inline-flex items-center justify-center w-8 h-8 rounded-xl mb-2"
                 style={{
                   background: active
-                    ? isDark ? 'rgba(124,108,255,0.22)' : 'rgba(99,91,255,0.12)'
+                    ? isDark ? 'rgba(99,102,241,0.22)' : 'rgba(99,102,241,0.12)'
                     : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(30,23,67,0.06)',
-                  color: active ? '#7c6cff' : isDark ? 'rgba(245,243,255,0.45)' : 'rgba(30,23,67,0.45)',
+                  color: active ? '#4f46e5' : isDark ? 'rgba(245,243,255,0.45)' : 'rgba(30,23,67,0.45)',
                   transition: 'background 0.18s, color 0.18s',
                 }}
               >
@@ -97,7 +97,7 @@ export function RoleSelector({ value, onChange, isDark, labels, descs, legend, s
 
               <p
                 className="text-xs font-semibold leading-tight mb-0.5"
-                style={{ color: active ? (isDark ? '#a78bfa' : '#4f3ef7') : isDark ? 'rgba(245,243,255,0.75)' : '#1e1743' }}
+                style={{ color: active ? (isDark ? '#818cf8' : '#4f46e5') : isDark ? 'rgba(245,243,255,0.75)' : '#1e1743' }}
               >
                 {opt.name}
               </p>

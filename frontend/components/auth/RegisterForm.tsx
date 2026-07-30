@@ -18,7 +18,7 @@ function getStrength(pw: string): 0 | 1 | 2 | 3 {
   return Math.min(score, 3) as 0 | 1 | 2 | 3
 }
 
-const STRENGTH_COLOR = ['#ef4444', '#f59e0b', '#22c55e', '#7c6cff'] as const
+const STRENGTH_COLOR = ['#ef4444', '#f59e0b', '#22c55e', '#4f46e5'] as const
 const STRENGTH_KEY   = ['pwWeak', 'pwFair', 'pwGood', 'pwStrong']  as const
 
 export function RegisterForm() {
@@ -61,19 +61,18 @@ export function RegisterForm() {
   }
 
   // ── Dynamic styles ─────────────────────────────────────────────────
-  const cardBg   = isDark ? '#13112a' : '#ffffff'
-  const inputBg  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(30,23,67,0.04)'
-  const inputBdr = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(30,23,67,0.12)'
-  const textMain = isDark ? 'rgba(245,243,255,0.92)' : '#1e1743'
-  const textSub  = isDark ? 'rgba(245,243,255,0.48)' : 'rgba(30,23,67,0.52)'
-  const divClr   = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(30,23,67,0.09)'
-  const labelClr = isDark ? 'rgba(245,243,255,0.22)' : 'rgba(30,23,67,0.38)'
-  const linkClr  = isDark ? '#a78bfa' : '#5b4ef5'
+  const inputBg  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.04)'
+  const inputBdr = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(99,102,241,0.14)'
+  const textMain = isDark ? '#f1f5f9'                : '#1e1b4b'
+  const textSub  = isDark ? 'rgba(148,163,184,0.85)' : 'rgba(71,85,105,0.75)'
+  const divClr   = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(99,102,241,0.10)'
+  const labelClr = isDark ? 'rgba(148,163,184,0.45)' : 'rgba(99,102,241,0.40)'
+  const linkClr  = isDark ? '#818cf8'                : '#4f46e5'
 
   const inputClass = [
     'w-full text-sm px-4 py-3 rounded-xl outline-none transition-all',
     'placeholder:opacity-40',
-    'focus:ring-2 focus:ring-[#7c6cff]/20 focus:border-[#7c6cff]',
+    'focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500',
   ].join(' ')
   const inputStyle = {
     background: inputBg,
@@ -92,14 +91,13 @@ export function RegisterForm() {
       <div className="mb-5">
         <div
           className="inline-flex items-center justify-center w-9 h-9 rounded-xl mb-3"
-          style={{ background: 'linear-gradient(135deg,#7c6cff,#9d8dff)', boxShadow: '0 4px 14px rgba(124,108,255,0.35)' }}
+          style={{ background: 'linear-gradient(135deg,#4f46e5,#6366f1)', boxShadow: '0 4px 14px rgba(79,70,229,0.35)' }}
         >
           <ShieldCheck className="w-4 h-4 text-white" />
         </div>
         <h1 className="text-xl font-bold mb-0.5" style={{ color: textMain }}>
           {t('auth.registerTitle')}
         </h1>
-        <p className="text-sm" style={{ color: textSub }}>{t('auth.trialSub')}</p>
 
         {/* Trust pills */}
         <div className="flex flex-wrap gap-2 mt-3">
@@ -111,9 +109,9 @@ export function RegisterForm() {
               key={label}
               className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full"
               style={{
-                background: isDark ? 'rgba(124,108,255,0.12)' : 'rgba(99,91,255,0.08)',
-                color: isDark ? '#a78bfa' : '#5b4ef5',
-                border: isDark ? '1px solid rgba(124,108,255,0.22)' : '1px solid rgba(99,91,255,0.15)',
+                background: isDark ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.08)',
+                color: isDark ? '#a5b4fc' : '#4f46e5',
+                border: isDark ? '1px solid rgba(99,102,241,0.22)' : '1px solid rgba(99,102,241,0.18)',
               }}
             >
               {icon}{label}
@@ -289,16 +287,16 @@ export function RegisterForm() {
       <motion.button
         type="submit"
         disabled={loading || !agreed}
-        whileHover={!loading && agreed ? { scale: 1.01, boxShadow: '0 6px 28px rgba(124,108,255,0.45)' } : {}}
+        whileHover={!loading && agreed ? { scale: 1.01, boxShadow: '0 6px 28px rgba(79,70,229,0.45)' } : {}}
         whileTap={!loading && agreed ? { scale: 0.985 } : {}}
         style={{
           width: '100%', marginTop: 14,
           height: 52, borderRadius: 14, border: 'none',
           cursor: loading || !agreed ? 'not-allowed' : 'pointer',
-          background: 'linear-gradient(135deg, #635BFF 0%, #7c6cff 100%)',
+          background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
           color: '#ffffff',
           fontWeight: 700, fontSize: '0.88rem', letterSpacing: '0.03em',
-          boxShadow: agreed && !loading ? '0 4px 20px rgba(99,91,255,0.38)' : 'none',
+          boxShadow: agreed && !loading ? '0 4px 20px rgba(79,70,229,0.38)' : 'none',
           opacity: loading || !agreed ? 0.48 : 1,
           transition: 'opacity 0.2s',
         }}

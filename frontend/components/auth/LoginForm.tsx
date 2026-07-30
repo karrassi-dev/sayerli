@@ -22,13 +22,13 @@ export function LoginForm() {
   const inputBdr  = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(30,23,67,0.12)'
   const textMain  = isDark ? 'rgba(245,243,255,0.92)' : '#1e1743'
   const textSub   = isDark ? 'rgba(245,243,255,0.48)' : 'rgba(30,23,67,0.52)'
-  const divClr    = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(30,23,67,0.09)'
-  const linkColor = isDark ? '#a78bfa' : '#5b4ef5'
+  const divClr    = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(99,102,241,0.10)'
+  const linkColor = isDark ? '#818cf8'               : '#4f46e5'
 
   const inputClass = [
     'w-full text-sm px-4 py-3 rounded-xl outline-none transition-all',
     'placeholder:opacity-40',
-    'focus:ring-2 focus:ring-[#7c6cff]/20 focus:border-[#7c6cff]',
+    'focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5]',
   ].join(' ')
   const inputStyle = {
     background: inputBg,
@@ -47,7 +47,7 @@ export function LoginForm() {
       <div className="mb-6">
         <div
           className="inline-flex items-center justify-center w-9 h-9 rounded-xl mb-3"
-          style={{ background: 'linear-gradient(135deg,#7c6cff,#9d8dff)', boxShadow: '0 4px 14px rgba(124,108,255,0.35)' }}
+          style={{ background: 'linear-gradient(135deg,#4f46e5,#6366f1)', boxShadow: '0 4px 14px rgba(79,70,229,0.35)' }}
         >
           <LogIn className="w-4 h-4 text-white" />
         </div>
@@ -113,16 +113,16 @@ export function LoginForm() {
 
       <motion.button
         type="submit" disabled={loading}
-        whileHover={!loading ? { scale: 1.01, boxShadow: '0 6px 28px rgba(124,108,255,0.45)' } : {}}
+        whileHover={!loading ? { scale: 1.01, boxShadow: '0 6px 28px rgba(79,70,229,0.45)' } : {}}
         whileTap={!loading ? { scale: 0.985 } : {}}
         style={{
           width: '100%',
           height: 52, borderRadius: 14, border: 'none',
           cursor: loading ? 'not-allowed' : 'pointer',
-          background: 'linear-gradient(135deg, #635BFF 0%, #7c6cff 100%)',
+          background: 'linear-gradient(135deg, #4f46e5 0%, #4f46e5 100%)',
           color: '#ffffff',
           fontWeight: 700, fontSize: '0.88rem', letterSpacing: '0.03em',
-          boxShadow: !loading ? '0 4px 20px rgba(99,91,255,0.38)' : 'none',
+          boxShadow: !loading ? '0 4px 20px rgba(79,70,229,0.38)' : 'none',
           opacity: loading ? 0.48 : 1,
           transition: 'opacity 0.2s',
         }}
