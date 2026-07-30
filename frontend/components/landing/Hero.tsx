@@ -49,7 +49,7 @@ export function Hero() {
       {/* ── Shared page background ── */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <div className="dark:hidden absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-white" />
-        <div className="hidden dark:block absolute inset-0 bg-[#0a0a0f]" />
+        <div className="hidden dark:block absolute inset-0 bg-[#0c0d1e]" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-indigo-500/6 dark:bg-indigo-500/12 blur-3xl" />
         <div className="absolute inset-0 [background-image:linear-gradient(rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.06)_1px,transparent_1px)] dark:[background-image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:48px_48px]" />
       </div>
