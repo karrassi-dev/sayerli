@@ -17,47 +17,102 @@ export function Hero() {
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="dark:hidden absolute inset-0 bg-gradient-to-b from-slate-50/80 via-white to-white" />
         <div className="hidden dark:block absolute inset-0 bg-[#0a0a0f]" />
-
-        {/* Gradient blobs */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-gradient-to-b from-indigo-500/10 dark:from-indigo-500/18 to-transparent blur-3xl" />
         <div className="absolute top-24 right-0 w-[500px] h-[500px] rounded-full bg-teal-400/8 dark:bg-teal-400/12 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-indigo-400/6 dark:bg-indigo-400/10 blur-3xl" />
-
-        {/* Dot grid */}
         <div className="absolute inset-0 [background-image:radial-gradient(circle,_#94a3b828_1px,_transparent_1px)] dark:[background-image:radial-gradient(circle,_#ffffff0f_1px,_transparent_1px)] [background-size:28px_28px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="flex items-center justify-center gap-5 xl:gap-8">
 
-          {/* ── Left — Copy ── */}
-          <div className="text-center lg:text-start">
+          {/* ── Left floating cards ── */}
+          <div
+            className="hidden xl:flex flex-col gap-3 flex-shrink-0 w-[205px]"
+            style={{ animation: 'fadeIn 0.7s ease-out 0.1s both' }}
+          >
+            <FeatureCard title="Devis & Factures" accent="#6366f1">
+              <div className="space-y-2">
+                {[['Design logo', '8 500'], ['Consultation', '3 200']].map(([l, a]) => (
+                  <div key={l} className="flex justify-between items-center">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500">{l}</span>
+                    <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-300">{a} MAD</span>
+                  </div>
+                ))}
+                <div className="pt-2 border-t border-slate-100 dark:border-white/6 flex justify-between items-center">
+                  <span className="text-xs font-black text-slate-800 dark:text-white">11 700 MAD</span>
+                  <Chip color="#10b981">Envoyée ✓</Chip>
+                </div>
+              </div>
+            </FeatureCard>
 
-            {/* Badge */}
+            <FeatureCard title="Bon de Livraison" accent="#14b8a6">
+              <div className="space-y-2">
+                {([['Produit A — Qté 3', true], ['Produit B — Qté 5', true], ['Produit C — Qté 2', false]] as [string, boolean][]).map(([label, done]) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 ${done ? 'bg-teal-500/15 dark:bg-teal-500/20' : 'bg-slate-100 dark:bg-white/5'}`}>
+                      {done && <span className="text-teal-500 text-[8px] font-black">✓</span>}
+                    </div>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">{label}</span>
+                  </div>
+                ))}
+                <div className="pt-1">
+                  <Chip color="#14b8a6">Signé & Livré</Chip>
+                </div>
+              </div>
+            </FeatureCard>
+
+            <FeatureCard title="Catalogue" accent="#f59e0b">
+              <div className="space-y-2">
+                {[
+                  { name: 'Pack Design', price: '8 000' },
+                  { name: 'Site vitrine', price: '12 500' },
+                  { name: 'Audit SEO', price: '4 500' },
+                ].map(({ name, price }) => (
+                  <div key={name} className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] text-slate-600 dark:text-slate-300 truncate">{name}</span>
+                    <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{price}</span>
+                  </div>
+                ))}
+              </div>
+            </FeatureCard>
+          </div>
+
+          {/* ── Center — hero copy ── */}
+          <div className="flex-1 text-center" style={{ maxWidth: 660 }}>
+
+            {/* Personas — styled inline, not a badge */}
             <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/70 text-indigo-700 dark:text-indigo-300 text-sm font-medium mb-8"
+              className="flex items-center justify-center gap-2 flex-wrap mb-10"
               style={{ animation: 'fadeIn 0.5s ease-out both' }}
             >
-              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-              {t('hero.badge')}
+              <span className="text-xl leading-none">🇲🇦</span>
+              <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400 tracking-wide">{t('hero.p1')}</span>
+              <span className="text-slate-300 dark:text-white/15 select-none">·</span>
+              <span className="text-sm font-bold text-slate-700 dark:text-slate-200 tracking-wide">{t('hero.p2')}</span>
+              <span className="text-slate-300 dark:text-white/15 select-none">·</span>
+              <span className="text-sm font-bold text-teal-600 dark:text-teal-400 tracking-wide">{t('hero.p3')}</span>
             </div>
 
-            {/* Headline */}
+            {/* Giant 3-line headline */}
             <h1
-              className="text-4xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-black leading-[1.05] tracking-tight mb-6"
+              className="font-black leading-[0.88] tracking-tighter mb-8"
               style={{ animation: 'fadeIn 0.55s ease-out 0.08s both' }}
             >
-              <span className="bg-gradient-to-r from-indigo-600 via-primary-600 to-teal-500 bg-clip-text text-transparent">
-                {t('hero.headline')}
+              <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-[4.75rem] text-slate-900 dark:text-white">
+                {t('hero.line1')}
               </span>
-              <br />
-              <span className="text-slate-900 dark:text-white">
-                {t('hero.headlineSub')}
+              <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-[4.75rem] bg-gradient-to-r from-indigo-600 via-indigo-500 to-teal-500 bg-clip-text text-transparent">
+                {t('hero.line2')}
+              </span>
+              <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-[4.75rem] text-slate-900 dark:text-white">
+                {t('hero.line3')}
               </span>
             </h1>
 
+            {/* Subtitle */}
             <p
-              className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+              className="text-base sm:text-lg text-slate-500 dark:text-slate-400 mb-10 max-w-lg mx-auto leading-relaxed"
               style={{ animation: 'fadeIn 0.55s ease-out 0.18s both' }}
             >
               {t('hero.subheadline')}
@@ -65,7 +120,7 @@ export function Hero() {
 
             {/* CTAs */}
             <div
-              className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-10"
+              className="flex flex-col sm:flex-row gap-3 justify-center mb-10"
               style={{ animation: 'fadeIn 0.55s ease-out 0.28s both' }}
             >
               {loggedIn ? (
@@ -95,7 +150,7 @@ export function Hero() {
 
             {/* Social proof */}
             <div
-              className="flex items-center gap-3"
+              className="flex items-center justify-center gap-3"
               style={{ animation: 'fadeIn 0.55s ease-out 0.38s both' }}
             >
               <div className="flex -space-x-2 flex-shrink-0">
@@ -122,29 +177,66 @@ export function Hero() {
             </div>
           </div>
 
-          {/* ── Right — ecosystem diagram ── */}
+          {/* ── Right floating cards ── */}
           <div
-            className="hidden lg:block"
-            style={{ animation: 'fadeIn 0.7s ease-out 0.2s both, float 6s ease-in-out 1s infinite' }}
+            className="hidden xl:flex flex-col gap-3 flex-shrink-0 w-[205px]"
+            style={{ animation: 'fadeIn 0.7s ease-out 0.2s both' }}
           >
-            <EcosystemPreview />
-          </div>
-
-          {/* ── Mobile stats strip ── */}
-          <div
-            className="lg:hidden flex justify-center gap-8 -mt-4"
-            style={{ animation: 'fadeIn 0.55s ease-out 0.5s both' }}
-          >
-            {[
-              { value: '0 MAD', label: 'Pour démarrer' },
-              { value: '2 min', label: 'Premier devis' },
-              { value: '100%', label: 'Sécurisé' },
-            ].map(({ value, label }) => (
-              <div key={label} className="text-center">
-                <div className="text-xl font-black bg-gradient-to-r from-indigo-600 to-primary-600 bg-clip-text text-transparent">{value}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{label}</div>
+            <FeatureCard title="Gestion d'équipe" accent="#8b5cf6">
+              <div className="space-y-2">
+                {[
+                  { name: 'Yassine', role: 'Comptable', color: '#6366f1' },
+                  { name: 'Sara',    role: 'Commercial', color: '#10b981' },
+                  { name: 'Karim',   role: 'Admin',      color: '#f59e0b' },
+                ].map(({ name, role, color }) => (
+                  <div key={name} className="flex items-center gap-2">
+                    <div
+                      className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black text-white flex-shrink-0"
+                      style={{ background: color }}
+                    >
+                      {name[0]}
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-semibold text-slate-700 dark:text-slate-200 leading-none">{name}</div>
+                      <div className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">{role}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </FeatureCard>
+
+            <FeatureCard title="Paiements & TVA" accent="#10b981">
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">Reçu ce mois</span>
+                  <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">+8 400 MAD</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-slate-100 dark:bg-white/8 overflow-hidden">
+                  <div className="h-full rounded-full w-4/5" style={{ background: 'linear-gradient(to right,#6366f1,#14b8a6)' }} />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] text-slate-400 dark:text-slate-500">TVA collectée</span>
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">3 280 MAD</span>
+                </div>
+              </div>
+            </FeatureCard>
+
+            <FeatureCard title="Relances auto" accent="#f87171">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30">
+                  <span className="text-red-500 text-xs flex-shrink-0">⚠</span>
+                  <span className="text-[9px] text-red-600 dark:text-red-400 font-medium">2 factures en retard</span>
+                </div>
+                <div className="text-[9px] text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                  <span className="text-teal-500 font-bold">✓</span>
+                  Relance envoyée · il y a 2h
+                </div>
+                <div className="text-[9px] text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                  <span className="text-teal-500 font-bold">✓</span>
+                  Relance envoyée · il y a 1j
+                </div>
+              </div>
+            </FeatureCard>
           </div>
 
         </div>
@@ -153,207 +245,35 @@ export function Hero() {
   )
 }
 
-/* ── Ecosystem orchestration diagram ───────────────────────────────── */
-function EcosystemPreview() {
-  const card: React.CSSProperties = {
-    position: 'absolute',
-    zIndex: 5,
-    background: 'rgba(10,12,22,0.97)',
-    border: '1px solid rgba(255,255,255,0.09)',
-    borderRadius: 14,
-    padding: 14,
-    backdropFilter: 'blur(14px)',
-    boxShadow: '0 12px 40px rgba(0,0,0,0.55)',
-  }
-
+/* ── Theme-aware feature card ─────────────────────────────── */
+function FeatureCard({
+  title,
+  accent,
+  children,
+}: {
+  title: string
+  accent: string
+  children: React.ReactNode
+}) {
   return (
-    <div className="relative select-none" style={{ width: 520, height: 565, margin: '0 auto' }}>
-
-      {/* Dark background + central orb */}
-      <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ background: '#06090f' }}>
-        <div className="absolute" style={{
-          top: '38%', left: '50%', transform: 'translate(-50%,-50%)',
-          width: 460, height: 460,
-          background: 'radial-gradient(ellipse, rgba(37,99,235,0.32) 0%, rgba(6,182,212,0.18) 38%, transparent 65%)',
-          filter: 'blur(52px)',
-        }} />
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-        }} />
+    <div className="rounded-2xl p-4 bg-white dark:bg-[#0f1117] border border-slate-100 dark:border-white/7 shadow-sm dark:shadow-none">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: accent }} />
+        <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{title}</span>
       </div>
-
-      {/* SVG connection lines */}
-      <svg className="absolute inset-0 pointer-events-none" width="520" height="565" style={{ zIndex: 3 }}>
-        <defs>
-          <marker id="ai" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(99,102,241,0.6)" />
-          </marker>
-          <marker id="at" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(20,184,166,0.6)" />
-          </marker>
-        </defs>
-        {/* Card1 → Card2 */}
-        <path d="M252,138 C270,138 280,118 297,118" stroke="rgba(99,102,241,0.45)" strokeWidth="1.5" strokeDasharray="5,3" fill="none" markerEnd="url(#ai)" />
-        {/* Card1 → Card3 */}
-        <line x1="148" y1="228" x2="160" y2="288" stroke="rgba(99,102,241,0.45)" strokeWidth="1.5" markerEnd="url(#ai)" />
-        {/* Card2 → Card4 */}
-        <line x1="388" y1="208" x2="386" y2="288" stroke="rgba(20,184,166,0.45)" strokeWidth="1.5" markerEnd="url(#at)" />
-        {/* Card3 → Card5 */}
-        <line x1="162" y1="398" x2="160" y2="432" stroke="rgba(99,102,241,0.4)" strokeWidth="1.5" markerEnd="url(#ai)" />
-        {/* Card4 → Card6 */}
-        <line x1="384" y1="396" x2="382" y2="430" stroke="rgba(20,184,166,0.4)" strokeWidth="1.5" markerEnd="url(#at)" />
-        {/* Card5 → Card6 */}
-        <line x1="250" y1="470" x2="278" y2="468" stroke="rgba(99,102,241,0.38)" strokeWidth="1.5" markerEnd="url(#ai)" />
-        {/* Endpoint dots */}
-        <circle cx="148" cy="228" r="3" fill="rgba(99,102,241,0.65)" />
-        <circle cx="388" cy="208" r="3" fill="rgba(20,184,166,0.65)" />
-        <circle cx="162" cy="398" r="3" fill="rgba(99,102,241,0.5)" />
-        <circle cx="384" cy="396" r="3" fill="rgba(20,184,166,0.5)" />
-      </svg>
-
-      {/* ── Multi-devises badge (top center) ── */}
-      <div className="absolute" style={{ top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 10, whiteSpace: 'nowrap' }}>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          padding: '5px 14px', borderRadius: 20,
-          background: 'rgba(20,184,166,0.15)', border: '1px solid rgba(20,184,166,0.38)',
-          color: '#2dd4bf', fontSize: 11, fontWeight: 600,
-        }}>✓ Multi-devises</span>
-      </div>
-
-      {/* ── Floating currency bubbles ── */}
-      {/* MAD pill left of badge */}
-      <div className="absolute" style={{ top: 22, left: 148, zIndex: 8 }}>
-        <span style={{ padding: '4px 10px', borderRadius: 14, background: 'rgba(99,102,241,0.13)', border: '1px solid rgba(99,102,241,0.3)', color: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 600 }}>MAD</span>
-      </div>
-      {/* € right of badge */}
-      <div className="absolute" style={{ top: 15, left: 355, zIndex: 8 }}>
-        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(99,102,241,0.13)', border: '1px solid rgba(99,102,241,0.28)', color: 'rgba(255,255,255,0.5)', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>€</div>
-      </div>
-      {/* $ far right */}
-      <div className="absolute" style={{ top: 9, left: 438, zIndex: 8 }}>
-        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(20,184,166,0.12)', border: '1px solid rgba(20,184,166,0.28)', color: 'rgba(255,255,255,0.5)', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
-      </div>
-      {/* € right edge */}
-      <div className="absolute" style={{ top: 70, left: 490, zIndex: 8 }}>
-        <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.22)', color: 'rgba(255,255,255,0.35)', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>€</div>
-      </div>
-      {/* MAD left side */}
-      <div className="absolute" style={{ top: 158, left: 14, zIndex: 8 }}>
-        <span style={{ padding: '3px 8px', borderRadius: 12, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.22)', color: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: 600 }}>MAD</span>
-      </div>
-      {/* € bottom left */}
-      <div className="absolute" style={{ top: 205, left: 10, zIndex: 8 }}>
-        <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.18)', color: 'rgba(255,255,255,0.28)', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>€</div>
-      </div>
-
-      {/* ── CARD 1: Devis & Factures ── */}
-      <div style={{ ...card, top: 50, left: 42, width: 210 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Devis & Factures</div>
-        {[
-          ['Design logo',   '12 500 MAD'],
-          ['Site web',      '12 500 MAD'],
-          ['Consultation',  '1 500 MAD'],
-        ].map(([label, amount]) => (
-          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)' }}>{label}</span>
-            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.48)' }}>{amount}</span>
-          </div>
-        ))}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 8, paddingTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, fontWeight: 800, color: 'rgba(255,255,255,0.92)' }}>12 500 MAD</span>
-          <span style={{ fontSize: 9, padding: '3px 8px', borderRadius: 8, background: 'rgba(16,185,129,0.18)', color: '#10b981', fontWeight: 600 }}>Envoyée</span>
-        </div>
-        <div style={{ marginTop: 10, fontSize: 9, color: 'rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', gap: 4 }}>↓ Télécharger PDF</div>
-      </div>
-
-      {/* ── CARD 2: TVA & Dépenses ── */}
-      <div style={{ ...card, top: 50, left: 295, width: 186 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>TVA & Dépenses</div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 50, marginBottom: 10 }}>
-          {[38,55,42,70,52,75,48,65].map((h, i) => (
-            <div key={i} style={{ flex: 1, borderRadius: '3px 3px 0 0', height: `${h}%`, background: i % 2 === 0 ? 'rgba(99,102,241,0.55)' : 'rgba(20,184,166,0.5)' }} />
-          ))}
-        </div>
-        <div style={{ fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.9)', marginBottom: 6 }}>8 300 MAD</div>
-        <span style={{ fontSize: 9, padding: '2px 8px', borderRadius: 8, background: 'rgba(251,191,36,0.15)', color: '#fbbf24', fontWeight: 600 }}>Statut</span>
-      </div>
-
-      {/* ORCHESTRATION label */}
-      <div className="absolute" style={{ top: 270, left: 20, zIndex: 8 }}>
-        <span style={{ padding: '6px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.48)', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', display: 'inline-block' }}>
-          ORCHESTRATION
-        </span>
-      </div>
-
-      {/* ── CARD 3: Comptable & Team ── */}
-      <div style={{ ...card, top: 288, left: 75, width: 186 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Comptable & Team</div>
-        {[
-          { name: 'Yassine', role: 'Comptable', color: '#6366f1' },
-          { name: 'Sara',    role: 'Commercial', color: '#10b981' },
-        ].map(({ name, role, color }) => (
-          <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: color + '25', border: `1.5px solid ${color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color, flexShrink: 0 }}>
-              {name[0]}
-            </div>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
-              {name} <span style={{ color: 'rgba(255,255,255,0.32)', fontSize: 10 }}>({role})</span>
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* ── CARD 4: Bon de Livraison ── */}
-      <div style={{ ...card, top: 288, left: 288, width: 186 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Bon de Livraison</div>
-        {[
-          { w: '68%', a: 3, b: 0 },
-          { w: '55%', a: 3, b: 0 },
-          { w: '42%', a: 0, b: 0 },
-        ].map(({ w, a, b }, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-            <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.1)', width: w }} />
-            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', minWidth: 14 }}>{a}</span>
-            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', minWidth: 14 }}>{b}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* ── CARD 5: Clients ── */}
-      <div style={{ ...card, top: 430, left: 75, width: 172 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Clients</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', flexShrink: 0, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.35)' }} />
-          <div>
-            <div style={{ height: 7, borderRadius: 4, background: 'rgba(255,255,255,0.18)', width: 80, marginBottom: 5 }} />
-            <div style={{ height: 5, borderRadius: 3, background: 'rgba(255,255,255,0.08)', width: 55 }} />
-          </div>
-        </div>
-      </div>
-
-      {/* ── CARD 6: Paiement ── */}
-      <div style={{ ...card, top: 428, left: 278, width: 206 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)' }}>Paiement</span>
-          <span style={{ fontSize: 9, padding: '2px 8px', borderRadius: 8, background: 'rgba(16,185,129,0.18)', color: '#10b981', fontWeight: 600 }}>Reçu</span>
-        </div>
-        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', marginBottom: 6 }}>Status</div>
-        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }}>
-          <div style={{ height: '100%', borderRadius: 2, width: '78%', background: 'linear-gradient(to right, #6366f1, #14b8a6)' }} />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 8, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.22)' }}>
-          <span style={{ color: '#10b981', fontSize: 11, fontWeight: 700 }}>✓</span>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.72)', fontWeight: 500 }}>Paiement reçu — 5 000 MAD</span>
-        </div>
-      </div>
-
-      {/* Outer glow */}
-      <div className="absolute -inset-6 -z-10 rounded-3xl" style={{
-        background: 'radial-gradient(ellipse at center, rgba(59,130,246,0.15) 0%, rgba(20,184,166,0.08) 50%, transparent 70%)',
-        filter: 'blur(24px)',
-      }} />
+      {children}
     </div>
+  )
+}
+
+/* ── Mini status chip ─────────────────────────────────────── */
+function Chip({ color, children }: { color: string; children: React.ReactNode }) {
+  return (
+    <span
+      className="inline-flex items-center text-[9px] font-semibold px-2 py-0.5 rounded-full"
+      style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}
+    >
+      {children}
+    </span>
   )
 }

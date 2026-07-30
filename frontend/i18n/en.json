@@ -12,17 +12,18 @@
     "blog": "Blog"
   },
   "hero": {
-    "badge": "🇲🇦 Freelancers · Entrepreneurs · SMEs",
-    "headline": "Quotes, invoices & payments in MAD,",
-    "headlineSub": "for freelancers, entrepreneurs & SMEs.",
-    "subheadline": "Manage your entire business in one place — no Excel, no accountant. Quotes, invoices, VAT, payment tracking and team management.",
+    "p1": "Freelancers",
+    "p2": "Entrepreneurs",
+    "p3": "SMEs",
+    "line1": "Invoice.",
+    "line2": "Collect.",
+    "line3": "Grow.",
+    "subheadline": "The all-in-one platform for managing your business in Morocco — quotes, invoices, delivery notes, payments, VAT and team. In MAD.",
     "cta": "Start for Free",
     "ctaSecondary": "Log In",
     "socialProof": "Join +3,200 Moroccan freelancers, entrepreneurs and SMEs",
-    "stat1": "No credit card needed",
-    "stat2": "Built for Morocco",
-    "stat3": "To send a quote",
-    "ctaDashboard": "Go to Dashboard"
+    "ctaDashboard": "Go to Dashboard",
+    "badge": "🇲🇦 Freelancers · Entrepreneurs · SMEs"
   },
   "features": {
     "badge": "Features",

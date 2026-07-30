@@ -12,17 +12,18 @@
     "blog": "Blog"
   },
   "hero": {
-    "badge": "🇲🇦 Freelancers · Auto-entrepreneurs · PME",
-    "headline": "Devis, factures et paiements en MAD,",
-    "headlineSub": "pour freelancers, entrepreneurs et PME.",
-    "subheadline": "Gérez toute votre activité en un seul endroit — sans Excel, sans comptable. Devis, factures, TVA, suivi des paiements et gestion d'équipe.",
+    "p1": "Freelancers",
+    "p2": "Auto-entrepreneurs",
+    "p3": "PME",
+    "line1": "Facturez.",
+    "line2": "Encaissez.",
+    "line3": "Développez.",
+    "subheadline": "La plateforme tout-en-un pour gérer votre activité au Maroc — devis, factures, bons de livraison, paiements, TVA et équipe. En MAD.",
     "cta": "Commencer gratuitement",
     "ctaSecondary": "Se connecter",
     "socialProof": "Rejoignez +3 200 freelancers, entrepreneurs et PME marocains",
-    "stat1": "Sans carte bancaire",
-    "stat2": "Conçu pour le Maroc",
-    "stat3": "Pour envoyer un devis",
-    "ctaDashboard": "Accéder au tableau de bord"
+    "ctaDashboard": "Accéder au tableau de bord",
+    "badge": "🇲🇦 Freelancers · Auto-entrepreneurs · PME"
   },
   "features": {
     "badge": "Fonctionnalités",
