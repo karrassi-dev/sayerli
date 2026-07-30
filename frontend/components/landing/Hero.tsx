@@ -92,24 +92,32 @@ export function Hero() {
               )}
             </div>
 
-            {/* Trust chips */}
+            {/* Social proof */}
             <div
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-2"
+              className="flex items-center gap-3"
               style={{ animation: 'fadeIn 0.55s ease-out 0.38s both' }}
             >
-              {[
-                t('hero.stat1'),
-                t('hero.stat2'),
-                `2 min — ${t('hero.stat3')}`,
-              ].map(text => (
-                <span
-                  key={text}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/8 text-xs font-medium text-slate-600 dark:text-slate-300"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 flex-shrink-0" />
-                  {text}
-                </span>
-              ))}
+              <div className="flex -space-x-2 flex-shrink-0">
+                {(['#6366f1', '#10b981', '#f59e0b', '#ec4899'] as const).map((color, i) => (
+                  <div
+                    key={i}
+                    className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-900 flex items-center justify-center text-xs font-bold text-white"
+                    style={{ background: color, zIndex: 4 - i }}
+                  >
+                    {['Y', 'S', 'K', 'M'][i]}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="flex items-center gap-0.5 mb-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="text-amber-400 text-sm leading-none">★</span>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {t('hero.socialProof')}
+                </p>
+              </div>
             </div>
           </div>
 

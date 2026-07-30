@@ -12,12 +12,13 @@
     "blog": "Blog"
   },
   "hero": {
-    "badge": "🇲🇦 For freelancers, entrepreneurs & SMEs",
-    "headline": "Nta khdem…",
-    "headlineSub": "Sayerli ysayyer lik lba9i.",
-    "subheadline": "Send a quote in 2 minutes, generate an invoice in one click, and track your payments in MAD — no Excel, no hassle.",
+    "badge": "🇲🇦 Freelancers · Entrepreneurs · SMEs",
+    "headline": "Quotes, invoices & payments in MAD,",
+    "headlineSub": "for freelancers, entrepreneurs & SMEs.",
+    "subheadline": "Manage your entire business in one place — no Excel, no accountant. Quotes, invoices, VAT, payment tracking and team management.",
     "cta": "Start for Free",
     "ctaSecondary": "Log In",
+    "socialProof": "Join +3,200 Moroccan freelancers, entrepreneurs and SMEs",
     "stat1": "No credit card needed",
     "stat2": "Built for Morocco",
     "stat3": "To send a quote",

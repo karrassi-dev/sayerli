@@ -12,12 +12,13 @@
     "blog": "Blog"
   },
   "hero": {
-    "badge": "🇲🇦 Pour freelancers, auto-entrepreneurs et PME",
-    "headline": "Nta khdem…",
-    "headlineSub": "Sayerli ysayyer lik lba9i.",
-    "subheadline": "Envoyez un devis en 2 minutes, générez une facture en un clic, et suivez vos paiements en MAD — sans Excel, sans galère.",
+    "badge": "🇲🇦 Freelancers · Auto-entrepreneurs · PME",
+    "headline": "Devis, factures et paiements en MAD,",
+    "headlineSub": "pour freelancers, entrepreneurs et PME.",
+    "subheadline": "Gérez toute votre activité en un seul endroit — sans Excel, sans comptable. Devis, factures, TVA, suivi des paiements et gestion d'équipe.",
     "cta": "Commencer gratuitement",
     "ctaSecondary": "Se connecter",
+    "socialProof": "Rejoignez +3 200 freelancers, entrepreneurs et PME marocains",
     "stat1": "Sans carte bancaire",
     "stat2": "Conçu pour le Maroc",
     "stat3": "Pour envoyer un devis",
