@@ -15,49 +15,48 @@ export function Hero() {
 
       {/* ── Background ── */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="dark:hidden absolute inset-0 bg-gradient-to-b from-slate-50/80 via-white to-white" />
+        <div className="dark:hidden absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-white" />
         <div className="hidden dark:block absolute inset-0 bg-[#0a0a0f]" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-gradient-to-b from-indigo-500/10 dark:from-indigo-500/18 to-transparent blur-3xl" />
-        <div className="absolute top-24 right-0 w-[500px] h-[500px] rounded-full bg-teal-400/8 dark:bg-teal-400/12 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-indigo-400/6 dark:bg-indigo-400/10 blur-3xl" />
-        <div className="absolute inset-0 [background-image:radial-gradient(circle,_#94a3b828_1px,_transparent_1px)] dark:[background-image:radial-gradient(circle,_#ffffff0f_1px,_transparent_1px)] [background-size:28px_28px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-indigo-500/8 dark:bg-indigo-500/14 blur-3xl" />
+        <div className="absolute top-32 right-0 w-[400px] h-[400px] rounded-full bg-teal-400/6 dark:bg-teal-400/10 blur-3xl" />
+        <div className="absolute inset-0 [background-image:linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] dark:[background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:48px_48px]" />
       </div>
 
       {/* ── Copy block ── */}
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 text-center pt-16 sm:pt-20 pb-10">
+      <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 text-center pt-14 sm:pt-18 pb-12">
 
-        {/* Personas — styled inline text, not a pill badge */}
+        {/* Personas — styled inline text, no badge */}
         <div
-          className="flex items-center justify-center gap-2 flex-wrap mb-8"
+          className="flex items-center justify-center gap-2 flex-wrap mb-7"
           style={{ animation: 'fadeIn 0.5s ease-out both' }}
         >
-          <span className="text-xl leading-none">🇲🇦</span>
-          <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400 tracking-wide">{t('hero.p1')}</span>
-          <span className="text-slate-300 dark:text-white/15 select-none">·</span>
-          <span className="text-sm font-bold text-slate-700 dark:text-slate-200 tracking-wide">{t('hero.p2')}</span>
-          <span className="text-slate-300 dark:text-white/15 select-none">·</span>
-          <span className="text-sm font-bold text-teal-600 dark:text-teal-400 tracking-wide">{t('hero.p3')}</span>
+          <span className="text-lg leading-none select-none">🇲🇦</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-indigo-600 dark:text-indigo-400">{t('hero.p1')}</span>
+          <span className="text-slate-300 dark:text-white/12 select-none text-xs">·</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-slate-600 dark:text-slate-300">{t('hero.p2')}</span>
+          <span className="text-slate-300 dark:text-white/12 select-none text-xs">·</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-teal-600 dark:text-teal-400">{t('hero.p3')}</span>
         </div>
 
-        {/* 3-line headline */}
+        {/* Headline */}
         <h1
-          className="font-black leading-[0.88] tracking-tighter mb-8"
+          className="font-black leading-[0.88] tracking-tighter mb-7"
           style={{ animation: 'fadeIn 0.55s ease-out 0.08s both' }}
         >
-          <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-slate-900 dark:text-white">
+          <span className="block text-5xl sm:text-6xl lg:text-[5rem] xl:text-[5.5rem] text-slate-900 dark:text-white">
             {t('hero.line1')}
           </span>
-          <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-teal-500 bg-clip-text text-transparent">
+          <span className="block text-5xl sm:text-6xl lg:text-[5rem] xl:text-[5.5rem] bg-gradient-to-r from-indigo-600 via-indigo-500 to-teal-500 bg-clip-text text-transparent">
             {t('hero.line2')}
           </span>
-          <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-slate-900 dark:text-white">
+          <span className="block text-5xl sm:text-6xl lg:text-[5rem] xl:text-[5.5rem] text-slate-900 dark:text-white">
             {t('hero.line3')}
           </span>
         </h1>
 
         {/* Subtitle */}
         <p
-          className="text-base sm:text-lg text-slate-500 dark:text-slate-400 mb-10 max-w-xl mx-auto leading-relaxed"
+          className="text-base sm:text-lg text-slate-500 dark:text-slate-400 mb-10 max-w-lg mx-auto leading-relaxed"
           style={{ animation: 'fadeIn 0.55s ease-out 0.18s both' }}
         >
           {t('hero.subheadline')}
@@ -77,7 +76,7 @@ export function Hero() {
           ) : (
             <Link
               href="/register"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-primary-600 hover:from-indigo-700 hover:to-primary-700 text-white font-bold text-base shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group"
             >
               {t('hero.cta')}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -89,7 +88,7 @@ export function Hero() {
       {/* ── Workflow diagram ── */}
       <div
         className="w-full"
-        style={{ animation: 'fadeIn 0.7s ease-out 0.5s both' }}
+        style={{ animation: 'fadeIn 0.6s ease-out 0.45s both' }}
       >
         <WorkflowDiagram t={t} />
       </div>
@@ -97,61 +96,80 @@ export function Hero() {
   )
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Workflow diagram — Modern Treasury style
-   Left:  Clients · Devis · Catalogue  (inputs)
-   Center: Sayerli hub
-   Right: Bon de Livraison · Factures · Paiements  (outputs)
-────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   Workflow diagram
+   5-step linear flow: Client → Devis → BL → Facture → Paiement
+   Animated: flowing dashes + twin particles on each connector
+═══════════════════════════════════════════════════════════════ */
 function WorkflowDiagram({ t }: { t: (k: string) => string }) {
+  /* ViewBox geometry */
   const VW = 1400
-  const VH = 390
-  const cx  = 700          // center x
-  const cy  = 195          // center y
-  const lhx = 490          // left hub x (vertical bar)
-  const rhx = 910          // right hub x
-  const lnx = 225          // left node center x
-  const rnx = 1175         // right node center x
-  const NW  = 230          // node width
-  const NH  = 40           // node height
+  const VH = 260
+  const ny  = 112   /* node center Y */
+  const NW  = 152   /* node width   */
+  const NH  = 50    /* node height  */
+  const NR  = NH / 2 /* pill radius */
 
-  const leftNodes = [
-    { key: 'wfClients',   color: '#6366f1', y: 100 },
-    { key: 'wfDevis',     color: '#14b8a6', y: 195 },
-    { key: 'wfCatalogue', color: '#f59e0b', y: 290 },
+  /* 5 steps */
+  const steps: { key: string; color: string; nx: number }[] = [
+    { key: 'wfClients',   color: '#6366f1', nx: 152  },
+    { key: 'wfDevis',     color: '#8b5cf6', nx: 416  },
+    { key: 'wfBl',        color: '#f59e0b', nx: 700  },  /* center = 1400/2 */
+    { key: 'wfFactures',  color: '#0ea5e9', nx: 984  },
+    { key: 'wfPaiements', color: '#10b981', nx: 1248 },
   ]
-  const rightNodes = [
-    { key: 'wfBl',        color: '#14b8a6', y: 100 },
-    { key: 'wfFactures',  color: '#6366f1', y: 195 },
-    { key: 'wfPaiements', color: '#10b981', y: 290 },
-  ]
+
+  /* Connector segments (right edge of node i → left edge of node i+1) */
+  const connectors = steps.slice(0, -1).map((s, i) => ({
+    x1: s.nx    + NW / 2,
+    x2: steps[i + 1].nx - NW / 2,
+    color: s.color,
+    nextColor: steps[i + 1].color,
+  }))
 
   return (
     <>
       <style>{`
-        @keyframes wfLine {
-          from { stroke-dashoffset: 500; }
-          to   { stroke-dashoffset: 0; }
+        @keyframes heroFlow {
+          from { stroke-dashoffset: 0; }
+          to   { stroke-dashoffset: -24; }
         }
-        @keyframes wfAppear {
+        @keyframes heroFade {
           from { opacity: 0; }
           to   { opacity: 1; }
         }
+        @keyframes heroPulse {
+          0%, 100% { r: 4; opacity: 0.9; }
+          50%      { r: 5.5; opacity: 1; }
+        }
       `}</style>
 
-      {/* ── Mobile: 2-col feature chip grid ── */}
-      <div className="md:hidden px-4 pb-14">
-        <div className="grid grid-cols-2 gap-3">
-          {[...leftNodes, ...rightNodes].map(({ key, color }) => (
+      {/* ── Mobile: vertical step list ── */}
+      <div className="md:hidden px-6 pb-14 flex flex-col items-center gap-0">
+        {steps.map((step, i) => (
+          <React.Fragment key={step.key}>
             <div
-              key={key}
-              className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/8 text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm dark:shadow-none"
+              className="flex items-center gap-3 w-full max-w-xs px-5 py-3.5 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/8 shadow-sm dark:shadow-none"
             >
-              <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
-              {t(`hero.${key}`)}
+              <div
+                className="w-3 h-3 rounded-full flex-shrink-0"
+                style={{ background: step.color, boxShadow: `0 0 8px ${step.color}60` }}
+              />
+              <span className="text-sm font-bold text-slate-800 dark:text-white">
+                {t(`hero.${step.key}`)}
+              </span>
             </div>
-          ))}
-        </div>
+            {i < steps.length - 1 && (
+              <div
+                className="w-px h-7 my-0.5 rounded-full"
+                style={{
+                  background: `linear-gradient(to bottom, ${step.color}, ${steps[i + 1].color})`,
+                  opacity: 0.5,
+                }}
+              />
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
       {/* ── Desktop: animated SVG ── */}
@@ -163,202 +181,220 @@ function WorkflowDiagram({ t }: { t: (k: string) => string }) {
         aria-hidden="true"
       >
         <defs>
-          {/* Grid pattern */}
-          <pattern id="wfGrid" width="48" height="48" patternUnits="userSpaceOnUse">
+          {/* Subtle line grid */}
+          <pattern id="hero-grid" width="48" height="48" patternUnits="userSpaceOnUse">
             <path
-              d="M 48 0 L 0 0 0 48"
-              fill="none"
-              strokeWidth="0.5"
-              stroke="currentColor"
-              className="text-slate-200 dark:text-white/[0.04]"
+              d="M 48 0 L 0 0 0 48" fill="none"
+              stroke="currentColor" strokeWidth="0.5"
+              className="text-slate-300 dark:text-white/[0.04]"
             />
           </pattern>
-          {/* Center gradient */}
-          <linearGradient id="cGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#312e81" />
-            <stop offset="100%" stopColor="#0f172a" />
-          </linearGradient>
-          {/* Glow filter for center */}
-          <filter id="cGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="10" result="b" />
+
+          {/* Glow filter for particles + nodes */}
+          <filter id="hero-glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
             <feMerge>
-              <feMergeNode in="b" />
+              <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <filter id="hero-glow-sm" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          {/* Invisible connector paths for animateMotion */}
+          {connectors.map((c, i) => (
+            <path key={i} id={`hcp-${i}`} d={`M ${c.x1},${ny} L ${c.x2},${ny}`} />
+          ))}
+
+          {/* Per-step gradient for node borders */}
+          {steps.map((s, i) => (
+            <radialGradient key={i} id={`ng-${i}`} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor={s.color} stopOpacity="0.25" />
+              <stop offset="100%" stopColor={s.color} stopOpacity="0.06" />
+            </radialGradient>
+          ))}
         </defs>
 
         {/* Grid background */}
-        <rect width={VW} height={VH} fill="url(#wfGrid)" />
+        <rect width={VW} height={VH} fill="url(#hero-grid)" />
 
-        {/* ── Trunk lines: center box → hubs ── */}
-        <line
-          x1={cx - 50} y1={cy} x2={lhx} y2={cy}
-          strokeWidth={1.5} strokeDasharray="300"
-          stroke="currentColor"
-          className="text-slate-300 dark:text-white/20"
-          fill="none"
-          style={{ animation: 'wfLine 0.5s ease 0.65s both' }}
-        />
-        <line
-          x1={cx + 50} y1={cy} x2={rhx} y2={cy}
-          strokeWidth={1.5} strokeDasharray="300"
-          stroke="currentColor"
-          className="text-slate-300 dark:text-white/20"
-          fill="none"
-          style={{ animation: 'wfLine 0.5s ease 0.65s both' }}
-        />
+        {/* ═══ CONNECTORS ═══ */}
+        {connectors.map((c, i) => {
+          const lineDelay = `${0.9 + i * 0.15}s`
+          const particleDelay1 = `${0.9 + i * 0.15}s`
+          const particleDelay2 = `${0.9 + i * 0.15 + 0.7}s`
 
-        {/* ── Vertical bus bars ── */}
-        <line
-          x1={lhx} y1={leftNodes[0].y} x2={lhx} y2={leftNodes[2].y}
-          strokeWidth={1.5} strokeDasharray="240"
-          stroke="currentColor"
-          className="text-slate-300 dark:text-white/20"
-          fill="none"
-          style={{ animation: 'wfLine 0.4s ease 1.1s both' }}
-        />
-        <line
-          x1={rhx} y1={rightNodes[0].y} x2={rhx} y2={rightNodes[2].y}
-          strokeWidth={1.5} strokeDasharray="240"
-          stroke="currentColor"
-          className="text-slate-300 dark:text-white/20"
-          fill="none"
-          style={{ animation: 'wfLine 0.4s ease 1.1s both' }}
-        />
-
-        {/* ── Left branch connectors + nodes ── */}
-        {leftNodes.map(({ key, color, y }, i) => (
-          <g key={key}>
-            {/* Connector line */}
-            <line
-              x1={lhx} y1={y} x2={lnx + NW / 2} y2={y}
-              strokeWidth={1.5} strokeDasharray="300"
-              stroke={color} strokeOpacity={0.5}
-              fill="none"
-              style={{ animation: `wfLine 0.35s ease ${1.4 + i * 0.1}s both` }}
-            />
-            {/* Junction dot */}
-            <circle
-              cx={lhx} cy={y} r={4}
-              fill={color} fillOpacity={0.75}
-              style={{ animation: `wfAppear 0.3s ease ${1.38 + i * 0.1}s both` }}
-            />
-            {/* Node */}
-            <g style={{ animation: `wfAppear 0.4s ease ${1.55 + i * 0.1}s both` }}>
-              <rect
-                x={lnx - NW / 2} y={y - NH / 2}
-                width={NW} height={NH} rx={10}
-                stroke="currentColor" strokeWidth={1}
-                fill="white"
-                className="text-slate-200 dark:text-white/10 dark:fill-slate-900"
+          return (
+            <g key={i}>
+              {/* Background track (always visible after fade) */}
+              <line
+                x1={c.x1} y1={ny} x2={c.x2} y2={ny}
+                strokeWidth={1.5} stroke="currentColor" strokeOpacity={0.12} fill="none"
+                className="text-slate-900 dark:text-white"
+                style={{ animation: `heroFade 0.5s ease ${lineDelay} both` }}
               />
-              {/* Left accent bar */}
-              <rect
-                x={lnx - NW / 2} y={y - NH / 2}
-                width={4} height={NH} rx={10}
-                fill={color}
+
+              {/* Flowing animated dash */}
+              <line
+                x1={c.x1} y1={ny} x2={c.x2} y2={ny}
+                stroke={c.color}
+                strokeWidth={2}
+                fill="none"
+                strokeDasharray="5 19"
+                strokeOpacity={0.55}
+                style={{
+                  animation: [
+                    `heroFade 0.5s ease ${lineDelay} both`,
+                    `heroFlow 1.4s linear ${lineDelay} infinite`,
+                  ].join(', '),
+                }}
               />
+
+              {/* Primary glowing particle */}
+              <circle r={4} fill={c.color} filter="url(#hero-glow-sm)">
+                <animateMotion
+                  dur="1.4s"
+                  repeatCount="indefinite"
+                  begin={particleDelay1}
+                  calcMode="linear"
+                >
+                  <mpath href={`#hcp-${i}`} />
+                </animateMotion>
+              </circle>
+
+              {/* Secondary particle (offset by half period) */}
+              <circle r={2.5} fill={c.color} fillOpacity={0.55} filter="url(#hero-glow-sm)">
+                <animateMotion
+                  dur="1.4s"
+                  repeatCount="indefinite"
+                  begin={particleDelay2}
+                  calcMode="linear"
+                >
+                  <mpath href={`#hcp-${i}`} />
+                </animateMotion>
+              </circle>
+            </g>
+          )
+        })}
+
+        {/* ═══ NODES ═══ */}
+        {steps.map((step, i) => {
+          const nodeDelay = `${0.45 + i * 0.13}s`
+          const label = t(`hero.${step.key}`)
+
+          return (
+            <g
+              key={step.key}
+              style={{ animation: `heroFade 0.5s ease ${nodeDelay} both` }}
+            >
+              {/* Ambient glow behind node */}
+              <rect
+                x={step.nx - NW / 2 - 8} y={ny - NH / 2 - 8}
+                width={NW + 16} height={NH + 16}
+                rx={NR + 8}
+                fill={step.color} fillOpacity={0.1}
+                filter="url(#hero-glow)"
+              />
+
+              {/* Node card background */}
+              <rect
+                x={step.nx - NW / 2} y={ny - NH / 2}
+                width={NW} height={NH}
+                rx={NR}
+                className="fill-white dark:fill-[#0e1118]"
+                stroke={step.color}
+                strokeWidth={1.5}
+                strokeOpacity={0.45}
+              />
+
+              {/* Colored filled left section */}
+              <rect
+                x={step.nx - NW / 2} y={ny - NH / 2}
+                width={NH} height={NH}
+                rx={NR}
+                fill={step.color}
+                fillOpacity={0.12}
+              />
+
+              {/* Colored dot inside the left zone */}
+              <circle
+                cx={step.nx - NW / 2 + NH / 2}
+                cy={ny}
+                r={7}
+                fill={step.color}
+                filter="url(#hero-glow-sm)"
+              />
+
+              {/* Step label */}
               <text
-                x={lnx + 8} y={y}
-                textAnchor="middle"
+                x={step.nx - NW / 2 + NH + 8}
+                y={ny}
+                textAnchor="start"
                 dominantBaseline="central"
-                fontSize={13} fontWeight={600}
-                fill="currentColor"
-                className="text-slate-700 dark:text-slate-200"
+                fontSize={12.5}
+                fontWeight={700}
+                className="fill-slate-800 dark:fill-white"
                 style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
               >
-                {t(`hero.${key}`)}
+                {label}
               </text>
             </g>
-          </g>
-        ))}
+          )
+        })}
 
-        {/* ── Right branch connectors + nodes ── */}
-        {rightNodes.map(({ key, color, y }, i) => (
-          <g key={key}>
-            <line
-              x1={rhx} y1={y} x2={rnx - NW / 2} y2={y}
-              strokeWidth={1.5} strokeDasharray="300"
-              stroke={color} strokeOpacity={0.5}
-              fill="none"
-              style={{ animation: `wfLine 0.35s ease ${1.4 + i * 0.1}s both` }}
+        {/* ═══ STEP LABELS BELOW ═══ */}
+        {steps.map((step, i) => {
+          const subDelay = `${0.6 + i * 0.13}s`
+          return (
+            <text
+              key={`sub-${step.key}`}
+              x={step.nx} y={ny + NH / 2 + 22}
+              textAnchor="middle"
+              fontSize={10}
+              fontWeight={600}
+              fill={step.color}
+              fillOpacity={0.7}
+              style={{
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+                letterSpacing: '0.04em',
+                animation: `heroFade 0.5s ease ${subDelay} both`,
+              }}
+            >
+              0{i + 1}
+            </text>
+          )
+        })}
+
+        {/* ═══ CONNECTOR ARROW TIPS ═══ */}
+        {connectors.map((c, i) => {
+          const arrowX = c.x2
+          const arrowDelay = `${1.1 + i * 0.15}s`
+          return (
+            <polygon
+              key={`arrow-${i}`}
+              points={`${arrowX},${ny} ${arrowX - 7},${ny - 4} ${arrowX - 7},${ny + 4}`}
+              fill={c.nextColor}
+              fillOpacity={0.5}
+              style={{ animation: `heroFade 0.4s ease ${arrowDelay} both` }}
             />
-            <circle
-              cx={rhx} cy={y} r={4}
-              fill={color} fillOpacity={0.75}
-              style={{ animation: `wfAppear 0.3s ease ${1.38 + i * 0.1}s both` }}
-            />
-            <g style={{ animation: `wfAppear 0.4s ease ${1.55 + i * 0.1}s both` }}>
-              <rect
-                x={rnx - NW / 2} y={y - NH / 2}
-                width={NW} height={NH} rx={10}
-                stroke="currentColor" strokeWidth={1}
-                fill="white"
-                className="text-slate-200 dark:text-white/10 dark:fill-slate-900"
-              />
-              {/* Right accent bar */}
-              <rect
-                x={rnx + NW / 2 - 4} y={y - NH / 2}
-                width={4} height={NH} rx={10}
-                fill={color}
-              />
-              <text
-                x={rnx - 8} y={y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={13} fontWeight={600}
-                fill="currentColor"
-                className="text-slate-700 dark:text-slate-200"
-                style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-              >
-                {t(`hero.${key}`)}
-              </text>
-            </g>
-          </g>
-        ))}
+          )
+        })}
 
-        {/* ── Center Sayerli hub ── */}
-        <g style={{ animation: 'wfAppear 0.6s ease 0.3s both' }}>
-          {/* Glow halo */}
-          <rect
-            x={cx - 56} y={cy - 46}
-            width={112} height={92} rx={24}
-            fill="rgba(99,102,241,0.22)"
-            filter="url(#cGlow)"
-          />
-          {/* Dark box */}
-          <rect
-            x={cx - 48} y={cy - 38}
-            width={96} height={76} rx={18}
-            fill="url(#cGrad)"
-          />
-          {/* S letter */}
-          <text
-            x={cx} y={cy - 7}
-            textAnchor="middle" dominantBaseline="central"
-            fontSize={28} fontWeight={900} fill="white"
-            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-          >S</text>
-          {/* SAYERLI subtext */}
-          <text
-            x={cx} y={cy + 20}
-            textAnchor="middle" dominantBaseline="central"
-            fontSize={8} fontWeight={500}
-            fill="rgba(255,255,255,0.4)"
-            style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '2.5px' }}
-          >SAYERLI</text>
-        </g>
-
-        {/* WORKFLOW label bottom center */}
+        {/* ═══ BOTTOM LABEL ═══ */}
         <text
-          x={cx} y={VH - 16}
+          x={VW / 2} y={VH - 18}
           textAnchor="middle"
           fontSize={9} fontWeight={700}
-          fill="currentColor"
-          className="text-slate-300 dark:text-white/15"
-          style={{ fontFamily: 'system-ui, sans-serif', letterSpacing: '4px' }}
-        >WORKFLOW</text>
+          className="fill-slate-300 dark:fill-white/12"
+          style={{ fontFamily: 'system-ui, sans-serif', letterSpacing: '5px' }}
+        >
+          SAYERLI WORKFLOW
+        </text>
       </svg>
     </>
   )
