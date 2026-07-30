@@ -513,15 +513,82 @@ function WorkflowDiagram({
     @keyframes wfScrollBounce{ 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(7px)} }
   `
 
-  /* ── Mobile layout: natural height + horizontal scroll ── */
+  /* ── Mobile layout: 2-column feature card grid ── */
   if (isMobile) {
+    const mobileCards = [
+      { emoji:'💸', label:t('hero.wfDepenses'), color:'#ef4444', sub:'1 200 MAD',       span:1 },
+      { emoji:'👤', label:'Client',              color:'#6366f1', sub:'Amal Tech SARL',  span:1 },
+      { emoji:'📄', label:t('hero.wfDevis'),     color:'#8b5cf6', sub:'DEV-2026-0048',   span:1 },
+      { emoji:'📋', label:t('hero.wfFactures'),  color:'#10b981', sub:'FAC-2026-0048',   span:1 },
+      { emoji:'📦', label:t('hero.wfBl'),        color:'#f59e0b', sub:'BL-2026-0048',    span:1 },
+      { emoji:'💳', label:t('hero.wfPaiements'), color:'#6b7280', sub:'15 600 MAD',      span:1 },
+      { emoji:'📊', label:t('hero.wfTva'),       color:'#10b981', sub:'Net: 1 300 MAD',  span:1 },
+      { emoji:'📦', label:t('hero.wfCatalogue'), color:'#8b5cf6', sub:'87 articles',     span:1 },
+      { emoji:'👥', label:t('hero.wfTeam'),      color:'#6366f1', sub:'7 membres',       span:1 },
+      { emoji:'🔔', label:t('hero.wfRelance'),   color:'#f59e0b', sub:'Auto',            span:1 },
+      { emoji:'📤', label:t('hero.wfExport'),    color:'#0ea5e9', sub:'Excel · PDF · CSV', span:2 },
+    ] as { emoji:string; label:string; color:string; sub:string; span:1|2 }[]
+
+    /* Main flow strip — top of diagram */
+    const flowSteps = [
+      { emoji:'📄', color:'#8b5cf6' },
+      { emoji:'📋', color:'#10b981' },
+      { emoji:'📦', color:'#f59e0b' },
+      { emoji:'💳', color:'#6b7280' },
+      { emoji:'📊', color:'#10b981' },
+    ]
+
     return (
       <>
         <style>{keyframes}</style>
-        <div style={{ width:'100%', background:bg, position:'relative', minHeight:'60vh', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+        <div style={{ width:'100%', background:bg, position:'relative', padding:'28px 16px 36px' }}>
           {sparkles}
-          <div style={{ overflowX:'auto', WebkitOverflowScrolling:'touch' }}>
-            {diagramContent}
+
+          {/* Tagline */}
+          <p style={{ textAlign:'center', margin:'0 0 20px', fontSize:11, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:taglineClr }}>
+            {t('hero.wfTagline')}
+          </p>
+
+          {/* Flow strip */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, marginBottom:24 }}>
+            {flowSteps.map((s, i) => (
+              <React.Fragment key={i}>
+                <div style={{ width:36, height:36, borderRadius:10, background:`${s.color}22`, border:`1px solid ${s.color}44`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:17 }}>
+                  {s.emoji}
+                </div>
+                {i < flowSteps.length-1 && (
+                  <div style={{ width:18, height:2, borderRadius:1, background:`${s.color}55`, position:'relative' }}>
+                    <div style={{ position:'absolute', right:-3, top:-3, width:0, height:0, borderLeft:`5px solid ${s.color}88`, borderTop:'4px solid transparent', borderBottom:'4px solid transparent' }} />
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* 2-column grid */}
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+            {mobileCards.map((card, i) => (
+              <div
+                key={i}
+                style={{
+                  gridColumn: card.span === 2 ? 'span 2' : undefined,
+                  background: isDark ? `${card.color}18` : `${card.color}0e`,
+                  border: `1px solid ${card.color}38`,
+                  borderRadius:14,
+                  padding:'13px 14px',
+                  animation:`wfCardIn 0.4s ease ${i*0.04}s both`,
+                  backdropFilter:'blur(8px)',
+                }}
+              >
+                <div style={{ display:'flex', alignItems:'center', gap:9, marginBottom:4 }}>
+                  <div style={{ width:30, height:30, borderRadius:8, background:`${card.color}28`, border:`1px solid ${card.color}40`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, flexShrink:0 }}>
+                    {card.emoji}
+                  </div>
+                  <span style={{ fontSize:12, fontWeight:700, color:textMain, lineHeight:1.2 }}>{card.label}</span>
+                </div>
+                <div style={{ fontSize:10, color:textSub, paddingLeft:39 }}>{card.sub}</div>
+              </div>
+            ))}
           </div>
         </div>
       </>
