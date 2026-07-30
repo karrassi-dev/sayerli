@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
 import { ArrowRight, LayoutDashboard } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
@@ -121,12 +122,12 @@ export function Hero() {
             </div>
           </div>
 
-          {/* ── Right — always-dark product preview ── */}
+          {/* ── Right — ecosystem diagram ── */}
           <div
             className="hidden lg:block"
             style={{ animation: 'fadeIn 0.7s ease-out 0.2s both, float 6s ease-in-out 1s infinite' }}
           >
-            <ProductPreview />
+            <EcosystemPreview />
           </div>
 
           {/* ── Mobile stats strip ── */}
@@ -152,177 +153,207 @@ export function Hero() {
   )
 }
 
-/* ── Always-dark dashboard preview ──────────────────────────────────── */
-function ProductPreview() {
+/* ── Ecosystem orchestration diagram ───────────────────────────────── */
+function EcosystemPreview() {
+  const card: React.CSSProperties = {
+    position: 'absolute',
+    zIndex: 5,
+    background: 'rgba(10,12,22,0.97)',
+    border: '1px solid rgba(255,255,255,0.09)',
+    borderRadius: 14,
+    padding: 14,
+    backdropFilter: 'blur(14px)',
+    boxShadow: '0 12px 40px rgba(0,0,0,0.55)',
+  }
+
   return (
-    <div className="relative select-none">
-      {/* Outer glow */}
-      <div className="absolute -inset-6 bg-gradient-to-br from-indigo-500/15 via-transparent to-teal-500/10 rounded-3xl blur-2xl pointer-events-none" />
+    <div className="relative select-none" style={{ width: 520, height: 565, margin: '0 auto' }}>
 
-      {/* Browser frame — intentionally always dark */}
-      <div
-        className="relative rounded-2xl overflow-hidden"
-        style={{
-          background: '#0f1117',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04) inset',
-        }}
-      >
-        {/* Chrome bar */}
-        <div
-          className="flex items-center gap-2 px-4 py-3"
-          style={{ background: '#181a22', borderBottom: '1px solid rgba(255,255,255,0.07)' }}
-        >
-          <div className="flex gap-1.5">
-            <span className="w-3 h-3 rounded-full" style={{ background: '#ff5f57' }} />
-            <span className="w-3 h-3 rounded-full" style={{ background: '#ffbd2e' }} />
-            <span className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
-          </div>
-          <div className="flex-1 mx-3">
-            <div className="rounded-md px-3 py-1 text-center" style={{ background: 'rgba(255,255,255,0.05)' }}>
-              <span className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>sayerli.com/dashboard</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Dashboard body */}
-        <div className="p-5">
-
-          {/* KPI cards */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {[
-              { label: 'CA ce mois', value: '84 200', unit: 'MAD', accent: '#10b981', change: '+18%' },
-              { label: 'Factures',   value: '12',     unit: 'envoyées', accent: '#6366f1', change: '+3' },
-              { label: 'Clients',    value: '47',     unit: 'actifs',  accent: '#f59e0b', change: '+5' },
-            ].map(({ label, value, unit, accent, change }) => (
-              <div
-                key={label}
-                className="rounded-xl p-3"
-                style={{ background: '#181a22', border: '1px solid rgba(255,255,255,0.07)' }}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</span>
-                  <span
-                    className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
-                    style={{ background: `${accent}18`, color: accent }}
-                  >{change}</span>
-                </div>
-                <div className="text-lg font-black" style={{ color: 'rgba(255,255,255,0.88)' }}>{value}</div>
-                <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{unit}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Bar chart */}
-          <div
-            className="rounded-xl p-4 mb-4"
-            style={{ background: '#181a22', border: '1px solid rgba(255,255,255,0.07)' }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Chiffre d'affaires 2026
-              </span>
-              <span
-                className="text-[9px] px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(16,185,129,0.15)', color: '#10b981' }}
-              >+34% vs 2025</span>
-            </div>
-            <div className="flex items-end gap-1 h-14">
-              {[30, 48, 38, 65, 50, 80, 62, 90, 72, 85, 68, 95].map((h, i) => (
-                <div
-                  key={i}
-                  className="flex-1 rounded-t-sm"
-                  style={{
-                    height: `${h}%`,
-                    background: i === 11
-                      ? 'linear-gradient(to top, #4f46e5, #818cf8)'
-                      : 'rgba(99,102,241,0.28)',
-                  }}
-                />
-              ))}
-            </div>
-            <div className="flex mt-1.5">
-              {['J','F','M','A','M','J','J','A','S','O','N','D'].map(m => (
-                <span key={m} className="flex-1 text-center text-[8px]" style={{ color: 'rgba(255,255,255,0.18)' }}>{m}</span>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent items */}
-          <div className="space-y-1">
-            {[
-              { ref: 'FAC-2026-0031', name: 'Atlas Marketing',  amount: '8 400 MAD',  status: 'Payée',     color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
-              { ref: 'DEV-2026-0052', name: 'Groupe Tazi SARL', amount: '24 000 MAD', status: 'Accepté',   color: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
-              { ref: 'FAC-2026-0030', name: 'Rachidi Boutique', amount: '12 000 MAD', status: 'En retard', color: '#f87171', bg: 'rgba(248,113,113,0.12)' },
-            ].map(({ ref, name, amount, status, color, bg }) => (
-              <div
-                key={ref}
-                className="flex items-center justify-between p-2.5 rounded-lg"
-                style={{ background: 'rgba(255,255,255,0.025)' }}
-              >
-                <div>
-                  <div className="text-[9px] font-mono mb-0.5" style={{ color: 'rgba(255,255,255,0.28)' }}>{ref}</div>
-                  <div className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.78)' }}>{name}</div>
-                  <div className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{amount}</div>
-                </div>
-                <span
-                  className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                  style={{ color, background: bg }}
-                >{status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Dark background + central orb */}
+      <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ background: '#06090f' }}>
+        <div className="absolute" style={{
+          top: '38%', left: '50%', transform: 'translate(-50%,-50%)',
+          width: 460, height: 460,
+          background: 'radial-gradient(ellipse, rgba(37,99,235,0.32) 0%, rgba(6,182,212,0.18) 38%, transparent 65%)',
+          filter: 'blur(52px)',
+        }} />
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }} />
       </div>
 
-      {/* Floating chip — payment */}
-      <div
-        className="absolute -top-4 -right-5 rounded-xl p-3"
-        style={{
-          background: 'rgba(13,15,20,0.92)',
-          border: '1px solid rgba(255,255,255,0.09)',
-          backdropFilter: 'blur(16px)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-          minWidth: 178,
-        }}
-      >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(16,185,129,0.15)' }}
-          >
-            <span className="text-xs font-bold" style={{ color: '#10b981' }}>✓</span>
+      {/* SVG connection lines */}
+      <svg className="absolute inset-0 pointer-events-none" width="520" height="565" style={{ zIndex: 3 }}>
+        <defs>
+          <marker id="ai" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(99,102,241,0.6)" />
+          </marker>
+          <marker id="at" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(20,184,166,0.6)" />
+          </marker>
+        </defs>
+        {/* Card1 → Card2 */}
+        <path d="M252,138 C270,138 280,118 297,118" stroke="rgba(99,102,241,0.45)" strokeWidth="1.5" strokeDasharray="5,3" fill="none" markerEnd="url(#ai)" />
+        {/* Card1 → Card3 */}
+        <line x1="148" y1="228" x2="160" y2="288" stroke="rgba(99,102,241,0.45)" strokeWidth="1.5" markerEnd="url(#ai)" />
+        {/* Card2 → Card4 */}
+        <line x1="388" y1="208" x2="386" y2="288" stroke="rgba(20,184,166,0.45)" strokeWidth="1.5" markerEnd="url(#at)" />
+        {/* Card3 → Card5 */}
+        <line x1="162" y1="398" x2="160" y2="432" stroke="rgba(99,102,241,0.4)" strokeWidth="1.5" markerEnd="url(#ai)" />
+        {/* Card4 → Card6 */}
+        <line x1="384" y1="396" x2="382" y2="430" stroke="rgba(20,184,166,0.4)" strokeWidth="1.5" markerEnd="url(#at)" />
+        {/* Card5 → Card6 */}
+        <line x1="250" y1="470" x2="278" y2="468" stroke="rgba(99,102,241,0.38)" strokeWidth="1.5" markerEnd="url(#ai)" />
+        {/* Endpoint dots */}
+        <circle cx="148" cy="228" r="3" fill="rgba(99,102,241,0.65)" />
+        <circle cx="388" cy="208" r="3" fill="rgba(20,184,166,0.65)" />
+        <circle cx="162" cy="398" r="3" fill="rgba(99,102,241,0.5)" />
+        <circle cx="384" cy="396" r="3" fill="rgba(20,184,166,0.5)" />
+      </svg>
+
+      {/* ── Multi-devises badge (top center) ── */}
+      <div className="absolute" style={{ top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 10, whiteSpace: 'nowrap' }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          padding: '5px 14px', borderRadius: 20,
+          background: 'rgba(20,184,166,0.15)', border: '1px solid rgba(20,184,166,0.38)',
+          color: '#2dd4bf', fontSize: 11, fontWeight: 600,
+        }}>✓ Multi-devises</span>
+      </div>
+
+      {/* ── Floating currency bubbles ── */}
+      {/* MAD pill left of badge */}
+      <div className="absolute" style={{ top: 22, left: 148, zIndex: 8 }}>
+        <span style={{ padding: '4px 10px', borderRadius: 14, background: 'rgba(99,102,241,0.13)', border: '1px solid rgba(99,102,241,0.3)', color: 'rgba(255,255,255,0.55)', fontSize: 11, fontWeight: 600 }}>MAD</span>
+      </div>
+      {/* € right of badge */}
+      <div className="absolute" style={{ top: 15, left: 355, zIndex: 8 }}>
+        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(99,102,241,0.13)', border: '1px solid rgba(99,102,241,0.28)', color: 'rgba(255,255,255,0.5)', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>€</div>
+      </div>
+      {/* $ far right */}
+      <div className="absolute" style={{ top: 9, left: 438, zIndex: 8 }}>
+        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(20,184,166,0.12)', border: '1px solid rgba(20,184,166,0.28)', color: 'rgba(255,255,255,0.5)', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
+      </div>
+      {/* € right edge */}
+      <div className="absolute" style={{ top: 70, left: 490, zIndex: 8 }}>
+        <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.22)', color: 'rgba(255,255,255,0.35)', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>€</div>
+      </div>
+      {/* MAD left side */}
+      <div className="absolute" style={{ top: 158, left: 14, zIndex: 8 }}>
+        <span style={{ padding: '3px 8px', borderRadius: 12, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.22)', color: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: 600 }}>MAD</span>
+      </div>
+      {/* € bottom left */}
+      <div className="absolute" style={{ top: 205, left: 10, zIndex: 8 }}>
+        <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.18)', color: 'rgba(255,255,255,0.28)', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>€</div>
+      </div>
+
+      {/* ── CARD 1: Devis & Factures ── */}
+      <div style={{ ...card, top: 50, left: 42, width: 210 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Devis & Factures</div>
+        {[
+          ['Design logo',   '12 500 MAD'],
+          ['Site web',      '12 500 MAD'],
+          ['Consultation',  '1 500 MAD'],
+        ].map(([label, amount]) => (
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
+            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)' }}>{label}</span>
+            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.48)' }}>{amount}</span>
           </div>
+        ))}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 8, paddingTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 14, fontWeight: 800, color: 'rgba(255,255,255,0.92)' }}>12 500 MAD</span>
+          <span style={{ fontSize: 9, padding: '3px 8px', borderRadius: 8, background: 'rgba(16,185,129,0.18)', color: '#10b981', fontWeight: 600 }}>Envoyée</span>
+        </div>
+        <div style={{ marginTop: 10, fontSize: 9, color: 'rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', gap: 4 }}>↓ Télécharger PDF</div>
+      </div>
+
+      {/* ── CARD 2: TVA & Dépenses ── */}
+      <div style={{ ...card, top: 50, left: 295, width: 186 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>TVA & Dépenses</div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 50, marginBottom: 10 }}>
+          {[38,55,42,70,52,75,48,65].map((h, i) => (
+            <div key={i} style={{ flex: 1, borderRadius: '3px 3px 0 0', height: `${h}%`, background: i % 2 === 0 ? 'rgba(99,102,241,0.55)' : 'rgba(20,184,166,0.5)' }} />
+          ))}
+        </div>
+        <div style={{ fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.9)', marginBottom: 6 }}>8 300 MAD</div>
+        <span style={{ fontSize: 9, padding: '2px 8px', borderRadius: 8, background: 'rgba(251,191,36,0.15)', color: '#fbbf24', fontWeight: 600 }}>Statut</span>
+      </div>
+
+      {/* ORCHESTRATION label */}
+      <div className="absolute" style={{ top: 270, left: 20, zIndex: 8 }}>
+        <span style={{ padding: '6px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.48)', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', display: 'inline-block' }}>
+          ORCHESTRATION
+        </span>
+      </div>
+
+      {/* ── CARD 3: Comptable & Team ── */}
+      <div style={{ ...card, top: 288, left: 75, width: 186 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Comptable & Team</div>
+        {[
+          { name: 'Yassine', role: 'Comptable', color: '#6366f1' },
+          { name: 'Sara',    role: 'Commercial', color: '#10b981' },
+        ].map(({ name, role, color }) => (
+          <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: color + '25', border: `1.5px solid ${color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color, flexShrink: 0 }}>
+              {name[0]}
+            </div>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
+              {name} <span style={{ color: 'rgba(255,255,255,0.32)', fontSize: 10 }}>({role})</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── CARD 4: Bon de Livraison ── */}
+      <div style={{ ...card, top: 288, left: 288, width: 186 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Bon de Livraison</div>
+        {[
+          { w: '68%', a: 3, b: 0 },
+          { w: '55%', a: 3, b: 0 },
+          { w: '42%', a: 0, b: 0 },
+        ].map(({ w, a, b }, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
+            <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.1)', width: w }} />
+            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', minWidth: 14 }}>{a}</span>
+            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', minWidth: 14 }}>{b}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── CARD 5: Clients ── */}
+      <div style={{ ...card, top: 430, left: 75, width: 172 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Clients</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: '50%', flexShrink: 0, background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.35)' }} />
           <div>
-            <div className="text-xs font-bold" style={{ color: 'rgba(255,255,255,0.9)' }}>+8 400 MAD</div>
-            <div className="text-[10px]" style={{ color: 'rgba(255,255,255,0.38)' }}>Paiement reçu</div>
+            <div style={{ height: 7, borderRadius: 4, background: 'rgba(255,255,255,0.18)', width: 80, marginBottom: 5 }} />
+            <div style={{ height: 5, borderRadius: 3, background: 'rgba(255,255,255,0.08)', width: 55 }} />
           </div>
         </div>
       </div>
 
-      {/* Floating chip — devis accepted */}
-      <div
-        className="absolute -bottom-5 -left-5 rounded-xl p-3"
-        style={{
-          background: 'rgba(13,15,20,0.92)',
-          border: '1px solid rgba(255,255,255,0.09)',
-          backdropFilter: 'blur(16px)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-          minWidth: 188,
-        }}
-      >
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.82)' }}>Devis accepté</span>
-          <span
-            className="text-[9px] px-1.5 py-0.5 rounded-full"
-            style={{ background: 'rgba(99,102,241,0.2)', color: '#818cf8' }}
-          >DEV-0052</span>
+      {/* ── CARD 6: Paiement ── */}
+      <div style={{ ...card, top: 428, left: 278, width: 206 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.92)' }}>Paiement</span>
+          <span style={{ fontSize: 9, padding: '2px 8px', borderRadius: 8, background: 'rgba(16,185,129,0.18)', color: '#10b981', fontWeight: 600 }}>Reçu</span>
         </div>
-        <div className="text-[10px] mb-2" style={{ color: 'rgba(255,255,255,0.38)' }}>Groupe Tazi · 24 000 MAD</div>
-        <div className="rounded-full h-1 overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
-          <div className="h-1 rounded-full w-4/5" style={{ background: 'linear-gradient(to right, #6366f1, #14b8a6)' }} />
+        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', marginBottom: 6 }}>Status</div>
+        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }}>
+          <div style={{ height: '100%', borderRadius: 2, width: '78%', background: 'linear-gradient(to right, #6366f1, #14b8a6)' }} />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 8, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.22)' }}>
+          <span style={{ color: '#10b981', fontSize: 11, fontWeight: 700 }}>✓</span>
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.72)', fontWeight: 500 }}>Paiement reçu — 5 000 MAD</span>
         </div>
       </div>
+
+      {/* Outer glow */}
+      <div className="absolute -inset-6 -z-10 rounded-3xl" style={{
+        background: 'radial-gradient(ellipse at center, rgba(59,130,246,0.15) 0%, rgba(20,184,166,0.08) 50%, transparent 70%)',
+        filter: 'blur(24px)',
+      }} />
     </div>
   )
 }
