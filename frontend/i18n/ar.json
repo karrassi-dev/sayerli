@@ -29,7 +29,10 @@
     "wfCatalogue": "الكتالوج",
     "wfBl": "بون التسليم",
     "wfFactures": "الفواتير",
-    "wfPaiements": "المدفوعات"
+    "wfPaiements": "المدفوعات",
+    "wfTva": "المدفوعات والضريبة",
+    "wfTeam": "إدارة الفريق",
+    "wfRelance": "تذكيرات تلقائية"
   },
   "features": {
     "badge": "المميزات",

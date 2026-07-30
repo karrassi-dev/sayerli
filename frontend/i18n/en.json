@@ -29,7 +29,10 @@
     "wfCatalogue": "Catalogue",
     "wfBl": "Delivery Note",
     "wfFactures": "Invoices",
-    "wfPaiements": "Payments"
+    "wfPaiements": "Payments",
+    "wfTva": "Payments & VAT",
+    "wfTeam": "Team Management",
+    "wfRelance": "Auto Reminders"
   },
   "features": {
     "badge": "Features",
