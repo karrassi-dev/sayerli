@@ -32,7 +32,10 @@
     "wfPaiements": "Paiements",
     "wfTva": "Paiements & TVA",
     "wfTeam": "Gestion d'équipe",
-    "wfRelance": "Relance auto"
+    "wfRelance": "Relance auto",
+    "wfDepenses": "Dépenses",
+    "wfExport": "Export",
+    "wfTagline": "La plateforme tout-en-un pour gérer votre activité au Maroc"
   },
   "features": {
     "badge": "Fonctionnalités",

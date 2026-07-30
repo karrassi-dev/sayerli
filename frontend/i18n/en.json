@@ -32,7 +32,10 @@
     "wfPaiements": "Payments",
     "wfTva": "Payments & VAT",
     "wfTeam": "Team Management",
-    "wfRelance": "Auto Reminders"
+    "wfRelance": "Auto Reminders",
+    "wfDepenses": "Expenses",
+    "wfExport": "Export",
+    "wfTagline": "The all-in-one platform to manage your business in Morocco"
   },
   "features": {
     "badge": "Features",
