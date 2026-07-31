@@ -7,9 +7,11 @@ import { ArrowRight, LayoutDashboard, ChevronDown } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useIsLoggedIn } from '@/hooks/useIsLoggedIn'
 
-const DIAGRAM_W = 1180
-const DIAGRAM_H = 680
-const NAVBAR_H  = 80  // pt-20 = 5rem = 80px
+const DIAGRAM_W  = 1180
+const DIAGRAM_H  = 680
+const NAVBAR_H   = 80   // pt-20 = 5rem = 80px
+const HEADLINE_H = 82   // headline strip height
+const CTA_H      = 72   // CTA strip height
 
 export function Hero() {
   const { t } = useTranslation()
@@ -29,7 +31,7 @@ export function Hero() {
 
     if (!mobile) {
       const sx = vw / (DIAGRAM_W + 48)
-      const sy = (vh - NAVBAR_H) / (DIAGRAM_H + 64)
+      const sy = (vh - NAVBAR_H - HEADLINE_H - CTA_H) / (DIAGRAM_H + 64)
       setDiagramScale(Math.min(sx, sy, 1.0))
     }
   }, [])
@@ -55,21 +57,90 @@ export function Hero() {
       </div>
 
       {/* ══════════════════════════════════
-          SECTION 1 — Workflow (full viewport)
+          SECTION 1 — Headline + Workflow + CTA (full viewport)
       ══════════════════════════════════ */}
       <section
-        className="relative w-full"
-        style={{ paddingTop: NAVBAR_H }}
+        className="relative w-full overflow-hidden"
+        style={{
+          paddingTop: NAVBAR_H,
+          ...(mounted && !isMobile ? {
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+          } : {}),
+        }}
       >
+
+        {/* ── Headline strip — desktop only ── */}
+        {mounted && !isMobile && (
+          <div style={{
+            height: HEADLINE_H, flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: isDark ? '#0c0d1e' : '#f1f5f9',
+            position: 'relative', zIndex: 10, padding: '0 40px',
+          }}>
+            <h1 style={{
+              margin: 0, fontWeight: 900, letterSpacing: '-0.025em',
+              fontSize: 'clamp(1.25rem, 2.5vw, 2.3rem)',
+              lineHeight: 1.1, textAlign: 'center', whiteSpace: 'nowrap',
+            }}>
+              <span style={{ color: isDark ? 'rgba(255,255,255,0.92)' : '#0f172a' }}>{t('hero.line1')} </span>
+              <span style={{
+                background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #14b8a6 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+              }}>{t('hero.line2')} </span>
+              <span style={{ color: isDark ? 'rgba(255,255,255,0.92)' : '#0f172a' }}>{t('hero.line3')}</span>
+            </h1>
+          </div>
+        )}
+
+        {/* ── Workflow diagram ── */}
         <WorkflowDiagram
           t={t}
           isDark={isDark}
           scale={diagramScale}
           isMobile={isMobile}
+          containerH={mounted && !isMobile
+            ? `calc(100vh - ${NAVBAR_H + HEADLINE_H + CTA_H}px)`
+            : `calc(100vh - ${NAVBAR_H}px)`
+          }
         />
 
-        {/* Scroll hint — desktop only */}
+        {/* ── CTA strip — desktop only ── */}
         {mounted && !isMobile && (
+          <div style={{
+            height: CTA_H, flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: isDark ? '#0c0d1e' : '#f1f5f9',
+            position: 'relative', zIndex: 10,
+          }}>
+            {loggedIn ? (
+              <Link href="/dashboard" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '13px 32px', borderRadius: 12, textDecoration: 'none',
+                background: isDark ? 'rgba(99,102,241,0.14)' : 'rgba(99,102,241,0.08)',
+                color: isDark ? '#818cf8' : '#6366f1',
+                fontWeight: 700, fontSize: 14,
+                border: `1px solid ${isDark ? 'rgba(99,102,241,0.28)' : 'rgba(99,102,241,0.22)'}`,
+              }}>
+                {t('hero.ctaDashboard')} →
+              </Link>
+            ) : (
+              <Link href="/register" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '14px 40px', borderRadius: 12, textDecoration: 'none',
+                background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+                color: 'white', fontWeight: 700, fontSize: 15,
+                boxShadow: '0 8px 32px rgba(99,102,241,0.38)',
+              }}>
+                {t('hero.cta')} →
+              </Link>
+            )}
+          </div>
+        )}
+
+        {/* ── Scroll hint — mobile only ── */}
+        {mounted && isMobile && (
           <div
             className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
             style={{ animation: 'wfScrollBounce 2s ease-in-out infinite' }}
@@ -149,12 +220,13 @@ export function Hero() {
    • Mobile:  natural height, horizontal scroll
 ═══════════════════════════════════════════════════════════════ */
 function WorkflowDiagram({
-  t, isDark, scale, isMobile,
+  t, isDark, scale, isMobile, containerH,
 }: {
   t: (k: string) => string
   isDark: boolean
   scale: number
   isMobile: boolean
+  containerH: string
 }) {
   const W = DIAGRAM_W
   const H = DIAGRAM_H
@@ -601,7 +673,7 @@ function WorkflowDiagram({
       <style>{keyframes}</style>
       <div style={{
         width:'100%',
-        height: `calc(100vh - ${NAVBAR_H}px)`,
+        height: containerH,
         background: bg,
         position: 'relative',
         display: 'flex',
