@@ -665,6 +665,7 @@
     "title": "Sayerli works, even while you sleep",
     "sub": "Smart automations that eliminate repetitive tasks and let you focus on what matters.",
     "activeLabel": "Active",
+    "resumeAuto": "Resume auto-play",
     "item1": {
       "title": "Automatic Reminders",
       "desc": "Sayerli sends reminders to clients whose invoices are due or overdue. You never lose money through forgetfulness again.",
