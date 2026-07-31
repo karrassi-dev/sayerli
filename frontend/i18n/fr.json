@@ -663,6 +663,8 @@
   "automation": {
     "badge": "Automatisation",
     "title": "Sayerli travaille, même quand vous dormez",
+    "titleLine1": "Sayerli travaille,",
+    "titleLine2": "même quand vous dormez",
     "sub": "Des automatisations intelligentes qui éliminent les tâches répétitives et vous permettent de vous concentrer sur l'essentiel.",
     "activeLabel": "Actif",
     "resumeAuto": "Reprendre la lecture automatique",

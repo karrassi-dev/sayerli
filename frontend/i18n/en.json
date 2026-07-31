@@ -663,6 +663,8 @@
   "automation": {
     "badge": "Automation",
     "title": "Sayerli works, even while you sleep",
+    "titleLine1": "Sayerli works,",
+    "titleLine2": "even while you sleep",
     "sub": "Smart automations that eliminate repetitive tasks and let you focus on what matters.",
     "activeLabel": "Active",
     "resumeAuto": "Resume auto-play",

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Bell, FileText, CreditCard, Mail, Zap, Check, ChevronRight, ExternalLink } from 'lucide-react'
+import { Bell, FileText, CreditCard, Mail, Zap, Check, ExternalLink } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { useTranslation } from '@/hooks/useTranslation'
 import { cn } from '@/lib/utils'
@@ -17,23 +18,34 @@ const ITEMS = [
 ] as const
 
 const KF = `
-  @keyframes aFadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes aFadeUp  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
   @keyframes aFadeIn  { from{opacity:0} to{opacity:1} }
-  @keyframes aSlideR  { from{opacity:0;transform:translateX(-14px)} to{opacity:1;transform:translateX(0)} }
-  @keyframes aSlideL  { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:translateX(0)} }
-  @keyframes aScaleIn { from{opacity:0;transform:scale(0.55)} to{opacity:1;transform:scale(1)} }
+  @keyframes aSlideR  { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes aSlideL  { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes aScaleIn { from{opacity:0;transform:scale(0.5)} to{opacity:1;transform:scale(1)} }
   @keyframes aPulse   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.07)} }
-  @keyframes aCheck   { from{opacity:0;transform:scale(0.4) rotate(-15deg)} 60%{transform:scale(1.2) rotate(4deg)} to{opacity:1;transform:scale(1) rotate(0)} }
-  @keyframes aFly     { 0%{opacity:1;transform:translate(0,0) scale(1)} 65%{opacity:0.9;transform:translate(14px,-5px) scale(0.8)} 100%{opacity:0;transform:translate(32px,-11px) scale(0.55)} }
+  @keyframes aCheck   { from{opacity:0;transform:scale(0.3) rotate(-20deg)} 60%{transform:scale(1.25) rotate(5deg)} to{opacity:1;transform:scale(1) rotate(0)} }
+  @keyframes aFly     { 0%{opacity:1;transform:translate(0,0) scale(1)} 65%{opacity:0.9;transform:translate(16px,-6px) scale(0.75)} 100%{opacity:0;transform:translate(36px,-14px) scale(0.5)} }
+  @keyframes aOrbDrift{ 0%,100%{transform:translate(0,0)} 33%{transform:translate(14px,-12px)} 66%{transform:translate(-10px,14px)} }
 `
 
+/* ─────────────────────────────────────────────────────────
+   Main section
+───────────────────────────────────────────────────────── */
 export function AutomationSection() {
   const { t } = useTranslation()
+  const { resolvedTheme } = useTheme()
   const { ref, visible } = useScrollAnimation(0.05)
+
+  const [mounted,  setMounted]  = useState(false)
   const [active,   setActive]   = useState(0)
   const [paused,   setPaused]   = useState(false)
   const [progress, setProgress] = useState(0)
   const [panelKey, setPanelKey] = useState(0)
+
+  useEffect(() => { setMounted(true) }, [])
+
+  const isDark = !mounted || resolvedTheme !== 'light'
 
   /* Auto-cycle */
   useEffect(() => {
@@ -57,133 +69,250 @@ export function AutomationSection() {
     if (i !== active) { setActive(i); setPanelKey(k => k + 1) }
     setPaused(true)
   }
-
   const handleResume = () => { setPaused(false); setPanelKey(k => k + 1) }
 
+  const color      = ITEMS[active].color
+  const ActiveIcon = ITEMS[active].icon
+  const RING_R     = 14
+  const RING_C     = 2 * Math.PI * RING_R
+
+  /* ── Theme tokens ── */
+  const bg        = isDark ? '#07080f' : '#f4f6ff'
+  const textMain  = isDark ? '#ffffff' : '#0f172a'
+  const textSub   = isDark ? 'rgba(148,163,184,0.85)' : 'rgba(71,85,105,0.9)'
+  const textMuted = isDark ? 'rgba(100,116,139,0.6)'  : 'rgba(100,116,139,0.55)'
+
+  const cardActiveBg  = isDark ? `linear-gradient(135deg, ${color}16, ${color}07)` : `linear-gradient(135deg, ${color}0d, ${color}05)`
+  const cardIdleBg    = isDark ? 'rgba(255,255,255,0.022)' : 'rgba(255,255,255,0.75)'
+  const cardActiveBdr = isDark ? `${color}28` : `${color}32`
+  const cardIdleBdr   = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.09)'
+
+  const panelBg  = isDark ? 'rgba(255,255,255,0.028)' : 'rgba(255,255,255,0.95)'
+  const panelBdr = isDark ? 'rgba(255,255,255,0.07)'  : 'rgba(15,23,42,0.09)'
+  const panelSep = isDark ? 'rgba(255,255,255,0.05)'  : 'rgba(15,23,42,0.06)'
+  const panelShadow = isDark
+    ? `0 0 0 1px rgba(255,255,255,0.03), 0 32px 90px rgba(0,0,0,0.55), 0 0 70px ${color}18`
+    : `0 4px 6px -1px rgba(15,23,42,0.07), 0 12px 48px rgba(15,23,42,0.09), 0 0 50px ${color}10`
+
   return (
-    <section ref={ref} className="py-16 sm:py-24 bg-white dark:bg-[#07080f]">
+    <section
+      ref={ref}
+      className="relative overflow-hidden py-24 sm:py-32"
+      style={{ background: bg }}
+    >
       <style>{KF}</style>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      {/* ── Background decorations ── */}
+      <div className="absolute inset-0 pointer-events-none select-none">
+        <div className="absolute inset-0" style={{
+          backgroundImage: isDark
+            ? 'linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px)'
+            : 'linear-gradient(rgba(99,102,241,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.045) 1px,transparent 1px)',
+          backgroundSize: '64px 64px',
+        }} />
+        <div className="absolute top-1/3 left-1/5 w-[520px] h-[520px] rounded-full blur-[130px]"
+          style={{ background: isDark ? 'rgba(99,102,241,0.07)' : 'rgba(99,102,241,0.05)', animation: 'aOrbDrift 14s ease-in-out infinite' }} />
+        <div className="absolute bottom-1/3 right-1/5 w-[420px] h-[420px] rounded-full blur-[110px]"
+          style={{ background: isDark ? 'rgba(139,92,246,0.07)' : 'rgba(139,92,246,0.04)', animation: 'aOrbDrift 18s ease-in-out infinite 5s' }} />
+        {/* Active-color reactive glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[220px] rounded-full blur-[120px]"
+          style={{ background: `${color}${isDark ? '0c' : '07'}`, transition: 'background 0.9s ease' }} />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Header ── */}
-        <div className={cn('text-center mb-12 sm:mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
-          <span className="inline-block px-4 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-sm font-semibold mb-4">
-            {t('automation.badge')}
-          </span>
-          <h2 className="section-title mb-4">{t('automation.title')}</h2>
-          <p className="section-sub">{t('automation.sub')}</p>
+        <div className={cn('text-center mb-16 sm:mb-20 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
+
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full" style={{
+            background: isDark ? 'rgba(245,158,11,0.1)' : 'rgba(245,158,11,0.08)',
+            border: `1px solid ${isDark ? 'rgba(245,158,11,0.22)' : 'rgba(245,158,11,0.2)'}`,
+          }}>
+            <span style={{ color: isDark ? '#fbbf24' : '#d97706', fontSize: 11 }}>✦</span>
+            <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: isDark ? '#fbbf24' : '#d97706' }}>
+              {t('automation.badge')}
+            </span>
+          </div>
+
+          {/* Heading */}
+          <h2 className="font-black tracking-tight leading-[1.08] mb-5" style={{ fontSize: 'clamp(1.9rem,4vw,3.1rem)' }}>
+            <span style={{ color: textMain }}>{t('automation.titleLine1')} </span>
+            <span style={{
+              background: 'linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #fb923c 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>
+              {t('automation.titleLine2')}
+            </span>
+          </h2>
+
+          <p style={{ fontSize: 16, color: textSub, maxWidth: 560, margin: '0 auto', lineHeight: 1.7 }}>
+            {t('automation.sub')}
+          </p>
         </div>
 
         {/* ── Interactive panel ── */}
-        <div className={cn('transition-all duration-700 delay-150', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
-          <div className="flex flex-col lg:flex-row gap-3 lg:gap-5">
+        <div className={cn('transition-all duration-700 delay-200', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
+          <div className="flex flex-col lg:flex-row gap-5">
 
-            {/* LEFT — list */}
-            <div className="lg:w-[40%] space-y-2">
-              {ITEMS.map(({ key, icon: Icon, color }, i) => (
-                <button
-                  key={key}
-                  onClick={() => handleSelect(i)}
-                  className={cn(
-                    'w-full text-left rounded-2xl px-4 py-4 border transition-all duration-300 group',
-                    active !== i && 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-sm'
-                  )}
-                  style={active === i ? {
-                    background: `linear-gradient(135deg, ${color}12, ${color}06)`,
-                    borderColor: `${color}38`,
-                    boxShadow: `0 4px 20px ${color}15`,
-                  } : {}}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
-                      style={{ background: `${color}18`, border: `1px solid ${color}28` }}
-                    >
-                      <Icon className="w-4 h-4" style={{ color }} />
-                    </div>
+            {/* ── LEFT: Premium stepper ── */}
+            <div className="lg:w-[42%] flex flex-col gap-2">
+              {ITEMS.map(({ key, icon: Icon, color: c }, i) => {
+                const isActive = active === i
+                return (
+                  <button
+                    key={key}
+                    onClick={() => handleSelect(i)}
+                    className="relative w-full text-left rounded-2xl overflow-hidden transition-all duration-300 group"
+                    style={{
+                      background: isActive ? cardActiveBg : cardIdleBg,
+                      border: `1px solid ${isActive ? cardActiveBdr : cardIdleBdr}`,
+                      boxShadow: isActive
+                        ? isDark ? `0 0 0 1px ${c}18, 0 8px 32px ${c}14` : `0 0 0 1px ${c}22, 0 4px 24px ${c}12`
+                        : 'none',
+                    }}
+                  >
+                    {/* Accent left bar */}
+                    {isActive && (
+                      <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full"
+                        style={{ background: `linear-gradient(to bottom, ${c}, ${c}50)` }} />
+                    )}
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className={cn('font-semibold text-sm', active === i ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-300')}>
-                          {t(`automation.${key}.title`)}
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
-                          style={{ background: `${color}16`, color }}>
-                          {t(`automation.${key}.tag`)}
-                        </span>
+                    <div className="px-4 py-3.5">
+                      <div className="flex items-center gap-3">
+
+                        {/* Progress ring */}
+                        <div className="relative flex-shrink-0 w-9 h-9">
+                          {isActive && !paused && (
+                            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
+                              <circle cx="18" cy="18" r={RING_R} fill="none" stroke={`${c}22`} strokeWidth="2.5" />
+                              <circle cx="18" cy="18" r={RING_R} fill="none" stroke={c} strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeDasharray={RING_C}
+                                strokeDashoffset={RING_C * (1 - progress / 100)}
+                                style={{ transition: 'stroke-dashoffset 16ms linear' }}
+                              />
+                            </svg>
+                          )}
+                          <div className="absolute inset-[5px] rounded-full flex items-center justify-center" style={{
+                            background: isActive ? `${c}22` : isDark ? 'rgba(255,255,255,0.05)' : 'rgba(15,23,42,0.04)',
+                            border: `1px solid ${isActive ? c + '38' : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)'}`,
+                          }}>
+                            <Icon className="w-3.5 h-3.5" style={{ color: isActive ? c : isDark ? 'rgba(100,116,139,0.6)' : 'rgba(100,116,139,0.5)' }} />
+                          </div>
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span style={{
+                              fontSize: 13, fontWeight: 700,
+                              color: isActive ? textMain : isDark ? 'rgba(148,163,184,0.65)' : 'rgba(71,85,105,0.75)',
+                            }}>
+                              {t(`automation.${key}.title`)}
+                            </span>
+                            <span style={{
+                              fontSize: 9, fontWeight: 800, letterSpacing: '0.04em',
+                              padding: '2px 8px', borderRadius: 20,
+                              background: `${c}18`, color: c, border: `1px solid ${c}28`,
+                            }}>
+                              {t(`automation.${key}.tag`)}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      {active === i && (
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed line-clamp-2">
-                          {t(`automation.${key}.desc`)}
-                        </p>
+
+                      {/* Expanded content */}
+                      {isActive && (
+                        <div className="mt-3 pl-12" style={{ animation: 'aFadeUp 0.3s ease both' }}>
+                          <p style={{ fontSize: 12, lineHeight: 1.65, marginBottom: 10, color: isDark ? 'rgba(148,163,184,0.78)' : 'rgba(71,85,105,0.82)' }}>
+                            {t(`automation.${key}.desc`)}
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {(['detail1', 'detail2', 'detail3'] as const).map(d => (
+                              <span key={d} style={{
+                                display: 'inline-flex', alignItems: 'center', gap: 5,
+                                fontSize: 10, fontWeight: 600,
+                                padding: '3px 10px', borderRadius: 8,
+                                background: `${c}12`, color: c, border: `1px solid ${c}22`,
+                              }}>
+                                <span style={{ width: 4, height: 4, borderRadius: '50%', background: c, flexShrink: 0 }} />
+                                {t(`automation.${key}.${d}`)}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
-
-                    <ChevronRight
-                      className={cn('w-4 h-4 flex-shrink-0 transition-opacity', active === i ? 'opacity-100' : 'opacity-0')}
-                      style={{ color }}
-                    />
-                  </div>
-
-                  {/* Progress bar */}
-                  {active === i && !paused && (
-                    <div className="mt-3 h-[3px] rounded-full overflow-hidden" style={{ background: `${color}20` }}>
-                      <div className="h-full rounded-full" style={{ width: `${progress}%`, background: color, transition: 'width 16ms linear' }} />
-                    </div>
-                  )}
-                  {active === i && paused && (
-                    <div className="mt-2.5 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: color }} />
-                      <span className="text-[10px] font-medium" style={{ color }}>{t('automation.activeLabel')}</span>
-                    </div>
-                  )}
-                </button>
-              ))}
+                  </button>
+                )
+              })}
 
               {paused && (
-                <button
-                  onClick={handleResume}
-                  className="w-full text-center text-xs text-slate-400 dark:text-slate-600 hover:text-slate-500 dark:hover:text-slate-400 py-1.5 transition-colors"
-                >
+                <button onClick={handleResume} style={{
+                  fontSize: 11, textAlign: 'center', padding: '6px 0',
+                  color: textMuted, transition: 'color 0.2s',
+                }}>
                   ▶ {t('automation.resumeAuto')}
                 </button>
               )}
             </div>
 
-            {/* RIGHT — animated preview */}
+            {/* ── RIGHT: Premium glass preview ── */}
             <div className="lg:flex-1">
-              <div className="h-full min-h-[360px] rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 overflow-hidden flex flex-col">
+              <div
+                className="relative h-full min-h-[440px] rounded-2xl overflow-hidden flex flex-col"
+                style={{
+                  background: panelBg,
+                  border: `1px solid ${panelBdr}`,
+                  backdropFilter: 'blur(24px)',
+                  boxShadow: panelShadow,
+                  transition: 'box-shadow 0.7s ease',
+                }}
+              >
+                {/* Top accent gradient strip */}
+                <div className="flex-shrink-0 h-[2px]"
+                  style={{ background: `linear-gradient(90deg, ${color}, ${color}65, transparent 75%)`, transition: 'background 0.5s' }} />
 
-                {/* Window chrome */}
-                <div className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-400/60" />
-                  <span className="ml-3 text-xs text-slate-400 dark:text-slate-500 font-mono flex-1 truncate">
-                    sayerli.com — {t(`automation.${ITEMS[active].key}.title`)}
-                  </span>
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                {/* Panel header row */}
+                <div className="flex-shrink-0 flex items-center justify-between px-5 py-3"
+                  style={{ borderBottom: `1px solid ${panelSep}` }}>
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{ background: `${color}22`, border: `1px solid ${color}38` }}>
+                      <ActiveIcon className="w-3.5 h-3.5" style={{ color }} />
+                    </div>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: isDark ? 'rgba(226,232,240,0.85)' : 'rgba(15,23,42,0.8)' }}>
+                      {t(`automation.${ITEMS[active].key}.title`)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">{t('automation.activeLabel')}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: isDark ? '#34d399' : '#059669' }}>
+                      {t('automation.activeLabel')}
+                    </span>
                   </div>
                 </div>
 
+                {/* Animated preview content */}
                 <div className="flex-1 p-5 sm:p-6 overflow-hidden">
                   <PreviewPanel activeIdx={active} panelKey={panelKey} />
                 </div>
+
+                {/* Ambient corner glow */}
+                <div className="absolute bottom-0 right-0 w-56 h-56 pointer-events-none"
+                  style={{ background: `radial-gradient(circle at 80% 80%, ${color}22, transparent 65%)`, transition: 'background 0.5s' }} />
               </div>
             </div>
           </div>
 
           {/* Mobile pagination dots */}
           <div className="flex justify-center items-center gap-2 mt-5 lg:hidden">
-            {ITEMS.map(({ color }, i) => (
-              <button
-                key={i}
-                onClick={() => handleSelect(i)}
-                className="h-2 rounded-full transition-all duration-300"
-                style={{ width: active === i ? 24 : 8, background: active === i ? color : '#cbd5e1' }}
-              />
+            {ITEMS.map(({ color: c }, i) => (
+              <button key={i} onClick={() => handleSelect(i)} style={{
+                width: active === i ? 24 : 8, height: 8, borderRadius: 4,
+                background: active === i ? c : isDark ? 'rgba(100,116,139,0.25)' : 'rgba(100,116,139,0.2)',
+                transition: 'all 0.3s ease',
+              }} />
             ))}
           </div>
         </div>
@@ -192,7 +321,9 @@ export function AutomationSection() {
   )
 }
 
-/* ── Preview dispatcher — key forces remount on tab switch ── */
+/* ─────────────────────────────────────────────────────────
+   Preview dispatcher — key forces remount on tab switch
+───────────────────────────────────────────────────────── */
 function PreviewPanel({ activeIdx, panelKey }: { activeIdx: number; panelKey: number }) {
   return (
     <div className="h-full">
@@ -205,7 +336,9 @@ function PreviewPanel({ activeIdx, panelKey }: { activeIdx: number; panelKey: nu
   )
 }
 
-/* ── Preview 1: Rappels automatiques ── */
+/* ─────────────────────────────────────────────────────────
+   Preview 1 — Rappels automatiques
+───────────────────────────────────────────────────────── */
 function Preview1() {
   const rows = [
     { ref: 'FAC-2026-041', client: 'Atlas Corp',   amt: '8 400 MAD',  d: 200  },
@@ -218,13 +351,10 @@ function Preview1() {
         <Bell className="w-4 h-4 text-blue-500" />
         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">3 factures en retard détectées</span>
       </div>
-
       {rows.map(row => (
-        <div
-          key={row.ref}
-          className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
-          style={{ animation: `aFadeUp 0.4s ease ${row.d}ms both` }}
-        >
+        <div key={row.ref}
+          className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60"
+          style={{ animation: `aFadeUp 0.4s ease ${row.d}ms both` }}>
           <div className="flex-1 min-w-0">
             <div className="text-[10px] font-mono text-slate-400">{row.ref}</div>
             <div className="text-sm font-semibold text-slate-800 dark:text-white">{row.client}</div>
@@ -232,11 +362,10 @@ function Preview1() {
           </div>
           <div className="flex items-center gap-1.5">
             <span style={{ display: 'inline-block', fontSize: 16, animation: `aFly 0.5s ease ${row.d + 700}ms both` }}>✉️</span>
-            <span className="text-[10px] font-bold text-emerald-500" style={{ animation: `aFadeIn 0.3s ease ${row.d + 1350}ms both` }}>✓ Relancé</span>
+            <span className="text-[10px] font-bold text-emerald-500" style={{ animation: `aFadeIn 0.3s ease ${row.d + 1400}ms both` }}>✓ Relancé</span>
           </div>
         </div>
       ))}
-
       <p className="pt-1 text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400"
         style={{ animation: 'aFadeIn 0.4s ease 3.4s both' }}>
         ✅ 3 rappels envoyés automatiquement à 07:00
@@ -245,12 +374,13 @@ function Preview1() {
   )
 }
 
-/* ── Preview 2: BL → Facture ── */
+/* ─────────────────────────────────────────────────────────
+   Preview 2 — BL → Facture
+───────────────────────────────────────────────────────── */
 function Preview2() {
   return (
     <div className="flex flex-col justify-center h-full gap-5">
       <div className="flex items-center justify-center gap-4 flex-wrap">
-
         <div className="rounded-xl border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-900/20 p-4 w-40"
           style={{ animation: 'aSlideR 0.5s ease 200ms both' }}>
           <div className="flex items-center gap-1.5 mb-2">
@@ -293,11 +423,13 @@ function Preview2() {
   )
 }
 
-/* ── Preview 3: Suivi paiements ── */
+/* ─────────────────────────────────────────────────────────
+   Preview 3 — Suivi paiements
+───────────────────────────────────────────────────────── */
 function Preview3() {
   return (
     <div className="space-y-3">
-      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/40"
         style={{ animation: 'aFadeUp 0.4s ease 100ms both' }}>
         <div className="flex items-start justify-between mb-3">
           <div>
@@ -312,15 +444,13 @@ function Preview3() {
             </span>
           </div>
         </div>
-
         {[
           { label: 'Acompte 50%', amt: '7 800 MAD', d: 500  },
           { label: 'Solde final',  amt: '7 800 MAD', d: 1300 },
         ].map(p => (
           <div key={p.label}
-            className="flex items-center justify-between py-2 border-t border-slate-200 dark:border-slate-700"
-            style={{ animation: `aFadeUp 0.35s ease ${p.d}ms both` }}
-          >
+            className="flex items-center justify-between py-2 border-t border-slate-200 dark:border-slate-700/60"
+            style={{ animation: `aFadeUp 0.35s ease ${p.d}ms both` }}>
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center"
                 style={{ animation: `aCheck 0.4s ease ${p.d + 500}ms both` }}>
@@ -333,7 +463,7 @@ function Preview3() {
         ))}
       </div>
 
-      <div className="flex items-center gap-3 p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/50"
+      <div className="flex items-center gap-3 p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/40"
         style={{ animation: 'aFadeUp 0.4s ease 2.6s both' }}>
         <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-sm flex-shrink-0">🧾</div>
         <div className="flex-1 min-w-0">
@@ -346,25 +476,27 @@ function Preview3() {
   )
 }
 
-/* ── Preview 4: Portail client ── */
+/* ─────────────────────────────────────────────────────────
+   Preview 4 — Portail client
+───────────────────────────────────────────────────────── */
 function Preview4() {
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+      <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60"
         style={{ animation: 'aFadeUp 0.4s ease 100ms both' }}>
         <ExternalLink className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
         <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 truncate flex-1">lien.sayerli.com/portal/aml-t3x9k</span>
         <span className="text-[10px] font-semibold text-orange-500 flex-shrink-0">Copié ✓</span>
       </div>
 
-      <div className="rounded-xl border-2 border-orange-200 dark:border-orange-800/40 bg-white dark:bg-slate-800/60 overflow-hidden"
+      <div className="rounded-xl border-2 border-orange-200 dark:border-orange-800/40 bg-white dark:bg-slate-800/50 overflow-hidden"
         style={{ animation: 'aFadeUp 0.4s ease 500ms both' }}>
         <div className="flex items-center gap-2 px-4 py-2.5 bg-orange-500">
           <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-black text-white">A</div>
           <span className="text-xs font-bold text-white">Portail — Amal Tech SARL</span>
         </div>
         <div className="p-3 space-y-2">
-          <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600"
+          <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50"
             style={{ animation: 'aFadeUp 0.3s ease 900ms both' }}>
             <div>
               <div className="text-[10px] font-mono text-slate-400">DEV-2026-0048</div>
@@ -376,7 +508,7 @@ function Preview4() {
             </button>
           </div>
 
-          <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800/50"
+          <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800/40"
             style={{ animation: 'aFadeUp 0.4s ease 2.6s both' }}>
             <span className="text-base flex-shrink-0">🎉</span>
             <div>
@@ -390,7 +522,9 @@ function Preview4() {
   )
 }
 
-/* ── Preview 5: Catalogue de services ── */
+/* ─────────────────────────────────────────────────────────
+   Preview 5 — Catalogue de services
+───────────────────────────────────────────────────────── */
 function Preview5() {
   const items = [
     { name: 'Consulting Web',  price: '3 500 MAD', unit: 'jour',    d: 300  },
@@ -401,18 +535,16 @@ function Preview5() {
     <div className="space-y-3">
       <div className="flex items-center justify-between" style={{ animation: 'aFadeIn 0.4s ease both' }}>
         <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Nouveau devis</span>
-        <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50">
+        <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/40">
           + Depuis catalogue
         </span>
       </div>
 
       <div className="space-y-2">
         {items.map((item, i) => (
-          <div
-            key={item.name}
-            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
-            style={{ animation: `aSlideR 0.4s ease ${item.d}ms both` }}
-          >
+          <div key={item.name}
+            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60"
+            style={{ animation: `aSlideR 0.4s ease ${item.d}ms both` }}>
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-md bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-[10px] font-black text-amber-600 dark:text-amber-400">
                 {i + 1}
@@ -427,7 +559,7 @@ function Preview5() {
         ))}
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700"
+      <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700/60"
         style={{ animation: 'aFadeUp 0.4s ease 2.2s both' }}>
         <span className="text-xs text-slate-500 dark:text-slate-400">Total HT</span>
         <span className="text-sm font-black text-slate-900 dark:text-white">6 100 MAD</span>
