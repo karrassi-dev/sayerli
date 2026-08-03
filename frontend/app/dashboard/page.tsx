@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { TrendingUp, Users, Receipt, CreditCard, Wallet, Plus, ArrowRight, Clock, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle } from 'lucide-react'
+import { TrendingUp, Users, Receipt, CreditCard, Wallet, Plus, ArrowRight, Clock, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle, ChevronRight, Activity } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -89,7 +89,18 @@ function daysOverdue(dateEcheance: string | null): number {
   return Math.max(0, Math.floor((Date.now() - new Date(dateEcheance).getTime()) / 86400000))
 }
 
-// ── Card shell ───────────────────────────────────────────────────────────────
+function computeHealthScore(analytics: DashboardAnalytics): { score: number; recouvrement: number; conversion: number; retardPct: number } {
+  const recouvrement = Math.min(100, analytics.tauxRecouvrement)
+  const conversion   = Math.min(100, analytics.devis.tauxAcceptation)
+  const retardPct    = analytics.factures.total > 0
+    ? (analytics.factures.enRetard / analytics.factures.total) * 100
+    : 0
+  const retardScore  = Math.max(0, 100 - retardPct * 3)
+  const score = Math.round(recouvrement * 0.4 + conversion * 0.3 + retardScore * 0.3)
+  return { score, recouvrement, conversion, retardPct }
+}
+
+// ── Sub-components ───────────────────────────────────────────────────────────
 
 function CardHeader({ title, sub, badge }: {
   title: string
@@ -103,6 +114,229 @@ function CardHeader({ title, sub, badge }: {
         {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
       </div>
       {badge}
+    </div>
+  )
+}
+
+function MiniBar({ value, color }: { value: number; color: string }) {
+  return (
+    <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+      <div
+        className={`h-full rounded-full transition-all duration-700 ${color}`}
+        style={{ width: `${Math.min(100, value)}%` }}
+      />
+    </div>
+  )
+}
+
+function HealthScoreCard({ analytics, loading, t }: {
+  analytics: DashboardAnalytics | null
+  loading: boolean
+  t: (k: string) => string
+}) {
+  if (loading) {
+    return (
+      <div className="card rounded-2xl p-5 flex flex-col gap-4">
+        <div className="h-4 w-2/3 bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />
+        <div className="flex justify-center">
+          <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse" />
+        </div>
+        <div className="space-y-3">
+          {[1,2,3].map(i => <div key={i} className="h-6 bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />)}
+        </div>
+      </div>
+    )
+  }
+
+  if (!analytics) return null
+
+  const { score, recouvrement, conversion, retardPct } = computeHealthScore(analytics)
+
+  const { label, ringColor, textColor, bgColor } =
+    score >= 80 ? { label: t('dashboard.scoreExcellent'), ringColor: 'text-emerald-500', textColor: 'text-emerald-600 dark:text-emerald-400', bgColor: 'bg-emerald-50 dark:bg-emerald-950/30' } :
+    score >= 60 ? { label: t('dashboard.scoreGood'),      ringColor: 'text-blue-500',    textColor: 'text-blue-600 dark:text-blue-400',       bgColor: 'bg-blue-50 dark:bg-blue-950/30'     } :
+    score >= 40 ? { label: t('dashboard.scoreFair'),      ringColor: 'text-amber-500',   textColor: 'text-amber-600 dark:text-amber-400',     bgColor: 'bg-amber-50 dark:bg-amber-950/30'   } :
+                  { label: t('dashboard.scorePoor'),      ringColor: 'text-red-500',     textColor: 'text-red-600 dark:text-red-400',         bgColor: 'bg-red-50 dark:bg-red-950/30'       }
+
+  const circumference = 2 * Math.PI * 34
+  const dashOffset = circumference - (score / 100) * circumference
+
+  return (
+    <div className="card rounded-2xl p-5 flex flex-col h-full">
+      <CardHeader
+        title={t('dashboard.healthScore')}
+        sub={t('dashboard.healthScoreSub')}
+        badge={<Activity className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
+      />
+
+      {/* Ring */}
+      <div className="flex flex-col items-center mb-5">
+        <div className="relative">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle cx="44" cy="44" r="34" fill="none" stroke="currentColor" strokeWidth="7" className="text-slate-100 dark:text-slate-800" />
+            <circle
+              cx="44" cy="44" r="34"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="7"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={dashOffset}
+              className={`${ringColor} transition-all duration-700`}
+              transform="rotate(-90 44 44)"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-xl font-black text-slate-900 dark:text-white leading-none">{score}</span>
+            <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">/100</span>
+          </div>
+        </div>
+        <span className={`mt-2 text-xs font-bold px-2.5 py-0.5 rounded-full ${bgColor} ${textColor}`}>{label}</span>
+      </div>
+
+      {/* Sub-metrics */}
+      <div className="space-y-3 mt-auto">
+        <div>
+          <div className="flex justify-between text-xs mb-1">
+            <span className="text-slate-500 dark:text-slate-400">{t('dashboard.facteurRecouvrement')}</span>
+            <span className="font-semibold text-slate-800 dark:text-slate-200">{recouvrement}%</span>
+          </div>
+          <MiniBar value={recouvrement} color="bg-emerald-500" />
+        </div>
+        <div>
+          <div className="flex justify-between text-xs mb-1">
+            <span className="text-slate-500 dark:text-slate-400">{t('dashboard.facteurConversion')}</span>
+            <span className="font-semibold text-slate-800 dark:text-slate-200">{conversion}%</span>
+          </div>
+          <MiniBar value={conversion} color="bg-blue-500" />
+        </div>
+        <div>
+          <div className="flex justify-between text-xs mb-1">
+            <span className="text-slate-500 dark:text-slate-400">{t('dashboard.facteurRetard')}</span>
+            <span className={`font-semibold ${retardPct > 20 ? 'text-red-500' : retardPct > 10 ? 'text-amber-500' : 'text-emerald-600 dark:text-emerald-400'}`}>
+              {retardPct.toFixed(0)}%
+            </span>
+          </div>
+          <MiniBar value={retardPct} color={retardPct > 20 ? 'bg-red-400' : retardPct > 10 ? 'bg-amber-400' : 'bg-emerald-500'} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+interface PipelineStage {
+  labelKey: string
+  count: number
+  color: string
+  dotColor: string
+  bgColor: string
+}
+
+function DevisPipelineCard({ analytics, loading, t }: {
+  analytics: DashboardAnalytics | null
+  loading: boolean
+  t: (k: string) => string
+}) {
+  const stages: PipelineStage[] = analytics ? [
+    { labelKey: 'dashboard.stageBrouillon', count: analytics.devis.brouillon, color: 'text-slate-600 dark:text-slate-300',    dotColor: 'bg-slate-400',   bgColor: 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700' },
+    { labelKey: 'dashboard.stageEnvoye',    count: analytics.devis.envoye,    color: 'text-blue-600 dark:text-blue-400',      dotColor: 'bg-blue-500',    bgColor: 'bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900/40' },
+    { labelKey: 'dashboard.stageVu',        count: analytics.devis.vu,        color: 'text-indigo-600 dark:text-indigo-400',  dotColor: 'bg-indigo-500',  bgColor: 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-100 dark:border-indigo-900/40' },
+    { labelKey: 'dashboard.stageAccepte',   count: analytics.devis.accepte,   color: 'text-emerald-600 dark:text-emerald-400',dotColor: 'bg-emerald-500', bgColor: 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900/40' },
+    { labelKey: 'dashboard.stageRefuse',    count: analytics.devis.refuse,    color: 'text-red-500 dark:text-red-400',        dotColor: 'bg-red-400',     bgColor: 'bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30' },
+  ] : []
+
+  return (
+    <div className="card rounded-2xl p-5">
+      <CardHeader
+        title={t('dashboard.pipeline')}
+        sub={t('dashboard.pipelineSub')}
+        badge={
+          analytics ? (
+            <span className="text-xs font-semibold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
+              {analytics.devis.total} total
+            </span>
+          ) : null
+        }
+      />
+
+      {loading ? (
+        <div className="grid grid-cols-5 gap-3">
+          {[1,2,3,4,5].map(i => (
+            <div key={i} className="h-20 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+          ))}
+        </div>
+      ) : analytics ? (
+        <div className="flex items-stretch gap-2">
+          {stages.map((stage, idx) => {
+            const prev = idx > 0 ? stages[idx - 1].count : null
+            const convRate = prev !== null && prev > 0 ? Math.round((stage.count / prev) * 100) : null
+
+            return (
+              <React.Fragment key={stage.labelKey}>
+                {/* Stage box */}
+                <div className={`flex-1 rounded-xl border p-3 flex flex-col items-center gap-1 ${stage.bgColor}`}>
+                  <div className={`w-2 h-2 rounded-full ${stage.dotColor}`} />
+                  <span className={`text-2xl font-black leading-none ${stage.color}`}>{stage.count}</span>
+                  <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 text-center leading-tight">
+                    {t(stage.labelKey)}
+                  </span>
+                  {convRate !== null && (
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">
+                      {convRate}%
+                    </span>
+                  )}
+                </div>
+                {/* Arrow between stages (not after last) */}
+                {idx < stages.length - 1 && idx < 3 && (
+                  <div className="flex items-center text-slate-300 dark:text-slate-600 flex-shrink-0">
+                    <ChevronRight className="w-4 h-4" />
+                  </div>
+                )}
+                {/* Separator before refused (different branch) */}
+                {idx === 3 && (
+                  <div className="flex items-center text-slate-200 dark:text-slate-700 flex-shrink-0">
+                    <span className="text-xs font-light">|</span>
+                  </div>
+                )}
+              </React.Fragment>
+            )
+          })}
+        </div>
+      ) : null}
+
+      {/* Progress bar: accepted out of total */}
+      {analytics && analytics.devis.total > 0 && (
+        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+            <span>{t('dashboard.conversionRate')}</span>
+            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+              {analytics.devis.tauxAcceptation}%
+            </span>
+          </div>
+          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-full flex rounded-full overflow-hidden">
+              <div
+                className="bg-emerald-500 transition-all duration-700"
+                style={{ width: `${(analytics.devis.accepte / analytics.devis.total) * 100}%` }}
+              />
+              <div
+                className="bg-red-300 dark:bg-red-500/50 transition-all duration-700"
+                style={{ width: `${(analytics.devis.refuse / analytics.devis.total) * 100}%` }}
+              />
+            </div>
+          </div>
+          <div className="flex gap-4 mt-2">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('dashboard.stageAccepte')} ({analytics.devis.accepte})</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-red-300 dark:bg-red-400" />
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('dashboard.stageRefuse')} ({analytics.devis.refuse})</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -143,7 +377,7 @@ export default function DashboardPage() {
 
   const monthlyData = analytics?.revenus.mensuel ?? EMPTY_MONTHS
 
-  // ── Currency conversion for KPI totals ───────────────────────────────────
+  // ── Currency conversion ──────────────────────────────────────────────────
   const defaultDevise = entreprise?.devise ?? 'MAD'
   const tauxEUR = entreprise?.tauxEUR ?? null
   const tauxUSD = entreprise?.tauxUSD ?? null
@@ -172,6 +406,10 @@ export default function DashboardPage() {
     : null
 
   const isNewUser = !loading && analytics !== null && analytics.clients.total === 0
+
+  // Revenue month-over-month
+  const revenuEvol = analytics?.revenus.evolution ?? 0
+  const revenuMoisDernier = analytics?.revenus.moisDernier ?? 0
 
   return (
     <div className="space-y-5 pb-8">
@@ -213,7 +451,6 @@ export default function DashboardPage() {
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">{t('dashboard.overview')}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Client type filter pills */}
           <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
             {TYPE_FILTERS.map(({ value, icon: Icon, labelKey }) => {
               const active = typeFilter === value
@@ -327,7 +564,7 @@ export default function DashboardPage() {
             />
           </div>
 
-          {/* ── Per-devise breakdown (shown only when multiple devises are used) ── */}
+          {/* ── Per-devise breakdown ────────────────────────────────────────────── */}
           {analytics && analytics.parDevise.length > 1 && (
             <div className="card rounded-2xl p-4 sm:p-5">
               <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
@@ -357,52 +594,69 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── Row 2 · Revenue area + Invoice donut ───────────────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+          {/* ── Row 2 · Revenue + Donut + Health Score ──────────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-5">
 
-            {/* Revenue area chart */}
+            {/* Revenue area chart — 2 of 4 cols */}
             <div className="lg:col-span-2 card rounded-2xl p-5">
               <CardHeader
                 title={t('dashboard.revenueChart')}
                 sub={t('dashboard.revenueChartSub').replace('{year}', String(currentYear))}
                 badge={
-                  analytics && analytics.revenus.evolution !== 0 ? (
+                  analytics && revenuEvol !== 0 ? (
                     <div className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${
-                      analytics.revenus.evolution >= 0
+                      revenuEvol >= 0
                         ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30'
                         : 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30'
                     }`}>
                       <TrendingUp className="w-3 h-3" />
-                      {analytics.revenus.evolution >= 0 ? '+' : ''}{analytics.revenus.evolution}%
+                      {revenuEvol >= 0 ? '+' : ''}{revenuEvol}%
                     </div>
                   ) : null
                 }
               />
-              <div style={{ height: 180 }}>
+              <div style={{ height: 160 }}>
                 <RevenueAreaChart data={monthlyData} loading={loading} />
               </div>
-              <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 capitalize">{new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
-                <span className="text-sm font-black text-slate-900 dark:text-white">
-                  {analytics ? formatMAD(analytics.revenus.ceMois) : '—'}
-                </span>
+              {/* Ce mois vs mois dernier */}
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                  <p className="text-[10px] font-medium text-slate-400 capitalize mb-0.5">
+                    {new Date().toLocaleDateString(undefined, { month: 'long' })}
+                  </p>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">
+                    {analytics ? formatMAD(analytics.revenus.ceMois) : '—'}
+                  </p>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                  <p className="text-[10px] font-medium text-slate-400 mb-0.5">{t('dashboard.revenuMoisDernier')}</p>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">
+                    {analytics ? formatMAD(revenuMoisDernier) : '—'}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Invoice donut */}
+            {/* Invoice donut — 1 of 4 cols */}
             <div className="card rounded-2xl p-5">
               <CardHeader
                 title={t('dashboard.invoiceStatus')}
                 sub={t('dashboard.invoiceStatusSub')}
                 badge={<PieChart className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
               />
-              <div style={{ height: 240 }}>
+              <div style={{ height: 220 }}>
                 <InvoiceDonutChart stats={analytics?.factures ?? null} loading={loading} />
               </div>
             </div>
+
+            {/* Health Score — 1 of 4 cols */}
+            <HealthScoreCard analytics={analytics} loading={loading} t={t} />
           </div>
 
-          {/* ── Row 3 · Quick actions + Recent invoices ─────────────────────────── */}
+          {/* ── Row 3 · Devis pipeline ──────────────────────────────────────────── */}
+          <DevisPipelineCard analytics={analytics} loading={loading} t={t} />
+
+          {/* ── Row 4 · Quick actions + Recent invoices ─────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
 
             {/* Quick actions */}
@@ -462,7 +716,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* ── Row 4 · Top 5 clients + Factures en retard ─────────────────────── */}
+          {/* ── Row 5 · Top 5 clients + Factures en retard ─────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
 
             {/* Top 5 clients */}
@@ -631,7 +885,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* ── Row 5 · Recent activity ─────────────────────────────────────────── */}
+          {/* ── Row 6 · Recent activity ─────────────────────────────────────────── */}
           <div className="card rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('dashboard.recentActivity')}</h2>
