@@ -113,7 +113,7 @@ function TrendBadge({ value }: { value: number }) {
 
 // KPI card — big number + optional micro-sparkline (last 6 months, CSS bars)
 function KpiCard({
-  label, value, sub, trend, spark, loading,
+  label, value, sub, trend, spark, loading, icon: Icon, iconBg, iconColor, accentBorder,
 }: {
   label: string
   value: string | number
@@ -121,10 +121,14 @@ function KpiCard({
   trend?: number
   spark?: { valeur: number }[]
   loading: boolean
+  icon?: React.ElementType
+  iconBg?: string
+  iconColor?: string
+  accentBorder?: string
 }) {
   if (loading) {
     return (
-      <div className="card rounded-2xl p-5 space-y-3">
+      <div className={cn('card rounded-2xl p-5 space-y-3', accentBorder && `border-l-4 ${accentBorder}`)}>
         <Skeleton className="h-3 w-1/2" />
         <Skeleton className="h-8 w-3/4" />
         <Skeleton className="h-3 w-2/3" />
@@ -142,10 +146,17 @@ function KpiCard({
   const sparkMax = spark ? Math.max(...spark.slice(-6).map(d => d.valeur), 1) : 1
 
   return (
-    <div className="card rounded-2xl p-5">
+    <div className={cn('card rounded-2xl p-5', accentBorder && `border-l-4 ${accentBorder}`)}>
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">{label}</p>
-        {trend !== undefined && trend !== 0 && <TrendBadge value={trend} />}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {trend !== undefined && trend !== 0 && <TrendBadge value={trend} />}
+          {Icon && (
+            <div className={cn('w-7 h-7 rounded-lg flex items-center justify-center', iconBg)}>
+              <Icon className={cn('w-3.5 h-3.5', iconColor)} />
+            </div>
+          )}
+        </div>
       </div>
       <p className="mt-2 text-[26px] font-black text-slate-900 dark:text-white tabular-nums leading-none tracking-tight">
         {value}
@@ -502,24 +513,40 @@ export default function DashboardPage() {
                 : undefined}
               trend={analytics?.revenus.evolution}
               spark={monthlyData}
+              icon={Wallet}
+              iconBg="bg-emerald-50 dark:bg-emerald-950/40"
+              iconColor="text-emerald-500 dark:text-emerald-400"
+              accentBorder="border-emerald-400 dark:border-emerald-500"
             />
             <KpiCard
               loading={loading}
               label={t('dashboard.caEnAttente')}
               value={analytics ? formatMAD(analytics.caEnAttente) : '—'}
               sub={analytics ? `${analytics.tauxRecouvrement}% ${t('dashboard.tauxRecouvrement')}` : undefined}
+              icon={Clock}
+              iconBg="bg-amber-50 dark:bg-amber-950/40"
+              iconColor="text-amber-500 dark:text-amber-400"
+              accentBorder="border-amber-400 dark:border-amber-500"
             />
             <KpiCard
               loading={loading}
               label={t('dashboard.clients')}
               value={analytics?.clients.total ?? '—'}
               sub={analytics ? `${analytics.clients.actifs} actifs · +${analytics.clients.nouveauxCeMois} ${t('dashboard.thisMonth')}` : undefined}
+              icon={Users}
+              iconBg="bg-purple-50 dark:bg-purple-950/40"
+              iconColor="text-purple-500 dark:text-purple-400"
+              accentBorder="border-purple-400 dark:border-purple-500"
             />
             <KpiCard
               loading={loading}
               label={t('dashboard.quotes')}
               value={analytics ? `${analytics.devis.accepte}/${analytics.devis.total}` : '—'}
               sub={analytics ? `${analytics.devis.tauxAcceptation}% ${t('dashboard.accepted')}` : undefined}
+              icon={Receipt}
+              iconBg="bg-blue-50 dark:bg-blue-950/40"
+              iconColor="text-blue-500 dark:text-blue-400"
+              accentBorder="border-blue-400 dark:border-blue-500"
             />
           </div>
 
@@ -725,7 +752,14 @@ export default function DashboardPage() {
                     {analytics ? `${analytics.factures.enRetard} ${t('dashboard.overdue')}` : '—'}
                   </p>
                 </div>
-                <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                {analytics && analytics.factures.enRetard > 0 ? (
+                  <span className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400">
+                    <AlertCircle className="w-3 h-3" />
+                    {analytics.factures.enRetard}
+                  </span>
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                )}
               </div>
               {loading ? (
                 <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 rounded-xl" />)}</div>
@@ -843,7 +877,7 @@ export default function DashboardPage() {
               ) : analytics?.activite.length ? (
                 analytics.activite.map(a => (
                   <div key={a.id} className="flex items-start gap-3">
-                    <div className={`w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${ACTIVITY_COLORS[a.type] ?? 'bg-slate-400'}`} />
+                    <div className={`w-3 h-3 rounded-full mt-0.5 flex-shrink-0 ring-2 ring-white dark:ring-slate-900 ${ACTIVITY_COLORS[a.type] ?? 'bg-slate-400'}`} />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-slate-800 dark:text-slate-200 leading-snug">{a.message}</p>
                       <span className="text-[10px] text-slate-400">{formatRelativeTime(a.createdAt, t)}</span>
