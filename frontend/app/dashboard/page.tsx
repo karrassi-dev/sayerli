@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { TrendingUp, Users, Receipt, CreditCard, Plus, ArrowRight, Clock, BarChart2, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle, Truck } from 'lucide-react'
+import { TrendingUp, Users, Receipt, CreditCard, Wallet, Plus, ArrowRight, Clock, PieChart, X, User, Building2, Briefcase, Bell, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import { useAuth } from '@/hooks/useAuth'
@@ -9,11 +9,7 @@ import { StatsCard } from '@/components/dashboard/ui/StatsCard'
 import { StatusBadge } from '@/components/dashboard/ui/StatusBadge'
 import {
   RevenueAreaChart,
-  PaymentsBarChart,
   InvoiceDonutChart,
-  QuotesConversionChart,
-  ClientStatsVisual,
-  ChartSkeleton,
 } from '@/components/dashboard/ui/Charts'
 import { dashboardApi, facturesApi } from '@/lib/api'
 import { useCurrency } from '@/hooks/useCurrency'
@@ -24,11 +20,10 @@ import { canDo } from '@/lib/permissions'
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const QUICK_ACTIONS: { href: string; icon: React.ElementType; labelKey: string; color: string; permission: PermissionKey }[] = [
-  { href: '/dashboard/devis?action=create',          icon: Receipt,  labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950', permission: 'devis.create' },
-  { href: '/dashboard/factures?action=create',       icon: CreditCard, labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950',             permission: 'factures.create' },
-  { href: '/dashboard/bons-livraison?action=create', icon: Truck,    labelKey: 'dashboard.newBL',      color: 'bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-950',               permission: 'bons-livraison.manage' },
-  { href: '/dashboard/clients?action=create',        icon: Users,    labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950',   permission: 'clients.create' },
-  { href: '/dashboard/paiements?action=create',      icon: CreditCard, labelKey: 'dashboard.payments', color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950',  permission: 'paiements.create' },
+  { href: '/dashboard/devis?action=create',     icon: Receipt,    labelKey: 'dashboard.newQuote',   color: 'bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-950', permission: 'devis.create' },
+  { href: '/dashboard/factures?action=create',  icon: CreditCard, labelKey: 'dashboard.newInvoice', color: 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-950',             permission: 'factures.create' },
+  { href: '/dashboard/clients?action=create',   icon: Users,      labelKey: 'dashboard.newClient',  color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-950',   permission: 'clients.create' },
+  { href: '/dashboard/paiements?action=create', icon: Wallet,     labelKey: 'dashboard.payments',   color: 'bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-950',  permission: 'paiements.create' },
 ]
 
 const ACTIVITY_COLORS: Record<string, string> = {
@@ -176,6 +171,8 @@ export default function DashboardPage() {
     ? analytics.parDevise.reduce((s, d) => s + convert(d.caEnAttente, d.devise), 0)
     : null
 
+  const isNewUser = !loading && analytics !== null && analytics.clients.total === 0
+
   return (
     <div className="space-y-5 pb-8">
 
@@ -246,423 +243,433 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Row 1 · KPI cards ──────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <StatsCard
-          loading={loading}
-          label={t('dashboard.totalRevenue')}
-          value={analytics
-            ? convertedCA !== null
-              ? formatCurrency(convertedCA, defaultDevise)
-              : formatMAD(analytics.paiements.total)
-            : '—'}
-          sub={analytics
-            ? convertedEnAttente !== null
-              ? `${formatCurrency(convertedEnAttente, defaultDevise)} ${t('dashboard.caEnAttenteDesc')} · ${t('dashboard.tauxIndicatif')}`
-              : hasMultiDevise && !ratesConfigured
-                ? t('dashboard.tauxNonConfig')
-                : `${formatMAD(analytics.caEnAttente)} ${t('dashboard.caEnAttenteDesc')}`
-            : undefined}
-          icon={TrendingUp}
-          trend={analytics?.revenus.evolution}
-          color="blue"
-        />
-        <StatsCard
-          loading={loading}
-          label={t('dashboard.clients')}
-          value={analytics?.clients.total ?? '—'}
-          sub={analytics ? `+${analytics.clients.nouveauxCeMois} ${t('dashboard.thisMonth')}` : undefined}
-          icon={Users}
-          color="teal"
-        />
-        <StatsCard
-          loading={loading}
-          label={t('dashboard.quotes')}
-          value={analytics ? `${analytics.devis.accepte}/${analytics.devis.total}` : '—'}
-          sub={analytics ? `${analytics.devis.tauxAcceptation}% ${t('dashboard.accepted')}` : undefined}
-          icon={Receipt}
-          color="purple"
-        />
-        <StatsCard
-          loading={loading}
-          label={t('dashboard.invoices')}
-          value={analytics ? `${analytics.factures.payee}/${analytics.factures.total}` : '—'}
-          sub={analytics ? `${analytics.tauxRecouvrement}% ${t('dashboard.tauxRecouvrement')}` : undefined}
-          icon={CreditCard}
-          color="orange"
-        />
-      </div>
-
-      {/* ── Per-devise breakdown (shown only when multiple devises are used) ── */}
-      {analytics && analytics.parDevise.length > 1 && (
-        <div className="card rounded-2xl p-4 sm:p-5">
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
-            {t('dashboard.devisesTitle')}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {analytics.parDevise.map(d => (
-              <div key={d.devise} className="rounded-xl bg-slate-50 dark:bg-slate-800/60 px-4 py-3">
-                <span className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase">{d.devise}</span>
-                <div className="mt-1.5 space-y-0.5">
-                  <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
-                    <span>{t('dashboard.caTotal')}</span>
-                    <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(d.caTotal, d.devise)}</span>
-                  </div>
-                  <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
-                    <span>{t('dashboard.paye')}</span>
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatCurrency(d.caPaye, d.devise)}</span>
-                  </div>
-                  <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
-                    <span>{t('dashboard.enAttente')}</span>
-                    <span className="font-semibold text-amber-600 dark:text-amber-400">{formatCurrency(d.caEnAttente, d.devise)}</span>
-                  </div>
-                </div>
+      {/* ── Empty state for new users ───────────────────────────────────────── */}
+      {isNewUser ? (
+        <div className="card rounded-2xl p-10 text-center">
+          <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Bienvenue sur Sayerli 🎉</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">Commencez par configurer votre espace en 3 étapes simples.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
+            <Link
+              href="/dashboard/clients?action=create"
+              className="flex flex-col items-center gap-3 p-5 rounded-xl bg-purple-50 dark:bg-purple-950/30 hover:bg-purple-100 dark:hover:bg-purple-950/50 transition-colors"
+            >
+              <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
+                <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ── Row 2 · Revenue area + Invoice donut ───────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-
-        {/* Revenue area chart */}
-        <div className="lg:col-span-2 card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.revenueChart')}
-            sub={t('dashboard.revenueChartSub').replace('{year}', String(currentYear))}
-            badge={
-              analytics && analytics.revenus.evolution !== 0 ? (
-                <div className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${
-                  analytics.revenus.evolution >= 0
-                    ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30'
-                    : 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30'
-                }`}>
-                  <TrendingUp className="w-3 h-3" />
-                  {analytics.revenus.evolution >= 0 ? '+' : ''}{analytics.revenus.evolution}%
-                </div>
-              ) : null
-            }
-          />
-          <div style={{ height: 180 }}>
-            <RevenueAreaChart data={monthlyData} loading={loading} />
-          </div>
-          <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 capitalize">{new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
-            <span className="text-sm font-black text-slate-900 dark:text-white">
-              {analytics ? formatMAD(analytics.revenus.ceMois) : '—'}
-            </span>
-          </div>
-        </div>
-
-        {/* Invoice donut */}
-        <div className="card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.invoiceStatus')}
-            sub={t('dashboard.invoiceStatusSub')}
-            badge={<PieChart className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
-          />
-          <div style={{ height: 240 }}>
-            <InvoiceDonutChart stats={analytics?.factures ?? null} loading={loading} />
-          </div>
-        </div>
-      </div>
-
-      {/* ── Row 3 · Three analytics charts ─────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-
-        {/* Payments monthly */}
-        <div className="card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.paymentsChart')}
-            sub={t('dashboard.paymentsChartSub').replace('{year}', String(currentYear))}
-            badge={<BarChart2 className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
-          />
-          <div style={{ height: 160 }}>
-            <PaymentsBarChart data={monthlyData} loading={loading} />
-          </div>
-        </div>
-
-        {/* Quote conversion */}
-        <div className="card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.quotesChart')}
-            sub={analytics ? `${analytics.devis.tauxAcceptation}% ${t('dashboard.accepted')}` : '—'}
-            badge={<Receipt className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
-          />
-          <div style={{ height: 160 }}>
-            <QuotesConversionChart stats={analytics?.devis ?? null} loading={loading} />
-          </div>
-        </div>
-
-        {/* Client stats */}
-        <div className="card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.clientsChart')}
-            sub={t('dashboard.clientsChartSub')}
-            badge={<Users className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
-          />
-          <div style={{ height: 160 }}>
-            {loading ? (
-              <ChartSkeleton height={160} />
-            ) : (
-              <ClientStatsVisual
-                total={analytics?.clients.total ?? 0}
-                actifs={analytics?.clients.actifs ?? 0}
-                nouveauxCeMois={analytics?.clients.nouveauxCeMois ?? 0}
-                loading={loading}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Row 4 · Quick actions + Recent invoices ─────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-
-        {/* Quick actions */}
-        <div className="card rounded-2xl p-5">
-          <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-4">{t('dashboard.quickActions')}</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {visibleQuickActions.map(a => {
-              const Icon = a.icon
-              return (
-                <Link
-                  key={a.href}
-                  href={a.href}
-                  className={`flex flex-col items-center gap-2 p-3.5 rounded-xl text-center transition-all hover:-translate-y-0.5 group ${a.color}`}
-                >
-                  <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold leading-tight">{t(a.labelKey)}</span>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Recent invoices */}
-        <div className="lg:col-span-2 card rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('dashboard.recentInvoices')}</h2>
-            <Link href="/dashboard/factures" className="text-xs text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
-              {t('common.viewAll')} <ArrowRight className="w-3 h-3" />
+              <p className="text-xs font-bold text-slate-900 dark:text-white">1. Ajouter un client</p>
+            </Link>
+            <Link
+              href="/dashboard/devis?action=create"
+              className="flex flex-col items-center gap-3 p-5 rounded-xl bg-primary-50 dark:bg-primary-950/30 hover:bg-primary-100 dark:hover:bg-primary-950/50 transition-colors"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
+                <Receipt className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+              </div>
+              <p className="text-xs font-bold text-slate-900 dark:text-white">2. Créer un devis</p>
+            </Link>
+            <Link
+              href="/dashboard/factures?action=create"
+              className="flex flex-col items-center gap-3 p-5 rounded-xl bg-teal-50 dark:bg-teal-950/30 hover:bg-teal-100 dark:hover:bg-teal-950/50 transition-colors"
+            >
+              <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center">
+                <CreditCard className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+              </div>
+              <p className="text-xs font-bold text-slate-900 dark:text-white">3. Envoyer une facture</p>
             </Link>
           </div>
-          <div className="space-y-1.5">
-            {loading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
-              ))
-            ) : analytics?.facturesRecentes.length ? (
-              analytics.facturesRecentes.map(f => (
-                <Link
-                  key={f.id}
-                  href="/dashboard/factures"
-                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{f.clientNom}</p>
-                    <p className="text-xs text-slate-400">{f.numero}</p>
-                  </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">{formatMAD(f.totalTTC)}</span>
-                    <StatusBadge variant={f.statut as any} dot />
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p className="text-xs text-slate-400 text-center py-6">{t('common.noResults')}</p>
-            )}
-          </div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* ── Row 1 · KPI cards ──────────────────────────────────────────────── */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <StatsCard
+              loading={loading}
+              label={t('dashboard.totalRevenue')}
+              value={analytics
+                ? convertedCA !== null
+                  ? formatCurrency(convertedCA, defaultDevise)
+                  : formatMAD(analytics.paiements.total)
+                : '—'}
+              sub={analytics
+                ? convertedEnAttente !== null
+                  ? `${formatCurrency(convertedEnAttente, defaultDevise)} ${t('dashboard.caEnAttenteDesc')} · ${t('dashboard.tauxIndicatif')}`
+                  : hasMultiDevise && !ratesConfigured
+                    ? t('dashboard.tauxNonConfig')
+                    : `${formatMAD(analytics.caEnAttente)} ${t('dashboard.caEnAttenteDesc')}`
+                : undefined}
+              icon={TrendingUp}
+              trend={analytics?.revenus.evolution}
+              color="blue"
+            />
+            <StatsCard
+              loading={loading}
+              label={t('dashboard.clients')}
+              value={analytics?.clients.total ?? '—'}
+              sub={analytics ? `${analytics.clients.actifs} actifs · +${analytics.clients.nouveauxCeMois} ${t('dashboard.thisMonth')}` : undefined}
+              icon={Users}
+              color="teal"
+            />
+            <StatsCard
+              loading={loading}
+              label={t('dashboard.quotes')}
+              value={analytics ? `${analytics.devis.accepte}/${analytics.devis.total}` : '—'}
+              sub={analytics ? `${analytics.devis.tauxAcceptation}% ${t('dashboard.accepted')}` : undefined}
+              icon={Receipt}
+              color="purple"
+            />
+            <StatsCard
+              loading={loading}
+              label={t('dashboard.invoices')}
+              value={analytics ? `${analytics.factures.payee}/${analytics.factures.total}` : '—'}
+              sub={analytics ? `${analytics.tauxRecouvrement}% ${t('dashboard.tauxRecouvrement')}` : undefined}
+              icon={CreditCard}
+              color="orange"
+            />
+          </div>
 
-      {/* ── Row 5 · Top 5 clients + Factures en retard ─────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
-
-        {/* Top 5 clients */}
-        <div className="card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.top5Clients')}
-            sub={t('dashboard.top5Desc')}
-            badge={<Users className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
-          />
-          {loading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-8 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
-              ))}
-            </div>
-          ) : analytics?.top5Clients.length ? (() => {
-            const max = analytics.top5Clients[0].total
-            return (
-              <div className="space-y-3">
-                {analytics.top5Clients.map((c, i) => (
-                  <div key={c.clientId} className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-slate-400 w-4 flex-shrink-0">{i + 1}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">{c.nom}</span>
-                        <span className="text-xs font-bold text-slate-900 dark:text-white flex-shrink-0 ms-2">{formatMAD(c.total)}</span>
+          {/* ── Per-devise breakdown (shown only when multiple devises are used) ── */}
+          {analytics && analytics.parDevise.length > 1 && (
+            <div className="card rounded-2xl p-4 sm:p-5">
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
+                {t('dashboard.devisesTitle')}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {analytics.parDevise.map(d => (
+                  <div key={d.devise} className="rounded-xl bg-slate-50 dark:bg-slate-800/60 px-4 py-3">
+                    <span className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase">{d.devise}</span>
+                    <div className="mt-1.5 space-y-0.5">
+                      <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
+                        <span>{t('dashboard.caTotal')}</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(d.caTotal, d.devise)}</span>
                       </div>
-                      <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-primary-500 to-teal-500 transition-all"
-                          style={{ width: `${max > 0 ? (c.total / max) * 100 : 0}%` }}
-                        />
+                      <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
+                        <span>{t('dashboard.paye')}</span>
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatCurrency(d.caPaye, d.devise)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
+                        <span>{t('dashboard.enAttente')}</span>
+                        <span className="font-semibold text-amber-600 dark:text-amber-400">{formatCurrency(d.caEnAttente, d.devise)}</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            )
-          })() : (
-            <p className="text-xs text-slate-400 text-center py-6">{t('common.noResults')}</p>
-          )}
-        </div>
-
-        {/* Factures en retard */}
-        <div className="card rounded-2xl p-5">
-          <CardHeader
-            title={t('dashboard.facturesEnRetard')}
-            sub={analytics ? `${analytics.factures.enRetard} ${t('dashboard.overdue')}` : '—'}
-            badge={<AlertCircle className="w-4 h-4 text-red-400" />}
-          />
-          {loading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-12 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
-              ))}
             </div>
-          ) : analytics?.facturesEnRetard.length ? (
-            <div className="space-y-2">
-              {analytics.facturesEnRetard.map(f => {
-                const days = daysOverdue(f.dateEcheance)
-                const phone = toWhatsAppNumber(f.clientTelephone)
-                const reste = Math.max(0, f.totalTTC - f.montantPaye)
-                const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://sayerli.com'}/public/factures/${f.publicToken}`
-                const msg = f.montantPaye > 0
-                  ? [
-                      `Bonjour ${f.clientNom},`,
-                      '',
-                      `Nous avons bien reçu votre paiement de *${formatMAD(f.montantPaye)}* sur votre facture *${f.numero}* d'un montant total de *${formatMAD(f.totalTTC)}*.`,
-                      '',
-                      `Il reste un solde de *${formatMAD(reste)}* à régler. Pourriez-vous régulariser ce solde dans les meilleurs délais ?`,
-                      '',
-                      `Consultez votre facture ici : ${url}`,
-                      '',
-                      'Merci pour votre confiance.',
-                    ].join('\n')
-                  : [
-                      `Bonjour ${f.clientNom},`,
-                      '',
-                      `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${formatMAD(f.totalTTC)}*.`,
-                      '',
-                      `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
-                      '',
-                      `Consultez votre facture ici : ${url}`,
-                      '',
-                      'Merci pour votre confiance.',
-                    ].join('\n')
+          )}
 
-                const canRelancer = canDo('factures.relance', role, removed)
+          {/* ── Row 2 · Revenue area + Invoice donut ───────────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
 
-                const handleRelancer = async () => {
-                  setRelancingId(f.id)
-                  try {
-                    await facturesApi.relancer(f.id)
-                    if (phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
-                  } catch {
-                    // backend rejected (403, rate limit, etc.) — do not open WhatsApp
-                  } finally {
-                    setRelancingId(null)
-                  }
-                }
-
-                return (
-                  <div key={f.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/40">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{f.clientNom}</span>
-                        <span className="text-[10px] text-slate-400 flex-shrink-0">{f.numero}</span>
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        <span className="text-xs font-bold text-red-600 dark:text-red-400">
-                          {f.montantPaye > 0 ? `${formatMAD(reste)} ${t('dashboard.restant')}` : formatMAD(f.totalTTC)}
-                        </span>
-                        {f.montantPaye > 0 && (
-                          <span className="text-[10px] text-green-600 dark:text-green-400 flex-shrink-0">
-                            {formatMAD(f.montantPaye)} {t('dashboard.payeLabel')}
-                          </span>
-                        )}
-                        {days > 0 && (
-                          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">
-                            {days} {t('dashboard.joursRetard')}
-                          </span>
-                        )}
-                      </div>
+            {/* Revenue area chart */}
+            <div className="lg:col-span-2 card rounded-2xl p-5">
+              <CardHeader
+                title={t('dashboard.revenueChart')}
+                sub={t('dashboard.revenueChartSub').replace('{year}', String(currentYear))}
+                badge={
+                  analytics && analytics.revenus.evolution !== 0 ? (
+                    <div className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${
+                      analytics.revenus.evolution >= 0
+                        ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30'
+                        : 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30'
+                    }`}>
+                      <TrendingUp className="w-3 h-3" />
+                      {analytics.revenus.evolution >= 0 ? '+' : ''}{analytics.revenus.evolution}%
                     </div>
-                    {canRelancer && (
-                      <button
-                        onClick={handleRelancer}
-                        disabled={relancingId === f.id}
-                        title={t('dashboard.relancer')}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all bg-[#25D366] hover:bg-[#1ebe5d] text-white disabled:opacity-60"
-                      >
-                        {relancingId === f.id
-                          ? <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          : <Bell className="w-3 h-3" />
-                        }
-                        <span className="hidden sm:inline">{t('dashboard.relancer')}</span>
-                      </button>
-                    )}
+                  ) : null
+                }
+              />
+              <div style={{ height: 180 }}>
+                <RevenueAreaChart data={monthlyData} loading={loading} />
+              </div>
+              <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 capitalize">{new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
+                <span className="text-sm font-black text-slate-900 dark:text-white">
+                  {analytics ? formatMAD(analytics.revenus.ceMois) : '—'}
+                </span>
+              </div>
+            </div>
+
+            {/* Invoice donut */}
+            <div className="card rounded-2xl p-5">
+              <CardHeader
+                title={t('dashboard.invoiceStatus')}
+                sub={t('dashboard.invoiceStatusSub')}
+                badge={<PieChart className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
+              />
+              <div style={{ height: 240 }}>
+                <InvoiceDonutChart stats={analytics?.factures ?? null} loading={loading} />
+              </div>
+            </div>
+          </div>
+
+          {/* ── Row 3 · Quick actions + Recent invoices ─────────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+
+            {/* Quick actions */}
+            <div className="card rounded-2xl p-5">
+              <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-4">{t('dashboard.quickActions')}</h2>
+              <div className="grid grid-cols-2 gap-3">
+                {visibleQuickActions.map(a => {
+                  const Icon = a.icon
+                  return (
+                    <Link
+                      key={a.href}
+                      href={a.href}
+                      className={`flex flex-col items-center gap-2 p-3.5 rounded-xl text-center transition-all hover:-translate-y-0.5 group ${a.color}`}
+                    >
+                      <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold leading-tight">{t(a.labelKey)}</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Recent invoices */}
+            <div className="lg:col-span-2 card rounded-2xl p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('dashboard.recentInvoices')}</h2>
+                <Link href="/dashboard/factures" className="text-xs text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
+                  {t('common.viewAll')} <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+              <div className="space-y-1.5">
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                  ))
+                ) : analytics?.facturesRecentes.length ? (
+                  analytics.facturesRecentes.map(f => (
+                    <Link
+                      key={f.id}
+                      href={`/dashboard/factures?id=${f.id}`}
+                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{f.clientNom}</p>
+                        <p className="text-xs text-slate-400">{f.numero}</p>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white">{formatMAD(f.totalTTC)}</span>
+                        <StatusBadge variant={f.statut as any} dot />
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-xs text-slate-400 text-center py-6">{t('common.noResults')}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Row 4 · Top 5 clients + Factures en retard ─────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+
+            {/* Top 5 clients */}
+            <div className="card rounded-2xl p-5">
+              <CardHeader
+                title={t('dashboard.top5Clients')}
+                sub={t('dashboard.top5Desc')}
+                badge={<Users className="w-4 h-4 text-slate-300 dark:text-slate-600" />}
+              />
+              {loading ? (
+                <div className="space-y-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="h-8 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                  ))}
+                </div>
+              ) : analytics?.top5Clients.length ? (() => {
+                const max = analytics.top5Clients[0].total
+                return (
+                  <div className="space-y-3">
+                    {analytics.top5Clients.map((c, i) => (
+                      <div key={c.clientId} className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-slate-400 w-4 flex-shrink-0">{i + 1}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">{c.nom}</span>
+                            <span className="text-xs font-bold text-slate-900 dark:text-white flex-shrink-0 ms-2">{formatMAD(c.total)}</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-primary-500 to-teal-500 transition-all"
+                              style={{ width: `${max > 0 ? (c.total / max) * 100 : 0}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )
-              })}
+              })() : (
+                <p className="text-xs text-slate-400 text-center py-6">{t('common.noResults')}</p>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-6 gap-2 text-slate-400">
-              <div className="w-8 h-8 rounded-full bg-green-50 dark:bg-green-950/30 flex items-center justify-center">
-                <Receipt className="w-4 h-4 text-green-500" />
-              </div>
-              <p className="text-xs">{t('dashboard.aucunRetard')}</p>
-            </div>
-          )}
-        </div>
-      </div>
 
-      {/* ── Row 6 · Recent activity ─────────────────────────────────────────── */}
-      <div className="card rounded-2xl p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('dashboard.recentActivity')}</h2>
-          <Clock className="w-4 h-4 text-slate-400" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-3">
-          {loading ? (
-            Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full mt-1.5 bg-slate-200 dark:bg-slate-700 flex-shrink-0" />
-                <div className="flex-1 space-y-1.5">
-                  <div className="h-3 rounded bg-slate-100 dark:bg-slate-800 animate-pulse w-4/5" />
-                  <div className="h-2.5 rounded bg-slate-100 dark:bg-slate-800 animate-pulse w-1/3" />
+            {/* Factures en retard */}
+            <div className="card rounded-2xl p-5">
+              <CardHeader
+                title={t('dashboard.facturesEnRetard')}
+                sub={analytics ? `${analytics.factures.enRetard} ${t('dashboard.overdue')}` : '—'}
+                badge={<AlertCircle className="w-4 h-4 text-red-400" />}
+              />
+              {loading ? (
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-12 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                  ))}
                 </div>
-              </div>
-            ))
-          ) : analytics?.activite.length ? (
-            analytics.activite.map(a => (
-              <div key={a.id} className="flex items-start gap-3">
-                <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${ACTIVITY_COLORS[a.type] ?? 'bg-slate-400'}`} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-slate-800 dark:text-slate-200 leading-snug">{a.message}</p>
-                  <span className="text-[10px] text-slate-400">{formatRelativeTime(a.createdAt, t)}</span>
+              ) : analytics?.facturesEnRetard.length ? (
+                <div className="space-y-2">
+                  {analytics.facturesEnRetard.map(f => {
+                    const days = daysOverdue(f.dateEcheance)
+                    const phone = toWhatsAppNumber(f.clientTelephone)
+                    const reste = Math.max(0, f.totalTTC - f.montantPaye)
+                    const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://sayerli.com'}/public/factures/${f.publicToken}`
+                    const msg = f.montantPaye > 0
+                      ? [
+                          `Bonjour ${f.clientNom},`,
+                          '',
+                          `Nous avons bien reçu votre paiement de *${formatMAD(f.montantPaye)}* sur votre facture *${f.numero}* d'un montant total de *${formatMAD(f.totalTTC)}*.`,
+                          '',
+                          `Il reste un solde de *${formatMAD(reste)}* à régler. Pourriez-vous régulariser ce solde dans les meilleurs délais ?`,
+                          '',
+                          `Consultez votre facture ici : ${url}`,
+                          '',
+                          'Merci pour votre confiance.',
+                        ].join('\n')
+                      : [
+                          `Bonjour ${f.clientNom},`,
+                          '',
+                          `Nous vous contactons au sujet de votre facture *${f.numero}* d'un montant de *${formatMAD(f.totalTTC)}*.`,
+                          '',
+                          `Nous n'avons pas encore reçu votre règlement. Pourriez-vous régulariser cette situation dans les meilleurs délais ?`,
+                          '',
+                          `Consultez votre facture ici : ${url}`,
+                          '',
+                          'Merci pour votre confiance.',
+                        ].join('\n')
+
+                    const canRelancer = canDo('factures.relance', role, removed)
+
+                    const handleRelancer = async () => {
+                      setRelancingId(f.id)
+                      try {
+                        await facturesApi.relancer(f.id)
+                        if (phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank')
+                      } catch {
+                        // backend rejected (403, rate limit, etc.) — do not open WhatsApp
+                      } finally {
+                        setRelancingId(null)
+                      }
+                    }
+
+                    return (
+                      <div
+                        key={f.id}
+                        className={cn(
+                          'flex items-center gap-3 p-2.5 rounded-xl border',
+                          days === 0
+                            ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-100 dark:border-yellow-900/40'
+                            : days <= 6
+                            ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/40'
+                            : 'bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/40'
+                        )}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{f.clientNom}</span>
+                            <span className="text-[10px] text-slate-400 flex-shrink-0">{f.numero}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                            <span className="text-xs font-bold text-red-600 dark:text-red-400">
+                              {f.montantPaye > 0 ? `${formatMAD(reste)} ${t('dashboard.restant')}` : formatMAD(f.totalTTC)}
+                            </span>
+                            {f.montantPaye > 0 && (
+                              <span className="text-[10px] text-green-600 dark:text-green-400 flex-shrink-0">
+                                {formatMAD(f.montantPaye)} {t('dashboard.payeLabel')}
+                              </span>
+                            )}
+                            {days > 0 && (
+                              <span className={cn(
+                                'text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0',
+                                days <= 6
+                                  ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400'
+                                  : 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400'
+                              )}>
+                                {days} {t('dashboard.joursRetard')}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {canRelancer && (
+                          <button
+                            onClick={handleRelancer}
+                            disabled={relancingId === f.id}
+                            title={t('dashboard.relancer')}
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0 transition-all bg-[#25D366] hover:bg-[#1ebe5d] text-white disabled:opacity-60"
+                          >
+                            {relancingId === f.id
+                              ? <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              : <Bell className="w-3 h-3" />
+                            }
+                            <span className="hidden sm:inline">{t('dashboard.relancer')}</span>
+                          </button>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-6 gap-2 text-slate-400">
+                  <div className="w-8 h-8 rounded-full bg-green-50 dark:bg-green-950/30 flex items-center justify-center">
+                    <Receipt className="w-4 h-4 text-green-500" />
+                  </div>
+                  <p className="text-xs">{t('dashboard.aucunRetard')}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ── Row 5 · Recent activity ─────────────────────────────────────────── */}
+          <div className="card rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('dashboard.recentActivity')}</h2>
+              <div className="flex items-center gap-3">
+                <Link href="/dashboard/activite" className="text-xs text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
+                  Voir tout <ArrowRight className="w-3 h-3" />
+                </Link>
+                <Clock className="w-4 h-4 text-slate-400" />
               </div>
-            ))
-          ) : (
-            <p className="text-xs text-slate-400 col-span-4 text-center py-4">{t('common.noResults')}</p>
-          )}
-        </div>
-      </div>
+            </div>
+            <div className="flex flex-col gap-3 max-h-64 overflow-y-auto">
+              {loading ? (
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full mt-1.5 bg-slate-200 dark:bg-slate-700 flex-shrink-0" />
+                    <div className="flex-1 space-y-1.5">
+                      <div className="h-3 rounded bg-slate-100 dark:bg-slate-800 animate-pulse w-4/5" />
+                      <div className="h-2.5 rounded bg-slate-100 dark:bg-slate-800 animate-pulse w-1/3" />
+                    </div>
+                  </div>
+                ))
+              ) : analytics?.activite.length ? (
+                analytics.activite.map(a => (
+                  <div key={a.id} className="flex items-start gap-3">
+                    <div className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${ACTIVITY_COLORS[a.type] ?? 'bg-slate-400'}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-slate-800 dark:text-slate-200 leading-snug">{a.message}</p>
+                      <span className="text-[10px] text-slate-400">{formatRelativeTime(a.createdAt, t)}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-slate-400 text-center py-4">{t('common.noResults')}</p>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
     </div>
   )
