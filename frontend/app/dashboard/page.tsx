@@ -93,8 +93,8 @@ function daysOverdue(dateEcheance: string | null): number {
 
 // ── Pure-CSS sub-components ───────────────────────────────────────────────────
 
-function Skeleton({ className }: { className?: string }) {
-  return <div className={cn('bg-slate-100 dark:bg-slate-800 rounded animate-pulse', className)} />
+function Skeleton({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return <div className={cn('bg-slate-100 dark:bg-slate-800 rounded animate-pulse', className)} style={style} />
 }
 
 function TrendBadge({ value }: { value: number }) {
@@ -131,7 +131,7 @@ function KpiCard({
         {spark !== undefined && (
           <div className="flex items-end gap-0.5 h-9 pt-1">
             {BAR_SKELETON.slice(0, 6).map((h, i) => (
-              <Skeleton key={i} className="flex-1 rounded-sm" style={{ height: `${h}%` } as React.CSSProperties} />
+              <Skeleton key={i} className="flex-1 rounded-sm" style={{ height: `${h}%` }} />
             ))}
           </div>
         )}
@@ -181,7 +181,7 @@ function RevenueChart({
     return (
       <div className="flex items-end gap-1.5" style={{ height: 120 }}>
         {BAR_SKELETON.map((h, i) => (
-          <Skeleton key={i} className="flex-1 rounded-t" style={{ height: `${h}%` } as React.CSSProperties} />
+          <Skeleton key={i} className="flex-1 rounded-t" style={{ height: `${h}%` }} />
         ))}
       </div>
     )
