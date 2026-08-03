@@ -14,12 +14,12 @@ interface StatsCardProps {
 }
 
 const COLOR_MAP = {
-  blue:   { icon: 'bg-blue-50 dark:bg-blue-950/50', grad: 'from-blue-500 to-primary-600', text: 'text-primary-600 dark:text-primary-400' },
-  teal:   { icon: 'bg-teal-50 dark:bg-teal-950/50', grad: 'from-teal-500 to-emerald-600', text: 'text-teal-600 dark:text-teal-400' },
-  purple: { icon: 'bg-purple-50 dark:bg-purple-950/50', grad: 'from-purple-500 to-violet-600', text: 'text-purple-600 dark:text-purple-400' },
-  orange: { icon: 'bg-orange-50 dark:bg-orange-950/50', grad: 'from-orange-500 to-amber-600', text: 'text-orange-600 dark:text-orange-400' },
-  green:  { icon: 'bg-green-50 dark:bg-green-950/50', grad: 'from-green-500 to-emerald-600', text: 'text-green-600 dark:text-green-400' },
-  red:    { icon: 'bg-red-50 dark:bg-red-950/50', grad: 'from-red-500 to-rose-600', text: 'text-red-600 dark:text-red-400' },
+  blue:   { grad: 'from-blue-500 to-indigo-600',   text: 'text-primary-600 dark:text-primary-400' },
+  teal:   { grad: 'from-teal-500 to-emerald-600',  text: 'text-teal-600 dark:text-teal-400' },
+  purple: { grad: 'from-purple-500 to-violet-600', text: 'text-purple-600 dark:text-purple-400' },
+  orange: { grad: 'from-orange-500 to-amber-600',  text: 'text-orange-600 dark:text-orange-400' },
+  green:  { grad: 'from-green-500 to-emerald-600', text: 'text-green-600 dark:text-green-400' },
+  red:    { grad: 'from-red-500 to-rose-600',      text: 'text-red-600 dark:text-red-400' },
 }
 
 export function StatsCard({ label, value, sub, icon: Icon, trend, color = 'blue', loading }: StatsCardProps) {
@@ -41,10 +41,8 @@ export function StatsCard({ label, value, sub, icon: Icon, trend, color = 'blue'
   return (
     <div className="card p-5 rounded-2xl hover:shadow-lg transition-all group">
       <div className="flex items-start justify-between mb-4">
-        <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform', c.icon)}>
-          <div className={cn('w-5 h-5 bg-gradient-to-br rounded-lg flex items-center justify-center', c.grad)}>
-            <Icon className="w-3 h-3 text-white" />
-          </div>
+        <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform bg-gradient-to-br shadow-sm', c.grad)}>
+          <Icon className="w-5 h-5 text-white" />
         </div>
         {trend !== undefined && (
           <div className={cn('flex items-center gap-0.5 text-xs font-semibold px-2 py-1 rounded-full',

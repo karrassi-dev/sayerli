@@ -44,25 +44,6 @@ const ROLE_COLORS: Record<string, string> = {
   comptable:    'from-purple-500 to-purple-600',
 }
 
-/* ── Icon accent colors per nav item ── */
-const ICON_ACCENT: Record<string, { bg: string; text: string }> = {
-  dashboard:      { bg: 'bg-indigo-500',  text: 'text-white' },
-  clients:        { bg: 'bg-blue-500',    text: 'text-white' },
-  devis:          { bg: 'bg-teal-500',    text: 'text-white' },
-  factures:       { bg: 'bg-violet-500',  text: 'text-white' },
-  catalogue:      { bg: 'bg-emerald-500', text: 'text-white' },
-  bonsLivraison:  { bg: 'bg-amber-500',   text: 'text-white' },
-  depenses:       { bg: 'bg-rose-500',    text: 'text-white' },
-  paiements:      { bg: 'bg-green-500',   text: 'text-white' },
-  declarations:   { bg: 'bg-orange-500',  text: 'text-white' },
-  declarationsTva:{ bg: 'bg-cyan-500',    text: 'text-white' },
-  export:         { bg: 'bg-slate-500',   text: 'text-white' },
-  equipe:         { bg: 'bg-pink-500',    text: 'text-white' },
-  notifications:  { bg: 'bg-red-500',     text: 'text-white' },
-  activite:       { bg: 'bg-sky-500',     text: 'text-white' },
-  graphe:         { bg: 'bg-fuchsia-500', text: 'text-white' },
-  settings:       { bg: 'bg-slate-600',   text: 'text-white' },
-}
 
 export function Sidebar() {
   const { t } = useTranslation()
@@ -183,7 +164,6 @@ export function Sidebar() {
               const { href, iconC: Icon, key } = item
               const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
               const badge = key === 'notifications' ? unreadCount : key === 'declarations' ? pendingDeclarationsCount : 0
-              const accent = ICON_ACCENT[key] ?? { bg: 'bg-slate-500', text: 'text-white' }
 
               return (
                 <Link
@@ -203,13 +183,11 @@ export function Sidebar() {
                   <div className={cn(
                     'flex-shrink-0 flex items-center justify-center rounded-lg transition-all duration-200',
                     isExpanded ? 'w-7 h-7' : 'w-8 h-8',
-                    active
-                      ? cn(accent.bg, accent.text, 'shadow-sm')
-                      : 'bg-transparent'
+                    active ? 'bg-indigo-100 dark:bg-indigo-500/20' : 'bg-transparent'
                   )}>
                     <Icon className={cn(
-                      'transition-colors',
-                      active ? cn('w-3.5 h-3.5', accent.text) : isExpanded ? 'w-4 h-4' : 'w-4.5 h-4.5'
+                      'w-4 h-4 transition-colors',
+                      active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'
                     )} />
                   </div>
 

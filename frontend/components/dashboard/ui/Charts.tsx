@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar,
+  ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Label,
 } from 'recharts'
 import { useCurrency } from '@/hooks/useCurrency'
 
@@ -99,7 +99,7 @@ export function RevenueAreaChart({
       <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -8 }}>
         <defs>
           <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.18} />
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity={c.dark ? 0.35 : 0.28} />
             <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
           </linearGradient>
         </defs>
@@ -181,6 +181,39 @@ export function PaymentsBarChart({
   )
 }
 
+// ── Donut center label ────────────────────────────────────────────────────────
+
+function DonutCenterLabel({
+  viewBox,
+  total,
+  textColor,
+}: {
+  viewBox?: { cx: number; cy: number }
+  total: number
+  textColor: string
+}) {
+  const cx = viewBox?.cx ?? 0
+  const cy = viewBox?.cy ?? 0
+  return (
+    <g>
+      <text
+        x={cx} y={cy - 8}
+        textAnchor="middle" dominantBaseline="middle"
+        style={{ fontSize: 22, fontWeight: 900, fill: textColor }}
+      >
+        {total}
+      </text>
+      <text
+        x={cx} y={cy + 12}
+        textAnchor="middle" dominantBaseline="middle"
+        style={{ fontSize: 10, fill: '#94a3b8' }}
+      >
+        factures
+      </text>
+    </g>
+  )
+}
+
 // ── 3. Invoice Donut Chart ────────────────────────────────────────────────────
 
 interface FacturesStats {
@@ -207,6 +240,8 @@ export function InvoiceDonutChart({
   stats: FacturesStats | null
   loading?: boolean
 }) {
+  const c = useChartColors()
+
   if (loading || !stats) return <ChartSkeleton height={200} />
 
   const data = DONUT_COLORS
@@ -215,10 +250,12 @@ export function InvoiceDonutChart({
 
   if (!data.length) return <EmptyChart label="Aucune facture" />
 
+  const textColor = c.dark ? '#ffffff' : '#0f172a'
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {/* Donut */}
-      <div style={{ height: 128, flexShrink: 0 }}>
+      {/* Donut with center label */}
+      <div style={{ height: 160, flexShrink: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -231,6 +268,12 @@ export function InvoiceDonutChart({
               dataKey="value"
               strokeWidth={0}
             >
+              <Label
+                content={(props: any) => (
+                  <DonutCenterLabel viewBox={props.viewBox} total={stats.total} textColor={textColor} />
+                )}
+                position="center"
+              />
               {data.map((entry, i) => (
                 <Cell key={i} fill={entry.color} />
               ))}
@@ -239,13 +282,8 @@ export function InvoiceDonutChart({
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {/* Center label */}
-      <p className="text-center -mt-1 mb-2.5">
-        <span className="text-xl font-black text-slate-900 dark:text-white">{stats.total}</span>
-        <span className="text-xs text-slate-400 ml-1">factures</span>
-      </p>
       {/* Legend */}
-      <div className="space-y-1">
+      <div className="space-y-1 mt-1">
         {data.map(d => (
           <div key={d.key} className="flex items-center justify-between py-0.5">
             <div className="flex items-center gap-2">
